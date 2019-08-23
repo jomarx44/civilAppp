@@ -1,0 +1,18 @@
+{
+  "name": "pnmobile",
+  "displayName": "Sun Savings Mobile",
+  "appid_uri" : "https://coindrop-surprised-rhinocerous.au-syd.mybluemix.net/home/ibmsignin/",
+  "expo": {
+    "name": "pnmobile",
+    "slug": "expo-template-bare",
+    "privacy": "unlisted",
+    "sdkVersion": "34.0.0",
+    "version": "1.0.0",
+    "entryPoint": "node_modules/expo/AppEntry.js",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ]
+  }
+}
