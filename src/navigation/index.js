@@ -3,12 +3,14 @@ import { createDrawerNavigator, createAppContainer } from "react-navigation";
 import { Dimensions } from 'react-native';
 import SideMenu from "./SideMenu.js";
 import Login from "screens/LoginScreen";
+import LoginFingerPrintScreen from "screens/LoginScreen/fingerprint";
 import Test from "screens/TestScreen";
 import PersonalDetailsScreen from "screens/PersonalDetailsScreen/";
 
 const MainDrawer = createDrawerNavigator(
   {
     Login: { screen: Login },
+    FingerPrint: { screen: LoginFingerPrintScreen },
     Test: { screen: Test },
     PersonalDetails: {
        screen: PersonalDetailsScreen,

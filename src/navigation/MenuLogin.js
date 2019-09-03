@@ -9,6 +9,7 @@ class MenuLogin extends Component {
    return (
     <ScrollView>
       <CDSideMenuItem title='Login' route='Login' currentRoute={currentRoute} />
+      <CDSideMenuItem title='FingerPrint' route='FingerPrint' currentRoute={currentRoute} />
       <CDSideMenuItem title='About Us' route='AboutUs' currentRoute={currentRoute} />
     </ScrollView>
    );

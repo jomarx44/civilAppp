@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import PropTypes from 'prop-types';
+import { Platform, StyleSheet, Text, View, Alert, Image } from 'react-native';
 import { AppLoading, SplashScreen, Asset } from 'expo';
 import * as Font from 'expo-font';
 import { Notifications } from 'expo';
@@ -18,7 +19,7 @@ import rootReducer from './src/reducers';
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
-export default class App extends Component {
+class App extends Component {
 
   constructor(props) {
     super(props);
@@ -27,7 +28,7 @@ export default class App extends Component {
       isReady: false,
       test: false,
       text: "ReactNative WebView Sample",
-      text2:  ""
+      text2:  "",
     };
   }
 
@@ -45,10 +46,12 @@ export default class App extends Component {
     }
   }
 
+
   render() {
     if (!this.state.isReady) {
       return <AppLoading />;
     }
+
     return (
       <Provider store={store}>
       <StyleProvider style={getTheme(platform)}>
@@ -61,6 +64,7 @@ export default class App extends Component {
        </Provider>
     );
   }
+
 }
 
 const styles = StyleSheet.create({
@@ -79,3 +83,5 @@ const styles = StyleSheet.create({
     flex: 1
   }
 });
+
+export default App;
