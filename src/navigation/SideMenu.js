@@ -14,6 +14,9 @@ import CDHeaderSideMenu from "library/components/CDHeaderSideMenu";
 import CDSideMenuItem from "library/components/CDSideMenuItem";
 import Config from 'res/strings/main';
 
+import styleDrawer from "styles/styleDrawer";
+import styles from "styles/commonStyle";
+
 // menu list
 import MenuMain from "./MenuMain";
 import MenuLogin from "./MenuLogin";
@@ -148,42 +151,6 @@ class SideMenu extends Component {
 }
 
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  versionStyle: {
-    bottom: 10, 
-    fontSize: 10, 
-    marginLeft: 20,
-    color: '#FFFFFF'
-  },
-});
-
-
-
-const styleDrawer = StyleSheet.create({
-  container: {
-    backgroundColor: "#FA8043"
-  },
-  textstyle: {
-    color: "#FFFFFF",
-    fontSize: 12,
-    fontWeight: "normal"
-  },
-  itemstyle: {
-  },
-  hairline: {
-    backgroundColor: '#FFFFFF',
-    height: 1,
-    marginLeft: 18,
-    width: 145
-  }
-});
-
-
-
-
 SideMenu.propTypes = {
   navigation: PropTypes.object
 };
@@ -199,6 +166,5 @@ const mapStateToProps = state => {
   }
   return {};
 }
-
 
 export default connect(mapStateToProps)(SideMenu);

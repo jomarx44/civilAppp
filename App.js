@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Platform, StyleSheet, Text, View, Alert, Image } from 'react-native';
-import { AppLoading, SplashScreen, Asset } from 'expo';
+import { AppLoading, SplashScreen } from 'expo';
+import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import { Notifications } from 'expo';
 import { StyleProvider } from 'native-base';
@@ -26,6 +27,8 @@ class App extends Component {
 
     this.state = {
       isReady: false,
+      isSplashReady: false,
+      isAppReady: false,
       test: false,
       text: "ReactNative WebView Sample",
       text2:  "",
@@ -48,8 +51,12 @@ class App extends Component {
 
 
   render() {
+
     if (!this.state.isReady) {
-      return <AppLoading />;
+      return (
+        <AppLoading
+        />
+      );
     }
 
     return (
@@ -64,6 +71,10 @@ class App extends Component {
        </Provider>
     );
   }
+
+
+
+
 
 }
 

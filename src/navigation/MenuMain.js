@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
 import CDSideMenuItem from "library/components/CDSideMenuItem";
+import styleDrawer from "styles/styleDrawer";
 
 
 class MenuMain extends Component {
@@ -28,18 +29,6 @@ class MenuMain extends Component {
    );
   }
 }
-
-const styleDrawer = StyleSheet.create({
-  hairline: {
-    marginTop: 20,
-    marginBottom: 20,
-    backgroundColor: '#FFFFFF',
-    height: 1,
-    marginLeft: 18,
-    width: 145
-  }
-});
-
 
 
 export default MenuMain;

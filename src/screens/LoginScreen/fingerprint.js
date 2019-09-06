@@ -13,6 +13,8 @@ import { Container, Header, Title, Left, Center, Icon, Right, Button, Body, Cont
 import * as Profile from 'store/profile';
 import { setLoggedState } from "store/auth";
 
+import styles from "styles/commonStyle";
+
 import * as LocalAuthentication from 'expo-local-authentication';
 
 class LoginFingerPrintScreen extends React.Component {
@@ -127,21 +129,5 @@ class LoginFingerPrintScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center"
-  },
-  welcome: {
-    flex: 1,
-    paddingTop: 20,
-    fontSize: 20,
-    textAlign: "center",
-    backgroundColor: "skyblue"
-  },
-  webViewContainer: {
-    flex: 1
-  }
-});
 export default LoginFingerPrintScreen;
 

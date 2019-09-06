@@ -1,7 +1,7 @@
 {
   "name": "pnmobile",
   "displayName": "Sun Savings Mobile",
-  "appid_uri" : "https://coindrop-surprised-rhinocerous.au-syd.mybluemix.net/home/ibmsignin/",
+  "appid_uri" : "https://pnauthenticator.mybluemix.net/protected/api/userData",
   "expo": {
     "name": "pnmobile",
     "slug": "expo-template-bare",
@@ -9,10 +9,19 @@
     "sdkVersion": "34.0.0",
     "version": "1.0.0",
     "entryPoint": "node_modules/expo/AppEntry.js",
+    "android": {
+      "splash": {
+        "xhdpi": "./assets/images/SSB-Splash.png",
+        "xxhdpi": "./assets/images/SSB-Splash@2x.png",
+        "xxxhdpi": "./assets/images/SSB-Splash@3x.png",
+        "resizeMode" : "contain"
+      }
+    },
+
     "platforms": [
       "ios",
       "android",
       "web"
     ]
-  }
+  },
 }
