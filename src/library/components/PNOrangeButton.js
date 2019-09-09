@@ -17,9 +17,10 @@ class PNOrangeButton extends Component {
 
 let styles = StyleSheet.create({
   button: {
+   height: 50,
    marginTop: 20,
-   marginLeft: 60,
-   marginRight: 60,
+   marginLeft: 30,
+   marginRight: 30,
    justifyContent: 'center',
    alignItems: 'center',
  }

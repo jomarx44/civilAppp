@@ -7,11 +7,13 @@ import LoginFingerPrintScreen from "screens/LoginScreen/fingerprint";
 import Test from "screens/TestScreen";
 import PersonalDetailsScreen from "screens/PersonalDetailsScreen/";
 import ConnectCreateAccountScreen from "screens/ConnectCreateAccountScreen/";
+import TakeAPhotoOfID from "screens/TakeAPhotoOfID/";
 
 const MainDrawer = createDrawerNavigator(
   {
     Login: { screen: Login },
     ConnectCreateAccountScreen: { screen: ConnectCreateAccountScreen },
+    TakeAPhotoOfID: { screen: TakeAPhotoOfID },
     FingerPrint: { screen: LoginFingerPrintScreen },
     Test: { screen: Test },
     PersonalDetails: {
@@ -24,7 +26,7 @@ const MainDrawer = createDrawerNavigator(
   {
     drawerWidth: Dimensions.get('window').width * 0.45,
     contentComponent: SideMenu,
-    initialRouteName: 'ConnectCreateAccountScreen'
+    initialRouteName: 'TakeAPhotoOfID'
   }
 );
 export const Navigator = createAppContainer(MainDrawer);
