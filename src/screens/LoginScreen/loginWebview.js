@@ -2,9 +2,6 @@ import React from "react";
 import AppJson from '../../../app.json';
 import { WebView } from "react-native-webview";
 
-
-
-
 import CDHeaderNoLogo from "library/components/CDHeaderNoLogo.js"
 import KeyboardShift from "library/components/CDKeyboardShift.js"
 
@@ -13,7 +10,7 @@ import { Container, Header, Title, Left, Center, Icon, Right, Button, Body, Cont
 import * as Profile from 'store/profile';
 import { setLoggedState } from "store/auth";
 
-class LoginScreen extends React.Component {
+class LoginWebViewScreen extends React.Component {
 
   constructor(props) {
     super(props);
@@ -95,5 +92,5 @@ const styles = StyleSheet.create({
     flex: 1
   }
 });
-export default LoginScreen;
+export default LoginWebViewScreen;
 
