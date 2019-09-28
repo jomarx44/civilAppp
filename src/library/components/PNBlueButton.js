@@ -3,13 +3,12 @@ import { AppRegistry, StyleSheet, View, Dimensions} from "react-native";
 import { Button, Text } from "native-base";
 import NavigationService from 'navigation/NavigationService.js'
 
-
-class PNOrangeButton extends Component {
+class PNBlueButton extends Component {
 
   render() {
     const { title, navid } = this.props;
     return (
-      <Button full primary
+      <Button full 
         style={styles.button}
         onPress={() => NavigationService.navigate(navid)}>
         <Text>{title}</Text>
@@ -20,13 +19,13 @@ class PNOrangeButton extends Component {
 
 let styles = StyleSheet.create({
   button: {
-   height: 50,
    marginTop: 20,
    marginLeft: 30,
    marginRight: 30,
    justifyContent: 'center',
    alignItems: 'center',
+   backgroundColor: '#309fe7',
  }
 });
 
-export default PNOrangeButton;
+export default PNBlueButton;

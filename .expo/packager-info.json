@@ -1,9 +1,9 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 5348,
-  "expoServerNgrokUrl": "https://3h-yj2.mcandres.pnmobile.exp.direct",
-  "packagerNgrokUrl": "https://packager.3h-yj2.mcandres.pnmobile.exp.direct",
-  "ngrokPid": 5363
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": "https://gu-2q2.mcandres.pnmobile.exp.direct",
+  "packagerNgrokUrl": "https://packager.gu-2q2.mcandres.pnmobile.exp.direct",
+  "ngrokPid": 4452
 }

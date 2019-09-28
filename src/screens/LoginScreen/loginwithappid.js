@@ -19,23 +19,17 @@ import PNTransparentButton from "library/components/PNTransparentButton"
 import * as LocalAuthentication from 'expo-local-authentication';
 
 import NavigationService from 'navigation/NavigationService.js'
-import { connect } from 'react-redux';
-import API from 'actions/api';
 
 class LoginScreen extends React.Component {
 
-  input_username;
-  input_password;
   constructor(props) {
     super(props);
+    this.onWebViewMessage = this.onWebViewMessage.bind(this);
     this.state = {
+      isModal: false,
       isReady: false,
       compatible: false,
       fingerprints: false,
-      user : {
-        username: '',
-        password: '',
-      },
       result: ''
     }
   }
@@ -52,20 +46,15 @@ class LoginScreen extends React.Component {
     }
   }
 
-
-  onChangeText = (value, field) => {
-    const { user } = this.state;
-    user[field] = value;
-    this.setState({user : user})
-  }
-
-
   componentDidMount(){
-    //this.checkDeviceForHardware();
-    //this.checkForFingerprints();
-    //this.getLoginInformation();
+    this.checkDeviceForHardware();
+    this.checkForFingerprints();
+    this.getLoginInformation();
   }
 
+  componentWillUnMount() {
+    this.onWebViewMessage.unbind(this);
+  }
 
   checkDeviceForHardware = async () => {
     let compatible = await LocalAuthentication.hasHardwareAsync();
@@ -107,15 +96,31 @@ class LoginScreen extends React.Component {
 
     this.setState({
       text2: `Message from web view ${msgData}`,
+      isModal: false,
     });
     msgData.isSuccessfull = true;
   }
 
+  onWebViewMessage(event) {
+    console.log("Message received from webview");
+    let msgData;
+    try {
+      msgData = JSON.parse(event.nativeEvent.data);
+    } catch (err) {
+      console.warn(err);
+      return;
+    }
+    console.log(msgData);
+    switch (msgData.targetFunc) {
+      case "handleDataReceived":
+        this[msgData.targetFunc].apply(this, [msgData]);
+        break;
+    }
+  }
 
-  login() {
-    const { user } = this.state;
-    console.log("checklogin" + user.username + user.password);
-    this.props.login(user.username, user.password);
+
+  checkLogin() {
+    this.setState({isModal : true});
   }
 
 
@@ -123,14 +128,28 @@ class LoginScreen extends React.Component {
     let {height, width} = Dimensions.get('window');
     return (
       <Container>
-      <KeyboardShift>
-        {() => (
         <View style={styles.containerBlue}>
+        <Modal isVisible={this.state.isModal}
+           transparent={true} >
+           <View style={{
+             flex: 1,
+             flexDirection: 'column',
+             justifyContent: 'center',
+             alignItems: 'center'}}>
+             <View style={{
+               width: width * 0.9,
+               height: height * 0.7}}>
+               <WebView
+                 ref={webview => { this.myWebView = webview; }}
+                 scrollEnabled={false}
+                 onMessage={this.onWebViewMessage}
+                 style={{ flex: 1 }}
+                 source={{uri: AppJson.appid_uri }} />
+            </View>
+          </View>
+        </Modal>
  
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-         <Image style={[buttonStyles.logo, {width: width - 110, marginTop: height * 0.2}]} source={require('res/images/ic_logo_login.png')} />
-        </View>
-        <View style={{ flex: 1, flexDirection: 'column-reverse', paddingBottom: 50, justifyContent: 'center' }}>
+        <View style={{ flex: 1, flexDirection: 'column-reverse', paddingBottom: 50 }}>
 
          <Button full transparent light
           onPress={() => NavigationService.navigate("SignUpScreen")}
@@ -139,26 +158,12 @@ class LoginScreen extends React.Component {
          </Button>
 
          <Button full primary style={buttonStyles.button}
-           onPress={() => this.login()}>
+           onPress={() => this.checkLogin()}>
           <Text>LOGIN</Text>
          </Button>
 
-         <TextInput
-                   placeholder="Password"
-                   secureTextEntry={true}
-                   onChangeText={(text) => this.onChangeText(text,"password")}
-                   ref={input => { this.input_password = input }}
-                   style={[buttonStyles.textbox, { }]}/>
-
-         <TextInput
-                   placeholder="Email"
-                   onChangeText={(text) => this.onChangeText(text,"username")}
-                   ref={input => { this.input_username = input }}
-                   style={[buttonStyles.textbox, { }]}/>
         </View>
        </View>
-        )}
-        </KeyboardShift>
 
       </Container>
     );
@@ -166,12 +171,9 @@ class LoginScreen extends React.Component {
 }
 
 let buttonStyles = StyleSheet.create({
-  logo: {
-   marginBottom: 50,
-  },
   button: {
    height: 50,
-   marginTop: 50,
+   marginTop: 20,
    marginLeft: 30,
    marginRight: 30,
    justifyContent: 'center',
@@ -180,39 +182,17 @@ let buttonStyles = StyleSheet.create({
   }, 
   buttonTrans: {
    fontSize: 18,
-   marginBottom: 20,
    marginTop: 20,
    marginLeft: 30,
    marginRight: 30,
+   borderWidth: 2,
    borderColor: '#FFFFFF',
    justifyContent: 'center',
    alignItems: 'center',
- },
- textbox: {
-   height: 48,
-   marginTop: 20,
-   marginLeft: 30,
-   marginRight: 30,
-   justifyContent: 'center',
-   alignItems: 'center',
-   backgroundColor: '#FFFFFF'
  }
 });
 
-const mapStateToProps = state => {
-  return {
-    response: state.auth
-  };
-};
 
-const mapDispatchToProps = dispatch => {
-  return {
-    login: (username, password) => {
-      dispatch(API.login(username, password));
-    }
-  };
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
-
+export default LoginScreen;
 

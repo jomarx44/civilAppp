@@ -5,7 +5,6 @@ import { WebView } from "react-native-webview";
 
 
 
-import CDHeaderNoLogo from "library/components/CDHeaderNoLogo.js"
 import KeyboardShift from "library/components/CDKeyboardShift.js"
 
 import { StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio, TouchableOpacity} from "react-native";

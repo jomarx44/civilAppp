@@ -5,6 +5,11 @@ export const LOGIN = 'LOGIN';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 
+
+export const SIGNUP = 'SIGNUP';
+export const SIGNUP_SUCCESS = 'SIGNUP_SUCCESS';
+export const SIGNUP_ERROR = 'SIGNUP_ERROR';
+
 export const NOTIF = 'NOTIF';
 export const NOTIF_SUCCESS = 'NOTIF_SUCCESS';
 export const NOTIF_ERROR = 'NOTIF_ERROR';

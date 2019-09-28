@@ -3,7 +3,7 @@ import NavigationService  from '../navigation/NavigationService';
 import {
   ACCESS_TOKEN_SUCCESS, ACCESS_TOKEN_ERROR,
   LOGIN_SUCCESS, LOGIN_ERROR, LOGOUT, PIN_SUCCESS,
-  PRODUCTS_SUCCESS
+  PRODUCTS_SUCCESS, SIGNUP, SIGNUP_SUCCESS, SIGNUP_ERROR
 } from '../actions/types';
 import * as TYPE from 'actions/types';
 import * as Auth from 'store/auth';
@@ -17,14 +17,24 @@ export default function loginReducer(state = [], action) {
     case TYPE.CHANGE_MENU_LOGIN:
       console.log("change: login");
       return { loggedState: 'Login' };
+
+    case TYPE.SIGNUP_SUCCESS:
+      console.log("signup success");
+      console.log(action.payload);
+ //     NavigationService.navigate('EmailVerificationScreen');
+      return action.payload;
+
     case TYPE.CHANGE_MENU_NONE:
       console.log("change: none");
       return { loggedState: 'None' };
+
     case TYPE.CHANGE_MENU_PIN:
       console.log("change: pin");
       return { loggedState: 'Pin' };
+
     case ACCESS_TOKEN_SUCCESS:
       return action.payload;
+
     default:
       return state;
   }

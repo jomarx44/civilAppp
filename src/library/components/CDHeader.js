@@ -12,12 +12,12 @@ class CDHeader extends Component {
             <Button
               transparent
               onPress={() => {this.props.navigation.openDrawer() }}>
-              <Image source={require('res/images/ic_menu.png')} />
+              <Image source={require('res/images/ic_menu_white.png')} />
             </Button>
           </Left>
           <Body>
             <TouchableOpacity onPress={() => { NavigationService.navigate('Product') }}>
-              <Image source={require('res/images/ic_logo_menu.png')} />
+              <Image source={require('res/images/ic_menu_white.png')} />
             </TouchableOpacity>
           </Body>
         </Header>

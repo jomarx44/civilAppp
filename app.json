@@ -2,6 +2,12 @@
   "name": "pnmobile",
   "displayName": "Sun Savings Mobile",
   "appid_uri" : "https://pnauthenticator.mybluemix.net/protected/api/userData",
+  "appid": {
+    "APPID_AUTH_SERVER_HOST" : "https://us-south.appid.cloud.ibm.com",
+    "IBM_CLIENT_ID" : "f6d084d0-d9cd-4ade-ac17-dc63d42d2606",
+    "API_URL" : "https://e4788528.us-south.apiconnect.appdomain.cloud/bf33cd0a-aa9c-4424-9253-bf0d82a101fd/",
+   
+  },
   "expo": {
     "name": "pnmobile",
     "slug": "expo-template-bare",
@@ -9,7 +15,10 @@
     "sdkVersion": "34.0.0",
     "version": "1.0.0",
     "entryPoint": "node_modules/expo/AppEntry.js",
+    "icon": "./assets/images/ic_launcher_xxxhdpi.png",
     "android": {
+      "versionCode": 20,
+      "package": "com.thousandminds.sunsavings",
       "splash": {
         "xhdpi": "./assets/images/SSB-Splash.png",
         "xxhdpi": "./assets/images/SSB-Splash@2x.png",

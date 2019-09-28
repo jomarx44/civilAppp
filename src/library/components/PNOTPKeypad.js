@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { AppRegistry, StyleSheet, View, Dimensions} from "react-native";
 import { Container, Header, Content, Input, Item, Button, Text } from "native-base";
 import { Col, Row, Grid } from 'react-native-easy-grid';
+import NavigationService from 'navigation/NavigationService.js'
 
 
 
@@ -19,12 +20,27 @@ class PNKeypadButton extends Component {
 }
 
 
+class PNKeypadButtonCheck extends Component {
+  render() {
+    const { title, navid } = this.props;
+    return (
+      <Col style={[styles.digit]}>
+        <Button transparent light
+          onPress={() => NavigationService.navigate(navid)}>
+          <Text style={styles.text}>{title}</Text>
+        </Button>
+      </Col>
+    );
+  }
+}
+
+
 
 
 class PNOTPKeypad extends Component {
 
   render() {
-    const { placeholder } = this.props;
+    const { placeholder, navid } = this.props;
     return (
      <View style={styles.grid}>
         <View style={styles.row}>
@@ -45,7 +61,7 @@ class PNOTPKeypad extends Component {
         <View style={styles.row}>
           <PNKeypadButton title=""/>
           <PNKeypadButton title="0"/>
-          <PNKeypadButton title="<"/>
+          <PNKeypadButtonCheck title="<" navid={navid}/>
         </View>
  
  
