@@ -37,6 +37,20 @@ class Api  {
     return postMethod(json_data);
   }
 
+  checkEmail ( userId ) {
+    const json_data = {
+      path: "manage",
+      reducer_type: TYPE.CHECK_EMAIL, 
+      params: {
+        action: 'isEmailVerified',
+        userid: userId
+      }
+    }
+    return postMethod(json_data);
+  }
+
+
+
   signup ( userdata ) {
     const json_data = {
       path: "manage",

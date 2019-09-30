@@ -41,6 +41,25 @@ export const getAccessData = () => {
 };
 
 
+// SIGN UP DATA
+
+export const setSignUpData = ( json_data ) => AsyncStorage.setItem("SIGNUP_DATA", JSON.stringify(json_data));
+export const deleteSignUpData = ( ) => AsyncStorage.removeItem("SIGNUP_DATA");
+export const getSignUpData = () => {
+  return new Promise((resolve, reject) => {
+    AsyncStorage.getItem("SIGNUP_DATA")
+      .then(res => {
+        if (res !== null) {
+          const json_data = JSON.parse(res)
+          resolve(json_data);
+        } else {
+          resolve(null);
+        }
+      })
+      .catch(err => reject(err));
+  });
+};
+
 
 
 

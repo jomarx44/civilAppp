@@ -18,6 +18,14 @@ export default function loginReducer(state = [], action) {
       console.log("change: login");
       return { loggedState: 'Login' };
 
+    case TYPE.CHECK_EMAIL_ERROR:
+      return action.payload;
+
+    case TYPE.CHECK_EMAIL_SUCCESS:
+      console.log('TYPE.CHECK_EMAIL_SUCCESS');
+      console.log(action.payload);
+      return action.payload;
+
     case TYPE.SIGNUP_SUCCESS:
       console.log("signup success");
       console.log(action.payload);

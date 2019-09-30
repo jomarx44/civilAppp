@@ -60,6 +60,8 @@ class PersonalInfo extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.response.success ) {
       console.log("componentDidUpdate" + JSON.stringify(this.props.response));
+      // save the data
+      Profile.setSignUpData(this.props.response);
       NavigationService.navigate("EmailVerificationScreen");
     }
   }
