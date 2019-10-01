@@ -24,6 +24,22 @@ class Api  {
     this.token(token);
   }
 
+
+  loginInitial ( username, password ) {
+    const json_data = {
+      path: "manage",
+      reducer_type: TYPE.LOGIN_INITIAL,
+      params: {
+        action: 'signin',
+        username: username,
+        password: password
+      }
+    }
+    return postMethod(json_data);
+  }
+
+
+
   login ( username, password ) {
     const json_data = {
       path: "manage",
@@ -63,6 +79,33 @@ class Api  {
         middleName: userdata.middleName,
         familyName: userdata.familyName,
         phoneNumber: userdata.phoneNumber
+      }
+    }
+    return postMethod(json_data);
+  }
+
+  sendOTP ( token, phoneNumber ) {
+    const json_data = {
+      path: "manage",
+      reducer_type: TYPE.OTP, 
+      params: {
+        action: 'send_otp',
+        access_token: token,
+        phone_number: phoneNumber
+      }
+    }
+    return postMethod(json_data);
+  }
+
+
+  isOTPCorrect ( token, otp ) {
+    const json_data = {
+      path: "manage",
+      reducer_type: TYPE.OTP_CHECK, 
+      params: {
+        action: 'isOTPCorrect',
+        access_token: token,
+        otp: otp
       }
     }
     return postMethod(json_data);

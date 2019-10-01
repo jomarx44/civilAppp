@@ -14,6 +14,20 @@ export default function loginReducer(state = [], action) {
   switch (action.type) {
     case TYPE.LOGIN_ERROR:
       return action.payload;
+
+
+    case TYPE.LOGIN_INITIAL_SUCCESS:
+      console.log("login initial");
+      console.log(action.payload);
+      Profile.setAccessData(action.payload);
+      return action.payload;
+
+    case TYPE.OTP_CHECK_SUCCESS:
+      console.log("otp check");
+      console.log(action.payload);
+      return action.payload;
+
+
     case TYPE.CHANGE_MENU_LOGIN:
       console.log("change: login");
       return { loggedState: 'Login' };
@@ -30,6 +44,11 @@ export default function loginReducer(state = [], action) {
       console.log("signup success");
       console.log(action.payload);
  //     NavigationService.navigate('EmailVerificationScreen');
+      return action.payload;
+
+    case TYPE.OTP_SUCCESS:
+      console.log("otp success");
+      console.log(action.payload);
       return action.payload;
 
     case TYPE.CHANGE_MENU_NONE:

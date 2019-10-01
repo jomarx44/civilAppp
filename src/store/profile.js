@@ -60,6 +60,25 @@ export const getSignUpData = () => {
   });
 };
 
+// FORM DATA
+
+export const setFormData = ( json_data ) => AsyncStorage.setItem("FORM_DATA", JSON.stringify(json_data));
+export const deleteFormData = ( ) => AsyncStorage.removeItem("FORM_DATA");
+export const getFormData = () => {
+  return new Promise((resolve, reject) => {
+    AsyncStorage.getItem("FORM_DATA")
+      .then(res => {
+        if (res !== null) {
+          const json_data = JSON.parse(res)
+          resolve(json_data);
+        } else {
+          resolve(null);
+        }
+      })
+      .catch(err => reject(err));
+  });
+};
+
 
 
 

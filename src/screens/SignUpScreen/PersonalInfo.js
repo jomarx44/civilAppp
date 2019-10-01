@@ -58,10 +58,13 @@ class PersonalInfo extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.response.success ) {
-      console.log("componentDidUpdate" + JSON.stringify(this.props.response));
+    if (this.props.response.success && this.props.response.action ===  'signup' ) {
+      console.log("Personal Info componentDidUpdate" + JSON.stringify(this.props.response));
       // save the data
-      Profile.setSignUpData(this.props.response);
+      if ( this.props.response.meta && this.props.response.meta.resourceType && this.props.response.meta.resourceType === 'User') {
+        console.log("saving to signup data");
+        Profile.setSignUpData(this.props.response);
+      }
       NavigationService.navigate("EmailVerificationScreen");
     }
   }
@@ -69,6 +72,9 @@ class PersonalInfo extends React.Component {
 
   signup() {
     const { user } = this.state;
+
+    // save the form data here
+    Profile.setFormData(user);
     this.props.signup(user);
   }
 
@@ -173,7 +179,6 @@ let localStyle = StyleSheet.create({
 
 
 const mapStateToProps = state => {
-  console.log(JSON.stringify(state));
   return {
     response: state.auth
   };

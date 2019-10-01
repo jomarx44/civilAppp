@@ -32,7 +32,7 @@ class EmailVerificationScreen extends React.Component {
     let signupdata = await AsyncStorage.getItem('SIGNUP_DATA');
     signupdata = JSON.parse(signupdata);
     if (signupdata) {
-       console.log('signup data' + JSON.stringify(signupdata));
+       console.log('EmailVerificationScreen signup data' + JSON.stringify(signupdata));
        this.setState({ signup_data : signupdata });
     }
   }
@@ -51,7 +51,7 @@ class EmailVerificationScreen extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.response.success ) {
+    if (this.props.response.success && this.props.response.action === 'isEmailVerified' ) {
       console.log("Email Verification componentDidUpdate" + JSON.stringify(this.props.response));
       // save the data
       if ( this.props.response.isEmailVerified) {
@@ -73,7 +73,7 @@ class EmailVerificationScreen extends React.Component {
     let {height, width} = Dimensions.get('window');
     let signup_data = this.state.signup_data;
     let email = '';
-    if (signup_data) {
+    if (signup_data.emails) {
       console.log(signup_data.emails[0].value);
       email = signup_data.emails[0].value;
     } 

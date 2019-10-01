@@ -5,6 +5,21 @@ export const LOGIN = 'LOGIN';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 
+export const LOGIN_INITIAL = 'LOGIN_INITIAL';
+export const LOGIN_INITIAL_SUCCESS = 'LOGIN_INITIAL_SUCCESS';
+export const LOGIN_INITIAL_ERROR = 'LOGIN_INITIAL_ERROR';
+
+export const OTP_CHECK = 'OTP_CHECK';
+export const OTP_CHECK_SUCCESS = 'OTP_CHECK_SUCCESS';
+export const OTP_CHECK_ERROR = 'OTP_CHECK_ERROR';
+
+
+
+
+export const OTP = 'LOGIN';
+export const OTP_SUCCESS = 'OTP_SUCCESS';
+export const OTP_ERROR = 'OTP_ERROR';
+
 export const CHECK_EMAIL = 'CHECK_EMAIL';
 export const CHECK_EMAIL_SUCCESS = 'CHECK_EMAIL_SUCCESS';
 export const CHECK_EMAIL_ERROR = 'CHECK_EMAIL_ERROR';

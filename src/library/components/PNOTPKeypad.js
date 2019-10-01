@@ -7,11 +7,15 @@ import NavigationService from 'navigation/NavigationService.js'
 
 
 class PNKeypadButton extends Component {
+  handleClick(title) {
+    console.log("PNKeypadButton " + title);
+  }
   render() {
-    const { title } = this.props;
+    const { title, onPressButton } = this.props;
     return (
       <Col style={[styles.digit]}>
-        <Button transparent light>
+        <Button transparent light
+           onPress={() => onPressButton}>
           <Text style={styles.text}>{title}</Text>
         </Button>
       </Col>
@@ -21,6 +25,10 @@ class PNKeypadButton extends Component {
 
 
 class PNKeypadButtonCheck extends Component {
+
+
+ 
+
   render() {
     const { title, navid } = this.props;
     return (
@@ -39,12 +47,21 @@ class PNKeypadButtonCheck extends Component {
 
 class PNOTPKeypad extends Component {
 
+  constructor(props) {
+    super(props);
+
+  }
+
+  handleKeypadButton(title) {
+    console.log("PNKeypadButton " + title);
+  }
+
   render() {
     const { placeholder, navid } = this.props;
     return (
      <View style={styles.grid}>
         <View style={styles.row}>
-          <PNKeypadButton title="1"/>
+          <PNKeypadButton title="1" onPressButton={() => this.handleKeypadButton("1")}/>
           <PNKeypadButton title="2"/>
           <PNKeypadButton title="3"/>
         </View>
