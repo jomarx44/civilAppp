@@ -133,7 +133,7 @@ class LoginScreen extends React.Component {
         <View style={{ flex: 1, flexDirection: 'column-reverse', paddingBottom: 50, justifyContent: 'center' }}>
 
          <Button full transparent light
-          onPress={() => NavigationService.navigate("OTPScreen")}
+          onPress={() => NavigationService.navigate("ConnectCreateAccountScreen")}
           style={buttonStyles.buttonTrans}>
           <Text>CREATE MOBILE ACCOUNT</Text>
          </Button>
@@ -192,6 +192,7 @@ let buttonStyles = StyleSheet.create({
    height: 48,
    marginTop: 20,
    marginLeft: 30,
+   paddingLeft: 20,
    marginRight: 30,
    justifyContent: 'center',
    alignItems: 'center',
