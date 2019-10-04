@@ -9,7 +9,7 @@ class PNHeaderBackButtonOnly extends Component {
           <Left>
           <Button transparent onPress={() => this.props.navigation.goBack()}>
             <Icon style={{color: '#309FE7'}}
-              name='arrow-back' 
+              name='ios-arrow-back' 
             />
           </Button>
         </Left>

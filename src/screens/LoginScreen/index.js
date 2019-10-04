@@ -133,7 +133,7 @@ class LoginScreen extends React.Component {
         <View style={{ flex: 1, flexDirection: 'column-reverse', paddingBottom: 50, justifyContent: 'center' }}>
 
          <Button full transparent light
-          onPress={() => NavigationService.navigate("ConnectCreateAccountScreen")}
+          onPress={() => NavigationService.navigate("DashboardScreen")}
           style={buttonStyles.buttonTrans}>
           <Text>CREATE MOBILE ACCOUNT</Text>
          </Button>
