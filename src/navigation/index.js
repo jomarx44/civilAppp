@@ -4,7 +4,7 @@ import { Dimensions } from 'react-native';
 import SideMenu from "./SideMenu.js";
 import Login from "screens/LoginScreen";
 import LoginFingerPrintScreen from "screens/LoginScreen/fingerprint";
-import LoginWebViewScreen from "screens/LoginScreen/loginwebview";
+import LoginWebViewScreen from "screens/LoginScreen/loginWebview";
 import PersonalDetailsScreen from "screens/PersonalDetailsScreen/";
 import TakeAPhotoOfID from "screens/TakeAPhotoOfID/";
 import OpenAccountScreen from "screens/OpenAccountScreen/";
