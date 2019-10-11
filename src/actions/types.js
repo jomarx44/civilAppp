@@ -14,6 +14,9 @@ export const OTP_CHECK_SUCCESS = 'OTP_CHECK_SUCCESS';
 export const OTP_CHECK_ERROR = 'OTP_CHECK_ERROR';
 
 
+export const USERINFO = 'USERINFO';
+export const USERINFO_SUCCESS = 'USERINFO_SUCCESS';
+export const USERINFO_ERROR = 'USERINFO_ERROR';
 
 
 export const OTP = 'LOGIN';

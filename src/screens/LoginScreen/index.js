@@ -21,6 +21,7 @@ import * as LocalAuthentication from 'expo-local-authentication';
 import NavigationService from 'navigation/NavigationService.js'
 import { connect } from 'react-redux';
 import API from 'actions/api';
+import IBMAppId from 'actions/ibmappid';
 
 class LoginScreen extends React.Component {
 
@@ -65,6 +66,23 @@ class LoginScreen extends React.Component {
     //this.checkForFingerprints();
     //this.getLoginInformation();
   }
+
+
+  componentDidUpdate(prevProps) {
+    if (this.props.response.success && this.props.response.action ===  'signin' ) {
+      console.log("Login componentDidUpdate" + JSON.stringify(this.props.response));
+        console.log("Calling app id api");
+        this.props.userInfo(this.props.response.access_token); 
+      if ( this.props.response.meta && this.props.response.meta.resourceType && this.props.response.meta.resourceType === 'User') {
+        console.log("saving to signup data");
+        Profile.setSignUpData(this.props.response);
+      }
+      NavigationService.navigate("DashboardScreen");
+    }
+  }
+
+
+
 
 
   checkDeviceForHardware = async () => {
@@ -133,7 +151,7 @@ class LoginScreen extends React.Component {
         <View style={{ flex: 1, flexDirection: 'column-reverse', paddingBottom: 50, justifyContent: 'center' }}>
 
          <Button full transparent light
-          onPress={() => NavigationService.navigate("DashboardScreen")}
+          onPress={() => NavigationService.navigate("SignUpScreen")}
           style={buttonStyles.buttonTrans}>
           <Text>CREATE MOBILE ACCOUNT</Text>
          </Button>
@@ -210,6 +228,9 @@ const mapDispatchToProps = dispatch => {
   return {
     login: (username, password) => {
       dispatch(API.login(username, password));
+    }, 
+    userInfo: ( token ) => {
+      dispatch(IBMAppId.getUserInfo(token));
     }
   };
 };

@@ -39,7 +39,6 @@ class Api  {
   }
 
 
-
   login ( username, password ) {
     const json_data = {
       path: "manage",
@@ -110,7 +109,6 @@ class Api  {
     }
     return postMethod(json_data);
   }
-
 
 
 }
