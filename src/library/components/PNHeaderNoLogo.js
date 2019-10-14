@@ -14,8 +14,8 @@ class PNHeader extends Component {
               <Image source={require('res/images/ic_menu_white.png')} />
             </Button>
           </Left>
-          <Body>
-            <Title>{title}</Title>
+          <Body style={styles.body}>
+            <Title style={styles.title}>{title}</Title>
           </Body>
         </Header>
     );
@@ -24,7 +24,14 @@ class PNHeader extends Component {
 
 let styles = StyleSheet.create({
   header: {
-   backgroundColor: '#309fe7'
+   backgroundColor: '#309fe7',
+   marginTop: 30
+  }, 
+  body: {
+   textAlign: 'center'
+  },
+  title: {
+   paddingLeft: 20
   }
 
 });

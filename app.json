@@ -5,8 +5,8 @@
   "appid": {
     "APPID_AUTH_SERVER_HOST" : "https://us-south.appid.cloud.ibm.com",
     "IBM_CLIENT_ID" : "f6d084d0-d9cd-4ade-ac17-dc63d42d2606",
+    "IBM_TENANT_ID" : "b5c859af-de0a-4b00-aa58-4a596f88420e",
     "API_URL" : "https://e4788528.us-south.apiconnect.appdomain.cloud/bf33cd0a-aa9c-4424-9253-bf0d82a101fd/",
-   
   },
   "expo": {
     "name": "pnmobile",

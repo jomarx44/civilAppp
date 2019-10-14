@@ -200,6 +200,7 @@ export const getMethodWithToken = (json) => {
   };
 };
 
+
 // PUT METHOD
 export const putMethod = (json) => {
   const params = json["params"];

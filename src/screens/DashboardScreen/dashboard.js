@@ -106,7 +106,7 @@ class DashboardScreen extends React.Component {
     return (
       <Container>
         <View style={styles.viewHeader}>
-          <Text style={styles.title}>A.Dominguez</Text>
+          <Text style={styles.title}>Marc Andres</Text>
           <Text style={styles.subtitle}>0300 0652 6675</Text>
         </View>
 

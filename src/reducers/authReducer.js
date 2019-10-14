@@ -15,6 +15,11 @@ export default function loginReducer(state = [], action) {
     case TYPE.LOGIN_ERROR:
       return action.payload;
 
+    case TYPE.LOGIN_SUCCESS:
+      console.log("login success");
+      console.log(action.payload);
+      Profile.setAccessData(action.payload);
+      return action.payload;
 
     case TYPE.LOGIN_INITIAL_SUCCESS:
       console.log("login initial");
