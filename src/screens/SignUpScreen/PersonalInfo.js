@@ -14,7 +14,7 @@ import NavigationService from 'navigation/NavigationService.js'
 import styles from "styles/commonStyle";
 import PNFormTextBox from "library/components/PNFormTextBox"
 import PNBlueButton from "library/components/PNBlueButton"
-import PNHeaderBackButtonOnly from "library/components/PNHeaderBackButtonOnly"
+import PNHeaderBackButtonWhite from "library/components/PNHeaderBackButtonWhite"
 import PNHeaderTitleDesc from "library/components/PNHeaderTitleDesc"
 
 import { connect } from 'react-redux';
@@ -47,7 +47,7 @@ class PersonalInfo extends React.Component {
 
   static navigationOptions = {
     header: (
-      <PNHeaderBackButtonOnly/>
+      <PNHeaderBackButtonWhite/>
     )
   };
 
@@ -83,65 +83,63 @@ class PersonalInfo extends React.Component {
     let {height, width} = Dimensions.get('window');
     return (
     <KeyboardShift> 
-          {() => (
-      <ScrollView>
-        <View style={localStyle.header} >
-          <PNHeaderTitleDesc title="Verify Identity" 
-             desc="To verify your identity, please fill in personal information."/>
-        </View>
-        <View style={{flex: 4, paddingTop: 30 }} >
-          <PNFormTextBox
-                   title="First Name"
-                   onChangeText={(text) => this.onChangeText(text,"givenName")}
-                   reference={input => { this.input_givenName = input }}
-          />
-          <PNFormTextBox
-                   title="Middle Name"
-                   onChangeText={(text) => this.onChangeText(text,"middleName")}
-                   reference={input => { this.input_middleName = input }}
-          />
+      {() => (
+        <ScrollView>
+          <View style={localStyle.header} >
+            <PNHeaderTitleDesc title="Create Account" 
+               desc="To verify your identity, please fill in personal information."/>
+          </View>
+          <View style={{flex: 4, paddingTop: 30 }} >
+            <PNFormTextBox
+                     title="First Name"
+                     onChangeText={(text) => this.onChangeText(text,"givenName")}
+                     reference={input => { this.input_givenName = input }}
+            />
+            <PNFormTextBox
+                     title="Middle Name"
+                     onChangeText={(text) => this.onChangeText(text,"middleName")}
+                     reference={input => { this.input_middleName = input }}
+            />
 
-          <PNFormTextBox
-                   title="Last Name"
-                   onChangeText={(text) => this.onChangeText(text,"familyName")}
-                   reference={input => { this.input_familyName = input }}
-          />
+            <PNFormTextBox
+                     title="Last Name"
+                     onChangeText={(text) => this.onChangeText(text,"familyName")}
+                     reference={input => { this.input_familyName = input }}
+            />
 
-          <PNFormTextBox
-                   title="Email Address"
-                   onChangeText={(text) => this.onChangeText(text,"email")}
-                   reference={input => { this.input_email = input }}
-          />
+            <PNFormTextBox
+                     title="Email Address"
+                     onChangeText={(text) => this.onChangeText(text,"email")}
+                     reference={input => { this.input_email = input }}
+            />
 
-          <PNFormTextBox
-                   title="Mobile Number"
-                   onChangeText={(text) => this.onChangeText(text,"phoneNumber")}
-                   reference={input => { this.input_phoneNumber = input }}
-          />
+            <PNFormTextBox
+                     title="Mobile Number"
+                     onChangeText={(text) => this.onChangeText(text,"phoneNumber")}
+                     reference={input => { this.input_phoneNumber = input }}
+            />
 
-          <PNFormTextBox
-                   title="Password"
-                   onChangeText={(text) => this.onChangeText(text,"password")}
-                   reference={input => { this.input_password = input }}
-          />
+            <PNFormTextBox
+                     title="Password" password={true}
+                     onChangeText={(text) => this.onChangeText(text,"password")}
+                     reference={input => { this.input_password = input }}
+            />
 
-          <PNFormTextBox
-                   title="Confirm Password"
-                   onChangeText={(text) => this.onChangeText(text,"confirmpassword")}
-                   reference={input => { this.input_confirmpassword = input }}
-          />
- 
-      
-        </View>
-        <View style={{flex: 1, paddingBottom: 50}} >
-          <Button full primary style={localStyle.button}
-           onPress={() => this.signup()}>
-          <Text>NEXT</Text>
-         </Button>
-        </View>
+            <PNFormTextBox
+                     title="Confirm Password" password={true}
+                     onChangeText={(text) => this.onChangeText(text,"confirmpassword")}
+                     reference={input => { this.input_confirmpassword = input }}
+            />
+          </View>
+          <View style={{flex: 1, paddingBottom: 100}} >
+            <Button full primary style={localStyle.button}
+             onPress={() => this.signup()}>
+            <Text>NEXT</Text>
+           </Button>
+          </View>
 
-      </ScrollView>
-          )}
+        </ScrollView>
+      )}
     </KeyboardShift>
     );
   }

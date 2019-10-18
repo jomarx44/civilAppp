@@ -25,7 +25,7 @@ class PNHeader extends Component {
 let styles = StyleSheet.create({
   header: {
    backgroundColor: '#309fe7',
-   marginTop: 30
+   paddingTop: 30
   }, 
   body: {
    textAlign: 'center'

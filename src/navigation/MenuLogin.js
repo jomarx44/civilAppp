@@ -9,10 +9,10 @@ class MenuLogin extends Component {
    const { currentRoute } = this.props;
    return (
     <ScrollView>
-      <CDSideMenuItem title='Connect Create Account' route='ConnectCreateAccountScreen' currentRoute={currentRoute} />
-      <CDSideMenuItem title='Login' route='Login' currentRoute={currentRoute} />
+      <CDSideMenuItem title='Connect Account' route='ConnectCreateAccountScreen' currentRoute={currentRoute} />
       <CDSideMenuItem title='FingerPrint' route='FingerPrint' currentRoute={currentRoute} />
       <CDSideMenuItem title='About Us' route='AboutUs' currentRoute={currentRoute} />
+      <CDSideMenuItem title='Logout' route='Login' currentRoute={currentRoute} />
     </ScrollView>
    );
   }

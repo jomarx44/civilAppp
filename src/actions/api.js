@@ -67,6 +67,7 @@ class Api  {
 
 
   signup ( userdata ) {
+    console.log("userdata: ", userdata);
     const json_data = {
       path: "manage",
       reducer_type: TYPE.SIGNUP, 

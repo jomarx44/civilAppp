@@ -8,7 +8,8 @@ import NavigationService from "navigation/NavigationService.js";
 
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
-import { isPinAuthenticated, isLoggedIn, getLoggedState } from "store/auth";
+import { isPinAuthenticated, isLoggedIn, getLoggedState, getToken } from "store/auth";
+import { getProfileData, getAccessData } from "store/profile";
 import { connect } from 'react-redux';
 import API from 'actions/api';
 
@@ -17,7 +18,7 @@ const dataArray = [
   { title: "Debit Accounts (2)", content: "Lorem ipsum dolor sit amet", 
     data: [
      { key: 1, title: "Savings Account" , acctno : "0300 4563 3535", balance: "Php 10,340.10"},
-     { key: 2, title: "Savings Account2" , acctno : "0300 0652 6675", balance: "Php 8010.00"},
+     { key: 2, title: "Savings Account2" , acctno : "0300 0652 6675", balance: "Php 8,010.00"},
       ]  },
   { title: "Time Deposit", content: "Lorem ipsum dolor sit amet", data: [] },
   { title: "Savings Account", content: "Lorem ipsum dolor sit amet", data: [] },
@@ -25,6 +26,7 @@ const dataArray = [
 ];
 
 class DashboardScreen extends React.Component {
+
   constructor(props) {
     super(props);
   }
@@ -32,6 +34,13 @@ class DashboardScreen extends React.Component {
 
   state = {
     modalVisible: false,
+    profileDetails: {}
+  }
+
+  async componentDidMount() {
+    let authData = await getAccessData();
+    let profileDetails = await getProfileData();
+    this.setState({profileDetails});
   }
 
   static navigationOptions = {
@@ -103,11 +112,13 @@ class DashboardScreen extends React.Component {
 
   render() {
     let {height, width} = Dimensions.get('window');
+    let profileFullName = this.state.profileDetails.name;
+    let profileEmail = this.state.profileDetails.email;
     return (
       <Container>
         <View style={styles.viewHeader}>
-          <Text style={styles.title}>Marc Andres</Text>
-          <Text style={styles.subtitle}>0300 0652 6675</Text>
+          <Text style={styles.title}>{profileFullName}</Text>
+          <Text style={styles.subtitle}>{profileEmail}</Text>
         </View>
 
         <View style={styles.viewAccounts}>
@@ -186,16 +197,16 @@ let styles = StyleSheet.create({
     borderColor: '#cbcdd0',
   },
   headerText: {
-    marginTop: 16,
-    marginBottom: 16,
+    marginTop: 20,
+    marginBottom: 14,
     marginLeft: 20,
     color : '#5d646c',
     fontSize: 16,
     fontWeight: '400',
   },
   headerTextActive: {
-    marginTop: 16,
-    marginBottom: 16,
+    marginTop: 20,
+    marginBottom: 14,
     marginLeft: 20,
     color : '#309fe7',
     fontSize: 16,

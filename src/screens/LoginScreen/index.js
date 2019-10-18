@@ -60,10 +60,6 @@ class LoginScreen extends React.Component {
     this.setState({user : user})
   }
 
-  onTextInputBlur = () => {
-    alert("yes");
-  }
-
   componentDidMount(){
     //this.checkDeviceForHardware();
     //this.checkForFingerprints();
@@ -83,9 +79,6 @@ class LoginScreen extends React.Component {
       NavigationService.navigate("DashboardScreen");
     }
   }
-
-
-
 
 
   checkDeviceForHardware = async () => {
@@ -135,7 +128,7 @@ class LoginScreen extends React.Component {
 
   login() {
     const { user } = this.state;
-    console.log("checklogin" + user.username + user.password);
+    console.log("checklogin: " + user.username + " : " + user.password);
     this.props.login(user.username, user.password);
   }
 
@@ -143,10 +136,10 @@ class LoginScreen extends React.Component {
   render() {
     let {height, width} = Dimensions.get('window');
     return (
-      <Container>
+      <Container style={styles.containerBlue}>
       <KeyboardShift>
         {() => (
-        <View style={styles.containerBlue}>
+        <View>
         <ScrollView>
  
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>

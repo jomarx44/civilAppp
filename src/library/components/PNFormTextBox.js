@@ -5,16 +5,16 @@ import { Container, Header, Content, Input, Item, Button, Text, Label} from "nat
 class PNFormTextBox extends Component {
 
   render() {
-    const { title, reference, onChangeText } = this.props;
+    const { title, reference, onChangeText, password } = this.props;
     return (
      <View style={styles.view}>
         <Label style={styles.label}>{title}</Label>
       <Item 
         style={styles.text} >
         <TextInput
-                   onChangeText={onChangeText}
-                   ref={reference}
-        style={styles.input} />
+          onChangeText={onChangeText}
+          ref={reference} secureTextEntry={password}
+          style={styles.input} />
       </Item>
      </View>
     );
@@ -29,26 +29,26 @@ let styles = StyleSheet.create({
    backgroundColor: '#FFFFFF',
    marginBottom: 0,
    marginTop: 20,
- },
+  },
   input: {
    color: '#f9a010',
    fontSize: 18,
-   marginBottom: -5,
-   marginTop: -5,
+   marginBottom: 0,
+   marginTop: 0,
    width: '100%'
- },
+  },
  
- label: {
+  label: {
    marginLeft: 30,
    marginRight: 30,
    fontSize: 18,
    fontWeight: '400',
    color: '#5d646c'
- },
- view: {
+  },
+  view: {
    marginTop: 30,
    marginBottom: 10
- }
+  }
 });
 
 export default PNFormTextBox;

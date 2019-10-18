@@ -1,4 +1,4 @@
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 let _navigator;
 
 function setTopLevelNavigator(navigatorRef) {
@@ -18,12 +18,27 @@ function navigate(routeName, params) {
   );
 }
 
+function navigateReset(routeName, params) {
+  _navigator.dispatch(
+    StackActions.reset({
+      index: 0,
+      actions: [
+        NavigationActions.navigate({
+          routeName,
+          params,
+        })
+      ]
+    })
+  );
+}
+
 function updateMenu( loggedState ) {
   _navigator.dispatch({ loggedState : loggedState});
 }
 
 export default {
   navigate,
+  navigateReset,
   updateMenu,
   setTopLevelNavigator,
   getTopLevelNavigator,
