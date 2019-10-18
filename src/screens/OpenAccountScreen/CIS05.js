@@ -4,7 +4,7 @@ import AppJson from '../../../app.json';
 
 import KeyboardShift from "library/components/CDKeyboardShift.js"
 
-import { StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio} from "react-native";
+import { ScrollView, StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio} from "react-native";
 import { Container, Header, Title, Left, Center, Icon, Right, Button, Body, Content,Text, Card, CardItem } from "native-base";
 import * as Profile from 'store/profile';
 import { setLoggedState } from "store/auth";
@@ -33,24 +33,31 @@ class CIS05 extends React.Component {
     let {height, width} = Dimensions.get('window');
     return (
       <Container>
-        <View style={localStyle.header} >
-          <PNHeaderTitle title="My Employment Information:" />
-        </View>
-        <View style={{flex: 4, paddingTop: 30 }} >
-          <PNFormTextBox title="Nature of Work" />
-          <PNFormTextBox title="Contact Number" />
-          <PNFormTextBox title="Field Name" />
-          <PNFormTextBox title="Employment Position" />
-          <PNFormTextBox title="Source of Funds" />
-          <PNFormTextBox title="Monthly Gross Income" />
-          <PNFormTextBox title="Employer's Name" />
-          <PNFormTextBox title="Employer's Address" />
-      
-        </View>
-        <View style={{flex: 1}} >
-          <PNBlueButton title="NEXT" navid="CIS06" />
-        </View>
-
+        <KeyboardShift>
+          {() => (
+          <View style={{flex:1}}>
+            <View style={{backgroundColor: "#309fe7", height: height*.20}} >
+              <PNHeaderTitle title="My Employment Information:" />
+            </View>
+            <ScrollView>
+              <View style={{flex: 4, paddingTop: 30 }} >
+                <PNFormTextBox title="Nature of Work" />
+                <PNFormTextBox title="Contact Number" />
+                <PNFormTextBox title="Field Name" />
+                <PNFormTextBox title="Employment Position" />
+                <PNFormTextBox title="Source of Funds" />
+                <PNFormTextBox title="Monthly Gross Income" />
+                <PNFormTextBox title="Employer's Name" />
+                <PNFormTextBox title="Employer's Address" />
+            
+              </View>
+              <View style={localStyle.footer} >
+                <PNBlueButton title="NEXT" navid="CIS06" />
+              </View>
+            </ScrollView>
+          </View>
+          )}
+        </KeyboardShift>
       </Container>
     );
   }
@@ -69,7 +76,12 @@ let localStyle = StyleSheet.create({
   }, 
   header: {
     backgroundColor: "#309fe7",
-    flex: 1
+    flex: 1,
+    paddingTop: 110
+  },
+  footer: {
+    flex: 1,
+    paddingBottom: 50
   }
 });
 

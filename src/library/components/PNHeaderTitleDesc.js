@@ -7,9 +7,9 @@ class PNHeaderTitleDesc extends Component {
   render() {
     const { title, desc } = this.props;  
     return (
-        <View style={{ flex: 1 , flexDirection: 'column-reverse' }}>
-          <Text style={styles.desc}>{desc}</Text>
+        <View style={{ flex: 1 }}>
           <Text style={styles.text}>{title}</Text>
+          <Text style={styles.desc}>{desc}</Text>
         </View>
      );
   }

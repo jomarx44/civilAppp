@@ -14,6 +14,8 @@ import { setLoggedState } from "store/auth";
 
 import styles from "styles/commonStyle";
 
+import NavigationService from 'navigation/NavigationService.js'
+
 import * as LocalAuthentication from 'expo-local-authentication';
 
 class LoginFingerPrintScreen extends React.Component {
@@ -51,6 +53,8 @@ class LoginFingerPrintScreen extends React.Component {
   scanFingerprint = async () => {
    let result = await LocalAuthentication.authenticateAsync({promptMessage : 'Scan your finger.'});
    console.log('Scan Result:', result)
+   alert("Success!");
+   NavigationService.navigate("DashboardScreen");
   }
 
   showAndroidAlert = () => {
@@ -114,9 +118,7 @@ class LoginFingerPrintScreen extends React.Component {
             <View style={styles.container}>
               <View style={styles.webViewContainer}>
                 <WebView
-                    ref={webview => {
-                                                this.myWebView = webview;
-                                        }}
+                    ref={webview => {this.myWebView = webview;}}
                     scrollEnabled={false}
                     source={{uri: AppJson.appid_uri }}
                     onMessage={this.onWebViewMessage}

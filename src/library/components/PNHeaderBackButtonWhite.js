@@ -6,10 +6,10 @@ class PNHeaderBackButtonWhite extends Component {
   render() {
     const { title } = this.props;  
     return (
-        <Header transparent>
+        <Header transparent style={styles.text}>
           <Left>
           <Button transparent onPress={() => this.props.navigation.goBack()}>
-            <Icon style={{color: '#FFFFFF'}}
+            <Icon style={{color: '#DCDCDC'}}
               name='arrow-back' 
             />
           </Button>
@@ -25,7 +25,8 @@ class PNHeaderBackButtonWhite extends Component {
 let styles = StyleSheet.create({
   text: {
     fontSize: 18,
-    color: '#FFFFFF'
+    color: '#000',
+    backgroundColor: '#FFFFFF'
   },
 });
 

@@ -4,7 +4,7 @@ import AppJson from '../../../app.json';
 
 import KeyboardShift from "library/components/CDKeyboardShift.js"
 
-import { AsyncStorage, StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio} from "react-native";
+import { ScrollView, AsyncStorage, StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio} from "react-native";
 import { Container, Header, Title, Left, Center, Icon, Right, Button, Body, Content,Text, Card, CardItem } from "native-base";
 import * as Profile from 'store/profile';
 import { setLoggedState } from "store/auth";
@@ -60,7 +60,6 @@ class LoginScreen extends React.Component {
     this.setState({user : user})
   }
 
-
   componentDidMount(){
     //this.checkDeviceForHardware();
     //this.checkForFingerprints();
@@ -80,9 +79,6 @@ class LoginScreen extends React.Component {
       NavigationService.navigate("DashboardScreen");
     }
   }
-
-
-
 
 
   checkDeviceForHardware = async () => {
@@ -132,7 +128,7 @@ class LoginScreen extends React.Component {
 
   login() {
     const { user } = this.state;
-    console.log("checklogin" + user.username + user.password);
+    console.log("checklogin: " + user.username + " : " + user.password);
     this.props.login(user.username, user.password);
   }
 
@@ -140,23 +136,24 @@ class LoginScreen extends React.Component {
   render() {
     let {height, width} = Dimensions.get('window');
     return (
-      <Container>
+      <Container style={styles.containerBlue}>
       <KeyboardShift>
         {() => (
-        <View style={styles.containerBlue}>
+        <View>
+        <ScrollView>
  
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-         <Image style={[buttonStyles.logo, {width: width - 110, marginTop: height * 0.2}]} source={require('res/images/ic_logo_login.png')} />
+         <Image style={[buttonStyles.logo, {width: width - 90, marginTop: height * 0.3}]} source={require('res/images/ic_logo_login.png')} />
         </View>
-        <View style={{ flex: 1, flexDirection: 'column-reverse', paddingBottom: 50, justifyContent: 'center' }}>
+        <View style={{ flex: 1, flexDirection: 'column-reverse', justifyContent: 'center' }}>
 
          <Button full transparent light
           onPress={() => NavigationService.navigate("SignUpScreen")}
           style={buttonStyles.buttonTrans}>
-          <Text>CREATE MOBILE ACCOUNT</Text>
+          <Text style={ [{fontWeight: 'bold'}]}>CREATE MOBILE ACCOUNT</Text>
          </Button>
 
-         <Button full primary style={buttonStyles.button}
+         <Button full style={buttonStyles.button}
            onPress={() => this.login()}>
           <Text>LOGIN</Text>
          </Button>
@@ -174,6 +171,7 @@ class LoginScreen extends React.Component {
                    ref={input => { this.input_username = input }}
                    style={[buttonStyles.textbox, { }]}/>
         </View>
+      </ScrollView>
        </View>
         )}
         </KeyboardShift>
@@ -185,7 +183,8 @@ class LoginScreen extends React.Component {
 
 let buttonStyles = StyleSheet.create({
   logo: {
-   marginBottom: 50,
+   height: 55,
+   marginBottom: 100,
   },
   button: {
    height: 50,
@@ -195,6 +194,7 @@ let buttonStyles = StyleSheet.create({
    justifyContent: 'center',
    alignItems: 'center',
    fontSize: 18,
+   backgroundColor: '#f5ac14',
   }, 
   buttonTrans: {
    fontSize: 18,

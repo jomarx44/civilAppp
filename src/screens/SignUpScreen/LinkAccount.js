@@ -14,7 +14,7 @@ import NavigationService from 'navigation/NavigationService.js'
 import styles from "styles/commonStyle";
 import PNFormTextBox from "library/components/PNFormTextBox"
 import PNBlueButton from "library/components/PNBlueButton"
-import PNHeaderBackButtonOnly from "library/components/PNHeaderBackButtonOnly"
+import PNHeaderBackButtonWhite from "library/components/PNHeaderBackButtonWhite"
 import PNHeaderTitleDesc from "library/components/PNHeaderTitleDesc"
 
 class LinkAccount extends React.Component {
@@ -25,7 +25,7 @@ class LinkAccount extends React.Component {
 
   static navigationOptions = {
     header: (
-      <PNHeaderBackButtonOnly/>
+      <PNHeaderBackButtonWhite/>
     )
   };
 

@@ -26,6 +26,7 @@ let styles = StyleSheet.create({
    marginRight: 30,
    justifyContent: 'center',
    alignItems: 'center',
+   backgroundColor: '#f5ac14',
  }
 });
 

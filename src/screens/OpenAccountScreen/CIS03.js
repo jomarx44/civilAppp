@@ -4,7 +4,7 @@ import AppJson from '../../../app.json';
 
 import KeyboardShift from "library/components/CDKeyboardShift.js"
 
-import { StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio} from "react-native";
+import { ScrollView, StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio} from "react-native";
 import { Container, Header, Title, Left, Center, Icon, Right, Button, Body, Content,Text, Card, CardItem } from "native-base";
 import * as Profile from 'store/profile';
 import { setLoggedState } from "store/auth";
@@ -33,18 +33,25 @@ class CIS03 extends React.Component {
     let {height, width} = Dimensions.get('window');
     return (
       <Container>
-        <View style={localStyle.header} >
-          <PNHeaderTitle title="I was born:" />
-        </View>
-        <View style={{flex: 4, paddingTop: 30 }} >
-          <PNFormTextBox title="Date of Birth" />
-          <PNFormTextBox title="Place of Birth" />
-      
-        </View>
-        <View style={{flex: 1}} >
-          <PNBlueButton title="NEXT" navid="CIS04" />
-        </View>
-
+        <KeyboardShift>
+          {() => (
+          <View style={{flex:1}}>
+            <View style={{backgroundColor: "#309fe7", height: height*.20}} >
+              <PNHeaderTitle title="I was born:" />
+            </View>
+            <ScrollView>
+              <View style={{flex: 4, paddingTop: 30 }} >
+                <PNFormTextBox title="Date of Birth" />
+                <PNFormTextBox title="Place of Birth" />
+            
+              </View>
+              <View style={{flex: 1}} >
+                <PNBlueButton title="NEXT" navid="CIS04" />
+              </View>
+            </ScrollView>
+          </View>
+          )}
+        </KeyboardShift>
       </Container>
     );
   }
