@@ -68,6 +68,9 @@ class LoginScreen extends React.Component {
 
 
   componentDidUpdate(prevProps) {
+    if (this.props.response.email ) {
+      NavigationService.navigate("DashboardScreen");
+    }
     if (this.props.response.success && this.props.response.action ===  'signin' ) {
       console.log("Login componentDidUpdate" + JSON.stringify(this.props.response));
         console.log("Calling app id api");
@@ -75,8 +78,8 @@ class LoginScreen extends React.Component {
       if ( this.props.response.meta && this.props.response.meta.resourceType && this.props.response.meta.resourceType === 'User') {
         console.log("saving to signup data");
         Profile.setSignUpData(this.props.response);
-      }
       NavigationService.navigate("DashboardScreen");
+      }
     }
   }
 

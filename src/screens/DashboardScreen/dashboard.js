@@ -112,8 +112,13 @@ class DashboardScreen extends React.Component {
 
   render() {
     let {height, width} = Dimensions.get('window');
-    let profileFullName = this.state.profileDetails.name;
-    let profileEmail = this.state.profileDetails.email;
+    let profileFullName = "NA";
+    let profileEmail = "NA";
+    if (this.state.profileDetails ) {
+        profileFullName = this.state.profileDetails.name;
+        profileEmail = this.state.profileDetails.email;
+    }
+
     return (
       <Container>
         <View style={styles.viewHeader}>
