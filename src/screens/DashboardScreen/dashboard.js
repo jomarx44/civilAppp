@@ -1,6 +1,6 @@
 import React from "react";
 import PNHeaderNoLogo from "library/components/PNHeaderNoLogo.js"
-import { StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio} from "react-native";
+import { StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio, AsyncStorage} from "react-native";
 import { Accordion, Container, Header, Title, Left, Center, Icon, Right, Button, Body, Content,Text, Card, CardItem } from "native-base";
 
 import KeyboardShift from "library/components/CDKeyboardShift.js"
@@ -31,6 +31,22 @@ class DashboardScreen extends React.Component {
     super(props);
   }
 
+  checkStorage = async () => {
+    var tt1 = await AsyncStorage.getItem('cis1');
+    var tt2 = await AsyncStorage.getItem('cis2');
+    var tt3 = await AsyncStorage.getItem('cis3');
+    var tt4 = await AsyncStorage.getItem('cis4');
+    var tt5 = await AsyncStorage.getItem('cis5');
+    var tt6 = await AsyncStorage.getItem('cis6');
+    var tt7 = await AsyncStorage.getItem('cis7');
+    console.log("TT1: ", tt1);
+    console.log("TT2: ", tt2);
+    console.log("TT3: ", tt3);
+    console.log("TT4: ", tt4);
+    console.log("TT5: ", tt5);
+    console.log("TT6: ", tt6);
+    console.log("TT7: ", tt7);
+  }
 
   state = {
     modalVisible: false,
@@ -41,6 +57,7 @@ class DashboardScreen extends React.Component {
     let authData = await getAccessData();
     let profileDetails = await getProfileData();
     this.setState({profileDetails});
+    this.checkStorage();
   }
 
   static navigationOptions = {

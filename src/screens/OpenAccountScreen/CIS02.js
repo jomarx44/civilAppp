@@ -4,7 +4,7 @@ import AppJson from '../../../app.json';
 
 import KeyboardShift from "library/components/CDKeyboardShift.js"
 
-import { ScrollView, StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, CheckBox, View, BackHandler, PixelRatio} from "react-native";
+import { ScrollView, StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, CheckBox, View, BackHandler, PixelRatio, AsyncStorage } from "react-native";
 import { Container, Header, Title, Left, Center, Icon, Right, Button, Body, Content,Text, Card, CardItem } from "native-base";
 import * as Profile from 'store/profile';
 import { setLoggedState } from "store/auth";
@@ -14,14 +14,25 @@ import NavigationService from 'navigation/NavigationService.js'
 import styles from "styles/commonStyle";
 import PNFormTextBox from "library/components/PNFormTextBox"
 import PNBlueButton from "library/components/PNBlueButton"
+import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage"
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue"
 import PNHeaderTitle from "library/components/PNHeaderTitle"
 
 class CIS02 extends React.Component {
 
+  input_gender;
   constructor(props) {
     super(props);
-    this.state = {radioButton:'value1'};
+    this.state = {
+      radioButton:'value1',
+      cis: {}
+    };
+  }
+
+  onChangeText = (value, field) => {
+    const { cis } = this.state;
+    cis[field] = value;
+    this.setState({cis});
   }
 
   static navigationOptions = {
@@ -42,10 +53,12 @@ class CIS02 extends React.Component {
             </View>
             <ScrollView>
               <View style={{flex: 4, paddingTop: 30 }} >
-                <PNFormTextBox title="Gender" />
+                <PNFormTextBox title="Gender" 
+                    reference={input => { this.input_gender = input }}
+                    onChangeText={(text) => this.onChangeText(text,"gender")}/>
               </View>
               <View style={{flex: 1}} >
-                <PNBlueButton title="NEXT" navid="CIS03" />
+                <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS03" storeKey="cis2" storeValue={this.state.cis}/>
               </View>
             </ScrollView>
           </View>

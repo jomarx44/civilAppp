@@ -14,13 +14,25 @@ import NavigationService from 'navigation/NavigationService.js'
 import styles from "styles/commonStyle";
 import PNFormTextBox from "library/components/PNFormTextBox"
 import PNBlueButton from "library/components/PNBlueButton"
+import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage"
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue"
 import PNHeaderTitle from "library/components/PNHeaderTitle"
 
 class CIS03 extends React.Component {
 
+  input_birthdate;
+  input_birth_place;
   constructor(props) {
     super(props);
+    this.state = {
+      cis: {}
+    }
+  }
+
+  onChangeText = (value, field) => {
+    const { cis } = this.state;
+    cis[field] = value;
+    this.setState({cis});
   }
 
   static navigationOptions = {
@@ -41,12 +53,16 @@ class CIS03 extends React.Component {
             </View>
             <ScrollView>
               <View style={{flex: 4, paddingTop: 30 }} >
-                <PNFormTextBox title="Date of Birth" />
-                <PNFormTextBox title="Place of Birth" />
+                <PNFormTextBox title="Date of Birth" 
+                    reference={input => { this.input_birthdate = input }}
+                    onChangeText={(text) => this.onChangeText(text,"birthdate")}/>
+                <PNFormTextBox title="Place of Birth" 
+                    reference={input => { this.input_birth_place = input }}
+                    onChangeText={(text) => this.onChangeText(text,"birth_place")}/>
             
               </View>
               <View style={{flex: 1}} >
-                <PNBlueButton title="NEXT" navid="CIS04" />
+                <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS04" storeKey="cis3" storeValue={this.state.cis}/>
               </View>
             </ScrollView>
           </View>

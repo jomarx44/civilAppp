@@ -34,8 +34,8 @@ class LoginScreen extends React.Component {
       compatible: false,
       fingerprints: false,
       user : {
-        username: '',
-        password: '',
+        username: 'riczenn@thousandminds.com',
+        password: 'qwertyuiop',
       },
       result: ''
     }
@@ -146,7 +146,7 @@ class LoginScreen extends React.Component {
         <ScrollView>
  
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-         <Image style={[buttonStyles.logo, {width: width - 90, marginTop: height * 0.3}]} source={require('res/images/ic_logo_login.png')} />
+         <Image style={[buttonStyles.logo, {width: width - 30, height: height * 0.09, marginTop: height * 0.3}]} source={require('res/images/ic_logo_login.png')} />
         </View>
         <View style={{ flex: 1, flexDirection: 'column-reverse', justifyContent: 'center' }}>
 
@@ -186,7 +186,7 @@ class LoginScreen extends React.Component {
 
 let buttonStyles = StyleSheet.create({
   logo: {
-   height: 55,
+   // height: 70,
    marginBottom: 100,
   },
   button: {

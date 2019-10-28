@@ -14,13 +14,26 @@ import NavigationService from 'navigation/NavigationService.js'
 import styles from "styles/commonStyle";
 import PNFormTextBox from "library/components/PNFormTextBox"
 import PNBlueButton from "library/components/PNBlueButton"
+import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage"
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue"
 import PNHeaderTitle from "library/components/PNHeaderTitle"
 
 class CIS04 extends React.Component {
 
+  input_civil_status;
+  input_tin;
+  input_maiden_name;
   constructor(props) {
     super(props);
+    this.state = {
+      cis: {}
+    }
+  }
+
+  onChangeText = (value, field) => {
+    const { cis } = this.state;
+    cis[field] = value;
+    this.setState({cis});
   }
 
   static navigationOptions = {
@@ -41,13 +54,19 @@ class CIS04 extends React.Component {
             </View>
             <ScrollView>
               <View style={{flex: 4, paddingTop: 30 }} >
-                <PNFormTextBox title="Civil Status" />
-                <PNFormTextBox title="TIN" />
-                <PNFormTextBox title="Mother's Maiden Name" />
+                <PNFormTextBox title="Civil Status" 
+                    reference={input => { this.input_civil_status = input }}
+                    onChangeText={(text) => this.onChangeText(text,"civil_status")}/>
+                <PNFormTextBox title="TIN" 
+                    reference={input => { this.input_tin = input }}
+                    onChangeText={(text) => this.onChangeText(text,"tin")}/>
+                <PNFormTextBox title="Mother's Maiden Name" 
+                    reference={input => { this.input_maiden_name = input }}
+                    onChangeText={(text) => this.onChangeText(text,"maiden_name")}/>
             
               </View>
               <View style={{flex: 1}} >
-                <PNBlueButton title="NEXT" navid="CIS05" />
+                <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS05" storeKey="cis4" storeValue={this.state.cis}/>
               </View>
             </ScrollView>
           </View>

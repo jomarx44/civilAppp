@@ -14,13 +14,31 @@ import NavigationService from 'navigation/NavigationService.js'
 import styles from "styles/commonStyle";
 import PNFormTextBox from "library/components/PNFormTextBox"
 import PNBlueButton from "library/components/PNBlueButton"
+import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage"
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue"
 import PNHeaderTitle from "library/components/PNHeaderTitle"
 
 class CIS05 extends React.Component {
 
+  input_work;
+  input_contact_number;
+  input_field;
+  input_position;
+  input_fund_source;
+  input_gross_income;
+  input_employers_name;
+  input_employers_address;
   constructor(props) {
     super(props);
+    this.state = {
+      cis: {}
+    }
+  }
+
+  onChangeText = (value, field) => {
+    const { cis } = this.state;
+    cis[field] = value;
+    this.setState({cis});
   }
 
   static navigationOptions = {
@@ -41,18 +59,34 @@ class CIS05 extends React.Component {
             </View>
             <ScrollView>
               <View style={{flex: 4, paddingTop: 30 }} >
-                <PNFormTextBox title="Nature of Work" />
-                <PNFormTextBox title="Contact Number" />
-                <PNFormTextBox title="Field Name" />
-                <PNFormTextBox title="Employment Position" />
-                <PNFormTextBox title="Source of Funds" />
-                <PNFormTextBox title="Monthly Gross Income" />
-                <PNFormTextBox title="Employer's Name" />
-                <PNFormTextBox title="Employer's Address" />
+                <PNFormTextBox title="Nature of Work" 
+                    reference={input => { this.input_work = input }}
+                    onChangeText={(text) => this.onChangeText(text,"work")}/>
+                <PNFormTextBox title="Contact Number" 
+                    reference={input => { this.input_contact_number = input }}
+                    onChangeText={(text) => this.onChangeText(text,"contact_number")}/>
+                <PNFormTextBox title="Field Name" 
+                    reference={input => { this.input_field = input }}
+                    onChangeText={(text) => this.onChangeText(text,"field")}/>
+                <PNFormTextBox title="Employment Position" 
+                    reference={input => { this.input_position = input }}
+                    onChangeText={(text) => this.onChangeText(text,"position")}/>
+                <PNFormTextBox title="Source of Funds" 
+                    reference={input => { this.input_fund_source = input }}
+                    onChangeText={(text) => this.onChangeText(text,"fund_source")}/>
+                <PNFormTextBox title="Monthly Gross Income" 
+                    reference={input => { this.input_gross_income = input }}
+                    onChangeText={(text) => this.onChangeText(text,"gross_income")}/>
+                <PNFormTextBox title="Employer's Name" 
+                    reference={input => { this.input_employers_name = input }}
+                    onChangeText={(text) => this.onChangeText(text,"employers_name")}/>
+                <PNFormTextBox title="Employer's Address" 
+                    reference={input => { this.input_employers_address = input }}
+                    onChangeText={(text) => this.onChangeText(text,"employers_address")}/>
             
               </View>
               <View style={localStyle.footer} >
-                <PNBlueButton title="NEXT" navid="CIS06" />
+                <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS06" storeKey="cis5" storeValue={this.state.cis}/>
               </View>
             </ScrollView>
           </View>

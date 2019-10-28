@@ -14,13 +14,24 @@ import NavigationService from 'navigation/NavigationService.js'
 import styles from "styles/commonStyle";
 import PNFormTextBox from "library/components/PNFormTextBox"
 import PNBlueButton from "library/components/PNBlueButton"
+import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage"
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue"
 import PNHeaderTitle from "library/components/PNHeaderTitle"
 
 class CIS07 extends React.Component {
 
+  input_initial_deposit;
   constructor(props) {
     super(props);
+    this.state = {
+      cis: {}
+    }
+  }
+
+  onChangeText = (value, field) => {
+    const { cis } = this.state;
+    cis[field] = value;
+    this.setState({cis});
   }
 
   static navigationOptions = {
@@ -41,11 +52,13 @@ class CIS07 extends React.Component {
             </View>
             <ScrollView>
               <View style={{flex: 4, paddingTop: 30 }} >
-                <PNFormTextBox title="" />
+                <PNFormTextBox title="" 
+                    reference={input => { this.input_initial_deposit = input }}
+                    onChangeText={(text) => this.onChangeText(text,"initial_deposit")}/>
             
               </View>
               <View style={{flex: 1}} >
-                <PNBlueButton title="NEXT" navid="CIS07" navid="DashboardScreen"/>
+                <PNBlueButtonSaveAsyncStorage title="NEXT" navid="DashboardScreen" storeKey="cis7" storeValue={this.state.cis}/>
               </View>
             </ScrollView>
           </View>
