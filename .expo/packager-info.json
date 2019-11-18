@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 4922,
-  "expoServerNgrokUrl": "https://ur-w8r.xineya03.pnmobileapp.exp.direct",
-  "packagerNgrokUrl": "https://packager.ur-w8r.xineya03.pnmobileapp.exp.direct",
-  "ngrokPid": 4931,
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
   "webpackServerPort": null
 }

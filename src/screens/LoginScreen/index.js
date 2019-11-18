@@ -18,7 +18,7 @@ import PNTextBox from "library/components/PNTextBox"
 import PNTransparentButton from "library/components/PNTransparentButton"
 import * as LocalAuthentication from 'expo-local-authentication';
 
-import NavigationService from 'navigation/NavigationService.js'
+import NavigationService from 'navigation/NavigationService.js';
 import { connect } from 'react-redux';
 import API from 'actions/api';
 import IBMAppId from 'actions/ibmappid';
@@ -69,7 +69,8 @@ class LoginScreen extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.response.email ) {
-      NavigationService.navigate("DashboardScreen");
+      // NavigationService.navigate("DashboardScreen");
+      NavigationService.navigate("AnnouncementScreen");
     }
     if (this.props.response.success && this.props.response.action ===  'signin' ) {
       console.log("Login componentDidUpdate" + JSON.stringify(this.props.response));
@@ -78,7 +79,7 @@ class LoginScreen extends React.Component {
       if ( this.props.response.meta && this.props.response.meta.resourceType && this.props.response.meta.resourceType === 'User') {
         console.log("saving to signup data");
         Profile.setSignUpData(this.props.response);
-      NavigationService.navigate("DashboardScreen");
+        NavigationService.navigate("DashboardScreen");
       }
     }
   }

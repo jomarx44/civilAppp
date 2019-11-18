@@ -1,6 +1,6 @@
 import React from "react";
 import PNHeaderNoLogo from "library/components/PNHeaderNoLogo.js"
-import { StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio, AsyncStorage} from "react-native";
+import { StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio, AsyncStorage, TouchableOpacity, TouchableWithoutFeedback} from "react-native";
 import { Accordion, Container, Header, Title, Left, Center, Icon, Right, Button, Body, Content,Text, Card, CardItem } from "native-base";
 
 import KeyboardShift from "library/components/CDKeyboardShift.js"
@@ -66,6 +66,9 @@ class DashboardScreen extends React.Component {
     )
   };
 
+  onPressCard = (navid) => {
+    NavigationService.navigate(navid);
+  }
 
   _renderHeader = (section, expanded)  => {
     return (
@@ -95,17 +98,19 @@ class DashboardScreen extends React.Component {
       console.log(section.data[0].title);
       viewdata = section.data.map((data) => {
         return(
-          <View key={data.key} style={styles.card}>
-            <View style={{flex:1}}>
-             <Text style={styles.cardTitle}>{data.title}</Text>
-             <Text style={styles.cardSubTitle}>{data.acctno}</Text>
-            </View>
+          <TouchableOpacity onPress={() => this.onPressCard("AccountHistoryScreen")} key={data.key}>
+            <View style={styles.card}>
+              <View style={{flex:1}}>
+               <Text style={styles.cardTitle}>{data.title}</Text>
+               <Text style={styles.cardSubTitle}>{data.acctno}</Text>
+              </View>
 
-            <View style={{flex:1}}>
-                <Text style={styles.cardTextBalanceValue}>{data.balance}</Text>
-                <Text style={styles.cardTextBalance}>Current Balance</Text>
+              <View style={{flex:1}}>
+                  <Text style={styles.cardTextBalanceValue}>{data.balance}</Text>
+                  <Text style={styles.cardTextBalance}>Current Balance</Text>
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
         )
       });
     }
@@ -113,14 +118,16 @@ class DashboardScreen extends React.Component {
     return (
       <View style={styles.content}>
         {viewdata}
-        <View style={[styles.card, { flex: 1, flexDirection: 'row'}]}>
-          <View style={{flex:3, flexDirection: 'row'}}>
-            <Text style={[styles.cardTitle, {marginBottom: 10}]}>Add Account</Text>
+        <TouchableOpacity onPress={() => this.onPressCard("ConnectCreateAccountScreen")}>
+          <View style={[styles.card, { flex: 1, flexDirection: 'row'}]}>
+            <View style={{flex:3, flexDirection: 'row'}}>
+              <Text style={[styles.cardTitle, {marginBottom: 10}]}>Add Account</Text>
+            </View>
+            <View style={{flex:1, flexDirection: 'row-reverse'}}>
+              <Icon style={styles.iconArrow} name="ios-arrow-forward" />
+            </View>
           </View>
-          <View style={{flex:1, flexDirection: 'row-reverse'}}>
-            <Icon style={styles.iconArrow} name="ios-arrow-forward" />
-          </View>
-        </View>
+         </TouchableOpacity>
  
       </View>
     );
