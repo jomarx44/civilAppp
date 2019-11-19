@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": null,
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 30733,
+  "expoServerNgrokUrl": "https://ur-w8r.anonymous.seedbox.exp.direct",
+  "packagerNgrokUrl": "https://packager.ur-w8r.anonymous.seedbox.exp.direct",
+  "ngrokPid": 30750,
   "webpackServerPort": null
 }

@@ -138,6 +138,7 @@ class LoginScreen extends React.Component {
 
 
   render() {
+    
     let {height, width} = Dimensions.get('window');
     return (
       <Container style={styles.containerBlue}>
@@ -147,7 +148,7 @@ class LoginScreen extends React.Component {
         <ScrollView>
  
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-         <Image style={[buttonStyles.logo, {width: width - 30, height: height * 0.09, marginTop: height * 0.3}]} source={require('res/images/ic_logo_login.png')} />
+         <Image resizeMode='contain' style={[buttonStyles.logo, {width: width - 30, height: height * 0.09, marginTop: height * 0.3}]} source={require('res/images/ic_logo_login.png')} />
         </View>
         <View style={{ flex: 1, flexDirection: 'column-reverse', justifyContent: 'center' }}>
 

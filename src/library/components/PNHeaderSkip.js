@@ -22,7 +22,7 @@ class PNHeaderSkip extends Component {
         <Header transparent style={styles.text}>
           <Right>
             <Button transparent onPress={() => this.onPressBack(navid)}>
-              <Text style={{color: '#FFFFFF'}}>
+              <Text style={{color: '#FFFFFF', paddingRight: 10}}>
                 Skip
               </Text>
               <Icon style={{color: '#FFFFFF'}}
