@@ -22,7 +22,7 @@ class PNHeaderBackButtonBlue extends Component {
         <Header transparent style={styles.text}>
           <Left>
           <Button transparent onPress={() => this.onPressBack(navid)}>
-            <Icon style={{color: '#FFFFFF'}}
+            <Icon style={{color: '#FFFFFF', paddingRight: 20}}
               name='arrow-back' 
             />
           </Button>

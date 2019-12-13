@@ -148,7 +148,7 @@ class LoginScreen extends React.Component {
         <ScrollView>
  
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-         <Image resizeMode='contain' style={[buttonStyles.logo, {width: width - 30, height: height * 0.09, marginTop: height * 0.3}]} source={require('res/images/ic_logo_login.png')} />
+         <Image resizeMode='contain' style={[buttonStyles.logo, {width: width - 30, height: height * 0.09, marginTop: height * 0.2}]} source={require('res/images/ic_logo_login.png')} />
         </View>
         <View style={{ flex: 1, flexDirection: 'column-reverse', justifyContent: 'center' }}>
 
@@ -161,6 +161,12 @@ class LoginScreen extends React.Component {
          <Button full style={buttonStyles.button}
            onPress={() => this.login()}>
           <Text>LOGIN</Text>
+         </Button>
+
+         <Button full transparent light
+          onPress={() => NavigationService.navigate("ForgotPasswordScreen")}
+          style={buttonStyles.forgotButtonTrans}>
+          <Text style={ [{fontWeight: 'bold'}]}>FORGOT PASSWORD?</Text>
          </Button>
 
          <TextInput
@@ -189,11 +195,11 @@ class LoginScreen extends React.Component {
 let buttonStyles = StyleSheet.create({
   logo: {
    // height: 70,
-   marginBottom: 100,
+   marginBottom: 70,
   },
   button: {
    height: 50,
-   marginTop: 50,
+   marginTop: 20,
    marginLeft: 30,
    marginRight: 30,
    justifyContent: 'center',
@@ -220,7 +226,16 @@ let buttonStyles = StyleSheet.create({
    justifyContent: 'center',
    alignItems: 'center',
    backgroundColor: '#FFFFFF'
- }
+ },
+ forgotButtonTrans: {
+  fontSize: 18,
+  marginTop: 5,
+  marginLeft: 30,
+  marginRight: 30,
+  borderColor: '#FFFFFF',
+  justifyContent: 'center',
+  alignItems: 'center',
+},
 });
 
 const mapStateToProps = state => {

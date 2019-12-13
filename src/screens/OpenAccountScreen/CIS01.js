@@ -32,7 +32,7 @@ class CIS01 extends React.Component {
 
   static navigationOptions = {
     header: (
-      <PNHeaderBackButtonBlue navid="ConnectCreateAccountScreen"/>
+      <PNHeaderBackButtonBlue navid="DashboardScreen"/>
     )
   };
 
@@ -63,7 +63,6 @@ class CIS01 extends React.Component {
                   <PNFormTextBox title="City, State"
                     reference={input => { this.input_city = input }}
                     onChangeText={(text) => this.onChangeText(text,"city")}/>
-              
                 </View>
                 <View style={{flex: 1}} >
                   <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS02" storeKey="cis1" storeValue={this.state.cis}/>

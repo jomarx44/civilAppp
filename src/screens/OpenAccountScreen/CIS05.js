@@ -4,8 +4,9 @@ import AppJson from '../../../app.json';
 
 import KeyboardShift from "library/components/CDKeyboardShift.js"
 
-import { ScrollView, StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio} from "react-native";
+import { ScrollView, StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio } from "react-native";
 import { Container, Header, Title, Left, Center, Icon, Right, Button, Body, Content,Text, Card, CardItem } from "native-base";
+import ModalDropdown from 'react-native-modal-dropdown';
 import * as Profile from 'store/profile';
 import { setLoggedState } from "store/auth";
 
@@ -13,6 +14,9 @@ import { StackNavigator } from "react-navigation";
 import NavigationService from 'navigation/NavigationService.js'
 import styles from "styles/commonStyle";
 import PNFormTextBox from "library/components/PNFormTextBox"
+import PNDropDownInput from "library/components/PNDropDownInput"
+import PNDropDownInputFund from "library/components/PNDropDownInputFund"
+import PNDropDownInputEmployee from "library/components/PNDropDownInputEmployee"
 import PNBlueButton from "library/components/PNBlueButton"
 import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage"
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue"
@@ -65,15 +69,12 @@ class CIS05 extends React.Component {
                 <PNFormTextBox title="Contact Number" 
                     reference={input => { this.input_contact_number = input }}
                     onChangeText={(text) => this.onChangeText(text,"contact_number")}/>
-                <PNFormTextBox title="Field Name" 
-                    reference={input => { this.input_field = input }}
-                    onChangeText={(text) => this.onChangeText(text,"field")}/>
+                <PNDropDownInput title="Field Name" />
                 <PNFormTextBox title="Employment Position" 
                     reference={input => { this.input_position = input }}
                     onChangeText={(text) => this.onChangeText(text,"position")}/>
-                <PNFormTextBox title="Source of Funds" 
-                    reference={input => { this.input_fund_source = input }}
-                    onChangeText={(text) => this.onChangeText(text,"fund_source")}/>
+                <PNDropDownInputFund title="Source of Funds" 
+                    />
                 <PNFormTextBox title="Monthly Gross Income" 
                     reference={input => { this.input_gross_income = input }}
                     onChangeText={(text) => this.onChangeText(text,"gross_income")}/>

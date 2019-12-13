@@ -104,7 +104,8 @@ class AccountHistoryScreen extends React.Component {
           <SafeAreaView style={localStyles.listStyle}>
             <FlatList
               data={ DATA }
-              renderItem={({ item }) => <Item title={item.title} amount={item.amount} date={item.date} />}
+              renderItem={({ item }) => 
+                <Item title={item.title} amount={item.amount} date={item.date} />}
               keyExtractor={ item => item.id } 
             />
           </SafeAreaView>
