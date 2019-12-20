@@ -40,7 +40,12 @@ class DashboardScreen extends React.Component {
     var tt6 = await AsyncStorage.getItem('cis6');
     var tt7 = await AsyncStorage.getItem('cis7');
     var tt8 = await AsyncStorage.getItem('cis08');
-    var tt9 = await AsyncStorage.getItem('cis0');
+    var tt9 = await AsyncStorage.getItem('cis09');
+    var tt10 = await AsyncStorage.getItem('cis10');
+    var tt11 = await AsyncStorage.getItem('cis11');
+    var tt12 = await AsyncStorage.getItem('cis12');
+    var tt13 = await AsyncStorage.getItem('cis13');
+    var tt14 = await AsyncStorage.getItem('cis14');
     console.log("TT1: ", tt1);
     console.log("TT2: ", tt2);
     console.log("TT3: ", tt3);
@@ -50,6 +55,11 @@ class DashboardScreen extends React.Component {
     console.log("TT7: ", tt7);
     console.log("TT8: ", tt8);
     console.log("TT9: ", tt9);
+    console.log("TT10: ", tt10);
+    console.log("TT11: ", tt11);
+    console.log("TT12: ", tt12);
+    console.log("TT13: ", tt13);
+    console.log("TT14: ", tt14);
   } 
 
   state = {

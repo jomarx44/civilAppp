@@ -20,21 +20,13 @@ import PNHeaderTitle from "library/components/PNHeaderTitle"
 
 class CIS09 extends React.Component {
 
-  input_unit_number;
-  input_street_name;
-  input_city;
+  input_nationality;
   constructor(props) {
     super(props);
     this.state = {
-      cis : {}
+      cis: {}
     }
   }
-
-  static navigationOptions = {
-    header: (
-      <PNHeaderBackButtonBlue />
-    )
-  };
 
   onChangeText = (value, field) => {
     const { cis } = this.state;
@@ -42,34 +34,33 @@ class CIS09 extends React.Component {
     this.setState({cis});
   }
 
+  static navigationOptions = {
+    header: (
+      <PNHeaderBackButtonBlue/>
+    )
+  };
+
   render() {
     let {height, width} = Dimensions.get('window');
     return (
       <Container>
         <KeyboardShift>
           {() => (
-            <View style={{flex: 1}}>
-              <View style={{backgroundColor: "#309fe7", height: height*.20}} >
-                <PNHeaderTitle title="My Permanent Address is:" />
-              </View>
-              <ScrollView>
-                <View style={{flex: 4, paddingTop: 30 }} >
-                  <PNFormTextBox title="Home # / Unit #"
-                    reference={input => { this.input_unit_number = input }}
-                    onChangeText={(text) => this.onChangeText(text,"unit_number")}/>
-                  <PNFormTextBox title="Street Name"
-                    reference={input => { this.input_street_name = input }}
-                    onChangeText={(text) => this.onChangeText(text,"street_name")}/>
-                  <PNFormTextBox title="City, State"
-                    reference={input => { this.input_city = input }}
-                    onChangeText={(text) => this.onChangeText(text,"city")}/>
-              
-                </View>
-                <View style={{flex: 1}} >
-                  <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS01" storeKey="cis9" storeValue={this.state.cis}/>
-                </View>
-              </ScrollView>
+          <View style={{flex:1}}>
+            <View style={{backgroundColor: "#309fe7", height: height*.20}} >
+              <PNHeaderTitle title="My Nationality is:" />
             </View>
+            <ScrollView>
+              <View style={{flex: 4, paddingTop: 30 }} >
+                <PNFormTextBox title="Nationality" 
+                    reference={input => { this.input_nationality = input }}
+                    onChangeText={(text) => this.onChangeText(text,"nationality")}/>
+              </View>
+              <View style={{flex: 1}} >
+                <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS10" storeKey="cis9" storeValue={this.state.cis} value={this.state.cis} />
+              </View>
+            </ScrollView>
+          </View>
           )}
         </KeyboardShift>
       </Container>
@@ -89,7 +80,9 @@ let localStyle = StyleSheet.create({
     position: 'absolute'
   }, 
   header: {
-    backgroundColor: "#309fe7"
+    backgroundColor: "#309fe7",
+    flex: 1,
+    paddingTop: 110
   }
 });
 

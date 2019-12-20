@@ -4,7 +4,7 @@ import AppJson from '../../../app.json';
 
 import KeyboardShift from "library/components/CDKeyboardShift.js"
 
-import { ScrollView, StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio} from "react-native";
+import { ScrollView, StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, CheckBox, View, BackHandler, PixelRatio, AsyncStorage } from "react-native";
 import { Container, Header, Title, Left, Center, Icon, Right, Button, Body, Content,Text, Card, CardItem } from "native-base";
 import * as Profile from 'store/profile';
 import { setLoggedState } from "store/auth";
@@ -12,20 +12,22 @@ import { setLoggedState } from "store/auth";
 import { StackNavigator } from "react-navigation";
 import NavigationService from 'navigation/NavigationService.js'
 import styles from "styles/commonStyle";
+import PNRadioFormGender from "library/components/PNRadioFormGender";
 import PNFormTextBox from "library/components/PNFormTextBox"
 import PNBlueButton from "library/components/PNBlueButton"
 import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage"
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue"
 import PNHeaderTitle from "library/components/PNHeaderTitle"
 
-class CIS08 extends React.Component {
+class CIS10 extends React.Component {
 
-  input_contact_information;
+  input_gender;
   constructor(props) {
     super(props);
     this.state = {
+      radioButton:'value1',
       cis: {}
-    }
+    };
   }
 
   onChangeText = (value, field) => {
@@ -36,7 +38,7 @@ class CIS08 extends React.Component {
 
   static navigationOptions = {
     header: (
-      <PNHeaderBackButtonBlue/>
+      <PNHeaderBackButtonBlue />
     )
   };
 
@@ -46,18 +48,16 @@ class CIS08 extends React.Component {
       <Container>
         <KeyboardShift>
           {() => (
-          <View style={{flex:1}}>
+          <View style={{flex: 1}}>
             <View style={{backgroundColor: "#309fe7", height: height*.20}} >
-              <PNHeaderTitle title="My Contact Info is:" />
+              <PNHeaderTitle title="Biometrics" />
             </View>
             <ScrollView>
               <View style={{flex: 4, paddingTop: 30 }} >
-                <PNFormTextBox title="Contact Information" 
-                    reference={input => { this.input_contact_information = input }}
-                    onChangeText={(text) => this.onChangeText(text,"contact_information")}/>
+                <Text>BIOMETRICS</Text>
               </View>
               <View style={{flex: 1}} >
-                <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS09" storeKey="cis8" storeValue={this.state.cis} value={this.state.cis} />
+                <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS11" storeKey="cis10" storeValue={this.state.cis}/>
               </View>
             </ScrollView>
           </View>
@@ -81,11 +81,10 @@ let localStyle = StyleSheet.create({
   }, 
   header: {
     backgroundColor: "#309fe7",
-    flex: 1,
-    paddingTop: 110
+    flex: 1
   }
 });
 
 
-export default CIS08;
+export default CIS10;
 

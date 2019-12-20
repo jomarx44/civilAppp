@@ -27,6 +27,7 @@ let styles = StyleSheet.create({
    marginTop: 20,
    marginLeft: 30,
    marginRight: 30,
+   marginBottom: 20,
    justifyContent: 'center',
    alignItems: 'center',
    backgroundColor: '#309fe7',

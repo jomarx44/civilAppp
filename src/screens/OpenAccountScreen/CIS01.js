@@ -20,9 +20,9 @@ import PNHeaderTitle from "library/components/PNHeaderTitle"
 
 class CIS01 extends React.Component {
 
-  input_unit_number;
-  input_street_name;
-  input_city;
+  input_first_number;
+  input_middle_name;
+  input_last_name;
   constructor(props) {
     super(props);
     this.state = {
@@ -48,21 +48,21 @@ class CIS01 extends React.Component {
       <Container>
         <KeyboardShift>
           {() => (
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               <View style={{backgroundColor: "#309fe7", height: height*.20}} >
-                <PNHeaderTitle title="My Present Address is:" />
+                <PNHeaderTitle title="My Full Name is:" />
               </View>
-              <ScrollView>
+              <ScrollView style={{ marginBottom: 20 }}>
                 <View style={{flex: 4, paddingTop: 30 }} >
-                  <PNFormTextBox title="Home # / Unit #"
-                    reference={input => { this.input_unit_number = input }}
-                    onChangeText={(text) => this.onChangeText(text,"unit_number")}/>
-                  <PNFormTextBox title="Street Name"
-                    reference={input => { this.input_street_name = input }}
-                    onChangeText={(text) => this.onChangeText(text,"street_name")}/>
-                  <PNFormTextBox title="City, State"
-                    reference={input => { this.input_city = input }}
-                    onChangeText={(text) => this.onChangeText(text,"city")}/>
+                  <PNFormTextBox title="First Name"
+                    reference={input => { this.input_first_number = input }}
+                    onChangeText={(text) => this.onChangeText(text,"first_name")}/>
+                  <PNFormTextBox title="Middle Name"
+                    reference={input => { this.input_middle_name = input }}
+                    onChangeText={(text) => this.onChangeText(text,"middle_name")}/>
+                  <PNFormTextBox title="Last Name"
+                    reference={input => { this.input_last_name = input }}
+                    onChangeText={(text) => this.onChangeText(text,"last_name")}/>
                 </View>
                 <View style={{flex: 1}} >
                   <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS02" storeKey="cis1" storeValue={this.state.cis}/>

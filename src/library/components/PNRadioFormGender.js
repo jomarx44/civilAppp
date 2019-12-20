@@ -12,14 +12,14 @@ class PNRadioFormGender extends Component {
         }
     }
 
-    toggleRadio1() {
+    toggleMale() {
         this.setState({
           male: true,
           female: false,
         });
       }
 
-      toggleRadio2() {
+      toggleFemale() {
         this.setState({
           male: false,
           female: true
@@ -34,7 +34,7 @@ class PNRadioFormGender extends Component {
                 <Label style = {styles.label}>{title}</Label>
                 <ListItem
                     selected={this.state.male}
-                    onPress={() => this.toggleRadio1()}
+                    onPress={() => this.toggleMale()}
                     style={styles.radioStyle}
                 >
                     <Left>
@@ -43,13 +43,13 @@ class PNRadioFormGender extends Component {
                     <Right>
                         <Radio
                             selected={this.state.male}
-                            onPress={() => this.toggleRadio1()}
+                            onPress={() => this.toggleMale()}
                         />
                     </Right>
                 </ListItem>
                 <ListItem
-                    selected={this.state.radio2}
-                    onPress={() => this.toggleRadio2()}
+                    selected={this.state.female}
+                    onPress={() => this.toggleFemale()}
                     style={styles.radioStyle}
                 >
                     <Left>
@@ -58,7 +58,7 @@ class PNRadioFormGender extends Component {
                     <Right>
                         <Radio
                             selected={this.state.female}
-                            onPress={() => this.toggleRadio2()}
+                            onPress={() => this.toggleFemale()}
                         />
                     </Right>
                 </ListItem>

@@ -13,20 +13,31 @@ import { StackNavigator } from "react-navigation";
 import NavigationService from 'navigation/NavigationService.js'
 import styles from "styles/commonStyle";
 import PNFormTextBox from "library/components/PNFormTextBox"
+import PNFormTextBoxWithDefaultValue from "library/components/PNFormTextBoxWithDefaultValue"
 import PNBlueButton from "library/components/PNBlueButton"
 import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage"
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue"
 import PNHeaderTitle from "library/components/PNHeaderTitle"
+import PNRadioFormAddress from "library/components/PNRadioFormAddress"
 
 class CIS07 extends React.Component {
 
-  input_initial_deposit;
+  input_unit_number;
+  input_street_name;
+  input_city;
   constructor(props) {
     super(props);
     this.state = {
-      cis: {}
+      isChecked: false,
+      cis : {}
     }
   }
+
+  static navigationOptions = {
+    header: (
+      <PNHeaderBackButtonBlue />
+    )
+  };
 
   onChangeText = (value, field) => {
     const { cis } = this.state;
@@ -34,10 +45,10 @@ class CIS07 extends React.Component {
     this.setState({cis});
   }
 
-  static navigationOptions = {
-    header: (
-      <PNHeaderBackButtonBlue/>
-    )
+  toggleChecked = () => {
+    this.setState({
+      isChecked: !this.state.isChecked
+    });
   };
 
   render() {
@@ -46,21 +57,35 @@ class CIS07 extends React.Component {
       <Container>
         <KeyboardShift>
           {() => (
-          <View style={{flex:1}}>
-            <View style={{backgroundColor: "#309fe7", height: height*.20}} >
-              <PNHeaderTitle title="My Initial Deposit is:" />
+            <View style={{ flex: 1 }}>
+              <View style={{backgroundColor: "#309fe7", height: height*.20}} >
+                <PNHeaderTitle title="My Permanent Address is:" />
+              </View>
+              <ScrollView style={{ marginBottom: 20 }}>
+                <PNRadioFormAddress
+                  onPress={() => this.toggleChecked()}
+                  selected={this.state.isChecked}
+                />
+                <View style={{flex: 4, paddingTop: 30 }} >
+                  <PNFormTextBoxWithDefaultValue title="Home # / Unit #"
+                    reference={input => { this.input_unit_number = input }}
+                    onChangeText={(text) => this.onChangeText(text,"unit_number")}
+                    value={this.state.isChecked ? 'Yes' : ''}
+                  />
+                  <PNFormTextBoxWithDefaultValue title="Street Name"
+                    reference={input => { this.input_street_name = input }}
+                    onChangeText={(text) => this.onChangeText(text,"street_name")}
+                    value={this.state.isChecked ? 'Yes' : ''} />
+                  <PNFormTextBoxWithDefaultValue title="City, State"
+                    reference={input => { this.input_city = input }}
+                    onChangeText={(text) => this.onChangeText(text,"city")}
+                    value={this.state.isChecked ? 'Yes' : ''} />
+                </View>
+                <View style={{flex: 1}} >
+                  <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS08" storeKey="cis7" storeValue={this.state.cis}/>
+                </View>
+              </ScrollView>
             </View>
-            <ScrollView>
-              <View style={{flex: 4, paddingTop: 30 }} >
-                <PNFormTextBox title="" 
-                    reference={input => { this.input_initial_deposit = input }}
-                    onChangeText={(text) => this.onChangeText(text,"initial_deposit")}/>
-              </View>
-              <View style={{flex: 1}} >
-                <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS08" storeKey="cis7" storeValue={this.state.cis} value={this.state.cis} />
-              </View>
-            </ScrollView>
-          </View>
           )}
         </KeyboardShift>
       </Container>
@@ -80,9 +105,7 @@ let localStyle = StyleSheet.create({
     position: 'absolute'
   }, 
   header: {
-    backgroundColor: "#309fe7",
-    flex: 1,
-    paddingTop: 110
+    backgroundColor: "#309fe7"
   }
 });
 

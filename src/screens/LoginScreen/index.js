@@ -35,7 +35,7 @@ class LoginScreen extends React.Component {
       fingerprints: false,
       user : {
         username: 'riczenn@thousandminds.com',
-        password: 'qwertyuiop',
+        password: '',
       },
       result: ''
     }

@@ -37,7 +37,7 @@ class CIS03 extends React.Component {
 
   static navigationOptions = {
     header: (
-      <PNHeaderBackButtonBlue/>
+      <PNHeaderBackButtonBlue />
     )
   };
 

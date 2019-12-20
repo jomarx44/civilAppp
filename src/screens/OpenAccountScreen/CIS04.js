@@ -21,7 +21,6 @@ import PNHeaderTitle from "library/components/PNHeaderTitle"
 class CIS04 extends React.Component {
 
   input_civil_status;
-  input_tin;
   input_maiden_name;
   constructor(props) {
     super(props);
@@ -38,7 +37,7 @@ class CIS04 extends React.Component {
 
   static navigationOptions = {
     header: (
-      <PNHeaderBackButtonBlue/>
+      <PNHeaderBackButtonBlue />
     )
   };
 
@@ -57,9 +56,6 @@ class CIS04 extends React.Component {
                 <PNFormTextBox title="Civil Status" 
                     reference={input => { this.input_civil_status = input }}
                     onChangeText={(text) => this.onChangeText(text,"civil_status")}/>
-                <PNFormTextBox title="TIN" 
-                    reference={input => { this.input_tin = input }}
-                    onChangeText={(text) => this.onChangeText(text,"tin")}/>
                 <PNFormTextBox title="Mother's Maiden Name" 
                     reference={input => { this.input_maiden_name = input }}
                     onChangeText={(text) => this.onChangeText(text,"maiden_name")}/>
