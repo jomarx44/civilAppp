@@ -50,11 +50,11 @@ class CIS10 extends React.Component {
           {() => (
           <View style={{flex: 1}}>
             <View style={{backgroundColor: "#309fe7", height: height*.20}} >
-              <PNHeaderTitle title="Biometrics" />
+              <PNHeaderTitle title="Signature or Fingerprint:" />
             </View>
             <ScrollView>
               <View style={{flex: 4, paddingTop: 30 }} >
-                <Text>BIOMETRICS</Text>
+                <Text style={{ textAlign: 'center' }}>Signature or Fingerprint</Text>
               </View>
               <View style={{flex: 1}} >
                 <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS11" storeKey="cis10" storeValue={this.state.cis}/>
