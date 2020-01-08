@@ -14,20 +14,36 @@ import NavigationService from 'navigation/NavigationService.js'
 import styles from "styles/commonStyle";
 import PNFormTextBox from "library/components/PNFormTextBox"
 import PNBlueButton from "library/components/PNBlueButton"
+import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage"
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue"
 import PNHeaderTitle from "library/components/PNHeaderTitle"
 
 class CIS05 extends React.Component {
 
+  input_beneficiary_name;
+  input_beneficiary_address;
+  input_birth_date;
+  input_birth_place;
+  input_work_nature;
+  input_fund_source;
   constructor(props) {
     super(props);
+    this.state = {
+      cis : {}
+    }
   }
 
   static navigationOptions = {
     header: (
-      <PNHeaderBackButtonBlue/>
+      <PNHeaderBackButtonBlue />
     )
   };
+
+  onChangeText = (value, field) => {
+    const { cis } = this.state;
+    cis[field] = value;
+    this.setState({cis});
+  }
 
   render() {
     let {height, width} = Dimensions.get('window');
@@ -35,27 +51,36 @@ class CIS05 extends React.Component {
       <Container>
         <KeyboardShift>
           {() => (
-          <View style={{flex:1}}>
-            <View style={{backgroundColor: "#309fe7", height: height*.20}} >
-              <PNHeaderTitle title="My Employment Information:" />
+            <View style={{ flex: 1 }}>
+              <View style={{backgroundColor: "#309fe7", height: height*.20}} >
+                <PNHeaderTitle title="Beneficiary(if applicable):" />
+              </View>
+              <ScrollView style={{ marginBottom: 20 }}>
+                <View style={{flex: 4, paddingTop: 30 }} >
+                  <PNFormTextBox title="Name"
+                    reference={input => { this.input_beneficiary_name = input }}
+                    onChangeText={(text) => this.onChangeText(text,"beneficiary_name")}/>
+                  <PNFormTextBox title="Address"
+                    reference={input => { this.input_beneficiary_address = input }}
+                    onChangeText={(text) => this.onChangeText(text,"beneficiary_address")}/>
+                  <PNFormTextBox title="Birth Date"
+                    reference={input => { this.input_birth_date = input }}
+                    onChangeText={(text) => this.onChangeText(text,"birth_date")}/>
+                <PNFormTextBox title="Birth Place"
+                    reference={input => { this.input_birth_place = input }}
+                    onChangeText={(text) => this.onChangeText(text,"birth_place")}/>
+                <PNFormTextBox title="Nature of Work"
+                    reference={input => { this.input_work_nature = input }}
+                    onChangeText={(text) => this.onChangeText(text,"work_nature")}/>
+                <PNFormTextBox title="Source of Fund"
+                    reference={input => { this.input_fund_source = input }}
+                    onChangeText={(text) => this.onChangeText(text,"fund_source")}/>
+                </View>
+                <View style={{flex: 1}} >
+                  <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS07" storeKey="cis5" storeValue={this.state.cis}/>
+                </View>
+              </ScrollView>
             </View>
-            <ScrollView>
-              <View style={{flex: 4, paddingTop: 30 }} >
-                <PNFormTextBox title="Nature of Work" />
-                <PNFormTextBox title="Contact Number" />
-                <PNFormTextBox title="Field Name" />
-                <PNFormTextBox title="Employment Position" />
-                <PNFormTextBox title="Source of Funds" />
-                <PNFormTextBox title="Monthly Gross Income" />
-                <PNFormTextBox title="Employer's Name" />
-                <PNFormTextBox title="Employer's Address" />
-            
-              </View>
-              <View style={localStyle.footer} >
-                <PNBlueButton title="NEXT" navid="CIS06" />
-              </View>
-            </ScrollView>
-          </View>
           )}
         </KeyboardShift>
       </Container>
@@ -75,13 +100,7 @@ let localStyle = StyleSheet.create({
     position: 'absolute'
   }, 
   header: {
-    backgroundColor: "#309fe7",
-    flex: 1,
-    paddingTop: 110
-  },
-  footer: {
-    flex: 1,
-    paddingBottom: 50
+    backgroundColor: "#309fe7"
   }
 });
 

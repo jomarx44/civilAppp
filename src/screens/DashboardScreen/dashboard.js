@@ -1,6 +1,6 @@
 import React from "react";
 import PNHeaderNoLogo from "library/components/PNHeaderNoLogo.js"
-import { StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio} from "react-native";
+import { StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio, AsyncStorage, TouchableOpacity, TouchableWithoutFeedback} from "react-native";
 import { Accordion, Container, Header, Title, Left, Center, Icon, Right, Button, Body, Content,Text, Card, CardItem } from "native-base";
 
 import KeyboardShift from "library/components/CDKeyboardShift.js"
@@ -22,7 +22,7 @@ const dataArray = [
       ]  },
   { title: "Time Deposit", content: "Lorem ipsum dolor sit amet", data: [] },
   { title: "Savings Account", content: "Lorem ipsum dolor sit amet", data: [] },
-  { title: "Credit Card", content: "Lorem ipsum dolor sit amet", data: [] }
+  /* { title: "Credit Card", content: "Lorem ipsum dolor sit amet", data: [] } Hide Credit Card Option for the mean time */ 
 ];
 
 class DashboardScreen extends React.Component {
@@ -31,6 +31,36 @@ class DashboardScreen extends React.Component {
     super(props);
   }
 
+    checkStorage = async () => {
+    var tt1 = await AsyncStorage.getItem('cis1');
+    var tt2 = await AsyncStorage.getItem('cis2');
+    var tt3 = await AsyncStorage.getItem('cis3');
+    var tt4 = await AsyncStorage.getItem('cis4');
+    var tt5 = await AsyncStorage.getItem('cis5');
+    var tt6 = await AsyncStorage.getItem('cis6');
+    var tt7 = await AsyncStorage.getItem('cis7');
+    var tt8 = await AsyncStorage.getItem('cis08');
+    var tt9 = await AsyncStorage.getItem('cis09');
+    var tt10 = await AsyncStorage.getItem('cis10');
+    var tt11 = await AsyncStorage.getItem('cis11');
+    var tt12 = await AsyncStorage.getItem('cis12');
+    var tt13 = await AsyncStorage.getItem('cis13');
+    var tt14 = await AsyncStorage.getItem('cis14');
+    console.log("TT1: ", tt1);
+    console.log("TT2: ", tt2);
+    console.log("TT3: ", tt3);
+    console.log("TT4: ", tt4);
+    console.log("TT5: ", tt5);
+    console.log("TT6: ", tt6);
+    console.log("TT7: ", tt7);
+    console.log("TT8: ", tt8);
+    console.log("TT9: ", tt9);
+    console.log("TT10: ", tt10);
+    console.log("TT11: ", tt11);
+    console.log("TT12: ", tt12);
+    console.log("TT13: ", tt13);
+    console.log("TT14: ", tt14);
+  } 
 
   state = {
     modalVisible: false,
@@ -41,6 +71,7 @@ class DashboardScreen extends React.Component {
     let authData = await getAccessData();
     let profileDetails = await getProfileData();
     this.setState({profileDetails});
+    this.checkStorage(); 
   }
 
   static navigationOptions = {
@@ -49,6 +80,9 @@ class DashboardScreen extends React.Component {
     )
   };
 
+  onPressCard = (navid) => {
+    NavigationService.navigate(navid);
+  }
 
   _renderHeader = (section, expanded)  => {
     return (
@@ -78,32 +112,36 @@ class DashboardScreen extends React.Component {
       console.log(section.data[0].title);
       viewdata = section.data.map((data) => {
         return(
-          <View key={data.key} style={styles.card}>
-            <View style={{flex:1}}>
-             <Text style={styles.cardTitle}>{data.title}</Text>
-             <Text style={styles.cardSubTitle}>{data.acctno}</Text>
-            </View>
+          <TouchableOpacity onPress={() => this.onPressCard("AccountHistoryScreen")} key={data.key}>
+            <View style={styles.card}>
+              <View style={{flex:1}}>
+               <Text style={styles.cardTitle}>{data.title}</Text>
+               <Text style={styles.cardSubTitle}>{data.acctno}</Text>
+              </View>
 
-            <View style={{flex:1}}>
-                <Text style={styles.cardTextBalanceValue}>{data.balance}</Text>
-                <Text style={styles.cardTextBalance}>Current Balance</Text>
+              <View style={{flex:1}}>
+                  <Text style={styles.cardTextBalanceValue}>{data.balance}</Text>
+                  <Text style={styles.cardTextBalance}>Current Balance</Text>
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
         )
       });
     }
 
     return (
       <View style={styles.content}>
-        {viewdata}
-        <View style={[styles.card, { flex: 1, flexDirection: 'row'}]}>
-          <View style={{flex:3, flexDirection: 'row'}}>
-            <Text style={[styles.cardTitle, {marginBottom: 10}]}>Add Account</Text>
+         {viewdata} 
+        <TouchableOpacity onPress={() => this.onPressCard("ConnectCreateAccountScreen")}>
+          <View style={[styles.card, { flex: 1, flexDirection: 'row'}]}>
+            <View style={{flex:3, flexDirection: 'row'}}>
+              <Text style={[styles.cardTitle, {marginBottom: 10}]}>Add Account</Text>
+            </View>
+            <View style={{flex:1, flexDirection: 'row-reverse'}}>
+              <Icon style={styles.iconArrow} name="ios-arrow-forward" />
+            </View>
           </View>
-          <View style={{flex:1, flexDirection: 'row-reverse'}}>
-            <Icon style={styles.iconArrow} name="ios-arrow-forward" />
-          </View>
-        </View>
+         </TouchableOpacity>
  
       </View>
     );

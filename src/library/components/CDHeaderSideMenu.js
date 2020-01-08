@@ -6,7 +6,7 @@ import { withNavigation } from 'react-navigation';
 class CDHeaderSideMenu extends Component {
   render() {
     return (
-        <Header transparent>
+        <Header transparent style={{height: 84}}>
           <Right>
             <Button
              transparent

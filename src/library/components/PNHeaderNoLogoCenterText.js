@@ -33,7 +33,7 @@ let styles = StyleSheet.create({
   },
   title: {
    color: '#fff',
-   paddingLeft: 20
+   textAlign: 'center'
   }
 
 });

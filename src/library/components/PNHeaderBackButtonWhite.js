@@ -2,13 +2,25 @@ import React, { Component } from 'react';
 import { Image, StyleSheet } from 'react-native';
 import { Container, Header, Left, Body, Right, Button, Icon, Title, Text } from 'native-base';
 import { withNavigation } from 'react-navigation';
+import NavigationService from 'navigation/NavigationService.js'
+
 class PNHeaderBackButtonWhite extends Component {
+
+  onPressBack = (navid) => {
+    if(navid) {
+      NavigationService.navigate(navid);
+    }
+    else {
+      this.props.navigation.goBack(null);
+    }
+  }
+
   render() {
-    const { title } = this.props;  
+    const { title, navid } = this.props;  
     return (
         <Header transparent style={styles.text}>
           <Left>
-          <Button transparent onPress={() => this.props.navigation.goBack()}>
+          <Button transparent onPress={() => this.onPressBack(navid)}>
             <Icon style={{color: '#DCDCDC'}}
               name='arrow-back' 
             />

@@ -14,20 +14,33 @@ import NavigationService from 'navigation/NavigationService.js'
 import styles from "styles/commonStyle";
 import PNFormTextBox from "library/components/PNFormTextBox"
 import PNBlueButton from "library/components/PNBlueButton"
+import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage"
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue"
 import PNHeaderTitle from "library/components/PNHeaderTitle"
 
 class CIS01 extends React.Component {
 
+  input_first_number;
+  input_middle_name;
+  input_last_name;
   constructor(props) {
     super(props);
+    this.state = {
+      cis : {}
+    }
   }
 
   static navigationOptions = {
     header: (
-      <PNHeaderBackButtonBlue/>
+      <PNHeaderBackButtonBlue navid="DashboardScreen"/>
     )
   };
+
+  onChangeText = (value, field) => {
+    const { cis } = this.state;
+    cis[field] = value;
+    this.setState({cis});
+  }
 
   render() {
     let {height, width} = Dimensions.get('window');
@@ -35,19 +48,24 @@ class CIS01 extends React.Component {
       <Container>
         <KeyboardShift>
           {() => (
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               <View style={{backgroundColor: "#309fe7", height: height*.20}} >
-                <PNHeaderTitle title="My Present Address is:" />
+                <PNHeaderTitle title="My Full Name is:" />
               </View>
-              <ScrollView>
+              <ScrollView style={{ marginBottom: 20 }}>
                 <View style={{flex: 4, paddingTop: 30 }} >
-                  <PNFormTextBox title="Home # / Unit #" />
-                  <PNFormTextBox title="Street Name" />
-                  <PNFormTextBox title="City, State" />
-              
+                  <PNFormTextBox title="First Name"
+                    reference={input => { this.input_first_number = input }}
+                    onChangeText={(text) => this.onChangeText(text,"first_name")}/>
+                  <PNFormTextBox title="Middle Name"
+                    reference={input => { this.input_middle_name = input }}
+                    onChangeText={(text) => this.onChangeText(text,"middle_name")}/>
+                  <PNFormTextBox title="Last Name"
+                    reference={input => { this.input_last_name = input }}
+                    onChangeText={(text) => this.onChangeText(text,"last_name")}/>
                 </View>
                 <View style={{flex: 1}} >
-                  <PNBlueButton title="NEXT" navid="CIS02" />
+                  <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS02" storeKey="cis1" storeValue={this.state.cis}/>
                 </View>
               </ScrollView>
             </View>

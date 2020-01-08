@@ -95,7 +95,7 @@ class EmailVerificationScreen extends React.Component {
               Email Confirmation
             </Text>
             <Text style={[ localStyle.text , { fontSize: 16/PixelRatio.getFontScale()} ]} >
-              We have sent email to <Text style={{color: '#F5AC14'}}>{email}</Text> to confirm the validity of our email address. After receiving the email we will be sending OTP to your mobile number.
+              We have sent an email to <Text style={{color: '#F5AC14'}}>{email}</Text> for an email confirmation. Once verified, we will send an OTP  to your submitted mobile number.
             </Text>
  
           </View>

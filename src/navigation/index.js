@@ -9,6 +9,8 @@ import TakeAPhotoOfID from "screens/TakeAPhotoOfID/";
 import OpenAccountScreen from "screens/OpenAccountScreen/";
 import SignUpScreen from "screens/SignUpScreen/";
 import DashboardScreen from "screens/DashboardScreen/";
+import AnnouncementScreen from "screens/AnnouncementScreen/";
+import ForgotPasswordScreen from "screens/ForgotPasswordScreen/";
 
 const MainDrawer = createDrawerNavigator(
   {
@@ -16,8 +18,10 @@ const MainDrawer = createDrawerNavigator(
     SignUpScreen: { screen: SignUpScreen },
     TakeAPhotoOfID: { screen: TakeAPhotoOfID },
     FingerPrint: { screen: LoginFingerPrintScreen },
+    AnnouncementScreen: { screen: AnnouncementScreen },
     DashboardScreen: { screen: DashboardScreen },
     OpenAccountScreen: { screen: OpenAccountScreen },
+    ForgotPasswordScreen: { screen: ForgotPasswordScreen },
     PersonalDetails: {
        screen: PersonalDetailsScreen,
        navigationOptions: ( { navigation }) => ({

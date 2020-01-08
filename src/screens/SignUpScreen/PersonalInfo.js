@@ -160,7 +160,7 @@ let localStyle = StyleSheet.create({
    backgroundColor: '#309fe7',
   }, 
   header: {
-    paddingTop: 50,
+    paddingTop: 20,
     backgroundColor: "#FFFFFF",
     flex: 1
   },

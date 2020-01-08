@@ -18,7 +18,7 @@ import PNTextBox from "library/components/PNTextBox"
 import PNTransparentButton from "library/components/PNTransparentButton"
 import * as LocalAuthentication from 'expo-local-authentication';
 
-import NavigationService from 'navigation/NavigationService.js'
+import NavigationService from 'navigation/NavigationService.js';
 import { connect } from 'react-redux';
 import API from 'actions/api';
 import IBMAppId from 'actions/ibmappid';
@@ -34,8 +34,8 @@ class LoginScreen extends React.Component {
       compatible: false,
       fingerprints: false,
       user : {
-        username: '',
-        password: '',
+        username: 'riczenn@thousandminds.com',
+        password: 'qwertyuiop',
       },
       result: ''
     }
@@ -69,7 +69,8 @@ class LoginScreen extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.response.email ) {
-      NavigationService.navigate("DashboardScreen");
+      // NavigationService.navigate("DashboardScreen");
+      NavigationService.navigate("AnnouncementScreen");
     }
     if (this.props.response.success && this.props.response.action ===  'signin' ) {
       console.log("Login componentDidUpdate" + JSON.stringify(this.props.response));
@@ -78,7 +79,7 @@ class LoginScreen extends React.Component {
       if ( this.props.response.meta && this.props.response.meta.resourceType && this.props.response.meta.resourceType === 'User') {
         console.log("saving to signup data");
         Profile.setSignUpData(this.props.response);
-      NavigationService.navigate("DashboardScreen");
+        NavigationService.navigate("DashboardScreen");
       }
     }
   }
@@ -137,6 +138,7 @@ class LoginScreen extends React.Component {
 
 
   render() {
+    
     let {height, width} = Dimensions.get('window');
     return (
       <Container style={styles.containerBlue}>
@@ -146,7 +148,7 @@ class LoginScreen extends React.Component {
         <ScrollView>
  
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-         <Image style={[buttonStyles.logo, {width: width - 90, marginTop: height * 0.3}]} source={require('res/images/ic_logo_login.png')} />
+         <Image resizeMode='contain' style={[buttonStyles.logo, {width: width - 30, height: height * 0.09, marginTop: height * 0.2}]} source={require('res/images/ic_logo_login.png')} />
         </View>
         <View style={{ flex: 1, flexDirection: 'column-reverse', justifyContent: 'center' }}>
 
@@ -159,6 +161,12 @@ class LoginScreen extends React.Component {
          <Button full style={buttonStyles.button}
            onPress={() => this.login()}>
           <Text>LOGIN</Text>
+         </Button>
+
+         <Button full transparent light
+          onPress={() => NavigationService.navigate("ForgotPasswordScreen")}
+          style={buttonStyles.forgotButtonTrans}>
+          <Text style={ [{fontWeight: 'bold'}]}>FORGOT PASSWORD?</Text>
          </Button>
 
          <TextInput
@@ -186,12 +194,12 @@ class LoginScreen extends React.Component {
 
 let buttonStyles = StyleSheet.create({
   logo: {
-   height: 55,
-   marginBottom: 100,
+   // height: 70,
+   marginBottom: 70,
   },
   button: {
    height: 50,
-   marginTop: 50,
+   marginTop: 20,
    marginLeft: 30,
    marginRight: 30,
    justifyContent: 'center',
@@ -218,7 +226,16 @@ let buttonStyles = StyleSheet.create({
    justifyContent: 'center',
    alignItems: 'center',
    backgroundColor: '#FFFFFF'
- }
+ },
+ forgotButtonTrans: {
+  fontSize: 18,
+  marginTop: 5,
+  marginLeft: 30,
+  marginRight: 30,
+  borderColor: '#FFFFFF',
+  justifyContent: 'center',
+  alignItems: 'center',
+},
 });
 
 const mapStateToProps = state => {

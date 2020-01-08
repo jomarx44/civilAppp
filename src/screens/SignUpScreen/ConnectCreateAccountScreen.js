@@ -19,7 +19,7 @@ class ConnectCreateAccountScreen extends React.Component {
 
   static navigationOptions = {
     header: (
-      <PNHeaderBackButtonBlue/>
+      <PNHeaderBackButtonBlue navid="DashboardScreen"/>
     )
   };
 
