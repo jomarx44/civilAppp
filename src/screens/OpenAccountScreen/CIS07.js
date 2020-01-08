@@ -59,7 +59,7 @@ class CIS07 extends React.Component {
           {() => (
             <View style={{ flex: 1 }}>
               <View style={{backgroundColor: "#309fe7", height: height*.20}} >
-                <PNHeaderTitle title="My Permanent Address is:" />
+                <PNHeaderTitle title="My Present Address is:" />
               </View>
               <ScrollView style={{ marginBottom: 20 }}>
                 <PNRadioFormAddress
@@ -70,16 +70,15 @@ class CIS07 extends React.Component {
                   <PNFormTextBoxWithDefaultValue title="Home # / Unit #"
                     reference={input => { this.input_unit_number = input }}
                     onChangeText={(text) => this.onChangeText(text,"unit_number")}
-                    value={this.state.isChecked ? 'Yes' : ''}
                   />
                   <PNFormTextBoxWithDefaultValue title="Street Name"
                     reference={input => { this.input_street_name = input }}
                     onChangeText={(text) => this.onChangeText(text,"street_name")}
-                    value={this.state.isChecked ? 'Yes' : ''} />
+                     />
                   <PNFormTextBoxWithDefaultValue title="City, State"
                     reference={input => { this.input_city = input }}
                     onChangeText={(text) => this.onChangeText(text,"city")}
-                    value={this.state.isChecked ? 'Yes' : ''} />
+                     />
                 </View>
                 <View style={{flex: 1}} >
                   <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS08" storeKey="cis7" storeValue={this.state.cis}/>

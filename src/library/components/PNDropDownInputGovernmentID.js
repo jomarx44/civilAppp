@@ -10,7 +10,7 @@ class PNDropDownInputEmployee extends Component {
      <View style={styles.view}>
        <Label style={styles.label}>{title}</Label>
         <ModalDropdown
-          defaultValue='Please select type of government number...'
+          defaultValue='Type of government number...'
           options={[ 'SSS', 'GSIS', 'TIN' ]} 
           dropdownStyle={[styles.input]}
           textStyle={styles.text}

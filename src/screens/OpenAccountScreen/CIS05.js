@@ -77,7 +77,7 @@ class CIS05 extends React.Component {
                     onChangeText={(text) => this.onChangeText(text,"fund_source")}/>
                 </View>
                 <View style={{flex: 1}} >
-                  <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS06" storeKey="cis5" storeValue={this.state.cis}/>
+                  <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS07" storeKey="cis5" storeValue={this.state.cis}/>
                 </View>
               </ScrollView>
             </View>

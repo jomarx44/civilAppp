@@ -42,7 +42,7 @@ class PNRadioFormGender extends Component {
                     </Left>
                     <Right>
                         <Radio
-                            selected={this.state.male}
+                            selected={this.state.male}                            
                             onPress={() => this.toggleMale()}
                         />
                     </Right>
