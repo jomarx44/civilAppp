@@ -7,6 +7,7 @@ class PNBlueButtonSaveAsyncStorage extends Component {
 
   onPressButton = (navid, storeKey, storeValue) => {
     AsyncStorage.setItem(storeKey, JSON.stringify(storeValue));
+    
     NavigationService.navigate(navid);
   }
 

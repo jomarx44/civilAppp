@@ -1,78 +1,82 @@
-import React from 'React';
-import { Alert } from 'react-native'
-import { Toast } from 'native-base';
-import axios from 'axios';
-import querystring from 'querystring';
-import Constants from 'expo-constants';
-import { getMethod, postMethod, getMethodWithToken, postMethodWithToken, postMethodWithTokenApply, putMethod, putMethodWithToken,dispatchOnly } from './axiosCalls';
-import * as TYPE from './types';
-import * as Auth from 'store/auth';
-import moment from 'moment';
+import React from "React";
+import { Alert } from "react-native";
+import { Toast } from "native-base";
+import axios from "axios";
+import querystring from "querystring";
+import Constants from "expo-constants";
+import {
+  getMethod,
+  postMethod,
+  getMethodWithToken,
+  postMethodWithToken,
+  postMethodWithTokenApply,
+  putMethod,
+  putMethodWithToken,
+  dispatchOnly
+} from "./axiosCalls";
+import * as TYPE from "./types";
+import * as Auth from "store/auth";
+import moment from "moment";
 
-class Api  {
-
+class Api {
   token = null;
   static instance = null;
-  static getInstance () {
+  static getInstance() {
     if (Api.instance == null) {
       Api.instance = new Api();
     }
     return this.instance;
   }
 
-  setToken (token ) {
+  setToken(token) {
     this.token(token);
   }
 
-
-  loginInitial ( username, password ) {
+  loginInitial(username, password) {
     const json_data = {
-      path: "manage",
+      path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
       reducer_type: TYPE.LOGIN_INITIAL,
       params: {
-        action: 'signin',
+        action: "signin",
         username: username,
         password: password
       }
-    }
+    };
     return postMethod(json_data);
   }
 
-
-  login ( username, password ) {
+  login(username, password) {
     const json_data = {
-      path: "manage",
-      reducer_type: TYPE.LOGIN, 
+      path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
+      reducer_type: TYPE.LOGIN,
       params: {
-        action: 'signin',
+        action: "signin",
         username: username,
         password: password
       }
-    }
+    };
     return postMethod(json_data);
   }
 
-  checkEmail ( userId ) {
+  checkEmail(userId) {
     const json_data = {
-      path: "manage",
-      reducer_type: TYPE.CHECK_EMAIL, 
+      path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
+      reducer_type: TYPE.CHECK_EMAIL,
       params: {
-        action: 'isEmailVerified',
+        action: "isEmailVerified",
         userid: userId
       }
-    }
+    };
     return postMethod(json_data);
   }
 
-
-
-  signup ( userdata ) {
+  signup(userdata) {
     console.log("userdata: ", userdata);
     const json_data = {
-      path: "manage",
-      reducer_type: TYPE.SIGNUP, 
+      path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
+      reducer_type: TYPE.SIGNUP,
       params: {
-        action: 'signup',
+        action: "signup",
         email: userdata.email,
         password: userdata.password,
         givenName: userdata.givenName,
@@ -80,40 +84,61 @@ class Api  {
         familyName: userdata.familyName,
         phoneNumber: userdata.phoneNumber
       }
-    }
+    };
     return postMethod(json_data);
   }
 
-  sendOTP ( token, phoneNumber ) {
+  sendOTP(token, phoneNumber) {
     const json_data = {
-      path: "manage",
-      reducer_type: TYPE.OTP, 
+      path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
+      reducer_type: TYPE.OTP,
       params: {
-        action: 'send_otp',
+        action: "send_otp",
         access_token: token,
         phone_number: phoneNumber
       }
-    }
+    };
     return postMethod(json_data);
   }
 
-
-  isOTPCorrect ( token, otp ) {
+  isOTPCorrect(token, otp) {
     const json_data = {
-      path: "manage",
-      reducer_type: TYPE.OTP_CHECK, 
+      path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
+      reducer_type: TYPE.OTP_CHECK,
       params: {
-        action: 'isOTPCorrect',
+        action: "isOTPCorrect",
         access_token: token,
         otp: otp
       }
-    }
+    };
     return postMethod(json_data);
   }
 
+  getAccounts(cisno) {
+    const json_data = {
+      path: 'byteperbyte/CISAccountInquiry',
+      reducer_type: TYPE.FETCH_ACCOUNTS,
+      params: {
+        params: {
+          cisno: cisno,
+        }
+      },
+    }
+    return getMethod(json_data);
+  }
 
+  getAccountHistory(acctno, count) {
+    const json_data = {
+      path: 'byteperbyte/AccountInquiryHistory',
+      reducer_type: TYPE.FETCH_ACCOUNTHISTORY,
+      params: {
+        acctno,
+        count
+      },
+    }
+    return getMethod(json_data);
+  }
 }
 
 var instance = Api.getInstance();
 module.exports = instance;
-

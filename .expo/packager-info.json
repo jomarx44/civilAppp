@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 13386,
-  "expoServerNgrokUrl": "https://pn-zkh.anonymous.sunsavings.exp.direct",
-  "packagerNgrokUrl": "https://packager.pn-zkh.anonymous.sunsavings.exp.direct",
-  "ngrokPid": 13395,
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
   "webpackServerPort": null
 }
