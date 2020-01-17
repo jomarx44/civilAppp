@@ -1,30 +1,56 @@
 import React from "react";
-import AppJson from '../../../app.json';
+import AppJson from "../../../app.json";
 
+import KeyboardShift from "library/components/CDKeyboardShift.js";
 
-import KeyboardShift from "library/components/CDKeyboardShift.js"
-
-import { ScrollView, AsyncStorage, StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio} from "react-native";
-import { Container, Header, Title, Left, Center, Icon, Right, Button, Body, Content,Text, Card, CardItem } from "native-base";
-import * as Profile from 'store/profile';
+import {
+  ActivityIndicator,
+  ScrollView,
+  AsyncStorage,
+  StatusBar,
+  Image,
+  Dimensions,
+  StyleSheet,
+  ImageBackground,
+  TextInput,
+  View,
+  BackHandler,
+  PixelRatio
+} from "react-native";
+import {
+  Container,
+  Header,
+  Title,
+  Left,
+  Center,
+  Icon,
+  Right,
+  Button,
+  Body,
+  Content,
+  Text,
+  Card,
+  CardItem
+} from "native-base";
+import * as Profile from "store/profile";
 import { setLoggedState } from "store/auth";
 
-import { WebView } from 'react-native-webview';
+import { WebView } from "react-native-webview";
 import Modal from "react-native-modal";
 
 import styles from "styles/commonStyle";
-import PNOrangeButton from "library/components/PNOrangeButton"
-import PNTextBox from "library/components/PNTextBox"
-import PNTransparentButton from "library/components/PNTransparentButton"
-import * as LocalAuthentication from 'expo-local-authentication';
+import PNOrangeButton from "library/components/PNOrangeButton";
+import PNTextBox from "library/components/PNTextBox";
+import PNTransparentButton from "library/components/PNTransparentButton";
+import * as LocalAuthentication from "expo-local-authentication";
 
-import NavigationService from 'navigation/NavigationService.js';
-import { connect } from 'react-redux';
-import API from 'actions/api';
-import IBMAppId from 'actions/ibmappid';
+import NavigationService from "navigation/NavigationService.js";
+import { connect } from "react-redux";
+import API from "actions/api";
+import IBMAppId from "actions/ibmappid";
+import { alertBox } from "../../actions/axiosCalls.js";
 
 class LoginScreen extends React.Component {
-
   input_username;
   input_password;
   constructor(props) {
@@ -33,50 +59,57 @@ class LoginScreen extends React.Component {
       isReady: false,
       compatible: false,
       fingerprints: false,
-      user : {
-        username: 'riczenn@thousandminds.com',
-        password: 'qwertyuiop',
+      user: {
+        username: "riczenn@thousandminds.com",
+        password: "qwertyuiop"
       },
-      result: ''
-    }
+      result: ""
+    };
   }
 
   getLoginInformation = async () => {
-    let accessData = await AsyncStorage.getItem('ACCESS_DATA'); 
+    let accessData = await AsyncStorage.getItem("ACCESS_DATA");
     if (accessData !== null) {
-      accessData = JSON.parse(accessData)
+      accessData = JSON.parse(accessData);
       this.setState({
-        isModal: false,
+        isModal: false
       });
       this.scanFingerprint();
-   
     }
-  }
-
+  };
 
   onChangeText = (value, field) => {
     const { user } = this.state;
     user[field] = value;
-    this.setState({user : user})
-  }
+    this.setState({ user: user });
+  };
 
-  componentDidMount(){
+  componentDidMount() {
     //this.checkDeviceForHardware();
     //this.checkForFingerprints();
     //this.getLoginInformation();
   }
 
-
   componentDidUpdate(prevProps) {
-    if (this.props.response.email ) {
+    if (this.props.response.email) {
       // NavigationService.navigate("DashboardScreen");
       NavigationService.navigate("AnnouncementScreen");
     }
-    if (this.props.response.success && this.props.response.action ===  'signin' ) {
-      console.log("Login componentDidUpdate" + JSON.stringify(this.props.response));
-        console.log("Calling app id api");
-        this.props.userInfo(this.props.response.access_token); 
-      if ( this.props.response.meta && this.props.response.meta.resourceType && this.props.response.meta.resourceType === 'User') {
+    if (
+      !this.props.response.is_fetching &&
+      this.props.response.success &&
+      this.props.response.action === "signin"
+    ) {
+      console.log(
+        "Login componentDidUpdate" + JSON.stringify(this.props.response)
+      );
+      console.log("Calling app id api");
+      this.props.userInfo(this.props.response.access_token);
+      if (
+        this.props.response.meta &&
+        this.props.response.meta.resourceType &&
+        this.props.response.meta.resourceType === "User"
+      ) {
         console.log("saving to signup data");
         Profile.setSignUpData(this.props.response);
         NavigationService.navigate("DashboardScreen");
@@ -84,51 +117,56 @@ class LoginScreen extends React.Component {
     }
   }
 
-
   checkDeviceForHardware = async () => {
     let compatible = await LocalAuthentication.hasHardwareAsync();
     console.log("compatible " + compatible);
-    this.setState({compatible})
-  }
+    this.setState({ compatible });
+  };
 
   checkForFingerprints = async () => {
     let fingerprints = await LocalAuthentication.isEnrolledAsync();
     console.log("fingerprints " + fingerprints);
-    this.setState({fingerprints})
-  }
+    this.setState({ fingerprints });
+  };
 
   scanFingerprint = async () => {
-   let result = await LocalAuthentication.authenticateAsync({promptMessage : 'Scan your finger.'});
-   console.log('Scan Result:', result)
-  }
+    let result = await LocalAuthentication.authenticateAsync({
+      promptMessage: "Scan your finger."
+    });
+    console.log("Scan Result:", result);
+  };
 
   showAndroidAlert = () => {
     Alert.alert(
-      'Fingerprint Scan',
-      'Place your finger over the touch sensor and press scan.',
+      "Fingerprint Scan",
+      "Place your finger over the touch sensor and press scan.",
       [
-        {text: 'Scan', onPress: () => {
-          this.scanFingerprint();
-        }},
-        {text: 'Cancel', onPress: () => console.log('Cancel'), style: 'cancel'}
+        {
+          text: "Scan",
+          onPress: () => {
+            this.scanFingerprint();
+          }
+        },
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel"),
+          style: "cancel"
+        }
       ]
-    )
-  }
-
+    );
+  };
 
   handleDataReceived(msgData) {
-
     // add to profile data
     Profile.setProfileData(msgData.data.attributes);
     Profile.setAccessData(msgData.data.accessData);
-    setLoggedState('Authenticated');
+    setLoggedState("Authenticated");
 
     this.setState({
-      text2: `Message from web view ${msgData}`,
+      text2: `Message from web view ${msgData}`
     });
     msgData.isSuccessfull = true;
   }
-
 
   login() {
     const { user } = this.state;
@@ -136,57 +174,114 @@ class LoginScreen extends React.Component {
     this.props.login(user.username, user.password);
   }
 
-
   render() {
-    
-    let {height, width} = Dimensions.get('window');
+    let { height, width } = Dimensions.get("window");
+    const {
+      is_fetching,
+      message,
+      success
+    } = this.props.response;
+
+    if(!is_fetching && message && !success) {
+      alertBox(message);
+    }
+
     return (
       <Container style={styles.containerBlue}>
-      <KeyboardShift>
-        {() => (
-        <View>
-        <ScrollView>
- 
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-         <Image resizeMode='contain' style={[buttonStyles.logo, {width: width - 30, height: height * 0.09, marginTop: height * 0.2}]} source={require('res/images/ic_logo_login.png')} />
-        </View>
-        <View style={{ flex: 1, flexDirection: 'column-reverse', justifyContent: 'center' }}>
+        <KeyboardShift>
+          {() => (
+            <View>
+              <ScrollView>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                >
+                  <Image
+                    resizeMode="contain"
+                    style={[
+                      buttonStyles.logo,
+                      {
+                        width: width - 30,
+                        height: height * 0.09,
+                        marginTop: height * 0.2
+                      }
+                    ]}
+                    source={require("res/images/ic_logo_login.png")}
+                  />
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: "column",
+                    justifyContent: "center"
+                  }}
+                >
+                  <TextInput
+                    placeholder="Email"
+                    onChangeText={text => this.onChangeText(text, "username")}
+                    ref={input => {
+                      this.input_username = input;
+                    }}
+                    style={[buttonStyles.textbox, {}]}
+                  />
 
-         <Button full transparent light
-          onPress={() => NavigationService.navigate("SignUpScreen")}
-          style={buttonStyles.buttonTrans}>
-          <Text style={ [{fontWeight: 'bold'}]}>CREATE MOBILE ACCOUNT</Text>
-         </Button>
+                  <TextInput
+                    placeholder="Password"
+                    secureTextEntry={true}
+                    onChangeText={text => this.onChangeText(text, "password")}
+                    ref={input => {
+                      this.input_password = input;
+                    }}
+                    style={[buttonStyles.textbox, {}]}
+                  />
 
-         <Button full style={buttonStyles.button}
-           onPress={() => this.login()}>
-          <Text>LOGIN</Text>
-         </Button>
+                  <Button
+                    full
+                    transparent
+                    light
+                    onPress={() =>
+                      NavigationService.navigate("ForgotPasswordScreen")
+                    }
+                    style={buttonStyles.forgotButtonTrans}
+                  >
+                    <Text style={[{ fontWeight: "bold" }]}>
+                      FORGOT PASSWORD?
+                    </Text>
+                  </Button>
 
-         <Button full transparent light
-          onPress={() => NavigationService.navigate("ForgotPasswordScreen")}
-          style={buttonStyles.forgotButtonTrans}>
-          <Text style={ [{fontWeight: 'bold'}]}>FORGOT PASSWORD?</Text>
-         </Button>
+                  <Button
+                    full
+                    style={buttonStyles.button}
+                    onPress={() => this.login()}
+                    disabled={ is_fetching }
+                  >
+                    { is_fetching &&
+                      <ActivityIndicator color='#FFFFFF'/>
+                    }
+                    { !is_fetching && 
+                      <Text>LOGIN</Text>
+                    }
+                  </Button>
 
-         <TextInput
-                   placeholder="Password"
-                   secureTextEntry={true}
-                   onChangeText={(text) => this.onChangeText(text,"password")}
-                   ref={input => { this.input_password = input }}
-                   style={[buttonStyles.textbox, { }]}/>
-
-         <TextInput
-                   placeholder="Email"
-                   onChangeText={(text) => this.onChangeText(text,"username")}
-                   ref={input => { this.input_username = input }}
-                   style={[buttonStyles.textbox, { }]}/>
-        </View>
-      </ScrollView>
-       </View>
-        )}
+                  <Button
+                    full
+                    transparent
+                    light
+                    onPress={() => NavigationService.navigate("SignUpScreen")}
+                    style={buttonStyles.buttonTrans}
+                  >
+                    <Text style={[{ fontWeight: "bold" }]}>
+                      CREATE MOBILE ACCOUNT
+                    </Text>
+                  </Button>
+                </View>
+              </ScrollView>
+            </View>
+          )}
         </KeyboardShift>
-
       </Container>
     );
   }
@@ -194,48 +289,48 @@ class LoginScreen extends React.Component {
 
 let buttonStyles = StyleSheet.create({
   logo: {
-   // height: 70,
-   marginBottom: 70,
+    // height: 70,
+    marginBottom: 70
   },
   button: {
-   height: 50,
-   marginTop: 20,
-   marginLeft: 30,
-   marginRight: 30,
-   justifyContent: 'center',
-   alignItems: 'center',
-   fontSize: 18,
-   backgroundColor: '#f5ac14',
-  }, 
+    height: 50,
+    marginTop: 20,
+    marginLeft: 30,
+    marginRight: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: 18,
+    backgroundColor: "#f5ac14"
+  },
   buttonTrans: {
-   fontSize: 18,
-   marginBottom: 20,
-   marginTop: 20,
-   marginLeft: 30,
-   marginRight: 30,
-   borderColor: '#FFFFFF',
-   justifyContent: 'center',
-   alignItems: 'center',
- },
- textbox: {
-   height: 48,
-   marginTop: 20,
-   marginLeft: 30,
-   paddingLeft: 20,
-   marginRight: 30,
-   justifyContent: 'center',
-   alignItems: 'center',
-   backgroundColor: '#FFFFFF'
- },
- forgotButtonTrans: {
-  fontSize: 18,
-  marginTop: 5,
-  marginLeft: 30,
-  marginRight: 30,
-  borderColor: '#FFFFFF',
-  justifyContent: 'center',
-  alignItems: 'center',
-},
+    fontSize: 18,
+    marginBottom: 20,
+    marginTop: 20,
+    marginLeft: 30,
+    marginRight: 30,
+    borderColor: "#FFFFFF",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  textbox: {
+    height: 48,
+    marginTop: 20,
+    marginLeft: 30,
+    paddingLeft: 20,
+    marginRight: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF"
+  },
+  forgotButtonTrans: {
+    fontSize: 18,
+    marginTop: 5,
+    marginLeft: 30,
+    marginRight: 30,
+    borderColor: "#FFFFFF",
+    justifyContent: "center",
+    alignItems: "center"
+  }
 });
 
 const mapStateToProps = state => {
@@ -248,13 +343,11 @@ const mapDispatchToProps = dispatch => {
   return {
     login: (username, password) => {
       dispatch(API.login(username, password));
-    }, 
-    userInfo: ( token ) => {
+    },
+    userInfo: token => {
       dispatch(IBMAppId.getUserInfo(token));
     }
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
-
-

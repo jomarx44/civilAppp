@@ -1,12 +1,12 @@
 {
   "name": "pnmobile",
   "displayName": "Sun Savings Mobile",
-  "appid_uri" : "https://pnauthenticator.mybluemix.net/protected/api/userData",
+  "appid_uri": "https://pnauthenticator.mybluemix.net/protected/api/userData",
   "appid": {
-    "APPID_AUTH_SERVER_HOST" : "https://us-south.appid.cloud.ibm.com",
-    "IBM_CLIENT_ID" : "f6d084d0-d9cd-4ade-ac17-dc63d42d2606",
-    "IBM_TENANT_ID" : "b5c859af-de0a-4b00-aa58-4a596f88420e",
-    "API_URL" : "https://e4788528.us-south.apiconnect.appdomain.cloud/"
+    "APPID_AUTH_SERVER_HOST": "https://us-south.appid.cloud.ibm.com",
+    "IBM_CLIENT_ID": "f6d084d0-d9cd-4ade-ac17-dc63d42d2606",
+    "IBM_TENANT_ID": "b5c859af-de0a-4b00-aa58-4a596f88420e",
+    "API_URL": "https://e4788528.us-south.apiconnect.appdomain.cloud/"
   },
   "expo": {
     "name": "pnmobile",
@@ -23,14 +23,10 @@
         "xhdpi": "./assets/images/SSB-Splash.png",
         "xxhdpi": "./assets/images/SSB-Splash@2x.png",
         "xxxhdpi": "./assets/images/SSB-Splash@3x.png",
-        "resizeMode" : "contain"
+        "resizeMode": "contain"
       }
     },
 
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ]
-  },
+    "platforms": ["ios", "android", "web"]
+  }
 }

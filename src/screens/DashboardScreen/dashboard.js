@@ -97,7 +97,6 @@ class DashboardScreen extends React.Component {
     let viewdata = [];
 
     if (section.data && section.data.length > 0) {
-      console.log(section.data[0].title);
       viewdata = section.data.map(data => {
         return (
           <TouchableOpacity
@@ -105,13 +104,13 @@ class DashboardScreen extends React.Component {
               this.onPressCard("AccountHistoryScreen", data.acctno)
             }
             key={data.key}
+            style={{ paddingHorizontal: 20, paddingVertical: 5 }}
           >
             <View style={styles.card}>
               <View style={{ flex: 1 }}>
                 <Text style={styles.cardTitle}>{data.title}</Text>
                 <Text style={styles.cardSubTitle}>{data.acctno}</Text>
               </View>
-
               <View style={{ flex: 1 }}>
                 <Text style={styles.cardTextBalanceValue}>{data.balance}</Text>
                 <Text style={styles.cardTextBalance}>Current Balance</Text>
@@ -127,14 +126,15 @@ class DashboardScreen extends React.Component {
         {viewdata}
         <TouchableOpacity
           onPress={() => this.onPressCard("ConnectCreateAccountScreen")}
+          style={{ paddingHorizontal: 20, paddingVertical: 5 }}
         >
-          <View style={[styles.card, { flex: 1, flexDirection: "row" }]}>
-            <View style={{ flex: 3, flexDirection: "row" }}>
-              <Text style={[styles.cardTitle, { marginBottom: 10 }]}>
+          <View style={[styles.card, { flex: 1, flexDirection: "row", justifyContent: 'space-between' }]}>
+            <View style={{ flex: 3, flexDirection: "row", alignItems: 'center'}}>
+              <Text style={styles.cardTitle}>
                 Add Account
               </Text>
             </View>
-            <View style={{ flex: 1, flexDirection: "row-reverse" }}>
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
               <Icon style={styles.iconArrow} name="ios-arrow-forward" />
             </View>
           </View>
@@ -151,12 +151,12 @@ class DashboardScreen extends React.Component {
       profileEmail = this.state.profileDetails.email;
     }
 
-    if (this.props.account.is_fetching) {
+    if (this.props.accounts.is_fetching) {
       return (
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
-          <ActivityIndicator size="large" />
+          <ActivityIndicator size="large" color="#f9a010" />
         </View>
       );
     }
@@ -172,7 +172,7 @@ class DashboardScreen extends React.Component {
             renderHeader={this._renderHeader}
             renderContent={this._renderContent}
             animation={true}
-            dataArray={this.props.account.data}
+            dataArray={this.props.accounts.list}
             contentStyle={{ backgroundColor: "#ddecf8" }}
           />
         </View>
@@ -184,16 +184,16 @@ class DashboardScreen extends React.Component {
 let styles = StyleSheet.create({
   viewHeader: {
     flex: 1,
-    backgroundColor: "#309fe7"
+    backgroundColor: "#309fe7",
+    padding: 20,
+    flexDirection: 'column',
+    justifyContent: 'flex-end'
   },
   content: {
     marginBottom: 10
   },
   card: {
-    marginTop: 10,
-    marginBottom: 5,
-    marginLeft: 20,
-    marginRight: 20,
+    padding: 10,
     backgroundColor: "#ffffff",
     borderTopWidth: 1,
     borderTopColor: "#e5eced",
@@ -206,30 +206,27 @@ let styles = StyleSheet.create({
   },
 
   cardTitle: {
-    marginTop: 10,
-    marginLeft: 10,
     color: "#042c5c",
-    fontSize: RFValue(15)
+    fontSize: RFValue(14),
+    fontFamily: "OpenSans_Regular"
   },
 
   cardSubTitle: {
-    marginLeft: 10,
     color: "#5d646c",
-    fontSize: RFValue(11)
+    fontSize: RFValue(10),
+    fontFamily: "Montserrat_Regular"
   },
 
   cardTextBalanceValue: {
-    marginTop: -10,
-    marginRight: 20,
     textAlign: "right",
-    fontSize: RFValue(15)
+    fontSize: RFValue(12),
+    fontFamily: "OpenSans_Regular"
   },
 
   cardTextBalance: {
-    marginRight: 20,
     textAlign: "right",
-    fontSize: RFValue(9),
-    marginBottom: 20
+    fontSize: RFValue(10),
+    fontFamily: "Montserrat_Regular"
   },
 
   header: {
@@ -265,32 +262,26 @@ let styles = StyleSheet.create({
   iconArrow: {
     marginTop: 10,
     marginBottom: 10,
-    marginRight: 32,
+    marginRight: 30,
     color: "#5d646c"
   },
 
   iconActive: {
     marginTop: 16,
     marginBottom: 16,
-    marginRight: 32,
+    marginRight: 30,
     color: "#309fe7"
   },
 
   title: {
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 15,
     color: "#ffffff",
     fontSize: 18,
-    fontWeight: "400"
+    fontFamily: 'OpenSans_SemiBold'
   },
   subtitle: {
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 4,
-    color: "#c4ffffff",
+    color: "#EEEEEE",
     fontSize: 12,
-    fontWeight: "400"
+    fontFamily: 'Montserrat_Regular'
   },
 
   viewAccounts: {
@@ -300,18 +291,14 @@ let styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state, props) => {
-  const { account } = state;
-  console.log("Accounts: ", account);
-  return { account };
+  const { accounts } = state;
+  return { accounts };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     getAccounts: (cisno = "1590000062") => {
       dispatch(API.getAccounts(cisno));
-    },
-    getAccountHistory: (acctno = "001-01-00027-7", count = "10") => {
-      dispatch(API.getAccountHistory(acctno, count));
     }
   };
 };

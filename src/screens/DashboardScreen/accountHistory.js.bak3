@@ -91,11 +91,8 @@ class AccountHistoryScreen extends React.Component {
   }
 
   componentDidMount() {
-    this.setState(
-      { acctno: this.props.navigation.getParam("acctno", "") },
-      this.props.getAccountDetails(this.state.acctno)
-      // this.props.getAccountDetails()
-    );
+    this.setState({ acctno: this.props.navigation.getParam("acctno", "") });
+    this.props.getAccountDetails();
   }
 
   static navigationOptions = {
@@ -114,7 +111,7 @@ class AccountHistoryScreen extends React.Component {
             alignItems: "center"
           }}
         >
-          <ActivityIndicator size="large" color="#f9a010" />
+          <ActivityIndicator size="large" />
         </View>
       );
     }
@@ -153,27 +150,27 @@ class AccountHistoryScreen extends React.Component {
 
 let localStyles = StyleSheet.create({
   viewHeader: {
-    flex: 2,
+    flex: 1,
     backgroundColor: "#309fe7",
     padding: 20,
     justifyContent: "flex-end"
   },
   viewAccounts: {
-    flex: 4,
+    flex: 3,
     backgroundColor: "#f2f4f5"
   },
   title: {
     // color: "#292929",
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     fontFamily: "OpenSans_Bold",
     // marginBottom: 10,
     fontSize: 18
   },
   subtitle: {
     // color: "#555555",
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     fontFamily: "Montserrat_Medium",
-    fontSize: 16
+    fontSize: 16,
   },
   bodyTitle: {
     color: "#A9A9A9",
@@ -184,7 +181,7 @@ let localStyles = StyleSheet.create({
   },
   listStyle: {
     flex: 1,
-    marginVertical: 10
+    marginTop: 10
   },
   listItem: {
     display: "flex",
@@ -199,7 +196,7 @@ let localStyles = StyleSheet.create({
   },
   itemText: {
     textAlign: "left",
-    color: "#7a979c",
+    color: "#696969",
     textTransform: "capitalize",
     fontFamily: "OpenSans_SemiBold",
     fontSize: 14

@@ -1,74 +1,75 @@
 import * as TYPE from "../actions/types";
 
-const initialState = {
+const accountState = {
   is_fetching: true,
-  data: {}
+  list: []
 };
 
-export default function accountReducer(state = initialState, action) {
-  console.log(action);
+export const accountsReducer = (state = accountState, action) => {
   switch (action.type) {
     case TYPE.FETCH_ACCOUNTS:
       return state;
     case TYPE.FETCH_ACCOUNTS_SUCCESS:
-      let accountListFormatted = [
-        {
-          title: "Loan Accounts",
-          data: []
-        },
-        {
-          title: "Time Deposit",
-          data: []
-        },
-        {
-          title: "Savings Account",
-          data: []
-        },
-      ];
-
-      const accountList = action.payload.data["Account.Info"].accts.a;
-      accountList.map((account, index) => {
-        let idx = 0;
-        switch (account.accttype) {
-          case "LN":
-            idx = 0;
-            break;
-          case "TD":
-            idx = 1;
-            break;
-          case "SA":
-            idx = 2;
-            break;
-        }
-        
-        accountListFormatted[idx].data.push({
-          key: index,
-          title: account.Name1,
-          acctno: account.AcctNoFormatted,
-          balance: `PHP ${account.LedgerFormatted}`
-        });
-      });
-
-      const output = {
+      return {
         is_fetching: false,
-        data: accountListFormatted
+        list: action.payload
       };
-
-      console.log("OUTPUT: ", output);
-      return output;
     case TYPE.FETCH_ACCOUNTS_ERROR:
       action.payload.is_fetching = false;
       return action.payload;
-    case TYPE.FETCH_ACCOUNTSHISTORY:
+    default:
       return state;
-    case TYPE.FETCH_ACCOUNTSHISTORY_SUCCESS:
+  }
+};
+
+const accountDetailsState = {
+  is_fetching: true,
+  account: {
+    id: "", // Account Number
+    balance: {
+      raw: "", // Available Balance
+      formatted: "" // Available Balance (Formatted)
+    },
+    currency: "", // Currency Code
+    history: [], // History
+    name: "", // Full Name (Name1)
+    product: "", // Product
+    status: {
+      type: "", // Status
+      code: "" // Status Number
+    },
+    type: {
+      raw: "", // Account Type
+      formatted: "" // Account Type (Formatted)
+    }
+  }
+};
+
+export const accountDetailsReducer = (state = accountDetailsState, action) => {
+  switch (action.type) {
+    case TYPE.FETCH_ACCOUNTDETAILS:
+      return state;
+    case TYPE.FETCH_ACCOUNTDETAILS_SUCCESS:
+      console.log("FETCH_ACCOUNTDETAILS_SUCCESS", action.payload);
+      return {
+        is_fetching: false,
+        account: action.payload
+      };
+    case TYPE.FETCH_ACCOUNTDETAILS_ERROR:
+      return {
+        is_fetching: false,
+        account: {}
+      }
+    case TYPE.FETCH_ACCOUNTINFO_ERROR:
       action.payload.is_fetching = false;
-      console.log("FETCH ACCOUNTSHISTORY SUCCESS: ", action);
-      return action.payload;
+      return {
+        is_fetching: false,
+        account: {}
+      };
     case TYPE.FETCH_ACCOUNTSHISTORY_ERROR:
       action.payload.is_fetching = false;
       return action.payload;
     default:
       return state;
   }
-}
+};

@@ -286,7 +286,6 @@ export const deleteData = json => {
 export const getData = json => {
   const url = getPath(json);
   let action_type = json["reducer_type"];
-  ey;
   return dispatch => {
     return axios
       .get(url)
@@ -305,6 +304,17 @@ export const getData = json => {
   };
 };
 
+export const postOnly = json => {
+  const {path, params} = json;
+  return axios.post(path, params);
+};
+
+// Returns a Promise
+export const getDataOnly = json => {
+  const url = getPath(json);
+  return axios.get(url);
+};
+
 export const responseData = (data, type, params) => {
   return {
     type: type,
@@ -314,8 +324,8 @@ export const responseData = (data, type, params) => {
 };
 
 export const dispatchOnly = json => {
-  const params = json["params"];
   let action_type = json["reducer_type"];
+  console.log("ACTION: ", action_type);
   return dispatch => {
     dispatch({ type: action_type, payload: {} });
   };

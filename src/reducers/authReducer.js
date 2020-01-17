@@ -3,7 +3,7 @@ import NavigationService  from '../navigation/NavigationService';
 import {
   ACCESS_TOKEN_SUCCESS, ACCESS_TOKEN_ERROR,
   LOGIN_SUCCESS, LOGIN_ERROR, LOGOUT, PIN_SUCCESS,
-  PRODUCTS_SUCCESS, SIGNUP, SIGNUP_SUCCESS, SIGNUP_ERROR
+  PRODUCTS_SUCCESS, SIGNUP, SIGNUP_SUCCESS, SIGNUP_ERROR,
 } from '../actions/types';
 import * as TYPE from 'actions/types';
 import * as Auth from 'store/auth';
@@ -12,6 +12,10 @@ import * as Profile from 'store/profile';
 
 export default function loginReducer(state = [], action) {
   switch (action.type) {
+    case TYPE.LOGIN: 
+      return {
+        is_fetching: true
+      }
     case TYPE.LOGIN_ERROR:
       return action.payload;
 
