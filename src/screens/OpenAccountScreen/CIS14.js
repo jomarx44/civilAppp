@@ -57,7 +57,7 @@ class CIS14 extends React.Component {
                     onChangeText={(text) => this.onChangeText(text,"initial_deposit")}/>
               </View>
               <View style={{flex: 1}} >
-                <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS01" storeKey="cis14" storeValue={this.state.cis} value={this.state.cis} />
+                <PNBlueButtonSaveAsyncStorage title="Save" navid="DashboardScreen" storeKey="cis14" storeValue={this.state.cis} value={this.state.cis} />
               </View>
             </ScrollView>
           </View>

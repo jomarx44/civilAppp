@@ -2,9 +2,9 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 13386,
-  "expoServerNgrokUrl": "https://pn-zkh.anonymous.sunsavings.exp.direct",
-  "packagerNgrokUrl": "https://packager.pn-zkh.anonymous.sunsavings.exp.direct",
-  "ngrokPid": 13395,
+  "packagerPid": 2887,
+  "expoServerNgrokUrl": "https://4e-ci5.alvin-ching19.pnmobileapp.exp.direct",
+  "packagerNgrokUrl": "https://packager.4e-ci5.alvin-ching19.pnmobileapp.exp.direct",
+  "ngrokPid": 2937,
   "webpackServerPort": null
 }

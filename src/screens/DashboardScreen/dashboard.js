@@ -1,160 +1,164 @@
 import React from "react";
-import PNHeaderNoLogo from "library/components/PNHeaderNoLogo.js"
-import { StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio, AsyncStorage, TouchableOpacity, TouchableWithoutFeedback} from "react-native";
-import { Accordion, Container, Header, Title, Left, Center, Icon, Right, Button, Body, Content,Text, Card, CardItem } from "native-base";
+import PNHeaderNoLogo from "library/components/PNHeaderNoLogo.js";
+import {
+  Dimensions,
+  StyleSheet,
+  View,
+  AsyncStorage,
+  TouchableOpacity,
+  ActivityIndicator
+} from "react-native";
+import { Accordion, Container, Icon, Text } from "native-base";
 
-import KeyboardShift from "library/components/CDKeyboardShift.js"
+import KeyboardShift from "library/components/CDKeyboardShift.js";
 import NavigationService from "navigation/NavigationService.js";
 
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
-import { isPinAuthenticated, isLoggedIn, getLoggedState, getToken } from "store/auth";
+import {
+  isPinAuthenticated,
+  isLoggedIn,
+  getLoggedState,
+  getToken
+} from "store/auth";
 import { getProfileData, getAccessData } from "store/profile";
-import { connect } from 'react-redux';
-import API from 'actions/api';
-
-
-const dataArray = [
-  { title: "Debit Accounts (2)", content: "Lorem ipsum dolor sit amet", 
-    data: [
-     { key: 1, title: "Savings Account" , acctno : "0300 4563 3535", balance: "Php 10,340.10"},
-     { key: 2, title: "Savings Account2" , acctno : "0300 0652 6675", balance: "Php 8,010.00"},
-      ]  },
-  { title: "Time Deposit", content: "Lorem ipsum dolor sit amet", data: [] },
-  { title: "Savings Account", content: "Lorem ipsum dolor sit amet", data: [] },
-  /* { title: "Credit Card", content: "Lorem ipsum dolor sit amet", data: [] } Hide Credit Card Option for the mean time */ 
-];
+import { connect } from "react-redux";
+import API from "actions/api";
 
 class DashboardScreen extends React.Component {
+  state = {
+    modalVisible: false,
+    profileDetails: {},
+    loanAccounts: {
+      title: "Loan Accounts",
+      data: []
+    },
+    timeDeposit: {
+      title: "Time Deposit",
+      data: []
+    },
+    savingsAccount: {
+      title: "Savings Account",
+      data: []
+    }
+  };
 
   constructor(props) {
     super(props);
   }
 
-    checkStorage = async () => {
-    var tt1 = await AsyncStorage.getItem('cis1');
-    var tt2 = await AsyncStorage.getItem('cis2');
-    var tt3 = await AsyncStorage.getItem('cis3');
-    var tt4 = await AsyncStorage.getItem('cis4');
-    var tt5 = await AsyncStorage.getItem('cis5');
-    var tt6 = await AsyncStorage.getItem('cis6');
-    var tt7 = await AsyncStorage.getItem('cis7');
-    var tt8 = await AsyncStorage.getItem('cis08');
-    var tt9 = await AsyncStorage.getItem('cis09');
-    var tt10 = await AsyncStorage.getItem('cis10');
-    var tt11 = await AsyncStorage.getItem('cis11');
-    var tt12 = await AsyncStorage.getItem('cis12');
-    var tt13 = await AsyncStorage.getItem('cis13');
-    var tt14 = await AsyncStorage.getItem('cis14');
-    console.log("TT1: ", tt1);
-    console.log("TT2: ", tt2);
-    console.log("TT3: ", tt3);
-    console.log("TT4: ", tt4);
-    console.log("TT5: ", tt5);
-    console.log("TT6: ", tt6);
-    console.log("TT7: ", tt7);
-    console.log("TT8: ", tt8);
-    console.log("TT9: ", tt9);
-    console.log("TT10: ", tt10);
-    console.log("TT11: ", tt11);
-    console.log("TT12: ", tt12);
-    console.log("TT13: ", tt13);
-    console.log("TT14: ", tt14);
-  } 
-
-  state = {
-    modalVisible: false,
-    profileDetails: {}
-  }
-
   async componentDidMount() {
     let authData = await getAccessData();
     let profileDetails = await getProfileData();
-    this.setState({profileDetails});
-    this.checkStorage(); 
+    this.props.getAccounts();
+    this.setState({ profileDetails });
   }
 
   static navigationOptions = {
-    header: (
-      <PNHeaderNoLogo title="My Accounts" />
-    )
+    header: <PNHeaderNoLogo title="My Accounts" />
   };
 
-  onPressCard = (navid) => {
-    NavigationService.navigate(navid);
-  }
+  checkCiS14 = async () => {
+    return await AsyncStorage.getItem("cis14");
+  };
 
-  _renderHeader = (section, expanded)  => {
+  onPressCard = async (navid, acctno = "") => {
+    const cis14 = await this.checkCiS14();
+    console.log(`CIS14: ${cis14}`);
+    if (cis14 && cis14.initial_deposit) {
+      navid = "CIS14";
+    }
+    NavigationService.navigate(navid, { acctno });
+  };
+
+  _renderHeader = (section, expanded) => {
     return (
       <View style={styles.header}>
-        <View style={{flex: 3}}>
-          {expanded
-           ? <Text style={styles.headerTextActive}>{section.title}</Text> 
-           : <Text style={styles.headerText}>{section.title}</Text>}
+        <View style={{ flex: 3 }}>
+          {expanded ? (
+            <Text style={styles.headerTextActive}>{section.title}</Text>
+          ) : (
+            <Text style={styles.headerText}>{section.title}</Text>
+          )}
         </View>
-        <View style={{flex: 1, flexDirection: 'row-reverse'}}>
-          {expanded
-          ? <Icon style={styles.iconActive} name="ios-arrow-down" />
-          : <Icon style={styles.icon} name="ios-arrow-forward" />}
+        <View style={{ flex: 1, flexDirection: "row-reverse" }}>
+          {expanded ? (
+            <Icon style={styles.iconActive} name="ios-arrow-down" />
+          ) : (
+            <Icon style={styles.icon} name="ios-arrow-forward" />
+          )}
         </View>
       </View>
     );
   };
 
-
-
-
   _renderContent = section => {
     console.log(section);
     let viewdata = [];
-   
-    if (section.data && section.data.length > 0 ) {
-      console.log(section.data[0].title);
-      viewdata = section.data.map((data) => {
-        return(
-          <TouchableOpacity onPress={() => this.onPressCard("AccountHistoryScreen")} key={data.key}>
-            <View style={styles.card}>
-              <View style={{flex:1}}>
-               <Text style={styles.cardTitle}>{data.title}</Text>
-               <Text style={styles.cardSubTitle}>{data.acctno}</Text>
-              </View>
 
-              <View style={{flex:1}}>
-                  <Text style={styles.cardTextBalanceValue}>{data.balance}</Text>
-                  <Text style={styles.cardTextBalance}>Current Balance</Text>
+    if (section.data && section.data.length > 0) {
+      viewdata = section.data.map(data => {
+        return (
+          <TouchableOpacity
+            onPress={() =>
+              this.onPressCard("AccountHistoryScreen", data.acctno)
+            }
+            key={data.key}
+            style={{ paddingHorizontal: 20, paddingVertical: 5 }}
+          >
+            <View style={styles.card}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.cardTitle}>{data.title}</Text>
+                <Text style={styles.cardSubTitle}>{data.acctno}</Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.cardTextBalanceValue}>{data.balance}</Text>
+                <Text style={styles.cardTextBalance}>Current Balance</Text>
               </View>
             </View>
           </TouchableOpacity>
-        )
+        );
       });
     }
 
     return (
       <View style={styles.content}>
-         {viewdata} 
-        <TouchableOpacity onPress={() => this.onPressCard("ConnectCreateAccountScreen")}>
-          <View style={[styles.card, { flex: 1, flexDirection: 'row'}]}>
-            <View style={{flex:3, flexDirection: 'row'}}>
-              <Text style={[styles.cardTitle, {marginBottom: 10}]}>Add Account</Text>
+        {viewdata}
+        <TouchableOpacity
+          onPress={() => this.onPressCard("ConnectCreateAccountScreen")}
+          style={{ paddingHorizontal: 20, paddingVertical: 5 }}
+        >
+          <View style={[styles.card, { flex: 1, flexDirection: "row", justifyContent: 'space-between' }]}>
+            <View style={{ flex: 3, flexDirection: "row", alignItems: 'center'}}>
+              <Text style={styles.cardTitle}>
+                Add Account
+              </Text>
             </View>
-            <View style={{flex:1, flexDirection: 'row-reverse'}}>
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
               <Icon style={styles.iconArrow} name="ios-arrow-forward" />
             </View>
           </View>
-         </TouchableOpacity>
- 
+        </TouchableOpacity>
       </View>
     );
   };
 
-
   render() {
-    let {height, width} = Dimensions.get('window');
     let profileFullName = "NA";
     let profileEmail = "NA";
-    if (this.state.profileDetails ) {
-        profileFullName = this.state.profileDetails.name;
-        profileEmail = this.state.profileDetails.email;
+    if (this.state.profileDetails) {
+      profileFullName = this.state.profileDetails.name;
+      profileEmail = this.state.profileDetails.email;
+    }
+
+    if (this.props.accounts.is_fetching) {
+      return (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size="large" color="#f9a010" />
+        </View>
+      );
     }
 
     return (
@@ -163,17 +167,14 @@ class DashboardScreen extends React.Component {
           <Text style={styles.title}>{profileFullName}</Text>
           <Text style={styles.subtitle}>{profileEmail}</Text>
         </View>
-
         <View style={styles.viewAccounts}>
-
           <Accordion
             renderHeader={this._renderHeader}
             renderContent={this._renderContent}
             animation={true}
-            dataArray={dataArray}
+            dataArray={this.props.accounts.list}
             contentStyle={{ backgroundColor: "#ddecf8" }}
           />
-
         </View>
       </Container>
     );
@@ -183,123 +184,123 @@ class DashboardScreen extends React.Component {
 let styles = StyleSheet.create({
   viewHeader: {
     flex: 1,
-    backgroundColor: '#309fe7' 
+    backgroundColor: "#309fe7",
+    padding: 20,
+    flexDirection: 'column',
+    justifyContent: 'flex-end'
   },
   content: {
-    marginBottom: 10,
+    marginBottom: 10
   },
   card: {
-    marginTop: 10,
-    marginBottom: 5,
-    marginLeft: 20,
-    marginRight: 20,
-    backgroundColor: '#ffffff',
+    padding: 10,
+    backgroundColor: "#ffffff",
     borderTopWidth: 1,
-    borderTopColor: '#e5eced',
+    borderTopColor: "#e5eced",
     borderLeftWidth: 1,
-    borderLeftColor: '#e5eced',
+    borderLeftColor: "#e5eced",
     borderRightWidth: 1,
-    borderRightColor: '#e5eced',
-    borderLeftColor: '#f9a010',
-    borderLeftWidth: 2,
+    borderRightColor: "#e5eced",
+    borderLeftColor: "#f9a010",
+    borderLeftWidth: 2
   },
 
   cardTitle: {
-    marginTop: 10,
-    marginLeft: 10,
-    color: '#042c5c',
-    fontSize: RFValue(15),
+    color: "#042c5c",
+    fontSize: RFValue(14),
+    fontFamily: "OpenSans_Regular"
   },
 
   cardSubTitle: {
-    marginLeft: 10,
-    color: '#5d646c',
-    fontSize: RFValue(11),
+    color: "#5d646c",
+    fontSize: RFValue(10),
+    fontFamily: "Montserrat_Regular"
   },
-  
+
   cardTextBalanceValue: {
-    marginTop: -10,
-    marginRight: 20,
-    textAlign: 'right',
-    fontSize: RFValue(15),
+    textAlign: "right",
+    fontSize: RFValue(12),
+    fontFamily: "OpenSans_Regular"
   },
 
   cardTextBalance: {
-    marginRight: 20,
-    textAlign: 'right',
-    fontSize: RFValue(9),
-    marginBottom: 20,
+    textAlign: "right",
+    fontSize: RFValue(10),
+    fontFamily: "Montserrat_Regular"
   },
-
-
 
   header: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
     borderWidth: 1,
-    borderColor: '#cbcdd0',
+    borderColor: "#cbcdd0"
   },
   headerText: {
     marginTop: 20,
     marginBottom: 14,
     marginLeft: 20,
-    color : '#5d646c',
+    color: "#5d646c",
     fontSize: 16,
-    fontWeight: '400',
+    fontWeight: "400"
   },
   headerTextActive: {
     marginTop: 20,
     marginBottom: 14,
     marginLeft: 20,
-    color : '#309fe7',
+    color: "#309fe7",
     fontSize: 16,
-    fontWeight: '400',
+    fontWeight: "400"
   },
- 
+
   icon: {
     marginTop: 16,
     marginBottom: 16,
     marginRight: 32,
-    color : '#5d646c',
+    color: "#5d646c"
   },
- 
+
   iconArrow: {
     marginTop: 10,
     marginBottom: 10,
-    marginRight: 32,
-    color : '#5d646c',
+    marginRight: 30,
+    color: "#5d646c"
   },
 
   iconActive: {
     marginTop: 16,
     marginBottom: 16,
-    marginRight: 32,
-    color : '#309fe7',
+    marginRight: 30,
+    color: "#309fe7"
   },
- 
+
   title: {
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 15,
-    color : '#ffffff',
+    color: "#ffffff",
     fontSize: 18,
-    fontWeight: '400',
+    fontFamily: 'OpenSans_SemiBold'
   },
   subtitle: {
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 4,
-    color : '#c4ffffff',
+    color: "#EEEEEE",
     fontSize: 12,
-    fontWeight: '400',
+    fontFamily: 'Montserrat_Regular'
   },
- 
+
   viewAccounts: {
     flex: 7,
-    backgroundColor: '#f2f4f5' 
+    backgroundColor: "#f2f4f5"
   }
-
 });
 
+const mapStateToProps = (state, props) => {
+  const { accounts } = state;
+  return { accounts };
+};
 
-export default DashboardScreen;
+const mapDispatchToProps = dispatch => {
+  return {
+    getAccounts: (cisno = "1590000062") => {
+      dispatch(API.getAccounts(cisno));
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DashboardScreen);

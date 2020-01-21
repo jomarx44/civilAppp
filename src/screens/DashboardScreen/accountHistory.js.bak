@@ -38,6 +38,45 @@ import { thisExpression } from "@babel/types";
 import { connect } from "react-redux";
 import API from "../../actions/api";
 
+const DATA = [
+  {
+    id: "1",
+    title: "Payroll",
+    date: "11-15-2019",
+    amount: 5950.0
+  },
+  {
+    id: "2",
+    title: "ATM Withdrawal",
+    date: "11-01-2019",
+    amount: -20000.0
+  },
+  {
+    id: "3",
+    title: "ATM Withdrawal",
+    date: "10-30-2019",
+    amount: 8000.0
+  },
+  {
+    id: "4",
+    title: "Payroll",
+    date: "10-15-2019",
+    amount: 14000.0
+  },
+  {
+    id: "5",
+    title: "Payroll",
+    date: "10-1-2019",
+    amount: 14000.0
+  },
+  {
+    id: "6",
+    title: "ATM Withdrawal",
+    date: "10-5-2019",
+    amount: -19000.0
+  }
+];
+
 numFixed = amount => {
   amount = Math.abs(amount);
   amount = amount.toFixed(2);
@@ -55,17 +94,11 @@ numFixed = amount => {
 function Item({ title, date, amount }) {
   return (
     <View style={localStyles.listItem}>
-      <View
-        style={{
-          flex: 4,
-          flexDirection: "column",
-          justifyContent: "space-between"
-        }}
-      >
+      <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
         <Text style={localStyles.itemText}>{title}</Text>
         <Text style={localStyles.dateText}>{date}</Text>
       </View>
-      <View style={{ flex: 2, justifyContent: "center" }}>
+      <View style={{flex: 1, justifyContent: 'center'}}>
         <Text
           style={[
             localStyles.amountText,
@@ -91,11 +124,8 @@ class AccountHistoryScreen extends React.Component {
   }
 
   componentDidMount() {
-    this.setState(
-      { acctno: this.props.navigation.getParam("acctno", "") },
-      this.props.getAccountDetails(this.state.acctno)
-      // this.props.getAccountDetails()
-    );
+    this.setState({ acctno: this.props.navigation.getParam("acctno", "") });
+    this.props.getAccountDetails();
   }
 
   static navigationOptions = {
@@ -104,35 +134,46 @@ class AccountHistoryScreen extends React.Component {
 
   render() {
     const { is_fetching, account } = this.props.accountDetails;
-
-    if (is_fetching) {
-      return (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-        >
-          <ActivityIndicator size="large" color="#f9a010" />
-        </View>
-      );
+    
+    if(account.balance.formatted) {
+      console.log("ASDASDASDASDAS");
     }
     return (
       <Container>
         <View style={localStyles.viewHeader}>
           <Text style={localStyles.title}>CURRENT BALANCE</Text>
-          {!is_fetching && account.balance && account.balance.formatted && (
-            <Text style={localStyles.subtitle}>
-              PHP {account.balance.formatted}
-            </Text>
-          )}
+            { is_fetching && (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <ActivityIndicator size="large" />
+              </View>
+            )}
+            { !is_fetching && account.balance.formatted &&
+              <Text style={localStyles.subtitle}>PHP {account.balance.formatted}</Text>
+            }
         </View>
         <View style={localStyles.viewAccounts}>
-          <Text style={localStyles.bodyTitle}>Transactions</Text>
+          <Text style={localStyles.bodyTitle}>TRANSACTIONS</Text>
           <SafeAreaView style={localStyles.listStyle}>
-            {account.history && (
+            {is_fetching && (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <ActivityIndicator size="large" />
+              </View>
+            )}
+            {!is_fetching && account.history && (
               <FlatList
+                // data={DATA}
                 data={account.history}
                 renderItem={({ item }) => (
                   <Item
@@ -153,68 +194,66 @@ class AccountHistoryScreen extends React.Component {
 
 let localStyles = StyleSheet.create({
   viewHeader: {
-    flex: 2,
-    backgroundColor: "#309fe7",
-    padding: 20,
-    justifyContent: "flex-end"
+    flex: 1,
+    backgroundColor: "#309fe7"
   },
   viewAccounts: {
     flex: 4,
     backgroundColor: "#f2f4f5"
   },
   title: {
-    // color: "#292929",
-    color: "#FFFFFF",
+    textAlign: "center",
+    color: "#f5ac14",
     fontFamily: "OpenSans_Bold",
-    // marginBottom: 10,
-    fontSize: 18
+    paddingTop: 20,
+    fontSize: 25
   },
   subtitle: {
-    // color: "#555555",
-    color: "#FFFFFF",
-    fontFamily: "Montserrat_Medium",
-    fontSize: 16
+    textAlign: "center",
+    fontFamily: "OpenSans_Bold",
+    fontSize: 20,
+    color: "#fff",
+    marginTop: 20,
+    paddingBottom: 10
   },
   bodyTitle: {
-    color: "#A9A9A9",
-    fontFamily: "OpenSans_SemiBold",
-    marginHorizontal: 8,
-    marginTop: 30,
-    fontSize: 14
+    textAlign: "center",
+    color: "#696969",
+    fontFamily: "OpenSans_Bold",
+    paddingTop: 20,
+    paddingBottom: 10,
+    fontSize: 20
   },
   listStyle: {
     flex: 1,
-    marginVertical: 10
+    marginTop: 10
   },
   listItem: {
     display: "flex",
-    borderColor: "#EEEEEE",
-    borderWidth: 1,
-    borderStyle: "solid",
     padding: 16,
-    flexDirection: "row",
+    flexDirection: "column",
     backgroundColor: "#fff",
-    marginVertical: 2,
-    marginHorizontal: 8
+    marginVertical: 8,
+    marginHorizontal: 16
   },
   itemText: {
     textAlign: "left",
-    color: "#7a979c",
+    color: "#696969",
     textTransform: "capitalize",
-    fontFamily: "OpenSans_SemiBold",
-    fontSize: 14
+    fontFamily: "OpenSans_Bold",
+    fontSize: 18,
   },
   dateText: {
     textAlign: "left",
     color: "#696969",
-    fontFamily: "Montserrat_Light",
-    fontSize: 10
+    fontFamily: "Montserrat_Regular",
+    fontSize: 12
   },
   amountText: {
-    fontSize: 12,
+    fontSize: 15,
     textAlign: "right",
     alignItems: "center",
-    fontFamily: "OpenSans_Regular"
+    fontFamily: "OpenSans_SemiBold",
   }
 });
 
@@ -228,7 +267,7 @@ const mapDispatchToProps = dispatch => {
   return {
     getAccountDetails: (acctno = "001-01-00027-7", count = "10") => {
       dispatch(API.getAccountDetails(acctno, count));
-    }
+    },
   };
 };
 
