@@ -62,7 +62,6 @@ class ChangePasswordScreen extends React.Component {
 	};
 
 	changePassword(){
-		console.log("state: " + JSON.stringify(this.state));
 		if(this.state.password.old_pw == '' || this.state.password.new_pw == '' || this.state.password.confirm_new == '' ){
 			alertBox("Please fill out all fields!");
 		} else {
@@ -79,7 +78,6 @@ class ChangePasswordScreen extends React.Component {
 		    	bu_code: this.state.bu_code,
 		    	emp_no: this.state.emp_no
 		    }
-		    console.log("params: " + JSON.stringify(params));
 			this.updatePassword(params);
 		} else {
 			alertBox("New password does not match!");
@@ -121,7 +119,6 @@ class ChangePasswordScreen extends React.Component {
 	}
 
 	componentDidUpdate(prevProps){
-		console.log("current_pw: " + this.state.password.current_pw);
 	}
 
 	onChangeText = (value, field) => {
@@ -176,7 +173,6 @@ class ChangePasswordScreen extends React.Component {
 
 
 const mapStateToProps = state => {
-	console.log("return na sa screen ==> " + JSON.stringify(state))
   return {
     response: state.common
   };

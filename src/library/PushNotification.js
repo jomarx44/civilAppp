@@ -21,10 +21,8 @@ export default async function registerForPushNotificationsAsync() {
   if (finalStatus !== 'granted') {
     return;
   }
-  console.log("SAAAAAAAAAAAAAAAAAAAAA")
   // Get the token that uniquely identifies this device
   let push_token = await Notifications.getExpoPushTokenAsync();
-  console.log("SAAAAAAAAAAAAAAAAAAAAA", push_token)
 
   const token = await AsyncStorage.getItem('USER_TOKEN');
 

@@ -2,6 +2,7 @@ import * as TYPE from "../actions/types";
 
 const accountState = {
   is_fetching: true,
+  error: null,
   list: []
 };
 
@@ -15,7 +16,6 @@ export const accountsReducer = (state = accountState, action) => {
         list: action.payload
       };
     case TYPE.FETCH_ACCOUNTS_ERROR:
-      action.payload.is_fetching = false;
       return action.payload;
     default:
       return state;
@@ -42,7 +42,8 @@ const accountDetailsState = {
       raw: "", // Account Type
       formatted: "" // Account Type (Formatted)
     }
-  }
+  },
+  error: null,
 };
 
 export const accountDetailsReducer = (state = accountDetailsState, action) => {
@@ -50,25 +51,42 @@ export const accountDetailsReducer = (state = accountDetailsState, action) => {
     case TYPE.FETCH_ACCOUNTDETAILS:
       return state;
     case TYPE.FETCH_ACCOUNTDETAILS_SUCCESS:
-      console.log("FETCH_ACCOUNTDETAILS_SUCCESS", action.payload);
       return {
         is_fetching: false,
-        account: action.payload
+        account: action.payload,
+        error: null
       };
     case TYPE.FETCH_ACCOUNTDETAILS_ERROR:
       return {
         is_fetching: false,
-        account: {}
-      }
+        account: {},
+        error: true
+      };
     case TYPE.FETCH_ACCOUNTINFO_ERROR:
-      action.payload.is_fetching = false;
       return {
         is_fetching: false,
-        account: {}
+        account: {},
+        error: true
       };
     case TYPE.FETCH_ACCOUNTSHISTORY_ERROR:
-      action.payload.is_fetching = false;
-      return action.payload;
+      return {
+        is_fetching: false,
+        account: {},
+        error: true
+      };
+    default:
+      return state;
+  }
+};
+
+export const checkAccountReducer = (state = {}, action) => {
+  switch (action.type) {
+    case TYPE.CHECK_ACCOUNT:
+      return;
+    case TYPE.CHECK_ACCOUNT_SUCCESS:
+      return;
+    case TYPE.CHECK_ACCOUNT_ERROR:
+      return;
     default:
       return state;
   }

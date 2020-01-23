@@ -25,7 +25,6 @@ class CDCoinculator extends Component {
 
   onChangeText = (expected_cd_deduct) => {
   	this.setState({expected_cd_deduct: expected_cd_deduct})
-  	console.log(this.state.expected_cd_deduct)
   }
 
   onBackButtonPressAndroid = () => {
@@ -34,7 +33,6 @@ class CDCoinculator extends Component {
   };
 
   onApplyPress = () => {
-  	console.log("apply_enable: " + this.props.product_details.apply_enabled)
   	if(this.props.product_details.apply_enabled){
   		NavigationService.navigate('PrivacyPolicy', 
 	    {
@@ -62,13 +60,11 @@ class CDCoinculator extends Component {
     {
     	let ratio = (Dimensions.get('window').width * 0.8) / Width;
     	let imgheight = ratio * Height
-    	console.log("imgheight: " + imgheight)
         this.setState({imageHeight: imgheight});
 
     },(errorMsg) =>
     {
         console.log( errorMsg );
-
     });
 	
   }
@@ -96,7 +92,6 @@ class CDCoinculator extends Component {
         	<ScrollView contentContainerStyle={{flexGrow: 1}}>
         	<View>
         		<View style={{marginTop: 30, flexDirection: 'column', justifyContent: 'center'}}>
-        		{console.log('provider_img: ' + this.props.product_details.background_img_url)}
 
 		      		<Image 
 			        	style={{width: width * 0.8, height: this.state.imageHeight, alignSelf: 'center'}}

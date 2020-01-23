@@ -61,8 +61,6 @@ class IBMAppId  {
       return this.axios_obj.get(json["path"], config )
         .then(response => {
           action_type = action_type + "_SUCCESS"
-          console.log("sucess: ", action_type);
-          console.log("GET METHOD IBM APP ID: ", response.data);
           dispatch(this.responseData(response.data, action_type, params))
         })
         .catch(error => {

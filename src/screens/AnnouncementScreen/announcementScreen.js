@@ -65,14 +65,10 @@ class AnnouncementScreen extends React.Component {
               <View style={style.noteContainer__}>
                 <ImageBackground
                   source={require("res/images/bg.png")}
-                  style={{ width: "100%", height: "100%" }}
+                  style={{ width: "100%", height: "100%", padding: 20 }}
                 >
                   <Text
-                    style={{
-                      color: "#fff",
-                      padding: 20,
-                      fontFamily: "Avenir_Light",
-                    }}
+                    style={[style.announementSubheading, style.textLight]}
                   >
                     Lorem Ipsum is simply dummy text of the printing and
                     typesetting industry. Lorem Ipsum has been the industry's
@@ -94,12 +90,8 @@ class AnnouncementScreen extends React.Component {
                 />
                 <Text
                   style={[
-                    {
-                      fontWeight: "900",
-                      paddingBottom: 10,
-                      paddingTop: 20,
-                      fontFamily: "Menlo_Bold"
-                    }
+                    style.announcementHeading,
+                    style.textDark
                   ]}
                 >
                   LOREM IPSUM
@@ -120,16 +112,17 @@ class AnnouncementScreen extends React.Component {
               <View style={style.noteContainer_}>
                 <View style={style.shapeContainer}>
                   <Text
-                    style={{
-                      fontFamily: "Menlo_Bold",
-                      fontSize: 45,
-                      color: "#fff",
-                      textAlign: "center"
-                    }}
+                    style={[
+                      style.announcementHeading,
+                      style.textLight
+                    ]}
                   >
                     LOREM IPSUM
                   </Text>
-                  <Text style={{ paddingTop: 25 }}>
+                  <Text style={[
+                    style.announcementSubheading,
+                    style.textLight
+                  ]}>
                     When an unknown printer took a galley of type and scrambled
                     it to make a type specimen book.
                   </Text>
@@ -143,7 +136,10 @@ class AnnouncementScreen extends React.Component {
                 </View>
                 <View style={style.noteContainer}>
                   <Text
-                    style={{ textAlign: "center", fontFamily: "Avenir_Light" }}
+                    style={[
+                      style.announcementSubheading,
+                      style.textDark
+                    ]}
                   >
                     "Neque quisquam est qui ipsum quia, adipisci velit..."
                   </Text>
@@ -167,6 +163,20 @@ class AnnouncementScreen extends React.Component {
 }
 
 let style = StyleSheet.create({
+  announcementHeading: {
+    fontFamily: 'Montserrat_SemiBold',
+    fontSize: 16,
+  },
+  announementSubheading: {
+    fontFamily: 'OpenSans_Regular',
+    fontSize: 14,
+  },
+  textLight: {
+    color: '#FFF'
+  },
+  textDark: {
+    color: '#000'
+  },
   pagerView: {
     flex: 1,
     justifyContent: "center",

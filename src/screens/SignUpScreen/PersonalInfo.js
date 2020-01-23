@@ -59,10 +59,8 @@ class PersonalInfo extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.response.success && this.props.response.action ===  'signup' ) {
-      console.log("Personal Info componentDidUpdate" + JSON.stringify(this.props.response));
       // save the data
       if ( this.props.response.meta && this.props.response.meta.resourceType && this.props.response.meta.resourceType === 'User') {
-        console.log("saving to signup data");
         Profile.setSignUpData(this.props.response);
       }
       NavigationService.navigate("EmailVerificationScreen");

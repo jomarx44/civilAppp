@@ -47,7 +47,7 @@ import * as LocalAuthentication from "expo-local-authentication";
 import NavigationService from "navigation/NavigationService.js";
 import { connect } from "react-redux";
 import API from "actions/api";
-import IBMAppId from "actions/ibmappid";
+import IBMAppId from "../../actions/ibmappid";
 import { alertBox } from "../../actions/axiosCalls.js";
 
 class LoginScreen extends React.Component {
@@ -100,17 +100,12 @@ class LoginScreen extends React.Component {
       this.props.response.success &&
       this.props.response.action === "signin"
     ) {
-      console.log(
-        "Login componentDidUpdate" + JSON.stringify(this.props.response)
-      );
-      console.log("Calling app id api");
       this.props.userInfo(this.props.response.access_token);
       if (
         this.props.response.meta &&
         this.props.response.meta.resourceType &&
         this.props.response.meta.resourceType === "User"
       ) {
-        console.log("saving to signup data");
         Profile.setSignUpData(this.props.response);
         NavigationService.navigate("DashboardScreen");
       }
@@ -119,13 +114,11 @@ class LoginScreen extends React.Component {
 
   checkDeviceForHardware = async () => {
     let compatible = await LocalAuthentication.hasHardwareAsync();
-    console.log("compatible " + compatible);
     this.setState({ compatible });
   };
 
   checkForFingerprints = async () => {
     let fingerprints = await LocalAuthentication.isEnrolledAsync();
-    console.log("fingerprints " + fingerprints);
     this.setState({ fingerprints });
   };
 
@@ -133,7 +126,7 @@ class LoginScreen extends React.Component {
     let result = await LocalAuthentication.authenticateAsync({
       promptMessage: "Scan your finger."
     });
-    console.log("Scan Result:", result);
+    // console.log("Scan Result:", result);
   };
 
   showAndroidAlert = () => {
@@ -170,19 +163,14 @@ class LoginScreen extends React.Component {
 
   login() {
     const { user } = this.state;
-    console.log("checklogin: " + user.username + " : " + user.password);
     this.props.login(user.username, user.password);
   }
 
   render() {
     let { height, width } = Dimensions.get("window");
-    const {
-      is_fetching,
-      message,
-      success
-    } = this.props.response;
+    const { is_fetching, message, success } = this.props.response;
 
-    if(!is_fetching && message && !success) {
+    if (!is_fetching && message && !success) {
       alertBox(message);
     }
 
@@ -256,14 +244,13 @@ class LoginScreen extends React.Component {
                     full
                     style={buttonStyles.button}
                     onPress={() => this.login()}
-                    disabled={ is_fetching }
+                    disabled={is_fetching}
                   >
-                    { is_fetching &&
-                      <ActivityIndicator color='#FFFFFF'/>
-                    }
-                    { !is_fetching && 
+                    {is_fetching ? (
+                      <ActivityIndicator color="#FFFFFF" />
+                    ) : (
                       <Text>LOGIN</Text>
-                    }
+                    )}
                   </Button>
 
                   <Button
