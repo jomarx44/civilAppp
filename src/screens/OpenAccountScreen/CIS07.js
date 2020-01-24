@@ -25,7 +25,7 @@ import { StackNavigator } from "react-navigation";
 import NavigationService from "navigation/NavigationService.js";
 import styles from "styles/commonStyle";
 import PNFormTextBox from "library/components/PNFormTextBox";
-import PNFormTextBoxWithDefaultValue from "library/components/PNFormTextBoxWithDefaultValue";
+import PNFormTextBoxWithDefaultValue from "../../library/components/PNFormTextBoxWithDefaultValue";
 import PNBlueButton from "library/components/PNBlueButton";
 import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage";
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
@@ -87,13 +87,13 @@ class CIS07 extends React.Component {
               >
                 <PNHeaderTitle title="My Present Address is:" />
               </View>
-              <ScrollView style={{ marginBottom: 20 }}>
+              <ScrollView style={localStyle.container}>
                 <PNRadioFormAddress
                   onPress={() => this.toggleChecked()}
                   selected={this.state.isChecked}
                 />
                 <View style={{ flex: 4, paddingTop: 30 }}>
-                  <PNFormTextBoxWithDefaultValue
+                  <PNFormTextBox
                     title="Home # / Unit #"
                     reference={input => {
                       this.input_unit_number = input;
@@ -102,7 +102,7 @@ class CIS07 extends React.Component {
                       this.onChangeText(text, "present_unit_number")
                     }
                   />
-                  <PNFormTextBoxWithDefaultValue
+                  <PNFormTextBox
                     title="Street Name"
                     reference={input => {
                       this.input_street_name = input;
@@ -111,7 +111,7 @@ class CIS07 extends React.Component {
                       this.onChangeText(text, "present_street_name")
                     }
                   />
-                  <PNFormTextBoxWithDefaultValue
+                  <PNFormTextBox
                     title="City, State"
                     reference={input => {
                       this.input_city = input;

@@ -84,7 +84,7 @@ class CIS05 extends React.Component {
               >
                 <PNHeaderTitle title="Beneficiary(if applicable):" />
               </View>
-              <ScrollView style={{ marginBottom: 20 }}>
+              <ScrollView style={localStyle.container}>
                 <View style={{ flex: 4, paddingTop: 30 }}>
                   <PNFormTextBox
                     title="Name"

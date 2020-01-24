@@ -11,6 +11,8 @@ import {
   REQUEST_ID_ERROR
 } from "./AppAttribute_actions";
 
+import {alertBox} from "../../actions/axiosCalls"
+
 const initialState = {
   isFetching: false,
   isUpdating: false,
@@ -62,6 +64,7 @@ export const AppAttributeReducer = (state = initialState, action) => {
       return action.payload;
     case PUT_ATTRIBUTES_SUCCESS:
       console.log('PUT_ATTRIBUTES_SUCCESS')
+      alertBox("Successfully Created!")
       return action.payload;
     default:
       return state;

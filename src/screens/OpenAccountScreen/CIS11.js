@@ -25,9 +25,9 @@ import { setLoggedState } from "store/auth";
 import { StackNavigator } from "react-navigation";
 import NavigationService from "navigation/NavigationService.js";
 import styles from "styles/commonStyle";
-import PNFormTextBox from "library/components/PNFormTextBox";
-import PNDropDownInput from "library/components/PNDropDownInput";
-import PNDropDownInputFund from "library/components/PNDropDownInputFund";
+import PNFormTextBox from "../../library/components/PNFormTextBox";
+import PNDropDownInput from "../../library/components/PNDropDownInput";
+import PNDropDownInputFund from "../../library/components/PNDropDownInputFund";
 import PNDropDownInputEmployee from "library/components/PNDropDownInputEmployee";
 import PNBlueButton from "library/components/PNBlueButton";
 import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage";
@@ -90,7 +90,7 @@ class CIS11 extends React.Component {
               >
                 <PNHeaderTitle title="My Employment Information:" />
               </View>
-              <ScrollView>
+              <ScrollView style={localStyle.container}>
                 <View style={{ flex: 4, paddingTop: 30 }}>
                   <PNFormTextBox
                     title="Nature of Work"

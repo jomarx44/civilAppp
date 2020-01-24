@@ -24,33 +24,25 @@ class PNDropDownInput extends Component {
 
 let styles = StyleSheet.create({
   text: {
-   marginRight: 30,
-   alignItems: 'flex-start',
-   backgroundColor: '#FFFFFF',
-   marginLeft: 30,
-   marginBottom: 0,
-   marginTop: 20,
-   color: '#f9a010',
-   fontSize: 18
+    alignItems: "center",
+    color: '#f9a010',
+    fontSize: 18,
+    backgroundColor: "#FFFFFF",
+    marginTop: 5
   },
   input: {
-   color: '#f9a010',
-   fontSize: 18,
-   marginBottom: 0,
-   marginTop: 0,
-   marginLeft: 30,
-   width: '85%'
+    color: "#f9a010",
+    fontSize: 14,
+    fontFamily: 'Montserrat_Medium',
+    width: "100%"
   },
   label: {
-   marginLeft: 30,
-   marginRight: 30,
-   fontSize: 18,
-   fontWeight: '400',
-   color: '#5d646c'
+    fontSize: 14,
+    fontFamily: 'Montserrat_Medium',
+    color: "#5d646c"
   },
   view: {
-   marginTop: 30,
-   marginBottom: 10
+    marginBottom: 25
   }
 });
 

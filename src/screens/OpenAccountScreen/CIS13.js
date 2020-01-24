@@ -75,7 +75,7 @@ class CIS13 extends React.Component {
               >
                 <PNHeaderTitle title="The Purpose of my Account is:" />
               </View>
-              <ScrollView>
+              <ScrollView style={localStyle.container}>
                 <View style={{ flex: 4, paddingTop: 30 }}>
                   <PNRadioFormAccountType title="Account Type" />
                   {/*<PNFormTextBox title="Account Type" 

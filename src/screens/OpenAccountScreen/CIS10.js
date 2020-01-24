@@ -74,7 +74,7 @@ class CIS10 extends React.Component {
               >
                 <PNHeaderTitle title="Signature or Fingerprint:" />
               </View>
-              <ScrollView>
+              <ScrollView style={localStyle.container}>
                 <View style={{ flex: 4, paddingTop: 30 }}>
                   <Text style={{ textAlign: "center" }}>
                     Signature or Fingerprint

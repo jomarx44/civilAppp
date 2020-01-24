@@ -72,7 +72,7 @@ class CIS06 extends React.Component {
               >
                 <PNHeaderTitle title="My Permanent Address is:" />
               </View>
-              <ScrollView style={{ marginBottom: 20 }}>
+              <ScrollView style={localStyle.container}>
                 <View style={{ flex: 4, paddingTop: 30 }}>
                   <PNFormTextBox
                     title="Home # / Unit #"
