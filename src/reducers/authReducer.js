@@ -10,9 +10,9 @@ import {
   PRODUCTS_SUCCESS,
   SIGNUP,
   SIGNUP_SUCCESS,
-  SIGNUP_ERROR
+  SIGNUP_ERROR,
 } from "../actions/types";
-import * as TYPE from "actions/types";
+import * as TYPE from "../actions/types";
 import * as Auth from "store/auth";
 import * as Profile from "store/profile";
 
@@ -29,6 +29,19 @@ export default function loginReducer(state = [], action) {
     case TYPE.LOGIN_SUCCESS:
         console.log("Login Success: ", action.payload);
       Profile.setAccessData(action.payload);
+      return action.payload;
+
+    case TYPE.FORGOT_PASSWORD:
+      return {
+        is_fetching: true
+      }
+    
+    case TYPE.FORGOT_PASSWORD_SUCCESS:
+      console.log('FORGOT PASSWORD SUCCESS: ', action.payload) 
+      return action.payload;
+
+    case TYPE.FORGOT_PASSWORD_ERROR:
+        console.log('FORGOT PASSWORD ERROR: ', action.payload) 
       return action.payload;
 
     case TYPE.USERINFO_SUCCESS:

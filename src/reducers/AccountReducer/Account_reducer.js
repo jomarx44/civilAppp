@@ -1,4 +1,4 @@
-import * as TYPE from "../actions/types";
+import * as TYPE from "../../actions/types";
 
 const accountState = {
   is_fetching: true,
@@ -74,19 +74,6 @@ export const accountDetailsReducer = (state = accountDetailsState, action) => {
         account: {},
         error: true
       };
-    default:
-      return state;
-  }
-};
-
-export const checkAccountReducer = (state = {}, action) => {
-  switch (action.type) {
-    case TYPE.CHECK_ACCOUNT:
-      return;
-    case TYPE.CHECK_ACCOUNT_SUCCESS:
-      return;
-    case TYPE.CHECK_ACCOUNT_ERROR:
-      return;
     default:
       return state;
   }

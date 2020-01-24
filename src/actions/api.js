@@ -1,4 +1,3 @@
-import React from "React";
 import { Alert } from "react-native";
 import NavigationService from "../navigation/NavigationService";
 import { Toast } from "native-base";
@@ -37,7 +36,7 @@ const loginInitial = (username, password) => {
 const login = (username, password) => {
   const json_data = {
     path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
-    params: {
+    body: {
       action: "signin",
       username: username,
       password: password
@@ -59,6 +58,45 @@ const login = (username, password) => {
         dispatch({
           type: TYPE.LOGIN_ERROR,
           payload: response.data
+        });
+        alertBox(
+          "Ooops! There's something wrong connecting to the server. Please try again."
+        );
+      });
+  };
+};
+
+const forgotPassword = (username) => {
+  const json_data = {
+    path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
+    body: {
+      action: "forgotpassword",
+      user: username
+    }
+  };
+
+  return dispatch => {
+    dispatch({
+      type: TYPE.FORGOT_PASSWORD
+    });
+    return postOnly(json_data)
+      .then(response => {
+        dispatch({
+          type: response.data.success ? TYPE.FORGOT_PASSWORD_SUCCESS : TYPE.FORGOT_PASSWORD_ERROR,
+          payload: {
+            is_fetching: false,
+            message: response.data.message
+          }
+        });
+      })
+      .catch(error => {
+        dispatch({
+          type: TYPE.FORGOT_PASSWORD_ERROR,
+          
+          payload: {
+            is_fetching: false,
+            message: error
+          }
         });
         alertBox(
           "Ooops! There's something wrong connecting to the server. Please try again."
@@ -453,6 +491,7 @@ const checkStatus = response => {
 export default {
   loginInitial,
   login,
+  forgotPassword,
   checkEmail,
   signup,
   checkAccount,

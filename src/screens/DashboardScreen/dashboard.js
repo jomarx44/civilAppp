@@ -20,7 +20,7 @@ import {
   getLoggedState,
   getToken
 } from "store/auth";
-import { getProfileData, getAccessData } from "store/profile";
+import { getProfileData, getAccessData } from "../../store/profile";
 import { connect } from "react-redux";
 import API from "actions/api";
 
@@ -146,6 +146,10 @@ class DashboardScreen extends React.Component {
     if (this.state.profileDetails) {
       profileFullName = this.state.profileDetails.name;
       profileEmail = this.state.profileDetails.email;
+    }
+    console.log('AUTH DATA: ', this.props.auth)
+    if(this.props.appAttribute) {
+      console.log('APPATTRIBUTE: ', this.props.appAttribute);
     }
 
     if (this.props.accounts.is_fetching) {
@@ -283,8 +287,8 @@ let styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state, props) => {
-  const { accounts } = state;
-  return { accounts };
+  const { accounts, appAttribute, auth } = state;
+  return { accounts,appAttribute, auth };
 };
 
 const mapDispatchToProps = dispatch => {

@@ -1,69 +1,85 @@
 import React from "react";
-import AppJson from '../../../app.json';
+import AppJson from "../../../app.json";
 
+import KeyboardShift from "library/components/CDKeyboardShift.js";
 
-import KeyboardShift from "library/components/CDKeyboardShift.js"
-
-import { ScrollView, StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, CheckBox, View, BackHandler, PixelRatio, AsyncStorage } from "react-native";
-import { Container, Header, Title, Left, Center, Icon, Right, Button, Body, Content,Text, Card, CardItem } from "native-base";
-import * as Profile from 'store/profile';
-import { setLoggedState } from "store/auth";
-
-import { StackNavigator } from "react-navigation";
-import NavigationService from 'navigation/NavigationService.js'
-import styles from "styles/commonStyle";
-import PNRadioFormGender from "library/components/PNRadioFormGender";
-import PNFormTextBox from "library/components/PNFormTextBox"
-import PNBlueButton from "library/components/PNBlueButton"
-import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage"
-import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue"
-import PNHeaderTitle from "library/components/PNHeaderTitle"
+import {
+  ScrollView,
+  Dimensions,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  View,
+} from "react-native";
+import {
+  Container,
+} from "native-base";
+import PNFormTextBox from "../../library/components/PNFormTextBox";
+import PNRadioFormGender from "../../library/components/PNRadioFormGender";
+import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage";
+import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
+import PNHeaderTitle from "library/components/PNHeaderTitle";
+import NavigationService from "navigation/NavigationService.js";
+import { connect } from "react-redux";
+import {addAttributes} from '../../reducers/AppAttributeReducer/AppAttribute_actions'
 
 class CIS02 extends React.Component {
-
   input_gender;
   constructor(props) {
     super(props);
     this.state = {
-      radioButton:'value1',
-      cis: {}
+      radioButton: "value1",
+      cis: {
+        gender: ''
+      }
     };
   }
+
+  componentDidMount() {
+    console.log('APPATTRIBUTE: ', this.props.appAttribute);
+  }
+
+  handlePress = () => {
+    this.props.addAttributes(this.state.cis);
+    NavigationService.navigate('CIS03');
+  };
 
   onChangeText = (value, field) => {
     const { cis } = this.state;
     cis[field] = value;
-    this.setState({cis});
-  }
+    this.setState({ cis });
+  };
 
   static navigationOptions = {
-    header: (
-      <PNHeaderBackButtonBlue />
-    )
+    header: <PNHeaderBackButtonBlue />
   };
 
   render() {
-    let {height, width} = Dimensions.get('window');
+    let { height, width } = Dimensions.get("window");
     return (
       <Container>
         <KeyboardShift>
           {() => (
-          <View style={{flex: 1}}>
-            <View style={{backgroundColor: "#309fe7", height: height*.20}} >
-              <PNHeaderTitle title="I am a:" />
-            </View>
-            <ScrollView>
-              <View style={{flex: 4, paddingTop: 30 }} >
-                <PNRadioFormGender title = "Gender" />
-                {/*<PNFormTextBox title="Gender" 
+            <View style={{ flex: 1 }}>
+              <View
+                style={{ backgroundColor: "#309fe7", height: height * 0.2 }}
+              >
+                <PNHeaderTitle title="I am a:" />
+              </View>
+              <ScrollView style={localStyle.container}>
+                <View style={{ flex: 4, paddingTop: 30 }}>
+                  {/* <PNRadioFormGender title="Gender" /> */}
+                  <PNFormTextBox title="Gender" 
                     reference={input => { this.input_gender = input }}
-                    onChangeText={(text) => this.onChangeText(text,"gender")}/>*/}
-              </View>
-              <View style={{flex: 1}} >
-                <PNBlueButtonSaveAsyncStorage title="NEXT" navid="CIS03" storeKey="cis2" storeValue={this.state.cis}/>
-              </View>
-            </ScrollView>
-          </View>
+                    onChangeText={(text) => this.onChangeText(text,"gender")}/>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <TouchableOpacity style={localStyle.button} onPress={this.handlePress}>
+                    <Text style={localStyle.button_text}>NEXT</Text>
+                  </TouchableOpacity>
+                </View>
+              </ScrollView>
+            </View>
           )}
         </KeyboardShift>
       </Container>
@@ -72,22 +88,46 @@ class CIS02 extends React.Component {
 }
 
 let localStyle = StyleSheet.create({
+  container: {
+    paddingHorizontal: 30,
+    paddingBottom: 51
+  },
   text: {
     marginLeft: 32,
     marginRight: 32,
-    color: '#FFFFFF'
+    color: "#FFFFFF"
   },
   button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute'
-  }, 
+    width: "100%",
+    height: 50,
+    marginTop: 40,
+    backgroundColor: "#309fe7",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  button_text: {
+    color: "#fff",
+    fontSize: 16,
+    fontFamily: "Montserrat_Medium"
+  },
   header: {
     backgroundColor: "#309fe7",
     flex: 1
   }
 });
 
+const mapStateToProps = (state, props) => {
+  const { appAttribute } = state;
+  return { appAttribute };
+};
 
-export default CIS02;
+const mapDispatchToProps = dispatch => {
+  return {
+    addAttributes: attributes => {
+      dispatch(addAttributes(attributes));
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CIS02);
 

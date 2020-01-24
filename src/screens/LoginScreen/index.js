@@ -1,70 +1,96 @@
 import React from "react";
-import AppJson from "../../../app.json";
-
-import KeyboardShift from "library/components/CDKeyboardShift.js";
-
 import {
   ActivityIndicator,
   ScrollView,
   AsyncStorage,
-  StatusBar,
   Image,
   Dimensions,
   StyleSheet,
-  ImageBackground,
   TextInput,
   View,
-  BackHandler,
-  PixelRatio
 } from "react-native";
 import {
   Container,
-  Header,
-  Title,
-  Left,
-  Center,
-  Icon,
-  Right,
   Button,
-  Body,
-  Content,
   Text,
-  Card,
-  CardItem
 } from "native-base";
-import * as Profile from "store/profile";
-import { setLoggedState } from "store/auth";
-
-import { WebView } from "react-native-webview";
-import Modal from "react-native-modal";
-
-import styles from "styles/commonStyle";
-import PNOrangeButton from "library/components/PNOrangeButton";
-import PNTextBox from "library/components/PNTextBox";
-import PNTransparentButton from "library/components/PNTransparentButton";
-import * as LocalAuthentication from "expo-local-authentication";
-
-import NavigationService from "navigation/NavigationService.js";
 import { connect } from "react-redux";
+import { setLoggedState } from "store/auth";
+import { alertBox } from "../../actions/axiosCalls.js";
+import KeyboardShift from "library/components/CDKeyboardShift.js";
+import styles from "styles/commonStyle";
+import NavigationService from "navigation/NavigationService.js";
+
+// APIs
 import API from "actions/api";
 import IBMAppId from "../../actions/ibmappid";
-import { alertBox } from "../../actions/axiosCalls.js";
+
+// Action Creator
+import { getAttributes, putAttributes } from '../../reducers/AppAttributeReducer/AppAttribute_actions';
+import * as LocalAuthentication from "expo-local-authentication";
+import * as Profile from "../../store/profile";
 
 class LoginScreen extends React.Component {
   input_username;
   input_password;
-  constructor(props) {
-    super(props);
-    this.state = {
-      isReady: false,
-      compatible: false,
-      fingerprints: false,
-      user: {
-        username: "riczenn@thousandminds.com",
-        password: "qwertyuiop"
-      },
-      result: ""
-    };
+
+  state = {
+    isReady: false,
+    compatible: false,
+    fingerprints: false,
+    user: {
+      username: "riczenn@thousandminds.com",
+      password: "qwertyuiop"
+    },
+    result: ""
+  };
+
+  componentDidMount() {
+    //this.checkDeviceForHardware();
+    //this.checkForFingerprints();
+    //this.getLoginInformation();
+  }
+
+  componentDidUpdate(prevProps) {
+    const { response, userInfo, getAppAttributes, updateAppAttributes } = this.props;
+    // if (this.props.response) {
+    //   // NavigationService.navigate("DashboardScreen");
+    //   console.log('HERRE!');
+    //   NavigationService.navigate("AnnouncementScreen");
+    // }
+    if (
+      !response.is_fetching &&
+      response.success &&
+      response.action === "signin"
+    ) {
+      userInfo(response.access_token);
+      AsyncStorage.setItem('ACCESS_TOKEN', response.access_token)
+
+      // putAttributes({
+      //   attribute_name: 'alvin',
+      //   attribute_value: {
+      //     first_name: 'Alvin',
+      //     middle_name: 'Viernes',
+      //     last_name: 'Ching',
+      //     mobile_number: '09953186216',
+      //     email_address: 'alvin@thousandminds.com',
+      //     address: 'Zone 6, San Patricio, Delfin Albano, Isabela',
+      //   },
+      //   access_token: response.access_token
+      // });
+      NavigationService.navigate("AnnouncementScreen");
+    }
+
+    // if (
+    //   this.props.response.meta &&
+    //   this.props.response.meta.resourceType &&
+    //   this.props.response.meta.resourceType === "User"
+    // ) {
+    //   console.log('META: ', this.props.response);
+    //   Profile.setSignUpData(this.props.response);
+    //   // NavigationService.navigate("DashboardScreen");
+    //   NavigationService.navigate("AnnouncementScreen");
+    // }
   }
 
   getLoginInformation = async () => {
@@ -83,34 +109,6 @@ class LoginScreen extends React.Component {
     user[field] = value;
     this.setState({ user: user });
   };
-
-  componentDidMount() {
-    //this.checkDeviceForHardware();
-    //this.checkForFingerprints();
-    //this.getLoginInformation();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.response.email) {
-      // NavigationService.navigate("DashboardScreen");
-      NavigationService.navigate("AnnouncementScreen");
-    }
-    if (
-      !this.props.response.is_fetching &&
-      this.props.response.success &&
-      this.props.response.action === "signin"
-    ) {
-      this.props.userInfo(this.props.response.access_token);
-      if (
-        this.props.response.meta &&
-        this.props.response.meta.resourceType &&
-        this.props.response.meta.resourceType === "User"
-      ) {
-        Profile.setSignUpData(this.props.response);
-        NavigationService.navigate("DashboardScreen");
-      }
-    }
-  }
 
   checkDeviceForHardware = async () => {
     let compatible = await LocalAuthentication.hasHardwareAsync();
@@ -333,6 +331,12 @@ const mapDispatchToProps = dispatch => {
     },
     userInfo: token => {
       dispatch(IBMAppId.getUserInfo(token));
+    },
+    getAttributes: (parameters) => {
+      dispatch(getAttributes(parameters));
+    },
+    putAttributes: (parameters) => {
+      dispatch(putAttributes(parameters));
     }
   };
 };
