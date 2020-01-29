@@ -2,9 +2,9 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 17402,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
-  "webpackServerPort": 19006
+  "packagerPid": 3358,
+  "expoServerNgrokUrl": "https://5x-vkb.alvin-ching19.pnmobileapp.exp.direct",
+  "packagerNgrokUrl": "https://packager.5x-vkb.alvin-ching19.pnmobileapp.exp.direct",
+  "ngrokPid": 3400,
+  "webpackServerPort": null
 }

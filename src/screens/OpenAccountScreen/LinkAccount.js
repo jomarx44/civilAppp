@@ -42,6 +42,14 @@ class LinkAccount extends React.Component {
     this.input_acctno = React.createRef();
     this.input_tin = React.createRef();
   }
+  
+  getFormattedDate(date) {
+    let year = date.getFullYear();
+    let month = (1 + date.getMonth()).toString().padStart(2, '0');
+    let day = date.getDate().toString().padStart(2, '0');
+  
+    return month + '/' + day + '/' + year;
+}
 
   state = {
     acctno: "",
@@ -70,7 +78,7 @@ class LinkAccount extends React.Component {
 
   handlePress = () => {
     const account = this.state;
-    account.date_of_birth = account.date_of_birth.toISOString().slice(0,10);
+    account.date_of_birth = this.getFormattedDate(account.date_of_birth);
     this.props.checkAccount(account);
   };
 
