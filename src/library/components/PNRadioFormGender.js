@@ -60,9 +60,8 @@ let styles = StyleSheet.create({
     color: "#5d646c"
   },
   radioStyle: {
-    marginLeft: 30,
     marginBottom: 30,
-    width: "85%"
+    width: "100%"
   }
 });
 

@@ -76,7 +76,7 @@ let styles = StyleSheet.create({
   },
   radioStyle: {
     marginBottom: 30,
-    width: "85%"
+    width: "100%"
   }
 });
 

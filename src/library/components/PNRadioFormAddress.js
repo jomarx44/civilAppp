@@ -13,7 +13,7 @@ class PNRadioFormAddress extends Component {
     return (
       <View style={styles.view}>
         <ListItem
-          checked={selected}
+          // checked={selected}
           onPress={onPress}
           style={styles.radioStyle}
         >
@@ -40,7 +40,6 @@ let styles = StyleSheet.create({
   },
   radioStyle: {
     width: "100%",
-    textDecorationLine: "none"
   }
 });
 
