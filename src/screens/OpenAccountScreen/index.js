@@ -15,6 +15,10 @@ import CIS11 from "./CIS11.js";
 import CIS12 from "./CIS12.js";
 import CIS13 from "./CIS13.js";
 import CIS14 from "./CIS14.js";
+import OTPOpenAccountScreen from "./OTPOpenAccountScreen"
+import OTPScreen from "../OTPScreen/OTPScreen";
+import ConnectCreateAccountScreen from "./ConnectCreateAccountScreen.js";
+import LinkAccount from "./LinkAccount.js";
 
 import { createStackNavigator } from "react-navigation";
 export default (DrawNav = createStackNavigator({
@@ -31,5 +35,11 @@ export default (DrawNav = createStackNavigator({
   CIS11: { screen: CIS11 },
   CIS12: { screen: CIS12 },
   CIS13: { screen: CIS13 },
-  CIS14: { screen: CIS14 }
+  CIS14: { screen: CIS14 },
+  OTPOpenAccount: {screen: OTPOpenAccountScreen},
+  OTPScreen: { screen: OTPScreen },
+  ConnectCreateAccountScreen: { screen: ConnectCreateAccountScreen },
+  LinkAccount: { screen: LinkAccount }
+}, {
+  initialRouteName: 'ConnectCreateAccountScreen'
 }));

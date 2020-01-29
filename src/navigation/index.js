@@ -23,8 +23,8 @@ const AuthenticationNavigator = createDrawerNavigator({
 });
 
 const HomeNavigator = createDrawerNavigator({
-  AnnouncementScreen: { screen: AnnouncementScreen },
   DashboardScreen: { screen: DashboardScreen },
+  AnnouncementScreen: { screen: AnnouncementScreen },
   OpenAccountScreen: { screen: OpenAccountScreen },
   PersonalDetails: {
     screen: PersonalDetailsScreen,
@@ -33,7 +33,7 @@ const HomeNavigator = createDrawerNavigator({
     })
   }
 }, {
-  initialRouteName: 'AnnouncementScreen',
+  initialRouteName: 'DashboardScreen',
   drawerWidth: Dimensions.get("window").width * 0.45,
   contentComponent: SideMenu
 });

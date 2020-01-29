@@ -26,7 +26,7 @@ import { connect } from "react-redux";
 import {addAttributes} from '../../reducers/AppAttributeReducer/AppAttribute_actions'
 
 class CIS01 extends React.Component {
-  input_first_number;
+  input_first_name;
   input_middle_name;
   input_last_name;
   constructor(props) {
@@ -72,9 +72,10 @@ class CIS01 extends React.Component {
                   <PNFormTextBox
                     title="First Name"
                     reference={input => {
-                      this.input_first_number = input;
+                      this.input_first_name = input;
                     }}
                     onChangeText={text => this.onChangeText(text, "first_name")}
+                    onSubmitEditing={() => {this._}}
                   />
                   <PNFormTextBox
                     title="Middle Name"

@@ -24,13 +24,23 @@ import { setLoggedState } from "store/auth";
 import { StackNavigator } from "react-navigation";
 import NavigationService from "navigation/NavigationService.js";
 import styles from "styles/commonStyle";
+import PNDropDown from '../../library/components/PNDropDown';
 import PNFormTextBox from "library/components/PNFormTextBox";
-import PNBlueButton from "library/components/PNBlueButton";
-import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage";
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
 import PNHeaderTitle from "library/components/PNHeaderTitle";
 import { connect } from "react-redux";
 import {addAttributes} from '../../reducers/AppAttributeReducer/AppAttribute_actions'
+
+const options = [
+  {
+    label: 'Single',
+    value: 'single'
+  },
+  {
+    label: 'Married',
+    value: 'married'
+  }
+]
 
 class CIS04 extends React.Component {
   input_civil_status;
@@ -60,6 +70,10 @@ class CIS04 extends React.Component {
     this.setState({ cis });
   };
 
+  handleValueChange = (value) => {
+    this.onChangeText(value, 'civil_status');
+  }
+
   static navigationOptions = {
     header: <PNHeaderBackButtonBlue />
   };
@@ -78,14 +92,11 @@ class CIS04 extends React.Component {
               </View>
               <ScrollView style={localStyle.container}>
                 <View style={{ flex: 4, paddingTop: 30 }}>
-                  <PNFormTextBox
-                    title="Civil Status"
-                    reference={input => {
-                      this.input_civil_status = input;
-                    }}
-                    onChangeText={text =>
-                      this.onChangeText(text, "civil_status")
-                    }
+                  <PNDropDown 
+                    onValueChange={this.handleValueChange}
+                    options={options}
+                    selectedValue={this.state.cis.civil_status}
+                    title='Civil Status'
                   />
                   <PNFormTextBox
                     title="Mother's Maiden Name"

@@ -33,9 +33,10 @@ export const AppAttributeReducer = (state = initialState, action) => {
         }
       });
     case REQUEST_ID:
-      return {
+      return Object.assign({}, state, {
+        ...state,
         isFetching: true
-      };
+      });
     case REQUEST_ID_SUCCESS:
       console.log('REQUEST_ID_SUCCESS');
       return Object.assign({}, state, {
@@ -49,17 +50,19 @@ export const AppAttributeReducer = (state = initialState, action) => {
     case FETCH_ATTRIBUTES_SUCCESS:
       return action.payload;
     case FETCH_ATTRIBUTES:
-      return {
+      return Object.assign({}, state, {
+        ...state,
         isFetching: true
-      };
+      });
     case FETCH_ATTRIBUTES_ERROR:
       return action.payload;
     case FETCH_ATTRIBUTES_SUCCESS:
       return action.payload;
     case PUT_ATTRIBUTES:
-      return {
+      return Object.assign({}, state, {
+        ...state,
         isUpdating: true
-      };
+      });
     case PUT_ATTRIBUTES_ERROR:
       return action.payload;
     case PUT_ATTRIBUTES_SUCCESS:

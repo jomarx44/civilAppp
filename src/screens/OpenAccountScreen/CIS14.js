@@ -4,7 +4,7 @@ import AppJson from "../../../app.json";
 import KeyboardShift from "library/components/CDKeyboardShift.js";
 
 import {
-  AsyncStorage,
+  ActivityIndicator,
   ScrollView,
   StatusBar,
   Image,
@@ -17,15 +17,9 @@ import {
   Text
 } from "react-native";
 import { Container } from "native-base";
-import * as Profile from "store/profile";
-import { setLoggedState } from "store/auth";
-
-import { StackNavigator } from "react-navigation";
+import Overlay from "../../library/components/Overlay";
 import NavigationService from "navigation/NavigationService.js";
-import styles from "styles/commonStyle";
-import PNFormTextBox from "library/components/PNFormTextBox";
-import PNBlueButton from "library/components/PNBlueButton";
-import PNBlueButtonSaveAsyncStorage from "../../library/components/PNBlueButtonSaveAsyncStorage";
+import PNFormInitialDeposit from "../../library/components/PNFormInitialDeposit";
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
 import PNHeaderTitle from "library/components/PNHeaderTitle";
 import { connect } from "react-redux";
@@ -34,6 +28,7 @@ import {
   putAttributes,
   requestUniqueId
 } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
+import { requestOTP_TM } from "../../reducers/OTPReducer/OTP_actions";
 
 class CIS14 extends React.Component {
   input_initial_deposit;
@@ -43,10 +38,32 @@ class CIS14 extends React.Component {
     }
   };
 
+  componentDidUpdate(prevProps) {
+    const {
+      otp,
+      token
+    } = this.props;
+
+    if(prevProps.otp !== otp) {
+      if(!otp.isFetching & (otp.success == false)) {
+        alertBox(otp.message);
+      }
+    }
+
+    if(prevProps.token !== token) {
+      if (!token.isFetching && token.success) {
+        NavigationService.navigate("OTPOpenAccount");
+      }
+    }
+  }
+
   handlePress = () => {
-    this.props.addAttributes(this.state.cis);
-    console.log('oink', this.props.appAttribute);
-    this.props.requestUniqueId(this.props.appAttribute.temporary_attributes);
+    const { addAttributes, appAttribute, requestOTP_TM } = this.props;
+    addAttributes(this.state.cis);
+    requestOTP_TM({
+      mobile_number: appAttribute.temporary_attributes.contact_information,
+      save_info: appAttribute.temporary_attributes
+    });
   };
 
   onChangeText = (value, field) => {
@@ -55,31 +72,18 @@ class CIS14 extends React.Component {
     this.setState({ cis });
   };
 
+  numberWithCommas(x) {
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+  }
+
   static navigationOptions = {
     header: <PNHeaderBackButtonBlue />
   };
 
   render() {
-    const { appAttribute, putAttributes, auth } = this.props;
-    if (
-      appAttribute &&
-      !appAttribute.is_fetching &&
-      appAttribute.temporary_key 
-    ) {
-      AsyncStorage.getItem('ACCESS_TOKEN')
-        .then((response) => {
-          const data ={
-            attribute_name: appAttribute.temporary_key,
-            attribute_value: appAttribute.temporary_attributes,
-            access_token: response
-          };
-          console.log('appAttribute: ', appAttribute);
-          console.log('DDDAAAATTTAAA: ', data);
-          putAttributes(data);
-          NavigationService.navigate("DashboardScreen");
-        });
-      
-    }
+    const { otp, token } = this.props;
 
     let { height, width } = Dimensions.get("window");
     return (
@@ -94,14 +98,15 @@ class CIS14 extends React.Component {
               </View>
               <ScrollView style={localStyle.container}>
                 <View style={{ flex: 4, paddingTop: 30 }}>
-                  <PNFormTextBox
-                    title=""
+                  <PNFormInitialDeposit
+                    title="Initial Deposit"
                     reference={input => {
                       this.input_initial_deposit = input;
                     }}
                     onChangeText={text =>
                       this.onChangeText(text, "initial_deposit")
                     }
+                    value={this.state.cis.initial_deposit}
                   />
                 </View>
                 <View style={{ flex: 1 }}>
@@ -113,6 +118,11 @@ class CIS14 extends React.Component {
                   </TouchableOpacity>
                 </View>
               </ScrollView>
+              {otp.isFetching && otp.success == null &&(
+                <Overlay>
+                  <ActivityIndicator color="#FFF" size="large" />
+                </Overlay>
+              )}
             </View>
           )}
         </KeyboardShift>
@@ -150,8 +160,8 @@ let localStyle = StyleSheet.create({
 });
 
 const mapStateToProps = (state, props) => {
-  const { appAttribute, auth } = state;
-  return { appAttribute, auth };
+  const { appAttribute, otp, token } = state;
+  return { appAttribute, otp, token };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -164,6 +174,9 @@ const mapDispatchToProps = dispatch => {
     },
     requestUniqueId: attributes => {
       dispatch(requestUniqueId(attributes));
+    },
+    requestOTP_TM: params => {
+      dispatch(requestOTP_TM(params));
     }
   };
 };

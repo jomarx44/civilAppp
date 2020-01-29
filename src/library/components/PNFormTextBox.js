@@ -19,9 +19,11 @@ class PNFormTextBox extends Component {
       onChangeText,
       password,
       value,
+      maxLength = null,
       onSubmitEditing = null,
       keyboardType = "default",
-      autoCompleteType = "off"
+      autoCompleteType = "off",
+      editable = true
     } = this.props;
     return (
       <View style={styles.view}>
@@ -34,8 +36,10 @@ class PNFormTextBox extends Component {
             onChangeText={onChangeText}
             ref={this.input}
             secureTextEntry={password}
-            style={styles.input}
+            style={[styles.input, !editable && styles.input_disabled]}
             value={value}
+            editable={editable}
+            maxLength={maxLength}
           />
         </Item>
       </View>
@@ -63,12 +67,15 @@ let styles = StyleSheet.create({
   input: {
     color: "#f9a010",
     fontSize: 14,
-    fontFamily: 'Montserrat_Medium',
+    fontFamily: "Montserrat_Medium",
     width: "100%"
+  },
+  input_disabled: {
+    backgroundColor: "#EEEEEE"
   },
   label: {
     fontSize: 14,
-    fontFamily: 'Montserrat_Medium',
+    fontFamily: "Montserrat_Medium",
     color: "#5d646c"
   },
   view: {

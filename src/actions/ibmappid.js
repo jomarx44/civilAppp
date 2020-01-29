@@ -1,4 +1,3 @@
-import React from 'React';
 import { Alert } from 'react-native'
 import { Toast } from 'native-base';
 import axios from 'axios';

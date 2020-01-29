@@ -37,7 +37,11 @@ class CIS06 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      cis: { permanent_unit_number: "", permanent_street_name: "", permanent_city: "" }
+      cis: {
+        permanent_unit_number: "",
+        permanent_street_name: "",
+        permanent_city: ""
+      }
     };
   }
 
@@ -97,7 +101,9 @@ class CIS06 extends React.Component {
                     reference={input => {
                       this.input_city = input;
                     }}
-                    onChangeText={text => this.onChangeText(text, "permanent_city")}
+                    onChangeText={text =>
+                      this.onChangeText(text, "permanent_city")
+                    }
                   />
                 </View>
                 <View style={{ flex: 1 }}>

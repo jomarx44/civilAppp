@@ -5,7 +5,7 @@ import ModalDropdown from 'react-native-modal-dropdown';
 
 class PNDropDownInput extends Component {
   render() {
-    const { title, reference, onChangeText, password } = this.props;
+    const { title, onSelect } = this.props;
     const icon = <Icon style={{ marginLeft: 90 }} name="ios-arrow-down" />;
     return (
      <View style={styles.view}>
@@ -15,6 +15,7 @@ class PNDropDownInput extends Component {
           options={[ 'Manila', 'Makati City', 'Pasay City', 'Quezon City', 'Taguig City' ]} 
           dropdownStyle={[styles.input]}
           textStyle={styles.text}
+          onSelect={onSelect}
           dropdownTextStyle={{ fontSize: 18}}
         />
      </View>

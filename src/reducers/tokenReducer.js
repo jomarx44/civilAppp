@@ -1,7 +1,10 @@
 import * as TYPE from "../actions/types";
 
 const tokenState = {
-  token: ""
+  isFetching: false,
+  success: null,
+  message: "",
+  token: "",
 };
 
 export const tokenReducer = (state = tokenState, action) => {

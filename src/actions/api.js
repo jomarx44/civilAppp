@@ -55,9 +55,10 @@ const login = (username, password) => {
         });
       })
       .catch(error => {
+        console.log(error)
         dispatch({
           type: TYPE.LOGIN_ERROR,
-          payload: response.data
+          payload: error
         });
         alertBox(
           "Ooops! There's something wrong connecting to the server. Please try again."

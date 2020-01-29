@@ -44,6 +44,12 @@ class CIS02 extends React.Component {
     NavigationService.navigate('CIS03');
   };
 
+  handleToggleGender = (selected_gender) => {
+    const currentState = this.state;
+    currentState.cis.gender = selected_gender;
+    this.setState(currentState);
+  }
+
   onChangeText = (value, field) => {
     const { cis } = this.state;
     cis[field] = value;
@@ -68,10 +74,7 @@ class CIS02 extends React.Component {
               </View>
               <ScrollView style={localStyle.container}>
                 <View style={{ flex: 4, paddingTop: 30 }}>
-                  {/* <PNRadioFormGender title="Gender" /> */}
-                  <PNFormTextBox title="Gender" 
-                    reference={input => { this.input_gender = input }}
-                    onChangeText={(text) => this.onChangeText(text,"gender")}/>
+                  <PNRadioFormGender title="Gender" toggleGender={this.handleToggleGender } value={this.state.cis.gender}/>
                 </View>
                 <View style={{ flex: 1 }}>
                   <TouchableOpacity style={localStyle.button} onPress={this.handlePress}>

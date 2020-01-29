@@ -15,22 +15,16 @@ import {
   View,
   Text
 } from "react-native";
-import {
-  Container,
-} from "native-base";
+import { Container } from "native-base";
 import * as Profile from "store/profile";
 import { setLoggedState } from "store/auth";
 
 import { StackNavigator } from "react-navigation";
 import NavigationService from "navigation/NavigationService.js";
-import styles from "styles/commonStyle";
-import PNFormTextBox from "library/components/PNFormTextBox";
-import PNFormTextBoxWithDefaultValue from "../../library/components/PNFormTextBoxWithDefaultValue";
-import PNBlueButton from "library/components/PNBlueButton";
-import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage";
+import PNFormTextBox from "../../library/components/PNFormTextBox";
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
 import PNHeaderTitle from "library/components/PNHeaderTitle";
-import PNRadioFormAddress from "library/components/PNRadioFormAddress";
+import PNRadioFormAddress from "../../library/components/PNRadioFormAddress";
 import { connect } from "react-redux";
 import { addAttributes } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
 
@@ -43,9 +37,9 @@ class CIS07 extends React.Component {
     this.state = {
       isChecked: false,
       cis: {
-        present_city: '',
-        present_street_name: '',
-        present_unit_number: ''
+        present_city: "",
+        present_street_name: "",
+        present_unit_number: ""
       }
     };
   }
@@ -70,8 +64,19 @@ class CIS07 extends React.Component {
   };
 
   toggleChecked = () => {
+    const {
+      permanent_city,
+      permanent_street_name,
+      permanent_unit_number
+    } = this.props.appAttribute.temporary_attributes;
+
     this.setState({
-      isChecked: !this.state.isChecked
+      isChecked: !this.state.isChecked,
+      cis: {
+        present_city: !this.state.isChecked ? permanent_city : '',
+        present_street_name: !this.state.isChecked ? permanent_street_name : '',
+        present_unit_number: !this.state.isChecked ? permanent_unit_number : ''
+      }
     });
   };
 
@@ -88,11 +93,11 @@ class CIS07 extends React.Component {
                 <PNHeaderTitle title="My Present Address is:" />
               </View>
               <ScrollView style={localStyle.container}>
-                <PNRadioFormAddress
-                  onPress={() => this.toggleChecked()}
-                  selected={this.state.isChecked}
-                />
                 <View style={{ flex: 4, paddingTop: 30 }}>
+                  <PNRadioFormAddress
+                    onPress={() => this.toggleChecked()}
+                    selected={this.state.isChecked}
+                  />
                   <PNFormTextBox
                     title="Home # / Unit #"
                     reference={input => {
@@ -101,6 +106,8 @@ class CIS07 extends React.Component {
                     onChangeText={text =>
                       this.onChangeText(text, "present_unit_number")
                     }
+                    editable={!this.state.isChecked}
+                    value={this.state.cis.present_unit_number}
                   />
                   <PNFormTextBox
                     title="Street Name"
@@ -110,13 +117,19 @@ class CIS07 extends React.Component {
                     onChangeText={text =>
                       this.onChangeText(text, "present_street_name")
                     }
+                    editable={!this.state.isChecked}
+                    value={this.state.cis.present_street_name}
                   />
                   <PNFormTextBox
                     title="City, State"
                     reference={input => {
                       this.input_city = input;
                     }}
-                    onChangeText={text => this.onChangeText(text, "present_city")}
+                    onChangeText={text =>
+                      this.onChangeText(text, "present_city")
+                    }
+                    editable={!this.state.isChecked}
+                    value={this.state.cis.present_city}
                   />
                 </View>
                 <View style={{ flex: 1 }}>

@@ -24,7 +24,7 @@ import { setLoggedState } from "store/auth";
 import { StackNavigator } from "react-navigation";
 import NavigationService from "navigation/NavigationService.js";
 import styles from "styles/commonStyle";
-import PNFormTextBox from "library/components/PNFormTextBox";
+import PNFormContactInfo from "../../library/components/PNFormContactInfo";
 import PNBlueButton from "library/components/PNBlueButton";
 import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage";
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
@@ -54,7 +54,12 @@ class CIS08 extends React.Component {
   }
 
   handlePress = () => {
-    this.props.addAttributes(this.state.cis);
+    const attribute = {
+      contact_information: this.state.cis.contact_information
+    };
+    
+    attribute.contact_information = '63' + attribute.contact_information;
+    this.props.addAttributes(attribute);
     NavigationService.navigate("CIS09");
   };
 
@@ -76,7 +81,7 @@ class CIS08 extends React.Component {
               </View>
               <ScrollView style={localStyle.container}>
                 <View style={{ flex: 4, paddingTop: 30 }}>
-                  <PNFormTextBox
+                  <PNFormContactInfo
                     title="Contact Information"
                     reference={input => {
                       this.input_contact_information = input;
@@ -84,6 +89,7 @@ class CIS08 extends React.Component {
                     onChangeText={text =>
                       this.onChangeText(text, "contact_information")
                     }
+                    value={this.state.cis.contact_information}
                   />
                 </View>
                 <View style={{ flex: 1 }}>

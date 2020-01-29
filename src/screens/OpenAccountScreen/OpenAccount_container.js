@@ -1,32 +1,29 @@
-import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet
-} from 'react-native';
+import React, { Component } from "react";
+import { Dimensions, View, Text, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 
 import KeyboardShift from "library/components/CDKeyboardShift.js";
+import OpenAccountLayout from "./OpenAccount_layout";
+
 class OpenAccountContainer extends Component {
   render() {
-    return(
+    return (
+      <OpenAccountLayout
+        header
+      >
 
+      </OpenAccountLayout>
     );
   }
 }
 
 const mapStateToProps = (state, props) => {
-  const {  } = state;
-  return { otp, token };
+  const {} = state;
+  return {};
 };
 
 const mapDispatchToProps = dispatch => {
-  return {
-    checkAccount: account_info => {
-      dispatch(API.checkAccount(account_info));
-    }
-  };
+  return {};
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(OpenAccount);
-

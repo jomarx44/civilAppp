@@ -61,13 +61,11 @@ export const putAttributes = ({
       access_token
     }
   };
-
-  console.log(json_data);
-
+  
   return dispatch => {
-    // dispatch({
-    //   type: PUT_ATTRIBUTES
-    // });
+    dispatch({
+      type: PUT_ATTRIBUTES
+    });
     return postOnly(json_data)
       .then(response => {
         console.log("PUTATTR Response: ", response.data);

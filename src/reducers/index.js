@@ -2,7 +2,7 @@ import { combineReducers } from "redux";
 import common from "./commonReducer";
 import auth from "./authReducer";
 import {accountDetailsReducer, accountsReducer} from "./AccountReducer";
-import {otpReducer} from './otpReducer'
+import {otpReducer} from './OTPReducer'
 import {cisReducer} from './cisReducer';
 import {tokenReducer} from './tokenReducer';
 import AppAttributeReducer from './AppAttributeReducer'

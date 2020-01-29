@@ -18,21 +18,29 @@ import {
 import {
   Container,
 } from "native-base";
-import * as Profile from "store/profile";
-import { setLoggedState } from "store/auth";
-
-import { StackNavigator } from "react-navigation";
 import NavigationService from "navigation/NavigationService.js";
-import styles from "styles/commonStyle";
-import PNFormTextBox from "library/components/PNFormTextBox";
-import PNDropDownInputGovernmentID from "library/components/PNDropDownInputGovernmentID";
-import PNBlueButton from "library/components/PNBlueButton";
-import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage";
+import PNDropDown from '../../library/components/PNDropDown';
+import PNFormTextBox from "../../library/components/PNFormTextBox";
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
 import PNHeaderTitle from "library/components/PNHeaderTitle";
 import PNFormTextBoxWithoutLabel from "../../library/components/PNFormTextBoxWithoutLabel.js";
 import { connect } from "react-redux";
 import { addAttributes } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
+
+const options = [
+  {
+    label: 'SSS',
+    value: 'sss'
+  },
+  {
+    label: 'GSIS',
+    value: 'gsis'
+  },
+  {
+    label: 'TIN',
+    value: 'tin'
+  },
+]
 
 class CIS12 extends React.Component {
   input_government_number_type;
@@ -40,7 +48,8 @@ class CIS12 extends React.Component {
     super(props);
     this.state = {
       cis: {
-        government_number_type: ''
+        government_number_type: '',
+        government_number: '',
       }
     };
   }
@@ -60,6 +69,10 @@ class CIS12 extends React.Component {
     this.setState({ cis });
   };
 
+  handleValueChange = (value) => {
+    this.onChangeText(value, 'government_number_type');
+  }
+
   static navigationOptions = {
     header: <PNHeaderBackButtonBlue />
   };
@@ -78,13 +91,19 @@ class CIS12 extends React.Component {
               </View>
               <ScrollView style={localStyle.container}>
                 <View style={{ flex: 4, paddingTop: 30 }}>
-                  <PNDropDownInputGovernmentID title="Government Issued Number" />
-                  <PNFormTextBoxWithoutLabel
+                  <PNDropDown 
+                    onValueChange={this.handleValueChange}
+                    options={options}
+                    selectedValue={this.state.cis.government_number_type}
+                    title='Government Issued ID Type'
+                  />
+                  <PNFormTextBox
+                    title="Government Issued ID Number"
                     reference={input => {
                       this.input_account_type = input;
                     }}
                     onChangeText={text =>
-                      this.onChangeText(text, "government_number_type")
+                      this.onChangeText(text, "government_number")
                     }
                   />
                 </View>

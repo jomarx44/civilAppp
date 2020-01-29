@@ -24,6 +24,7 @@ export default function loginReducer(state = [], action) {
       };
     case TYPE.LOGIN_ERROR:
       // console.log('Login Error: ', action.payload);
+      action.payload.is_fetching = false;
       return action.payload;
 
     case TYPE.LOGIN_SUCCESS:

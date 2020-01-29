@@ -15,9 +15,7 @@ import {
   View,
   Text
 } from "react-native";
-import {
-  Container,
-} from "native-base";
+import { Container } from "native-base";
 import ModalDropdown from "react-native-modal-dropdown";
 import * as Profile from "store/profile";
 import { setLoggedState } from "store/auth";
@@ -28,13 +26,34 @@ import styles from "styles/commonStyle";
 import PNFormTextBox from "../../library/components/PNFormTextBox";
 import PNDropDownInput from "../../library/components/PNDropDownInput";
 import PNDropDownInputFund from "../../library/components/PNDropDownInputFund";
-import PNDropDownInputEmployee from "library/components/PNDropDownInputEmployee";
-import PNBlueButton from "library/components/PNBlueButton";
-import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage";
+import PNDropDown from "../../library/components/PNDropDown";
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
 import PNHeaderTitle from "library/components/PNHeaderTitle";
 import { connect } from "react-redux";
 import { addAttributes } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
+
+const options = [
+  {
+    label: 'Salary',
+    value: 'salary'
+  },
+  {
+    label: 'Investment',
+    value: 'investment'
+  },
+  {
+    label: 'Government Assistance',
+    value: 'government assistance'
+  },
+  {
+    label: 'Business',
+    value: 'business'
+  },
+  {
+    label: 'Others',
+    value: 'others'
+  },
+]
 
 class CIS11 extends React.Component {
   input_work;
@@ -49,12 +68,13 @@ class CIS11 extends React.Component {
     super(props);
     this.state = {
       cis: {
-        work: '',
-        contact_number: '',
-        position: '',
-        gross_income: '',
-        employers_name: '',
-        employers_address: ''
+        work: "",
+        contact_number: "",
+        position: "",
+        source_of_funds: "",
+        gross_income: "",
+        employers_name: "",
+        employers_address: ""
       }
     };
   }
@@ -73,6 +93,10 @@ class CIS11 extends React.Component {
     cis[field] = value;
     this.setState({ cis });
   };
+
+  handleValueChange = (value) => {
+    this.onChangeText(value, 'source_of_funds');
+  }
 
   static navigationOptions = {
     header: <PNHeaderBackButtonBlue />
@@ -108,7 +132,6 @@ class CIS11 extends React.Component {
                       this.onChangeText(text, "contact_number")
                     }
                   />
-                  <PNDropDownInput title="Field Name" />
                   <PNFormTextBox
                     title="Employment Position"
                     reference={input => {
@@ -116,7 +139,12 @@ class CIS11 extends React.Component {
                     }}
                     onChangeText={text => this.onChangeText(text, "position")}
                   />
-                  <PNDropDownInputFund title="Source of Funds" />
+                  <PNDropDown
+                    onValueChange={this.handleValueChange}
+                    options={options}
+                    selectedValue={this.state.cis.source_of_funds}
+                    title="Source of Funds"
+                  />
                   <PNFormTextBox
                     title="Monthly Gross Income"
                     reference={input => {

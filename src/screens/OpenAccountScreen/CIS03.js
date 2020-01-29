@@ -17,16 +17,12 @@ import {
 } from "react-native";
 import {
   Container,
+  DatePicker
 } from "native-base";
-import * as Profile from "store/profile";
-import { setLoggedState } from "store/auth";
 
-import { StackNavigator } from "react-navigation";
 import NavigationService from "navigation/NavigationService.js";
-import styles from "styles/commonStyle";
+import PNDatePicker from '../../library/components/PNDatePicker';
 import PNFormTextBox from "library/components/PNFormTextBox";
-import PNBlueButton from "library/components/PNBlueButton";
-import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage";
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
 import PNHeaderTitle from "library/components/PNHeaderTitle";
 import { connect } from "react-redux";
@@ -39,7 +35,7 @@ class CIS03 extends React.Component {
     super(props);
     this.state = {
       cis: {
-        birthdate: '',
+        birthdate: new Date(),
         birth_place: ''
       }
     };
@@ -50,6 +46,8 @@ class CIS03 extends React.Component {
   }
 
   handlePress = () => {
+    const attributes = this.state.cis;
+    attributes.birthdate = attributes.birthdate.toISOString().slice(0,10);
     this.props.addAttributes(this.state.cis);
     NavigationService.navigate('CIS04');
   };
@@ -63,6 +61,12 @@ class CIS03 extends React.Component {
   static navigationOptions = {
     header: <PNHeaderBackButtonBlue />
   };
+
+  handleDateChange = (date) => {
+    const currentState = this.state;
+    currentState.cis.birthdate = date || currentState.cis.birthdate;
+    this.setState(currentState)
+  }
 
   render() {
     let { height, width } = Dimensions.get("window");
@@ -78,12 +82,12 @@ class CIS03 extends React.Component {
               </View>
               <ScrollView style={localStyle.container}>
                 <View style={{ flex: 4, paddingTop: 30 }}>
-                  <PNFormTextBox
-                    title="Date of Birth"
-                    reference={input => {
-                      this.input_birthdate = input;
-                    }}
-                    onChangeText={text => this.onChangeText(text, "birthdate")}
+                  <PNDatePicker 
+                    title='Date of Birth'
+                    placeHolderText='Select Date of Birth'
+                    defaultDate={this.state.cis.birthdate}
+                    onDateChange={this.handleDateChange}
+                    maximumDate={new Date()}
                   />
                   <PNFormTextBox
                     title="Place of Birth"

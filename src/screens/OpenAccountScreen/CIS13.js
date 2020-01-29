@@ -53,6 +53,12 @@ class CIS13 extends React.Component {
     NavigationService.navigate("CIS14");
   };
 
+  toggleAccountType = (selected_accountType) => {
+    const currentState = this.state;
+    currentState.cis.account_type = selected_accountType;
+    this.setState(currentState);
+  }
+
   onChangeText = (value, field) => {
     const { cis } = this.state;
     cis[field] = value;
@@ -77,7 +83,7 @@ class CIS13 extends React.Component {
               </View>
               <ScrollView style={localStyle.container}>
                 <View style={{ flex: 4, paddingTop: 30 }}>
-                  <PNRadioFormAccountType title="Account Type" />
+                  <PNRadioFormAccountType title="Account Type" toggleAccountType={this.toggleAccountType } value={this.state.cis.account_type}/>
                   {/*<PNFormTextBox title="Account Type" 
                     reference={input => { this.input_account_type = input }}
           onChangeText={(text) => this.onChangeText(text,"account_type")}/>*/}
