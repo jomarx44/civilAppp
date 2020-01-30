@@ -36,7 +36,6 @@
 
 				promiseChain = promiseChain.then(function () {
 					return new Promise(function (resolve, reject) {
-						console.log("sending message " + msgObj.targetFunc);
 
 						if (msgObj.msgId) {
 							callbacks[msgObj.msgId] = {
@@ -50,7 +49,6 @@
 						resolve();
 					})
 				}).catch(function (e) {
-					console.error('rnBridge send failed ' + e.message);
 				});
 			},
 
@@ -58,7 +56,6 @@
 		};
 
 		window.document.addEventListener('message', function(e) {
-			console.log("message received from react native");
 
 			var message;
 			try {

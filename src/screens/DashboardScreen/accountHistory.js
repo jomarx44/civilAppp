@@ -1,6 +1,7 @@
 import React from "react";
 
 import {
+  Alert,
   ActivityIndicator,
   StatusBar,
   Image,
@@ -82,28 +83,13 @@ function Item({ title, date, amount }) {
 }
 
 class AccountHistoryScreen extends React.Component {
-  state = {
-    acctno: ""
-  };
-
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {
-    this.setState(
-      { acctno: this.props.navigation.getParam("acctno", "") },
-      this.props.getAccountDetails(this.state.acctno)
-      // this.props.getAccountDetails()
-    );
-  }
-
+  
   static navigationOptions = {
     header: <PNHeaderNoLogoCenterText title="Savings Account" />
   };
 
   render() {
-    const { is_fetching, account } = this.props.accountDetails;
+    const { is_fetching, account, error } = this.props.accountDetails;
 
     if (is_fetching) {
       return (
@@ -118,6 +104,11 @@ class AccountHistoryScreen extends React.Component {
         </View>
       );
     }
+
+    if(error) {
+      Alert.alert("Sun Savings Bank", "Ooops! There's something wrong connecting to the server. Please try again.");
+    }
+    
     return (
       <Container>
         <View style={localStyles.viewHeader}>
@@ -220,16 +211,11 @@ let localStyles = StyleSheet.create({
 
 const mapStateToProps = (state, props) => {
   const { accountDetails } = state;
-  console.log("accountDetails: ", accountDetails);
   return { accountDetails };
 };
 
 const mapDispatchToProps = dispatch => {
-  return {
-    getAccountDetails: (acctno = "001-01-00027-7", count = "10") => {
-      dispatch(API.getAccountDetails(acctno, count));
-    }
-  };
+  return {};
 };
 
 export default connect(

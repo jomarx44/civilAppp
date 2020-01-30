@@ -8,7 +8,6 @@ import NavigationService from 'navigation/NavigationService.js'
 
 class PNKeypadButton extends Component {
   handleClick(title) {
-    console.log("PNKeypadButton " + title);
   }
   render() {
     const { title, onPressButton } = this.props;
@@ -53,7 +52,6 @@ class PNOTPKeypad extends Component {
   }
 
   handleKeypadButton(title) {
-    console.log("PNKeypadButton " + title);
   }
 
   render() {

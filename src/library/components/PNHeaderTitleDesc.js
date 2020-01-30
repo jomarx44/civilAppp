@@ -17,18 +17,15 @@ class PNHeaderTitleDesc extends Component {
 
 let styles = StyleSheet.create({
   text: {
-    fontSize: 32,
-    fontWeight: 'bold',
+    fontSize: 28,
+    fontFamily: 'OpenSans_Bold',
     color: '#f5ac14',
-    marginBottom: 13,
-    marginLeft: 32,
+    marginBottom: 10
   },
   desc: {
-    marginLeft: 32,
-    marginRight: 32,
     color: "#5d646c",
-    fontSize: 16,
-
+    fontFamily: 'Montserrat_Regular',
+    fontSize: 14,
   }
 });
 

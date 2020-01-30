@@ -91,7 +91,6 @@ class LoginFingerPrintScreen extends React.Component {
   }
 
   onWebViewMessage(event) {
-    console.log("Message received from webview");
     let msgData;
     try {
       msgData = JSON.parse(event.nativeEvent.data);
@@ -99,7 +98,6 @@ class LoginFingerPrintScreen extends React.Component {
       console.warn(err);
       return;
     }
-    console.log(msgData);
     switch (msgData.targetFunc) {
       case "handleDataReceived":
         this[msgData.targetFunc].apply(this, [msgData]);

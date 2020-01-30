@@ -51,7 +51,6 @@
 				var msg = JSON.stringify(msgObj);
 				promiseChain = promiseChain.then(function () {
 					return new Promise(function (resolve, reject) {
-						console.log("sending message " + msgObj.targetFunc);
 						if (msgObj.msgId) {
 							callbacks[msgObj.msgId] = {
 								onsuccess: success,
@@ -67,7 +66,6 @@
 			},
 		};
 		window.addEventListener('message', function(e) {
-			console.log("message received from react native");
 			var message;
 			try {
 				message = JSON.parse(e.data)

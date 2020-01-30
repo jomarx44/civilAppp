@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { createDrawerNavigator, createAppContainer } from "react-navigation";
-import { Dimensions } from 'react-native';
+import { createDrawerNavigator, createAppContainer, createSwitchNavigator } from "react-navigation";
+import { Dimensions } from "react-native";
 import SideMenu from "./SideMenu.js";
 import Login from "screens/LoginScreen";
 import LoginFingerPrintScreen from "screens/LoginScreen/fingerprint";
@@ -12,28 +12,36 @@ import DashboardScreen from "screens/DashboardScreen/";
 import AnnouncementScreen from "screens/AnnouncementScreen/";
 import ForgotPasswordScreen from "screens/ForgotPasswordScreen/";
 
-const MainDrawer = createDrawerNavigator(
-  {
-    Login: { screen: Login },
-    SignUpScreen: { screen: SignUpScreen },
-    TakeAPhotoOfID: { screen: TakeAPhotoOfID },
-    FingerPrint: { screen: LoginFingerPrintScreen },
-    AnnouncementScreen: { screen: AnnouncementScreen },
-    DashboardScreen: { screen: DashboardScreen },
-    OpenAccountScreen: { screen: OpenAccountScreen },
-    ForgotPasswordScreen: { screen: ForgotPasswordScreen },
-    PersonalDetails: {
-       screen: PersonalDetailsScreen,
-       navigationOptions: ( { navigation }) => ({
-         title: "Personal Details",
-       }),    
-    },  
-  },
-  {
-    drawerWidth: Dimensions.get('window').width * 0.45,
-    contentComponent: SideMenu,
-    initialRouteName: 'Login'
+const AuthenticationNavigator = createDrawerNavigator({
+  Login: { screen: Login },
+  SignUpScreen: { screen: SignUpScreen },
+  TakeAPhotoOfID: { screen: TakeAPhotoOfID },
+  FingerPrint: { screen: LoginFingerPrintScreen },
+  ForgotPasswordScreen: { screen: ForgotPasswordScreen },
+}, {
+  initialRouteName: 'Login'
+});
+
+const HomeNavigator = createDrawerNavigator({
+  DashboardScreen: { screen: DashboardScreen },
+  AnnouncementScreen: { screen: AnnouncementScreen },
+  OpenAccountScreen: { screen: OpenAccountScreen },
+  PersonalDetails: {
+    screen: PersonalDetailsScreen,
+    navigationOptions: ({ navigation }) => ({
+      title: "Personal Details"
+    })
   }
-);
-export const Navigator = createAppContainer(MainDrawer);
+}, {
+  initialRouteName: 'DashboardScreen',
+  drawerWidth: Dimensions.get("window").width * 0.45,
+  contentComponent: SideMenu
+});
+
+const AppNavigator = createSwitchNavigator({
+  Auth: AuthenticationNavigator,
+  Home: HomeNavigator
+});
+
+export const Navigator = createAppContainer(AppNavigator);
 export default Navigator;

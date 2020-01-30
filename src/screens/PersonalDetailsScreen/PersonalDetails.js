@@ -28,7 +28,6 @@ export default class PersonalDetails extends React.Component {
     let profile = await AsyncStorage.getItem('PROFILE_DATA');
     profile = JSON.parse(profile)
     if (profile) {
-      console.log('checkuser profile ' + profile);
       this.setState({ 
         first_name: profile.first_name,
         middle_name: profile.middle_name,

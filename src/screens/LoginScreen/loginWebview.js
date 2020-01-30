@@ -1,34 +1,53 @@
 import React from "react";
-import AppJson from '../../../app.json';
+import AppJson from "../../../app.json";
 import { WebView } from "react-native-webview";
 
-import KeyboardShift from "library/components/CDKeyboardShift.js"
+import KeyboardShift from "library/components/CDKeyboardShift.js";
 
-import { StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio} from "react-native";
-import { Container, Header, Title, Left, Center, Icon, Right, Button, Body, Content,Text, Card, CardItem } from "native-base";
-import * as Profile from 'store/profile';
+import {
+  StatusBar,
+  Image,
+  Dimensions,
+  StyleSheet,
+  ImageBackground,
+  TextInput,
+  View,
+  BackHandler,
+  PixelRatio
+} from "react-native";
+import {
+  Container,
+  Header,
+  Title,
+  Left,
+  Center,
+  Icon,
+  Right,
+  Button,
+  Body,
+  Content,
+  Text,
+  Card,
+  CardItem
+} from "native-base";
+import * as Profile from "store/profile";
 import { setLoggedState } from "store/auth";
 
 class LoginWebViewScreen extends React.Component {
-
   constructor(props) {
     super(props);
     this.onWebViewMessage = this.onWebViewMessage.bind(this);
   }
-
-
 
   componentWillUnMount() {
     this.onWebViewMessage.ubbind(this);
   }
 
   handleDataReceived(msgData) {
-
     // add to profile data
     Profile.setProfileData(msgData.data.attributes);
     Profile.setAccessData(msgData.data.accessData);
-    setLoggedState('Authenticated');
-
+    setLoggedState("Authenticated");
 
     this.setState({
       text2: `Message from web view ${msgData}`
@@ -37,7 +56,6 @@ class LoginWebViewScreen extends React.Component {
   }
 
   onWebViewMessage(event) {
-    console.log("Message received from webview");
     let msgData;
     try {
       msgData = JSON.parse(event.nativeEvent.data);
@@ -45,7 +63,6 @@ class LoginWebViewScreen extends React.Component {
       console.warn(err);
       return;
     }
-    console.log(msgData);
     switch (msgData.targetFunc) {
       case "handleDataReceived":
         this[msgData.targetFunc].apply(this, [msgData]);
@@ -53,23 +70,22 @@ class LoginWebViewScreen extends React.Component {
     }
   }
 
-
   render() {
-    let {height, width} = Dimensions.get('window');
+    let { height, width } = Dimensions.get("window");
     return (
       <Container>
-            <View style={styles.container}>
-              <View style={styles.webViewContainer}>
-                <WebView
-                    ref={webview => {
-                                                this.myWebView = webview;
-                                        }}
-                    scrollEnabled={false}
-                    source={{uri: AppJson.appid_uri }}
-                    onMessage={this.onWebViewMessage}
-                />
-              </View>
-            </View>
+        <View style={styles.container}>
+          <View style={styles.webViewContainer}>
+            <WebView
+              ref={webview => {
+                this.myWebView = webview;
+              }}
+              scrollEnabled={false}
+              source={{ uri: AppJson.appid_uri }}
+              onMessage={this.onWebViewMessage}
+            />
+          </View>
+        </View>
       </Container>
     );
   }
@@ -92,4 +108,3 @@ const styles = StyleSheet.create({
   }
 });
 export default LoginWebViewScreen;
-
