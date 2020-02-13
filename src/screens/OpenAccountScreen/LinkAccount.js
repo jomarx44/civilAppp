@@ -1,37 +1,25 @@
 import React from "react";
-import AppJson from "../../../app.json";
-
-import KeyboardShift from "library/components/CDKeyboardShift.js";
-
 import {
   ActivityIndicator,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  View
+  View,
+  Text
 } from "react-native";
-import {
-  Container,
-  Header,
-  Title,
-  Left,
-  Center,
-  Icon,
-  Right,
-  Button,
-  Body,
-  Content,
-  Text,
-  Card,
-  CardItem
-} from "native-base";
+
+import KeyboardShift from "library/components/CDKeyboardShift.js";
 import PNFormTextBox from "../../library/components/PNFormTextBox";
 import PNDatePicker from '../../library/components/PNDatePicker';
 import PNHeaderBackButtonWhite from "library/components/PNHeaderBackButtonWhite";
 import PNHeaderTitleDesc from "../../library/components/PNHeaderTitleDesc";
 import { connect } from "react-redux";
 import API from "../../actions/api";
-import { alertBox } from "../../actions/axiosCalls.js";
+import validate from "validate.js";
+
+const constraints = {
+
+};
 
 class LinkAccount extends React.Component {
   constructor(props) {
@@ -49,24 +37,16 @@ class LinkAccount extends React.Component {
     let day = date.getDate().toString().padStart(2, '0');
   
     return month + '/' + day + '/' + year;
-}
+  }
 
   state = {
-    acctno: "",
-    first_name: "",
-    middle_name: "",
-    last_name: "",
-    date_of_birth: new Date(),
-    tin: ""
+    acctno: "1238912830",
+    first_name: "marc clemen",
+    middle_name: "conejos",
+    last_name: "andres",
+    date_of_birth: new Date(1985, 8, 3),
+    tin: "193712983"
   };
-
-  componentDidUpdate(prevProps) {
-    if(prevProps.otp !== this.props.otp) {
-      if(!this.props.otp.isFetching && this.props.otp.success == false) {
-        alertBox(this.props.otp.message);
-      }
-    }
-  }
 
   static navigationOptions = {
     header: <PNHeaderBackButtonWhite />
@@ -97,10 +77,6 @@ class LinkAccount extends React.Component {
     } = this.state;
 
     const { otp, token } = this.props;
-
-    if(!otp.isFetching && token.token) {
-      NavigationService.navigate("OTPScreen")
-    }
 
     return (
       <KeyboardShift>
@@ -195,7 +171,7 @@ let localStyle = StyleSheet.create({
   button_text: {
     color: "#fff",
     fontSize: 16,
-    fontFamily: "Montserrat_Medium"
+    fontFamily: "Avenir_Medium"
   },
   header: {
     paddingTop: 50,

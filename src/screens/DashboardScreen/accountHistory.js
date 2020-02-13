@@ -31,11 +31,8 @@ import {
   CardItem
 } from "native-base";
 
-import styles from "styles/commonStyle";
 import PNHeaderNoLogoCenterText from "library/components/PNHeaderNoLogo";
-import PNTransparentButton from "library/components/PNTransparentButton";
-import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
-import { thisExpression } from "@babel/types";
+import PNHeaderBlueBack from "../../library/components/PNHeaderBlueBack";
 import { connect } from "react-redux";
 import API from "../../actions/api";
 
@@ -53,14 +50,14 @@ numFixed = amount => {
   return str.join(".");
 };
 
-function Item({ title, date, amount }) {
+function Item({ title, date, amount, index }) {
   return (
-    <View style={localStyles.listItem}>
+    <View style={[localStyles.listItem, {backgroundColor: index % 2 == 0 ? '#FFF' : '#FAFAFB'}]}>
       <View
         style={{
           flex: 4,
           flexDirection: "column",
-          justifyContent: "space-between"
+          justifyContent: "space-between" 
         }}
       >
         <Text style={localStyles.itemText}>{title}</Text>
@@ -70,11 +67,11 @@ function Item({ title, date, amount }) {
         <Text
           style={[
             localStyles.amountText,
-            { color: Math.sign(amount) === -1 ? "green" : "red" }
+            { color: Math.sign(amount) === -1 ? "#679D1D" : "#DC6061" }
           ]}
         >
           {Math.sign(amount) === 1
-            ? "(PHP " + numFixed(amount) + ")"
+            ? "PHP -" + numFixed(amount)
             : "PHP " + numFixed(amount)}
         </Text>
       </View>
@@ -85,7 +82,7 @@ function Item({ title, date, amount }) {
 class AccountHistoryScreen extends React.Component {
   
   static navigationOptions = {
-    header: <PNHeaderNoLogoCenterText title="Savings Account" />
+    header: <PNHeaderBlueBack title="Savings Account" navid="Dashboard" />
   };
 
   render() {
@@ -104,29 +101,30 @@ class AccountHistoryScreen extends React.Component {
         </View>
       );
     }
-
-    if(error) {
-      Alert.alert("Sun Savings Bank", "Ooops! There's something wrong connecting to the server. Please try again.");
-    }
     
     return (
       <Container>
         <View style={localStyles.viewHeader}>
           <Text style={localStyles.title}>CURRENT BALANCE</Text>
-          {!is_fetching && account.balance && account.balance.formatted && (
+          <View style={localStyles.subtitle_container}>
+            <Text style={localStyles.subtitle_static}>PHP</Text>
             <Text style={localStyles.subtitle}>
-              PHP {account.balance.formatted}
+               {account.balance.formatted}
             </Text>
-          )}
+          </View>
+          
         </View>
         <View style={localStyles.viewAccounts}>
-          <Text style={localStyles.bodyTitle}>Transactions</Text>
+          <View style={localStyles.bodyTitle_container}>
+            <Text style={localStyles.bodyTitle}>TRANSACTIONS</Text>
+          </View>
           <SafeAreaView style={localStyles.listStyle}>
             {account.history && (
               <FlatList
                 data={account.history}
-                renderItem={({ item }) => (
+                renderItem={({ item, index }) => (
                   <Item
+                    index={index}
                     title={item.title}
                     amount={item.amount}
                     date={item.date}
@@ -144,10 +142,11 @@ class AccountHistoryScreen extends React.Component {
 
 let localStyles = StyleSheet.create({
   viewHeader: {
-    flex: 2,
+    flex: 1,
     backgroundColor: "#309fe7",
     padding: 20,
-    justifyContent: "flex-end"
+    justifyContent: "center",
+    alignItems: 'center'
   },
   viewAccounts: {
     flex: 4,
@@ -156,56 +155,69 @@ let localStyles = StyleSheet.create({
   title: {
     // color: "#292929",
     color: "#FFFFFF",
-    fontFamily: "OpenSans_Bold",
+    fontFamily: "Avenir_Heavy",
     // marginBottom: 10,
-    fontSize: 18
+    fontSize: 18,
+    marginBottom: 10
+  },
+  subtitle_container: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  subtitle_static: {
+    color: "#FFFFFF",
+    fontFamily: "Avenir_Medium",
+    fontSize: 20
   },
   subtitle: {
     // color: "#555555",
     color: "#FFFFFF",
-    fontFamily: "Montserrat_Medium",
-    fontSize: 16
+    fontFamily: "Avenir_Medium",
+    fontSize: 50, 
+    margin: 0
+  },
+  bodyTitle_container: {
+    marginVertical: 10,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   bodyTitle: {
-    color: "#A9A9A9",
-    fontFamily: "OpenSans_SemiBold",
-    marginHorizontal: 8,
-    marginTop: 30,
-    fontSize: 14
+    color: "#5D646C",
+    marginBottom: 0,
+    fontFamily: "Avenir_Medium",
+    letterSpacing: 1.56,
+    textAlign: 'center',
+    fontSize: 18
   },
   listStyle: {
     flex: 1,
-    marginVertical: 10
   },
   listItem: {
     display: "flex",
-    borderColor: "#EEEEEE",
-    borderWidth: 1,
     borderStyle: "solid",
-    padding: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
     flexDirection: "row",
-    backgroundColor: "#fff",
-    marginVertical: 2,
-    marginHorizontal: 8
   },
   itemText: {
     textAlign: "left",
-    color: "#7a979c",
+    color: "#444444",
     textTransform: "capitalize",
-    fontFamily: "OpenSans_SemiBold",
-    fontSize: 14
+    fontFamily: "Avenir_Medium",
+    fontSize: 16
   },
   dateText: {
     textAlign: "left",
-    color: "#696969",
-    fontFamily: "Montserrat_Light",
-    fontSize: 10
+    color: "#868686",
+    fontFamily: "Avenir_Light",
+    fontSize: 12
   },
   amountText: {
-    fontSize: 12,
+    fontSize: 15,
     textAlign: "right",
     alignItems: "center",
-    fontFamily: "OpenSans_Regular"
+    fontFamily: "Avenir_Medium"
   }
 });
 

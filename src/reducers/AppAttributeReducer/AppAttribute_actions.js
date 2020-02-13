@@ -1,4 +1,5 @@
-import { postOnly, alertBox } from "../../actions/axiosCalls";
+import { postOnly, alertBox, responseData } from "../../actions/axiosCalls";
+import NavigationService from "../../navigation/NavigationService"
 
 // Actions
 export const ADD_ATTRIBUTES = "ADD_ATTRIBUTES";
@@ -63,18 +64,29 @@ export const putAttributes = ({
   };
   
   return dispatch => {
-    dispatch({
-      type: PUT_ATTRIBUTES
-    });
+    // dispatch({
+    //   type: PUT_ATTRIBUTES
+    // });
     return postOnly(json_data)
       .then(response => {
         console.log("PUTATTR Response: ", response.data);
-        dispatch({
-          type: response.data.success
-            ? PUT_ATTRIBUTES_SUCCESS
-            : PUT_ATTRIBUTES_ERROR,
-          payload: response.data.success ? response.data : {}
-        });
+        if(response.data.success) {
+          dispatch({
+            type: PUT_ATTRIBUTES_SUCCESS,
+            payload: response.data
+          });
+          alertBox("Successfully Created!");
+          NavigationService.navigate("Dashboard");
+        } else {
+          dispatch({
+            type: response.data.success
+              ? PUT_ATTRIBUTES_SUCCESS
+              : PUT_ATTRIBUTES_ERROR,
+            payload: response.data.success ? response.data : {}
+          });
+          alertBox("Failed while creating an account");
+        }
+        
       })
       .catch(error => {
         alertBox("Error has occured!");

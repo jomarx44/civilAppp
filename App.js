@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Platform, StyleSheet} from "react-native";
+import { AsyncStorage, Platform, StyleSheet } from "react-native";
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
 import { StyleProvider } from "native-base";
@@ -14,6 +14,8 @@ import thunk from "redux-thunk";
 import { createStore, applyMiddleware } from "redux";
 import rootReducer from "./src/reducers";
 
+import OnBoardingScreen from "./src/screens/OnBoardingScreen";
+
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
 class App extends Component {
@@ -22,41 +24,37 @@ class App extends Component {
 
     this.state = {
       isReady: false,
+      isFirstTime: true
     };
   }
 
   async componentWillMount() {
     await Font.loadAsync({
-      Roboto: require("./src/res/fonts/Poppins-Regular.ttf"),
-      Roboto_medium: require("./src/res/fonts/Poppins-Medium.ttf"),
-      Poppins: require("./src/res/fonts/Poppins-Regular.ttf"),
-      Poppins_medium: require("./src/res/fonts/Poppins-Medium.ttf"),
-      Avenir_Light: require("./src/res/fonts/Avenir-Light.ttf"),
-      Menlo_Bold: require("./src/res/fonts/Menlo-Bold.ttf"),
-      OpenSans_Bold: require("./src/res/fonts/OpenSans-Bold.ttf"),
-      OpenSans_BoldItalic: require("./src/res/fonts/OpenSans-BoldItalic.ttf"),
-      OpenSans_ExtraBold: require("./src/res/fonts/OpenSans-ExtraBold.ttf"),
-      OpenSans_ExtraBoldItalic: require("./src/res/fonts/OpenSans-ExtraBoldItalic.ttf"),
-      OpenSans_Italic: require("./src/res/fonts/OpenSans-Italic.ttf"),
-      OpenSans_Light: require("./src/res/fonts/OpenSans-Light.ttf"),
-      OpenSans_LightItalic: require("./src/res/fonts/OpenSans-LightItalic.ttf"),
-      OpenSans_Regular: require("./src/res/fonts/OpenSans-Regular.ttf"),
-      OpenSans_SemiBold: require("./src/res/fonts/OpenSans-SemiBold.ttf"),
-      OpenSans_SemiBoldItalic: require("./src/res/fonts/OpenSans-SemiBoldItalic.ttf"),
-      Montserrat_Black: require("./src/res/fonts/Montserrat-Black.ttf"),
-      Montserrat_Bold: require("./src/res/fonts/Montserrat-Bold.ttf"),
-      Montserrat_ExtraBold: require("./src/res/fonts/Montserrat-ExtraBold.ttf"),
-      Montserrat_ExtraLight: require("./src/res/fonts/Montserrat-ExtraLight.ttf"),
-      Montserrat_Italic: require("./src/res/fonts/Montserrat-Italic.ttf"),
-      Montserrat_Light: require("./src/res/fonts/Montserrat-Light.ttf"),
-      Montserrat_Medium: require("./src/res/fonts/Montserrat-Medium.ttf"),
-      Montserrat_Regular: require("./src/res/fonts/Montserrat-Regular.ttf"),
-      Montserrat_SemiBold: require("./src/res/fonts/Montserrat-SemiBold.ttf"),
-      Montserrat_Thin: require("./src/res/fonts/Montserrat-Thin.ttf"),
+      Avenir_Black: require("./src/res/fonts/AvenirLTStd-Black.otf"),
+      Avenir_BlackOblique: require("./src/res/fonts/AvenirLTStd-BlackOblique.otf"),
+      Avenir_Book: require("./src/res/fonts/AvenirLTStd-Book.otf"),
+      Avenir_BookOblique: require("./src/res/fonts/AvenirLTStd-BookOblique.otf"),
+      Avenir_Heavy: require("./src/res/fonts/AvenirLTStd-Heavy.otf"),
+      Avenir_HeavyOblique: require("./src/res/fonts/AvenirLTStd-HeavyOblique.otf"),
+      Avenir_Light: require("./src/res/fonts/AvenirLTStd-Light.otf"),
+      Avenir_LightOblique: require("./src/res/fonts/AvenirLTStd-LightOblique.otf"),
+      Avenir_Medium: require("./src/res/fonts/AvenirLTStd-Medium.otf"),
+      Avenir_MediumOblique: require("./src/res/fonts/AvenirLTStd-MediumOblique.otf"),
+      Avenir_Oblique: require("./src/res/fonts/AvenirLTStd-Oblique.otf"),
+      Avenir_Roman: require("./src/res/fonts/AvenirLTStd-Roman.otf"),
+      Roboto_medium: require("./src/res/fonts/AvenirLTStd-Medium.otf"),
+      Poppins_medium: require("./src/res/fonts/AvenirLTStd-Medium.otf"),
+      Poppins: require("./src/res/fonts/AvenirLTStd-Light.otf")
     });
 
-    this.setState({ isReady: true });
+    const isFirstTime = (await AsyncStorage.getItem("isFirstTime")) !== "false";
+    this.setState({ isReady: true, isFirstTime });
   }
+
+  onProceed = () => {
+    AsyncStorage.setItem("isFirstTime", "false");
+    this.setState({isFirstTime: false});
+  };
 
   render() {
     if (!this.state.isReady) {
@@ -65,13 +63,17 @@ class App extends Component {
 
     return (
       <Provider store={store}>
-        <StyleProvider style={getTheme(platform)}>
-          <MainDrawer
-            ref={navigatorRef => {
-              NavigationService.setTopLevelNavigator(navigatorRef);
-            }}
-          />
-        </StyleProvider>
+        {/* <StyleProvider style={getTheme(platform)}> */}
+          {this.state.isFirstTime === true ? (
+            <OnBoardingScreen onProceed={this.onProceed}/>
+          ) : (
+            <MainDrawer
+              ref={navigatorRef => {
+                NavigationService.setTopLevelNavigator(navigatorRef);
+              }}
+            />
+          )}
+        {/* </StyleProvider> */}
       </Provider>
     );
   }

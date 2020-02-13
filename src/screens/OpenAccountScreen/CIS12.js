@@ -19,13 +19,28 @@ import {
   Container,
 } from "native-base";
 import NavigationService from "navigation/NavigationService.js";
+import PNFormNavigation from "../../library/components/PNFormNavigation";
+import PNFormButton from "../../library/components/PNFormButton"
+
 import PNDropDown from '../../library/components/PNDropDown';
-import PNFormTextBox from "../../library/components/PNFormTextBox";
-import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
-import PNHeaderTitle from "library/components/PNHeaderTitle";
-import PNFormTextBoxWithoutLabel from "../../library/components/PNFormTextBoxWithoutLabel.js";
+import PNFormInputBox from "../../library/components/PNFormInputBox";
+import PNFormHeader from "../../library/components/PNFormHeader";
 import { connect } from "react-redux";
 import { addAttributes } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
+import validate from "validate.js";
+
+const constraints = {
+  government_number_type: {
+    presence: {
+      allowEmpty: false
+    }
+  },
+  government_number:{
+    presence: {
+      allowEmpty: false
+    }
+  }
+}
 
 const options = [
   {
@@ -43,24 +58,72 @@ const options = [
 ]
 
 class CIS12 extends React.Component {
-  input_government_number_type;
+  
   constructor(props) {
     super(props);
     this.state = {
       cis: {
         government_number_type: '',
         government_number: '',
-      }
+      },
+      invalid: {}
     };
+
+    this.input_government_number_type = React.createRef();
   }
 
-  componentDidMount() {
-    console.log("APPATTRIBUTE: ", this.props.appAttribute);
-  }
+  static navigationOptions = {
+    header: ({ scene, previous, navigation }) => {
+      const { options } = scene.descriptor;
+      const title =
+        options.title !== undefined ? options.title : "Create Account";
+      return <PNFormNavigation title={title} />;
+    },
+    headerStyle: {
+      style: {
+        shadowColor: 'transparent'
+      }
+    }
+  };
 
+  handleOnBlur = ( index, additionalValidate = {} ) => {
+    const current = {
+      ...additionalValidate,
+      [index]: this.state.cis[index]
+    };
+    const invalid = validate(current, { [index]: constraints[index] });
+    if (invalid) {
+      this.setState(
+        {
+          ...this.state,
+          invalid: {
+            ...this.state.invalid,
+            ...invalid
+          }
+        },
+        () => console.log("Invalid State: ", this.state.invalid)
+      );
+    } else {
+      const { invalid } = this.state;
+      delete invalid[index];
+      this.setState({
+        ...this.state,
+        invalid
+      });
+    }
+  }
+ 
   handlePress = () => {
-    this.props.addAttributes(this.state.cis);
-    NavigationService.navigate("CIS13");
+    const invalid = validate(this.state.cis, constraints);
+    
+    if (!invalid) {
+      this.props.addAttributes(this.state.cis);
+      NavigationService.navigate("CIS13");
+    } else {
+      this.setState({
+        invalid: invalid
+      });
+    }
   };
 
   onChangeText = (value, field) => {
@@ -73,49 +136,50 @@ class CIS12 extends React.Component {
     this.onChangeText(value, 'government_number_type');
   }
 
-  static navigationOptions = {
-    header: <PNHeaderBackButtonBlue />
-  };
-
   render() {
     let { height, width } = Dimensions.get("window");
+    const {invalid} = this.state;
     return (
       <Container>
         <KeyboardShift>
           {() => (
-            <View style={{ flex: 1 }}>
-              <View
-                style={{ backgroundColor: "#309fe7", height: height * 0.2 }}
+            <View style={{ flex: 1, justifyContent: 'space-between' }}>
+              <PNFormHeader>Government number(if any):</PNFormHeader>
+              <ScrollView
+                style={localStyle.container}
+                contentContainerStyle={localStyle.contentContainer}
               >
-                <PNHeaderTitle title="TIN/SSS/GSIS number(if any):" />
-              </View>
-              <ScrollView style={localStyle.container}>
-                <View style={{ flex: 4, paddingTop: 30 }}>
-                  <PNDropDown 
-                    onValueChange={this.handleValueChange}
-                    options={options}
-                    selectedValue={this.state.cis.government_number_type}
-                    title='Government Issued ID Type'
-                  />
-                  <PNFormTextBox
-                    title="Government Issued ID Number"
-                    reference={input => {
-                      this.input_account_type = input;
-                    }}
-                    onChangeText={text =>
-                      this.onChangeText(text, "government_number")
-                    }
-                  />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <TouchableOpacity
-                    style={localStyle.button}
-                    onPress={this.handlePress}
-                  >
-                    <Text style={localStyle.button_text}>NEXT</Text>
-                  </TouchableOpacity>
-                </View>
+                <PNDropDown 
+                  placeholder={{label: 'Select Government Number', value: null}}
+                  onValueChange={this.handleValueChange}
+                  options={options}
+                  selectedValue={this.state.cis.government_number_type}
+                  onBlur={() => this.handleOnBlur("government_number_type")}
+                  invalid={invalid.government_number_type ? invalid.government_number_type[0] : ""}
+                />
+                <PNFormInputBox
+                  placeholder="Government Issued ID Number"
+                  ref={input => {
+                    this.input_account_type = input;
+                  }}
+                  onChangeText={text =>
+                    this.onChangeText(text, "government_number")
+                  }
+                  onSubmitEditing={() => {
+                  }}
+                  value={this.state.cis.government_number}
+                  onBlur={() => this.handleOnBlur("government_number")}
+                  invalid={invalid.government_number ? invalid.government_number[0] : ""}
+                />
               </ScrollView>
+              <View style={{ paddingHorizontal: 30, marginBottom: 30 }}>
+                {/* <PNFormButton onPress={this.handlePress} disabled={!this.state.validated} label="Next" /> */}
+                <PNFormButton
+                  onPress={this.handlePress}
+                  disabled={false}
+                  label="Next"
+                />
+              </View>
             </View>
           )}
         </KeyboardShift>
@@ -128,6 +192,9 @@ let localStyle = StyleSheet.create({
   container: {
     paddingHorizontal: 30,
     paddingBottom: 51
+  },
+  contentContainer: {
+    paddingTop: 30
   },
   text: {
     marginLeft: 32,
@@ -145,7 +212,7 @@ let localStyle = StyleSheet.create({
   button_text: {
     color: "#fff",
     fontSize: 16,
-    fontFamily: "Montserrat_Medium"
+    fontFamily: "Avenir_Medium"
   },
   header: {
     backgroundColor: "#309fe7"

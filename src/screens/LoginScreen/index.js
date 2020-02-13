@@ -16,7 +16,6 @@ import {
 } from "native-base";
 import { connect } from "react-redux";
 import { setLoggedState } from "store/auth";
-import { alertBox } from "../../actions/axiosCalls.js";
 import KeyboardShift from "library/components/CDKeyboardShift.js";
 import styles from "styles/commonStyle";
 import NavigationService from "navigation/NavigationService.js";
@@ -39,16 +38,27 @@ class LoginScreen extends React.Component {
     compatible: false,
     fingerprints: false,
     user: {
-      username: "riczenn@thousandminds.com",
-      password: "qwertyuiop"
+      // username: "alvinching.official@gmail.com",
+      // password: "alvinviernes"
+      username: '',
+      password: ''
     },
-    result: ""
+    result: "",
+    signupdata: {}
   };
-
-  componentDidMount() {
+  
+  static navigationOptions = {
+    header: null
+  }
+  
+  async componentDidMount() {
     //this.checkDeviceForHardware();
     //this.checkForFingerprints();
     //this.getLoginInformation();
+    let signupdata = await AsyncStorage.getItem("SIGNUP_DATA");
+    console.log(signupdata);
+    signupdata = JSON.parse(signupdata);
+    this.setState({ signupdata: signupdata })
   }
 
   componentDidUpdate(prevProps) {
@@ -64,33 +74,8 @@ class LoginScreen extends React.Component {
       response.action === "signin"
     ) {
       userInfo(response.access_token);
-      AsyncStorage.setItem('ACCESS_TOKEN', response.access_token)
-
-      // putAttributes({
-      //   attribute_name: 'alvin',
-      //   attribute_value: {
-      //     first_name: 'Alvin',
-      //     middle_name: 'Viernes',
-      //     last_name: 'Ching',
-      //     mobile_number: '09953186216',
-      //     email_address: 'alvin@thousandminds.com',
-      //     address: 'Zone 6, San Patricio, Delfin Albano, Isabela',
-      //   },
-      //   access_token: response.access_token
-      // });
-      NavigationService.navigate("AnnouncementScreen");
+      Profile.setAccessToken(response.access_token)
     }
-
-    // if (
-    //   this.props.response.meta &&
-    //   this.props.response.meta.resourceType &&
-    //   this.props.response.meta.resourceType === "User"
-    // ) {
-    //   console.log('META: ', this.props.response);
-    //   Profile.setSignUpData(this.props.response);
-    //   // NavigationService.navigate("DashboardScreen");
-    //   NavigationService.navigate("AnnouncementScreen");
-    // }
   }
 
   getLoginInformation = async () => {
@@ -168,10 +153,6 @@ class LoginScreen extends React.Component {
     let { height, width } = Dimensions.get("window");
     const { is_fetching, message, success } = this.props.response;
 
-    if (!is_fetching && message && !success) {
-      alertBox(message);
-    }
-
     return (
       <Container style={styles.containerBlue}>
         <KeyboardShift>
@@ -212,6 +193,7 @@ class LoginScreen extends React.Component {
                       this.input_username = input;
                     }}
                     style={[buttonStyles.textbox, {}]}
+                    value={this.state.user.username}
                   />
 
                   <TextInput
@@ -222,6 +204,7 @@ class LoginScreen extends React.Component {
                       this.input_password = input;
                     }}
                     style={[buttonStyles.textbox, {}]}
+                    value={this.state.user.password}
                   />
 
                   <Button
@@ -229,12 +212,12 @@ class LoginScreen extends React.Component {
                     transparent
                     light
                     onPress={() =>
-                      NavigationService.navigate("ForgotPasswordScreen")
+                      NavigationService.navigate("ForgotPassword")
                     }
                     style={buttonStyles.forgotButtonTrans}
                   >
-                    <Text style={[{ fontWeight: "bold" }]}>
-                      FORGOT PASSWORD?
+                    <Text style={{margin:0, padding: 0}}>
+                      FORGOT PASSWORD
                     </Text>
                   </Button>
 
@@ -247,7 +230,7 @@ class LoginScreen extends React.Component {
                     {is_fetching ? (
                       <ActivityIndicator color="#FFFFFF" />
                     ) : (
-                      <Text>LOGIN</Text>
+                      <Text style={buttonStyles.buttonText}>LOGIN</Text>
                     )}
                   </Button>
 
@@ -255,10 +238,17 @@ class LoginScreen extends React.Component {
                     full
                     transparent
                     light
-                    onPress={() => NavigationService.navigate("SignUpScreen")}
+                    onPress={() => {
+                      if (this.state.signupdata) {
+                        NavigationService.navigate("EmailVerification");
+                      } else {
+                        NavigationService.navigate("CreateMobileAccount");
+                      }
+                    }}
+                    // onPress={() => NavigationService.navigate("EmailVerification")}
                     style={buttonStyles.buttonTrans}
                   >
-                    <Text style={[{ fontWeight: "bold" }]}>
+                    <Text style={buttonStyles.buttonTransText}>
                       CREATE MOBILE ACCOUNT
                     </Text>
                   </Button>
@@ -278,6 +268,7 @@ let buttonStyles = StyleSheet.create({
     marginBottom: 70
   },
   button: {
+    borderRadius: 4,
     height: 50,
     marginTop: 20,
     marginLeft: 30,
@@ -286,6 +277,10 @@ let buttonStyles = StyleSheet.create({
     alignItems: "center",
     fontSize: 18,
     backgroundColor: "#f5ac14"
+  },
+  buttonText: {
+    fontFamily: 'Avenir_Heavy',
+    fontSize: 16
   },
   buttonTrans: {
     fontSize: 18,
@@ -297,12 +292,17 @@ let buttonStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
+  buttonTransText: {
+    fontFamily: 'Avenir_Heavy',
+    fontSize: 16
+  },
   textbox: {
     height: 48,
     marginTop: 20,
     marginLeft: 30,
     paddingLeft: 20,
     marginRight: 30,
+    borderRadius: 4,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#FFFFFF"
@@ -313,7 +313,7 @@ let buttonStyles = StyleSheet.create({
     marginLeft: 30,
     marginRight: 30,
     borderColor: "#FFFFFF",
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center"
   }
 });

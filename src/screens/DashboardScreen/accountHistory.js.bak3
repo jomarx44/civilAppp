@@ -162,19 +162,19 @@ let localStyles = StyleSheet.create({
   title: {
     // color: "#292929",
     color: '#FFFFFF',
-    fontFamily: "OpenSans_Bold",
+    fontFamily: "Avenir_Heavy",
     // marginBottom: 10,
     fontSize: 18
   },
   subtitle: {
     // color: "#555555",
     color: '#FFFFFF',
-    fontFamily: "Montserrat_Medium",
+    fontFamily: "Avenir_Medium",
     fontSize: 16,
   },
   bodyTitle: {
     color: "#A9A9A9",
-    fontFamily: "OpenSans_SemiBold",
+    fontFamily: "Avenir_Medium",
     marginHorizontal: 8,
     marginTop: 30,
     fontSize: 14
@@ -198,7 +198,7 @@ let localStyles = StyleSheet.create({
     textAlign: "left",
     color: "#696969",
     textTransform: "capitalize",
-    fontFamily: "OpenSans_SemiBold",
+    fontFamily: "Avenir_Medium",
     fontSize: 14
   },
   dateText: {

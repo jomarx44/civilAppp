@@ -20,13 +20,13 @@ class PNFormContactInfo extends Component {
       value,
       onSubmitEditing = null,
       autoCompleteType = "off",
-      editable = true
+      editable = true,
+      invalid = ''
     } = this.props;
     return (
       <View style={styles.view}>
-        <Label style={styles.label}>{title}</Label>
         <Item style={styles.text}>
-          <Text style={styles.prefix_number}>+63</Text>
+          <Text style={styles.prefix_number}>+639</Text>
           <TextInput 
             autoCompleteType={autoCompleteType}
             keyboardType='number-pad'
@@ -36,9 +36,10 @@ class PNFormContactInfo extends Component {
             style={[styles.input, !editable && styles.input_disabled]}
             value={value}
             editable={editable}
-            maxLength={10}
+            maxLength={9}
           />
         </Item>
+      <Text style={[styles.invalidText]}>{ invalid }</Text>
       </View>
     );
   }
@@ -62,28 +63,29 @@ let styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   prefix_number: {
-    color: "#f9a010",
-    fontSize: 16,
-    fontFamily: "Montserrat_SemiBold",
-    width:'10%',
-    marginRight: 10
+    fontFamily: "Avenir_Book",
+    fontSize: 20,
+    color: '#F9A010',
+    width:'20%',
+    marginRight: 5
   },
   input: {
-    color: "#f9a010",
-    fontSize: 14,
-    fontFamily: "Montserrat_Medium",
+    fontFamily: "Avenir_Book",
+    fontSize: 20,
+    color: '#F9A010',
     width:'80%'
   },
   input_disabled: {
     backgroundColor: "#EEEEEE"
   },
-  label: {
-    fontSize: 14,
-    fontFamily: "Montserrat_Medium",
-    color: "#5d646c"
-  },
   view: {
     marginBottom: 25
+  },
+  invalidText: {
+    marginTop: 5,
+    fontFamily: 'Avenir_Medium',
+    fontSize: 12,
+    color: '#DC6061'
   }
 });
 

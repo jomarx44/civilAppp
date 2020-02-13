@@ -12,7 +12,7 @@ class PNOrangeButton extends Component {
       <Button full primary
         style={styles.button}
         onPress={() => NavigationService.navigate(navid)}>
-        <Text>{title}</Text>
+        <Text style={styles.text}>{title}</Text>
       </Button>
     );
   }
@@ -20,6 +20,7 @@ class PNOrangeButton extends Component {
 
 let styles = StyleSheet.create({
   button: {
+   borderRadius: 4,
    height: 50,
    marginTop: 20,
    marginLeft: 30,
@@ -27,6 +28,11 @@ let styles = StyleSheet.create({
    justifyContent: 'center',
    alignItems: 'center',
    backgroundColor: '#f5ac14',
+   height: 50
+ },
+ text: {
+   fontFamily: 'Avenir_Heavy',
+   fontSize: 16
  }
 });
 

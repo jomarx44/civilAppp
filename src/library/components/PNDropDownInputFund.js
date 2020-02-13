@@ -32,12 +32,12 @@ let styles = StyleSheet.create({
   input: {
     color: "#f9a010",
     fontSize: 14,
-    fontFamily: 'Montserrat_Medium',
+    fontFamily: 'Avenir_Medium',
     width: "100%"
   },
   label: {
     fontSize: 14,
-    fontFamily: 'Montserrat_Medium',
+    fontFamily: 'Avenir_Medium',
     color: "#5d646c"
   },
   view: {

@@ -27,7 +27,10 @@ import API from "actions/api";
 class DashboardScreen extends React.Component {
   state = {
     modalVisible: false,
-    profileDetails: {},
+    profileDetails: {
+      name: "",
+      email: ""
+    },
     loanAccounts: {
       title: "Loan Accounts",
       data: []
@@ -51,6 +54,7 @@ class DashboardScreen extends React.Component {
     let profileDetails = await getProfileData();
     this.props.getAccounts();
     this.setState({ profileDetails });
+    NavigationService.navigate("Announcement");
   }
 
   static navigationOptions = {
@@ -68,8 +72,12 @@ class DashboardScreen extends React.Component {
     }
     // this.props.getAccountDetails(acctno);
     this.props.getAccountDetails();
-    NavigationService.navigate(navid, { acctno });
+    this.props.navigation.push(navid, { acctno });
   };
+
+  onAddAccount = (navid) => {
+    this.props.navigation.navigate(navid);
+  }
 
   _renderHeader = (section, expanded) => {
     return (
@@ -93,7 +101,7 @@ class DashboardScreen extends React.Component {
         return (
           <TouchableOpacity
             onPress={() =>
-              this.onPressCard("AccountHistoryScreen", data.acctno)
+              this.onPressCard("AccountHistory", data.acctno)
             }
             key={data.key}
             style={{ paddingHorizontal: 20, paddingVertical: 5 }}
@@ -117,7 +125,7 @@ class DashboardScreen extends React.Component {
       <View style={styles.content}>
         {viewdata}
         <TouchableOpacity
-          onPress={() => this.onPressCard("ConnectCreateAccountScreen")}
+          onPress={() => this.onAddAccount("ConnectCreateAccount")}
           style={{ paddingHorizontal: 20, paddingVertical: 5 }}
         >
           <View
@@ -141,51 +149,46 @@ class DashboardScreen extends React.Component {
   };
 
   render() {
-    let profileFullName = "NA";
-    let profileEmail = "NA";
-    if (this.state.profileDetails) {
-      profileFullName = this.state.profileDetails.name;
-      profileEmail = this.state.profileDetails.email;
-    }
-    console.log('AUTH DATA: ', this.props.auth)
+    
     if(this.props.appAttribute) {
       console.log('APPATTRIBUTE: ', this.props.appAttribute);
     }
 
-    if (this.props.accounts.is_fetching) {
+    if(this.props.accounts.error) {
+      Alert.alert("Sun Savings Bank", "Ooops! There's something wrong connecting to the server. Please try again.");
+    }
+    
+    if(!this.props.accounts.is_fetching) {
+      const {profileDetails: {
+        name = 'NA',
+        email = 'NA'
+      }} = this.state;
+      console.log(this.state.profileDetails)
       return (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <ActivityIndicator size="large" color="#f9a010" />
-        </View>
+        <Container>
+          <View style={styles.viewHeader}>
+            <Text style={styles.title}>{name}</Text>
+            <Text style={styles.subtitle}>{email}</Text>
+          </View>
+          <View style={styles.viewAccounts}>
+            <Accordion
+              renderHeader={this._renderHeader}
+              renderContent={this._renderContent}
+              animation={true}
+              dataArray={this.props.accounts.list}
+              contentStyle={{ backgroundColor: "#ddecf8" }}
+            />
+          </View>
+        </Container>
       );
     }
 
-    if(this.props.accounts.error) {
-      Alert.alert("Sun Savings Bank", "Ooops! There's something wrong connecting to the server. Please try again.", [
-        {
-          
-        }
-      ]);
-    }
-
     return (
-      <Container>
-        <View style={styles.viewHeader}>
-          <Text style={styles.title}>{profileFullName}</Text>
-          <Text style={styles.subtitle}>{profileEmail}</Text>
-        </View>
-        <View style={styles.viewAccounts}>
-          <Accordion
-            renderHeader={this._renderHeader}
-            renderContent={this._renderContent}
-            animation={true}
-            dataArray={this.props.accounts.list}
-            contentStyle={{ backgroundColor: "#ddecf8" }}
-          />
-        </View>
-      </Container>
+      <View
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      >
+        <ActivityIndicator size="large" color="#f9a010" />
+      </View>
     );
   }
 }
@@ -196,10 +199,10 @@ let styles = StyleSheet.create({
     backgroundColor: "#309fe7",
     padding: 20,
     flexDirection: "column",
-    justifyContent: "flex-end"
+    justifyContent: "center"
   },
   content: {
-    marginBottom: 10
+    marginVertical: 20
   },
   card: {
     paddingVertical: 10,
@@ -212,27 +215,30 @@ let styles = StyleSheet.create({
     borderRightWidth: 1,
     borderRightColor: "#e5eced",
     borderLeftColor: "#f9a010",
-    borderLeftWidth: 3
+    borderLeftWidth: 3,
+    borderRadius: 5
   },
   cardTitle: {
-    color: "#042c5c",
-    fontSize: RFValue(14),
-    fontFamily: "OpenSans_Regular"
+    color: "#444444",
+    fontSize: 15,
+    fontFamily: "Avenir_Heavy"
   },
   cardSubTitle: {
     color: "#5d646c",
-    fontSize: RFValue(10),
-    fontFamily: "Montserrat_Regular"
+    fontSize: 11,
+    fontFamily: "Avenir_Book"
   },
   cardTextBalanceValue: {
     textAlign: "right",
-    fontSize: RFValue(12),
-    fontFamily: "OpenSans_Regular"
+    color: '#3e4a59',
+    fontSize: 17,
+    fontFamily: "Avenir_Heavy"
   },
   cardTextBalance: {
     textAlign: "right",
-    fontSize: RFValue(10),
-    fontFamily: "Montserrat_Regular"
+    fontSize: 9,
+    color: '#5d646c',
+    fontFamily: "Avenir_Book"
   },
   header: {
     flex: 1,
@@ -244,16 +250,16 @@ let styles = StyleSheet.create({
     borderColor: "#cbcdd0"
   },
   headerText: {
-    fontFamily: "Montserrat_SemiBold",
+    fontFamily: "Avenir_Medium",
     marginLeft: 20,
     color: "#5d646c",
-    fontSize: 14
+    fontSize: 16
   },
   headerTextActive: {
-    fontFamily: "Montserrat_SemiBold",
+    fontFamily: "Avenir_Medium",
     marginLeft: 20,
-    color: "#309fe7",
-    fontSize: 14
+    color: "#f5ac14",
+    fontSize: 16
   },
   icon: {
     marginTop: 16,
@@ -273,12 +279,14 @@ let styles = StyleSheet.create({
   title: {
     color: "#ffffff",
     fontSize: 18,
-    fontFamily: "OpenSans_SemiBold"
+    fontFamily: "Avenir_Heavy",
+    marginBottom: 3
   },
   subtitle: {
-    color: "#EEEEEE",
+    color: '#ffffff',
+    opacity: 0.7,
     fontSize: 12,
-    fontFamily: "Montserrat_Regular"
+    fontFamily: "Avenir_Medium"
   },
   viewAccounts: {
     flex: 7,

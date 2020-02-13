@@ -16,21 +16,54 @@ import {
   Text
 } from "react-native";
 import { Container } from "native-base";
-import ModalDropdown from "react-native-modal-dropdown";
-import * as Profile from "store/profile";
-import { setLoggedState } from "store/auth";
 
-import { StackNavigator } from "react-navigation";
 import NavigationService from "navigation/NavigationService.js";
-import styles from "styles/commonStyle";
-import PNFormTextBox from "../../library/components/PNFormTextBox";
-import PNDropDownInput from "../../library/components/PNDropDownInput";
-import PNDropDownInputFund from "../../library/components/PNDropDownInputFund";
+import PNFormNavigation from "../../library/components/PNFormNavigation";
+import PNFormInputBox from "../../library/components/PNFormInputBox";
 import PNDropDown from "../../library/components/PNDropDown";
-import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
-import PNHeaderTitle from "library/components/PNHeaderTitle";
+import PNFormButton from "../../library/components/PNFormButton";
+import PNFormHeader from "../../library/components/PNFormHeader";
 import { connect } from "react-redux";
 import { addAttributes } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
+import validate from "validate.js";
+
+const constraints = {
+  work: {
+    presence: {
+      allowEmpty: false
+    }
+  },
+  contact_number: {
+    presence: {
+      allowEmpty: false
+    }
+  },
+  position: {
+    presence: {
+      allowEmpty: false
+    }
+  },
+  source_of_funds: {
+    presence: {
+      allowEmpty: false
+    }
+  },
+  gross_income: {
+    presence: {
+      allowEmpty: false
+    }
+  },
+  employers_name: {
+    presence: {
+      allowEmpty: false
+    }
+  },
+  employers_address: {
+    presence: {
+      allowEmpty: false
+    }
+  }
+}
 
 const options = [
   {
@@ -56,14 +89,7 @@ const options = [
 ]
 
 class CIS11 extends React.Component {
-  input_work;
-  input_contact_number;
-  input_field;
-  input_position;
-  input_fund_source;
-  input_gross_income;
-  input_employers_name;
-  input_employers_address;
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -75,18 +101,73 @@ class CIS11 extends React.Component {
         gross_income: "",
         employers_name: "",
         employers_address: ""
-      }
+      },
+      invalid: {}
     };
+
+    this.input_work = React.createRef();
+    this.input_contact_number = React.createRef();
+    this.input_field = React.createRef();
+    this.input_position = React.createRef();
+    this.input_fund_source = React.createRef();
+    this.input_gross_income = React.createRef();
+    this.input_employers_name = React.createRef();
+    this.input_employers_address = React.createRef();
   }
 
-  componentDidMount() {
-    console.log("APPATTRIBUTE: ", this.props.appAttribute);
-  }
-
-  handlePress = () => {
-    this.props.addAttributes(this.state.cis);
-    NavigationService.navigate("CIS12");
+  static navigationOptions = {
+    header: ({ scene, previous, navigation }) => {
+      const { options } = scene.descriptor;
+      const title =
+        options.title !== undefined ? options.title : "Create Account";
+      return <PNFormNavigation title={title} />;
+    },
+    headerStyle: {
+      style: {
+        shadowColor: 'transparent'
+      }
+    }
   };
+
+  handleOnBlur = ( index, additionalValidate = {} ) => {
+    const current = {
+      ...additionalValidate,
+      [index]: this.state.cis[index]
+    };
+    const invalid = validate(current, { [index]: constraints[index] });
+    if (invalid) {
+      this.setState(
+        {
+          ...this.state,
+          invalid: {
+            ...this.state.invalid,
+            ...invalid
+          }
+        },
+        () => console.log("Invalid State: ", this.state.invalid)
+      );
+    } else {
+      const { invalid } = this.state;
+      delete invalid[index];
+      this.setState({
+        ...this.state,
+        invalid
+      });
+    }
+  }
+ 
+  handlePress = () => {
+    const invalid = validate(this.state.cis, constraints);
+    
+    if (!invalid) {
+      this.props.addAttributes(this.state.cis);
+      NavigationService.navigate("CIS12");
+    } else {
+      this.setState({
+        invalid: invalid
+      });
+    }
+  }
 
   onChangeText = (value, field) => {
     const { cis } = this.state;
@@ -98,90 +179,120 @@ class CIS11 extends React.Component {
     this.onChangeText(value, 'source_of_funds');
   }
 
-  static navigationOptions = {
-    header: <PNHeaderBackButtonBlue />
-  };
-
   render() {
     let { height, width } = Dimensions.get("window");
+    const {invalid} = this.state;
     return (
       <Container>
         <KeyboardShift>
           {() => (
-            <View style={{ flex: 1 }}>
-              <View
-                style={{ backgroundColor: "#309fe7", height: height * 0.2 }}
+            <View style={{ flex: 1, justifyContent: 'space-between' }}>
+              <PNFormHeader>My Employment Information:</PNFormHeader>
+              <ScrollView
+                style={localStyle.container}
+                contentContainerStyle={localStyle.contentContainer}
               >
-                <PNHeaderTitle title="My Employment Information:" />
-              </View>
-              <ScrollView style={localStyle.container}>
-                <View style={{ flex: 4, paddingTop: 30 }}>
-                  <PNFormTextBox
-                    title="Nature of Work"
-                    reference={input => {
-                      this.input_work = input;
-                    }}
-                    onChangeText={text => this.onChangeText(text, "work")}
-                  />
-                  <PNFormTextBox
-                    title="Contact Number"
-                    reference={input => {
-                      this.input_contact_number = input;
-                    }}
-                    onChangeText={text =>
-                      this.onChangeText(text, "contact_number")
-                    }
-                  />
-                  <PNFormTextBox
-                    title="Employment Position"
-                    reference={input => {
-                      this.input_position = input;
-                    }}
-                    onChangeText={text => this.onChangeText(text, "position")}
-                  />
-                  <PNDropDown
-                    onValueChange={this.handleValueChange}
-                    options={options}
-                    selectedValue={this.state.cis.source_of_funds}
-                    title="Source of Funds"
-                  />
-                  <PNFormTextBox
-                    title="Monthly Gross Income"
-                    reference={input => {
-                      this.input_gross_income = input;
-                    }}
-                    onChangeText={text =>
-                      this.onChangeText(text, "gross_income")
-                    }
-                  />
-                  <PNFormTextBox
-                    title="Employer's Name"
-                    reference={input => {
-                      this.input_employers_name = input;
-                    }}
-                    onChangeText={text =>
-                      this.onChangeText(text, "employers_name")
-                    }
-                  />
-                  <PNFormTextBox
-                    title="Employer's Address"
-                    reference={input => {
-                      this.input_employers_address = input;
-                    }}
-                    onChangeText={text =>
-                      this.onChangeText(text, "employers_address")
-                    }
-                  />
-                </View>
-                <View style={localStyle.footer}>
-                  <TouchableOpacity
-                    style={localStyle.button}
-                    onPress={this.handlePress}
-                  >
-                    <Text style={localStyle.button_text}>NEXT</Text>
-                  </TouchableOpacity>
-                </View>
+                <PNFormInputBox
+                  placeholder="Nature of Work"
+                  ref={input => {
+                    this.input_work = input;
+                  }}
+                  onChangeText={text =>
+                    this.onChangeText(text, "work")
+                  }
+                  onSubmitEditing={() => {
+                  }}
+                  value={this.state.cis.work}
+                  onBlur={() => this.handleOnBlur("work")}
+                  invalid={invalid.work ? invalid.work[0] : ""}
+                />
+                <PNFormInputBox
+                  placeholder="Contact Number"
+                  ref={input => {
+                    this.input_contact_number = input;
+                  }}
+                  onChangeText={text =>
+                    this.onChangeText(text, "contact_number")
+                  }
+                  onSubmitEditing={() => {
+                  }}
+                  value={this.state.cis.contact_number}
+                  onBlur={() => this.handleOnBlur("contact_number")}
+                  invalid={invalid.contact_number ? invalid.contact_number[0] : ""}
+                />
+                <PNFormInputBox
+                  placeholder="Employment Position"
+                  ref={input => {
+                    this.input_position = input;
+                  }}
+                  onChangeText={text =>
+                    this.onChangeText(text, "position")
+                  }
+                  onSubmitEditing={() => {
+                  }}
+                  value={this.state.cis.position}
+                  onBlur={() => this.handleOnBlur("position")}
+                  invalid={invalid.position ? invalid.position[0] : ""}
+                />
+                <PNDropDown
+                  placeholder={{label: 'Select Source of Income', value: null}}
+                  onValueChange={this.handleValueChange}
+                  options={options}
+                  selectedValue={this.state.cis.source_of_funds}
+                  onBlur={() => this.handleOnBlur("source_of_funds")}
+                  invalid={invalid.source_of_funds ? invalid.source_of_funds[0] : ""}
+                />
+                <PNFormInputBox
+                  placeholder="Monthly Gross Income"
+                  ref={input => {
+                    this.input_gross_income = input;
+                  }}
+                  onChangeText={text =>
+                    this.onChangeText(text, "gross_income")
+                  }
+                  onSubmitEditing={() => {
+                  }}
+                  value={this.state.cis.gross_income}
+                  onBlur={() => this.handleOnBlur("gross_income")}
+                  invalid={invalid.gross_income ? invalid.gross_income[0] : ""}
+                />
+                <PNFormInputBox
+                  placeholder="Employer's Name"
+                  ref={input => {
+                    this.input_employers_name = input;
+                  }}
+                  onChangeText={text =>
+                    this.onChangeText(text, "employers_name")
+                  }
+                  onSubmitEditing={() => {
+                  }}
+                  value={this.state.cis.employers_name}
+                  onBlur={() => this.handleOnBlur("employers_name")}
+                  invalid={invalid.employers_name ? invalid.employers_name[0] : ""}
+                />
+                <PNFormInputBox
+                  placeholder="Employer's Address"
+                  ref={input => {
+                    this.input_employers_address = input;
+                  }}
+                  onChangeText={text =>
+                    this.onChangeText(text, "employers_address")
+                  }
+                  onSubmitEditing={() => {
+                  }}
+                  value={this.state.cis.employers_address}
+                  onBlur={() => this.handleOnBlur("employers_address")}
+                  invalid={invalid.employers_address ? invalid.employers_address[0] : ""}
+                />
               </ScrollView>
+              <View style={{ paddingHorizontal: 30, marginBottom: 30 }}>
+                {/* <PNFormButton onPress={this.handlePress} disabled={!this.state.validated} label="Next" /> */}
+                <PNFormButton
+                  onPress={this.handlePress}
+                  disabled={false}
+                  label="Next"
+                />
+              </View>
             </View>
           )}
         </KeyboardShift>
@@ -194,6 +305,9 @@ let localStyle = StyleSheet.create({
   container: {
     paddingHorizontal: 30,
     paddingBottom: 51
+  },
+  contentContainer: {
+    paddingTop: 30
   },
   text: {
     marginLeft: 32,
@@ -211,7 +325,7 @@ let localStyle = StyleSheet.create({
   button_text: {
     color: "#fff",
     fontSize: 16,
-    fontFamily: "Montserrat_Medium"
+    fontFamily: "Avenir_Medium"
   },
   header: {
     backgroundColor: "#309fe7"

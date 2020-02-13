@@ -111,7 +111,6 @@ class ChangePasswordScreen extends React.Component {
 		this.props.updatePassword(params);
 		this.props.firstTimeLogInFalse(this.state.token, this.state.user_id);
 		this.signOut();
-
 	}
 
 	componentDidMount(){

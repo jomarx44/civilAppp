@@ -64,10 +64,12 @@ export const AppAttributeReducer = (state = initialState, action) => {
         isUpdating: true
       });
     case PUT_ATTRIBUTES_ERROR:
-      return action.payload;
+      return {
+        ...state,
+        isFetching: false,
+        success: false
+      };
     case PUT_ATTRIBUTES_SUCCESS:
-      console.log('PUT_ATTRIBUTES_SUCCESS')
-      alertBox("Successfully Created!")
       return action.payload;
     default:
       return state;

@@ -17,9 +17,9 @@ class PNRadioFormAddress extends Component {
           onPress={onPress}
           style={styles.radioStyle}
         >
-          <CheckBox checked={selected} onPress={onPress} />
+          <CheckBox checked={selected} onPress={onPress} color='#f9a010' />
           <Body>
-            <Text style={{ color: "#f9a010", fontWeight: "bold" }}>
+            <Text style={styles.label}>
               Same as my Permanent Address
             </Text>
           </Body>
@@ -34,11 +34,12 @@ let styles = StyleSheet.create({
     marginBottom: 25
   },
   label: {
-    fontSize: 14,
-    fontFamily: "Montserrat_Medium",
-    color: "#5d646c"
+    fontSize: 17,
+    fontFamily: "Avenir_Medium",
+    color: "#444444"
   },
   radioStyle: {
+    marginLeft: 0,
     width: "100%",
   }
 });

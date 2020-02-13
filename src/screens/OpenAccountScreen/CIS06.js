@@ -16,24 +16,36 @@ import {
   Text
 } from "react-native";
 import { Container } from "native-base";
-import * as Profile from "store/profile";
-import { setLoggedState } from "store/auth";
 
-import { StackNavigator } from "react-navigation";
 import NavigationService from "navigation/NavigationService.js";
-import styles from "styles/commonStyle";
-import PNFormTextBox from "library/components/PNFormTextBox";
-import PNBlueButton from "library/components/PNBlueButton";
-import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage";
-import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
-import PNHeaderTitle from "library/components/PNHeaderTitle";
+import PNFormNavigation from "../../library/components/PNFormNavigation";
+import PNFormInputBox from "../../library/components/PNFormInputBox"
+import PNFormButton from "../../library/components/PNFormButton"
+import PNFormHeader from "../../library/components/PNFormHeader";
 import { connect } from "react-redux";
 import { addAttributes } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
+import validate from "validate.js"
+
+const constraints = {
+  permanent_unit_number: {
+    presence: {
+      allowEmpty: false
+    }
+  },
+  permanent_street_name: {
+    presence: {
+      allowEmpty: false
+    }
+  },
+  permanent_city: {
+    presence: {
+      allowEmpty: false
+    }
+  }
+}
 
 class CIS06 extends React.Component {
-  input_unit_number;
-  input_street_name;
-  input_city;
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -41,21 +53,66 @@ class CIS06 extends React.Component {
         permanent_unit_number: "",
         permanent_street_name: "",
         permanent_city: ""
-      }
+      },
+      invalid: {}
     };
+    this.input_unit_number = React.createRef();
+    this.input_street_name = React.createRef();
+    this.input_city = React.createRef();
   }
-
-  componentDidMount() {
-    console.log("APPATTRIBUTE: ", this.props.appAttribute);
-  }
-
-  handlePress = () => {
-    this.props.addAttributes(this.state.cis);
-    NavigationService.navigate("CIS07");
-  };
 
   static navigationOptions = {
-    header: <PNHeaderBackButtonBlue />
+    header: ({ scene, previous, navigation }) => {
+      const { options } = scene.descriptor;
+      const title =
+        options.title !== undefined ? options.title : "Create Account";
+      return <PNFormNavigation title={title} />;
+    },
+    headerStyle: {
+      style: {
+        shadowColor: 'transparent'
+      }
+    }
+  };
+
+  handleOnBlur = ( index, additionalValidate = {} ) => {
+    const current = {
+      ...additionalValidate,
+      [index]: this.state.cis[index]
+    };
+    const invalid = validate(current, { [index]: constraints[index] });
+    if (invalid) {
+      this.setState(
+        {
+          ...this.state,
+          invalid: {
+            ...this.state.invalid,
+            ...invalid
+          }
+        },
+        () => console.log("Invalid State: ", this.state.invalid)
+      );
+    } else {
+      const { invalid } = this.state;
+      delete invalid[index];
+      this.setState({
+        ...this.state,
+        invalid
+      });
+    }
+  }
+ 
+  handlePress = () => {
+    const invalid = validate(this.state.cis, constraints);
+    
+    if (!invalid) {
+      this.props.addAttributes(this.state.cis);
+      NavigationService.navigate("CIS07");
+    } else {
+      this.setState({
+        invalid: invalid
+      });
+    }
   };
 
   onChangeText = (value, field) => {
@@ -66,55 +123,68 @@ class CIS06 extends React.Component {
 
   render() {
     let { height, width } = Dimensions.get("window");
+    const {invalid} = this.state;
     return (
       <Container>
         <KeyboardShift>
           {() => (
-            <View style={{ flex: 1 }}>
-              <View
-                style={{ backgroundColor: "#309fe7", height: height * 0.2 }}
+            <View style={{ flex: 1, justifyContent: 'space-between' }}>
+              <PNFormHeader>My Permanent Address is:</PNFormHeader>
+              <ScrollView
+                style={localStyle.container}
+                contentContainerStyle={localStyle.contentContainer}
               >
-                <PNHeaderTitle title="My Permanent Address is:" />
-              </View>
-              <ScrollView style={localStyle.container}>
-                <View style={{ flex: 4, paddingTop: 30 }}>
-                  <PNFormTextBox
-                    title="Home # / Unit #"
-                    reference={input => {
-                      this.input_unit_number = input;
-                    }}
-                    onChangeText={text =>
-                      this.onChangeText(text, "permanent_unit_number")
-                    }
-                  />
-                  <PNFormTextBox
-                    title="Street Name"
-                    reference={input => {
-                      this.input_street_name = input;
-                    }}
-                    onChangeText={text =>
-                      this.onChangeText(text, "permanent_street_name")
-                    }
-                  />
-                  <PNFormTextBox
-                    title="City, State"
-                    reference={input => {
-                      this.input_city = input;
-                    }}
-                    onChangeText={text =>
-                      this.onChangeText(text, "permanent_city")
-                    }
-                  />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <TouchableOpacity
-                    style={localStyle.button}
-                    onPress={this.handlePress}
-                  >
-                    <Text style={localStyle.button_text}>NEXT</Text>
-                  </TouchableOpacity>
-                </View>
+                <PNFormInputBox
+                  placeholder="Home # / Unit #"
+                  ref={input => {
+                    this.input_unit_number = input;
+                  }}
+                  onChangeText={text =>
+                    this.onChangeText(text, "permanent_unit_number")
+                  }
+                  onSubmitEditing={() => {
+                    this.input_street_name.focus();
+                  }}
+                  value={this.state.cis.permanent_unit_number}
+                  onBlur={() => this.handleOnBlur("permanent_unit_number")}
+                  invalid={invalid.permanent_unit_number ? invalid.permanent_unit_number[0] : ""}
+                />
+                <PNFormInputBox
+                  placeholder="Street Name"
+                  ref={input => {
+                    this.input_street_name = input;
+                  }}
+                  onChangeText={text =>
+                    this.onChangeText(text, "permanent_street_name")
+                  }
+                  onSubmitEditing={() => {
+                    this.input_city.focus();
+                  }}
+                  value={this.state.cis.permanent_street_name}
+                  onBlur={() => this.handleOnBlur("permanent_street_name")}
+                  invalid={invalid.permanent_street_name ? invalid.permanent_street_name[0] : ""}
+                />
+                <PNFormInputBox
+                  placeholder="City, State"
+                  ref={input => {
+                    this.input_city = input;
+                  }}
+                  onChangeText={text =>
+                    this.onChangeText(text, "permanent_city")
+                  }
+                  value={this.state.cis.permanent_city}
+                  onBlur={() => this.handleOnBlur("permanent_city")}
+                  invalid={invalid.permanent_city ? invalid.permanent_city[0] : ""}
+                />
               </ScrollView>
+              <View style={{ paddingHorizontal: 30, marginBottom: 30 }}>
+                {/* <PNFormButton onPress={this.handlePress} disabled={!this.state.validated} label="Next" /> */}
+                <PNFormButton
+                  onPress={this.handlePress}
+                  disabled={false}
+                  label="Next"
+                />
+              </View>
             </View>
           )}
         </KeyboardShift>
@@ -127,6 +197,9 @@ let localStyle = StyleSheet.create({
   container: {
     paddingHorizontal: 30,
     paddingBottom: 51
+  },
+  contentContainer: {
+    paddingTop: 30
   },
   text: {
     marginLeft: 32,
@@ -144,7 +217,7 @@ let localStyle = StyleSheet.create({
   button_text: {
     color: "#fff",
     fontSize: 16,
-    fontFamily: "Montserrat_Medium"
+    fontFamily: "Avenir_Medium"
   },
   header: {
     backgroundColor: "#309fe7"

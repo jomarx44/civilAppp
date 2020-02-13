@@ -10,7 +10,7 @@ export const Form1 = ({onChangeText}) => {
     <>
       <PNFormTextBox
         title="First Name"
-        reference={input => {
+        ref={input => {
           input_first_number = input;
         }}
         onChangeText={text => onChangeText(text, "first_name")}
@@ -18,7 +18,7 @@ export const Form1 = ({onChangeText}) => {
       />
       <PNFormTextBox
         title="Middle Name"
-        reference={input => {
+        ref={input => {
           input_middle_name = input;
         }}
         onChangeText={text => onChangeText(text, "middle_name")}
@@ -26,7 +26,7 @@ export const Form1 = ({onChangeText}) => {
       />
       <PNFormTextBox
         title="Last Name"
-        reference={input => {
+        ref={input => {
           input_last_name = input;
         }}
         onChangeText={text => onChangeText(text, "last_name")}

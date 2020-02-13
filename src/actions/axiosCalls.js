@@ -13,12 +13,16 @@ axios.defaults.headers = {
   DeviceID: Constants.installationId,
   DeviceName: Constants.deviceName
 };
+axios.defaults.timeout = 10000;
 
 // POST METHOD
 export const postMethod = json => {
   const params = json["params"];
   let action_type = json["reducer_type"];
   return dispatch => {
+    dispatch({
+      type: action_type
+    });
     return axios
       .post(json["path"], params)
       .then(response => {
@@ -29,11 +33,14 @@ export const postMethod = json => {
           action_type = action_type + "_ERROR";
           dispatch(responseData(response.data, action_type, params));
         }
+        
         if (
           response.data.message &&
           (!response.data.success || json["reducer_type"] != "LOGIN")
         ) {
           alertBox(response.data.message);
+          console.log("Path: ", json["path"]);
+          console.log("Params: ", params);
         }
       })
       .catch(error => {

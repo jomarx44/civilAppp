@@ -11,42 +11,97 @@ import {
   Text
 } from "react-native";
 import { Container } from "native-base";
-import * as Profile from "store/profile";
-import { setLoggedState } from "store/auth";
-
-import { StackNavigator } from "react-navigation";
-import styles from "styles/commonStyle";
-import PNFormTextBox from "library/components/PNFormTextBox";
-import PNBlueButton from "library/components/PNBlueButton";
-import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage";
-import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
-import PNHeaderTitle from "library/components/PNHeaderTitle";
+import PNFormInputBox from "../../library/components/PNFormInputBox";
+import PNFormButton from "../../library/components/PNFormButton";
+import PNFormHeader from "../../library/components/PNFormHeader";
+import PNFormNavigation from "../../library/components/PNFormNavigation";
 import NavigationService from "navigation/NavigationService.js";
 import { connect } from "react-redux";
-import {addAttributes} from '../../reducers/AppAttributeReducer/AppAttribute_actions'
+import { addAttributes } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
+import validate from "validate.js";
+
+const constraints = {
+  first_name: {
+    presence: {
+      allowEmpty: false
+    }
+  },
+  last_name: {
+    presence: {
+      allowEmpty: false
+    }
+  }
+}
 
 class CIS01 extends React.Component {
-  input_first_name;
-  input_middle_name;
-  input_last_name;
   constructor(props) {
     super(props);
     this.state = {
       cis: {
-        first_name: '',
-        middle_name: '',
-        last_name: ''
-      }
+        first_name: "",
+        middle_name: "",
+        last_name: ""
+      },
+      invalid: {}
     };
+
+    this.input_first_name = React.createRef();
+    this.input_middle_name = React.createRef();
+    this.input_last_name = React.createRef();
   }
 
   static navigationOptions = {
-    header: <PNHeaderBackButtonBlue navid="DashboardScreen" />
+    header: ({ scene, previous, navigation }) => {
+      const { options } = scene.descriptor;
+      const title =
+        options.title !== undefined ? options.title : "Create Account";
+      return <PNFormNavigation title={title} />;
+    },
+    headerStyle: {
+      style: {
+        shadowColor: 'transparent'
+      }
+    }
   };
 
+  handleOnBlur = ( index, additionalValidate = {} ) => {
+    const current = {
+      ...additionalValidate,
+      [index]: this.state.cis[index]
+    };
+    const invalid = validate(current, { [index]: constraints[index] });
+    if (invalid) {
+      this.setState(
+        {
+          ...this.state,
+          invalid: {
+            ...this.state.invalid,
+            ...invalid
+          }
+        },
+        () => console.log("Invalid State: ", this.state.invalid)
+      );
+    } else {
+      const { invalid } = this.state;
+      delete invalid[index];
+      this.setState({
+        ...this.state,
+        invalid
+      });
+    }
+  }
+ 
   handlePress = () => {
-    this.props.addAttributes(this.state.cis);
-    NavigationService.navigate('CIS02');
+    const invalid = validate(this.state.cis, constraints);
+    
+    if (!invalid) {
+      this.props.addAttributes(this.state.cis);
+      NavigationService.navigate("CIS02");
+    } else {
+      this.setState({
+        invalid: invalid
+      });
+    }
   };
 
   onChangeText = (value, field) => {
@@ -57,49 +112,57 @@ class CIS01 extends React.Component {
 
   render() {
     let { height, width } = Dimensions.get("window");
+    const {invalid} = this.state;
     return (
       <Container>
         <KeyboardShift>
           {() => (
-            <View style={{ flex: 1 }}>
-              <View
-                style={{ backgroundColor: "#309fe7", height: height * 0.2 }}
+            <View style={{ flex: 1, justifyContent: "space-between" }}>
+              <PNFormHeader>My Full Name is:</PNFormHeader>
+              <ScrollView
+                style={localStyle.container}
+                contentContainerStyle={localStyle.contentContainer}
               >
-                <PNHeaderTitle title="My Full Name is:" />
-              </View>
-              <ScrollView style={localStyle.container}>
-                <View style={{ flex: 4, paddingTop: 30 }}>
-                  <PNFormTextBox
-                    title="First Name"
-                    reference={input => {
-                      this.input_first_name = input;
-                    }}
-                    onChangeText={text => this.onChangeText(text, "first_name")}
-                    onSubmitEditing={() => {this._}}
-                  />
-                  <PNFormTextBox
-                    title="Middle Name"
-                    reference={input => {
-                      this.input_middle_name = input;
-                    }}
-                    onChangeText={text =>
-                      this.onChangeText(text, "middle_name")
-                    }
-                  />
-                  <PNFormTextBox
-                    title="Last Name"
-                    reference={input => {
-                      this.input_last_name = input;
-                    }}
-                    onChangeText={text => this.onChangeText(text, "last_name")}
-                  />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <TouchableOpacity style={localStyle.button} onPress={this.handlePress}>
-                    <Text style={localStyle.button_text}>NEXT</Text>
-                  </TouchableOpacity>
-                </View>
+                <PNFormInputBox
+                  placeholder="First Name"
+                  ref={this.input_first_name}
+                  onChangeText={text => this.onChangeText(text, "first_name")}
+                  // onSubmitEditing={() => {
+                  //   console.log('KWAKWAK', this.input_middle_name);
+                  //   this.input_middle_name.current.focus();
+                  // }}
+                  value={this.state.cis.first_name}
+                  onBlur={() => this.handleOnBlur("first_name")}
+                  invalid={invalid.first_name ? invalid.first_name[0] : ""}
+                />
+                <PNFormInputBox
+                  placeholder="Middle Name"
+                  ref={this.input_middle_name}
+                  onChangeText={text => this.onChangeText(text, "middle_name")}
+                  // onSubmitEditing={() => {
+                  //   this.input_last_name.current.focus();
+                  // }}
+                  value={this.state.cis.middle_name}
+                />
+                <PNFormInputBox
+                  placeholder="Last Name"
+                  ref={input => {
+                    this.input_last_name = input;
+                  }}
+                  onChangeText={text => this.onChangeText(text, "last_name")}
+                  value={this.state.cis.last_name}
+                  onBlur={() => this.handleOnBlur("last_name")}
+                  invalid={invalid.last_name ? invalid.last_name[0] : ""}
+                />
               </ScrollView>
+              <View style={{ paddingHorizontal: 30, marginBottom: 30 }}>
+                {/* <PNFormButton onPress={this.handlePress} disabled={!this.state.validated} label="Next" /> */}
+                <PNFormButton
+                  onPress={this.handlePress}
+                  disabled={false}
+                  label="Next"
+                />
+              </View>
             </View>
           )}
         </KeyboardShift>
@@ -111,7 +174,11 @@ class CIS01 extends React.Component {
 let localStyle = StyleSheet.create({
   container: {
     paddingHorizontal: 30,
-    paddingBottom: 51
+    paddingBottom: 51,
+    flex: 1
+  },
+  contentContainer: {
+    paddingTop: 30
   },
   text: {
     marginLeft: 32,
@@ -129,7 +196,7 @@ let localStyle = StyleSheet.create({
   button_text: {
     color: "#fff",
     fontSize: 16,
-    fontFamily: "Montserrat_Medium"
+    fontFamily: "Avenir_Medium"
   },
   header: {
     backgroundColor: "#309fe7"

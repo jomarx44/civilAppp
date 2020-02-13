@@ -20,46 +20,110 @@ import {
   DatePicker
 } from "native-base";
 
+import PNFormButton from "../../library/components/PNFormButton";
 import NavigationService from "navigation/NavigationService.js";
-import PNDatePicker from '../../library/components/PNDatePicker';
-import PNFormTextBox from "library/components/PNFormTextBox";
-import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
-import PNHeaderTitle from "library/components/PNHeaderTitle";
+import PNFormDatePicker from '../../library/components/PNFormDatePicker';
+import PNFormNavigation from "../../library/components/PNFormNavigation";
+import PNFormHeader from "../../library/components/PNFormHeader";
+import PNFormInputBox from "../../library/components/PNFormInputBox";
 import { connect } from "react-redux";
 import {addAttributes} from '../../reducers/AppAttributeReducer/AppAttribute_actions'
+import validate from "validate.js";
+
+const constraints = {
+  birthdate: {
+    presence: {
+      allowEmpty: false
+    }
+  },
+  birth_place: {
+    presence: {
+      allowEmpty: false
+    }
+  }
+}
 
 class CIS03 extends React.Component {
-  input_birthdate;
-  input_birth_place;
   constructor(props) {
     super(props);
     this.state = {
       cis: {
-        birthdate: new Date(),
+        birthdate: '',
         birth_place: ''
-      }
+      },
+      invalid: {}
     };
+
+    this.input_birthdate = React.createRef();
+    this.input_birth_place = React.createRef();
   }
+
+  static navigationOptions = {
+    header: ({ scene, previous, navigation }) => {
+      const { options } = scene.descriptor;
+      const title =
+        options.title !== undefined ? options.title : "Create Account";
+      return <PNFormNavigation title={title} />;
+    },
+    headerStyle: {
+      style: {
+        shadowColor: 'transparent'
+      }
+    }
+  };
 
   componentDidMount() {
     console.log('APPATTRIBUTE: ', this.props.appAttribute);
   }
 
+  handleOnBlur = ( index, additionalValidate = {} ) => {
+    const current = {
+      ...additionalValidate,
+      [index]: this.state.cis[index]
+    };
+    const invalid = validate(current, { [index]: constraints[index] });
+    if (invalid) {
+      this.setState(
+        {
+          ...this.state,
+          invalid: {
+            ...this.state.invalid,
+            ...invalid
+          }
+        },
+        () => console.log("Invalid State: ", this.state.invalid)
+      );
+    } else {
+      const { invalid } = this.state;
+      delete invalid[index];
+      this.setState({
+        ...this.state,
+        invalid
+      });
+    }
+  }
+
   handlePress = () => {
-    const attributes = this.state.cis;
-    attributes.birthdate = attributes.birthdate.toISOString().slice(0,10);
-    this.props.addAttributes(this.state.cis);
-    NavigationService.navigate('CIS04');
+    const cis = {
+      ...this.state.cis
+    };
+    cis.birthdate = cis.birthdate != '' ? cis.birthdate.toISOString().slice(0,10) : '';
+    const invalid = validate(cis, constraints);
+    
+    if (!invalid) {
+      this.props.addAttributes(cis);
+      NavigationService.navigate('CIS04');
+    } else {
+      this.setState({
+        invalid: invalid
+      });
+    }
   };
 
   onChangeText = (value, field) => {
     const { cis } = this.state;
     cis[field] = value;
     this.setState({ cis });
-  };
-
-  static navigationOptions = {
-    header: <PNHeaderBackButtonBlue />
   };
 
   handleDateChange = (date) => {
@@ -70,41 +134,47 @@ class CIS03 extends React.Component {
 
   render() {
     let { height, width } = Dimensions.get("window");
+    const {invalid} = this.state;
     return (
       <Container>
         <KeyboardShift>
           {() => (
             <View style={{ flex: 1 }}>
-              <View
-                style={{ backgroundColor: "#309fe7", height: height * 0.2 }}
+              <PNFormHeader>I was born:</PNFormHeader>
+              <ScrollView
+                style={localStyle.container}
+                contentContainerStyle={localStyle.contentContainer}
               >
-                <PNHeaderTitle title="I was born:" />
-              </View>
-              <ScrollView style={localStyle.container}>
                 <View style={{ flex: 4, paddingTop: 30 }}>
-                  <PNDatePicker 
+                  <PNFormDatePicker 
                     title='Date of Birth'
                     placeHolderText='Select Date of Birth'
-                    defaultDate={this.state.cis.birthdate}
                     onDateChange={this.handleDateChange}
                     maximumDate={new Date()}
+                    invalid={invalid.birthdate ? invalid.birthdate[0] : ""}
                   />
-                  <PNFormTextBox
-                    title="Place of Birth"
-                    reference={input => {
+                  <PNFormInputBox
+                    placeholder="Place of Birth"
+                    ref={input => {
                       this.input_birth_place = input;
                     }}
                     onChangeText={text =>
                       this.onChangeText(text, "birth_place")
                     }
+                    value={this.state.cis.birth_place}
+                    onBlur={() => this.handleOnBlur("birth_place")}
+                    invalid={invalid.birth_place ? invalid.birth_place[0] : ""}
                   />
                 </View>
-                <View style={{ flex: 1 }}>
-                  <TouchableOpacity style={localStyle.button} onPress={this.handlePress}>
-                    <Text style={localStyle.button_text}>NEXT</Text>
-                  </TouchableOpacity>
-                </View>
               </ScrollView>
+              <View style={{ paddingHorizontal: 30, marginBottom: 30 }}>
+                {/* <PNFormButton onPress={this.handlePress} disabled={!this.state.validated} label="Next" /> */}
+                <PNFormButton
+                  onPress={this.handlePress}
+                  disabled={false}
+                  label="Next"
+                />
+              </View>
             </View>
           )}
         </KeyboardShift>
@@ -117,6 +187,9 @@ let localStyle = StyleSheet.create({
   container: {
     paddingHorizontal: 30,
     paddingBottom: 51
+  },
+  contentContainer: {
+    paddingTop: 30
   },
   text: {
     marginLeft: 32,
@@ -134,7 +207,7 @@ let localStyle = StyleSheet.create({
   button_text: {
     color: "#fff",
     fontSize: 16,
-    fontFamily: "Montserrat_Medium"
+    fontFamily: "Avenir_Medium"
   },
   header: {
     backgroundColor: "#309fe7"

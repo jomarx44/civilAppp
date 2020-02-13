@@ -1,17 +1,5 @@
 import { AsyncStorage } from "react-native";
 import NavigationService from "../navigation/NavigationService";
-import {
-  ACCESS_TOKEN_SUCCESS,
-  ACCESS_TOKEN_ERROR,
-  LOGIN_SUCCESS,
-  LOGIN_ERROR,
-  LOGOUT,
-  PIN_SUCCESS,
-  PRODUCTS_SUCCESS,
-  SIGNUP,
-  SIGNUP_SUCCESS,
-  SIGNUP_ERROR,
-} from "../actions/types";
 import * as TYPE from "../actions/types";
 import * as Auth from "store/auth";
 import * as Profile from "store/profile";
@@ -28,27 +16,66 @@ export default function loginReducer(state = [], action) {
       return action.payload;
 
     case TYPE.LOGIN_SUCCESS:
-        console.log("Login Success: ", action.payload);
+      console.log("Login Success: ", action.payload);
       Profile.setAccessData(action.payload);
       return action.payload;
+
+    case TYPE.SIGNUP:
+      return {
+        is_fetching: true,
+        success: null,
+        message: "",
+      };
+
+    case TYPE.SIGNUP_SUCCESS: 
+      return {
+        is_fetching: false,
+        success: true,
+        message: action.payload.status
+      };
+    
+    case TYPE.SIGNUP_ERROR: 
+      return {
+        is_fetching: false,
+        success: false,
+        message: action.payload.message
+      };
 
     case TYPE.FORGOT_PASSWORD:
       return {
         is_fetching: true
-      }
-    
+      };
+
     case TYPE.FORGOT_PASSWORD_SUCCESS:
-      console.log('FORGOT PASSWORD SUCCESS: ', action.payload) 
+      console.log("FORGOT PASSWORD SUCCESS: ", action.payload);
       return action.payload;
 
     case TYPE.FORGOT_PASSWORD_ERROR:
-        console.log('FORGOT PASSWORD ERROR: ', action.payload) 
+      console.log("FORGOT PASSWORD ERROR: ", action.payload);
       return action.payload;
 
+    case TYPE.USERINFO: 
+      console.log("USER INFO")
+      return {
+        is_fetching: true
+      }
+
     case TYPE.USERINFO_SUCCESS:
-      console.log('User Info: ', action.payload)
+      console.log("User Info: ", action.payload);
       Profile.setProfileData(action.payload);
-      return action.payload;
+      return {
+        ...action.payload,
+        action: 'USERINFO',
+        is_fetching: false
+      };
+
+    case TYPE.USERINFO_ERROR: 
+      
+      return {
+        ...action.payload,
+        is_fetching: false,
+        success: false
+      };
 
     case TYPE.LOGIN_INITIAL_SUCCESS:
       Profile.setAccessData(action.payload);
@@ -57,15 +84,28 @@ export default function loginReducer(state = [], action) {
     case TYPE.CHANGE_MENU_LOGIN:
       return { loggedState: "Login" };
 
+    case TYPE.CHECK_EMAIL: 
+      return {
+        is_fetching: true,
+        success: null,
+        message: ""
+      }
+
     case TYPE.CHECK_EMAIL_ERROR:
-      return action.payload;
+      return {
+        ...action.payload,
+        is_fetching: false,
+        success: false,
+        message: ""
+      };
 
     case TYPE.CHECK_EMAIL_SUCCESS:
-      return action.payload;
-
-    case TYPE.SIGNUP_SUCCESS:
-      //     NavigationService.navigate('EmailVerificationScreen');
-      return action.payload;
+      return {
+        ...action.payload,
+        is_fetching: false,
+        success: true,
+        message: ""
+      };
 
     case TYPE.CHANGE_MENU_NONE:
       return { loggedState: "None" };
@@ -73,7 +113,7 @@ export default function loginReducer(state = [], action) {
     case TYPE.CHANGE_MENU_PIN:
       return { loggedState: "Pin" };
 
-    case ACCESS_TOKEN_SUCCESS:
+    case TYPE.ACCESS_TOKEN_SUCCESS:
       return action.payload;
 
     default:
