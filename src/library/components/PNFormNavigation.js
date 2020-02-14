@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import { Text, Platform, StatusBar, StyleSheet, View, TouchableOpacity } from 'react-native'
+import { Dimensions, Text, Platform, StatusBar, StyleSheet, View, TouchableOpacity } from 'react-native'
 import { Header, Left, Body, Title, Right, Icon } from 'native-base';
 import { withNavigation } from 'react-navigation'
 import NavigationService from 'navigation/NavigationService.js'
+
+const {width} = Dimensions.get('window')
 
 export const PNFormNavigation = ({navigation, navid, title}) => {
   const onPressBack = (navid) => {
@@ -16,14 +18,14 @@ export const PNFormNavigation = ({navigation, navid, title}) => {
 
   return (
     <Header style={styles.container}>
-      <Left style={{flex: 1}}>
+      <Left style={{flex: 1, justifyContent: 'flex-end'}}>
         <TouchableOpacity style={styles.backButton} onPress={() => onPressBack(navid)}>
           <Icon style={{color: '#F9A010'}}
             name='arrow-back' 
           />
         </TouchableOpacity>
       </Left>
-      <Body style={{flex: 1}}>
+      <Body style={{flex: 3, alignItems: 'center', justifyContent: 'center'}}>
         <Title  style={styles.text}>{title}</Title>
       </Body>
       <Right style={{flex: 1}}>
@@ -41,11 +43,15 @@ const styles = StyleSheet.create({
   },
   backButton: {
     backgroundColor: 'transparent',
+    justifyContent: 'center',
+    paddingLeft: 10,
+    height: 44,
+    width: 40
   },
   text: {
     fontFamily: 'Avenir_Medium',
     fontSize: 18,
-    color: '#444444'
+    color: '#444444',
   }
 })
 

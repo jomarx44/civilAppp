@@ -209,7 +209,6 @@ class PersonalInfo extends React.Component {
                 }}
                 ref={this.input_givenName}
                 onSubmitEditing={() => this.input_middleName.current.focus()}
-                placeholder="9*********"
                 onBlur={() => this.handleOnBlur("givenName")}
                 invalid={invalid.givenName ? invalid.givenName[0] : ""}
                 value={this.state.user.givenName}
