@@ -244,6 +244,7 @@ class LoginScreen extends React.Component {
                       } else {
                         NavigationService.navigate("CreateMobileAccount");
                       }
+                        // NavigationService.navigate("EmailVerification");
                     }}
                     // onPress={() => NavigationService.navigate("EmailVerification")}
                     style={buttonStyles.buttonTrans}

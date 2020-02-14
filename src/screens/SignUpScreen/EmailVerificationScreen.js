@@ -19,6 +19,7 @@ import { requestOTP_TM } from "../../reducers/OTPReducer/OTP_actions";
 import { alertBox } from "../../actions/axiosCalls";
 import * as Profile from "../../store/profile";
 import { relativeTimeThreshold } from "moment";
+import Overlay from "library/components/Overlay";
 
 class EmailVerificationScreen extends React.Component {
   constructor(props) {
@@ -37,6 +38,12 @@ class EmailVerificationScreen extends React.Component {
     }
   };
 
+  resend_email = () => {
+    let { signup_data } = this.state;
+    console.log("Signup Data: ", signup_data);
+    this.props.resend_email(signup_data.id);
+  }
+
   componentDidMount() {
     this.getSignupData();
   }
@@ -47,10 +54,6 @@ class EmailVerificationScreen extends React.Component {
     if (signup_data) {
       this.props.checkEmail(signup_data.id);
     }
-  }
-
-  clearSignUpData = () => {
-    profi
   }
 
   componentDidUpdate(prevProps) {
@@ -137,10 +140,11 @@ class EmailVerificationScreen extends React.Component {
             </View>
           </View>
 
-          <View
+          <TouchableOpacity
             style={[
               { flex: 1, alignItems: "center", justifyContent: "flex-end" }
             ]}
+            onPress={() => {this.resend_email()}}
           >
             <Text
               style={[
@@ -153,7 +157,7 @@ class EmailVerificationScreen extends React.Component {
             >
               resend email confirmation
             </Text>
-          </View>
+          </TouchableOpacity>
           <View>
             <TouchableOpacity
               disabled={this.props.response.is_fetching || this.props.otp.isFetching}
@@ -168,6 +172,11 @@ class EmailVerificationScreen extends React.Component {
             </TouchableOpacity>
           </View>
         </View>
+        {this.props.response.resending && this.props.response.resent === null && (
+          <Overlay>
+            <ActivityIndicator color="#FFF" size="large" />
+          </Overlay>
+        )}
       </Container>
     );
   }
@@ -207,6 +216,9 @@ const mapDispatchToProps = dispatch => {
     },
     requestOTP_TM: params => {
       dispatch(requestOTP_TM(params));
+    },
+    resend_email: params => {
+      dispatch(API.resend_email(params));
     }
   };
 };

@@ -13,6 +13,7 @@ import KeyboardShift from "library/components/CDKeyboardShift.js";
 import * as Profile from "../../store/profile";
 import NavigationService from "navigation/NavigationService.js";
 import PNFormTextBox from "../../library/components/PNFormTextBox";
+import PNFormTextBoxPhoneNumber from "../../library/components/PNFormTextBox-PhoneNumber";
 import PNFormTextBoxMasked from "../../library/components/PNFormTextBoxMasked";
 import PNHeaderBackButtonWhite from "library/components/PNHeaderBackButtonWhite";
 import PNHeaderTitleDesc from "library/components/PNHeaderTitleDesc";
@@ -67,8 +68,8 @@ const constraints = {
       allowEmpty: false
     },
     length: {
-      minimum: 8,
-      message: "must be atleast 12 characters"
+      minimum: 10,
+      message: "is not valid"
     }
   }
 };
@@ -107,7 +108,7 @@ class PersonalInfo extends React.Component {
   onChangeText = (value, field) => {
     const { user } = this.state;
     user[field] = value;
-
+    
     this.setState({ user: user });
   };
 
@@ -132,7 +133,7 @@ class PersonalInfo extends React.Component {
       ...additionalValidate,
       [index]: this.state.user[index]
     };
-    console.log("Value: ", this.state.user[index]);
+    console.log("Current: ", current);
     const invalid = validate(current, { [index]: constraints[index] });
     if (invalid) {
       this.setState(
@@ -155,16 +156,28 @@ class PersonalInfo extends React.Component {
     }
   };
 
+  handleBlurPhone = (index) => {
+    console.log(parseInt(this.state.user.phoneNumber, 10).toString());
+    this.setState({
+      ...this.state,
+      user: {
+        ...this.state.user,
+        phoneNumber: this.state.user.phoneNumber ? parseInt(this.state.user.phoneNumber.toString(), 10) : ''
+      }
+    }, () => {
+      console.log(this.state.user.phoneNumber)
+      this.handleOnBlur(index)
+    });
+  }
+
   signup() {
     // Add Validation
     const invalid = validate(this.state.user, constraints);
     
     if (!invalid) {
-      const { user } = this.state;
-      user.phoneNumber = user.phoneNumber
-        .replace("+", "")
-        .replace(/ /g, "");
-      // console.log(user);
+      const user = { ...this.state.user };
+      user.phoneNumber = '63' + user.phoneNumber;
+      console.log("USER: ", user);
       Profile.setFormData(user);
       this.props.signup(user);
     } else {
@@ -196,6 +209,7 @@ class PersonalInfo extends React.Component {
                 }}
                 ref={this.input_givenName}
                 onSubmitEditing={() => this.input_middleName.current.focus()}
+                placeholder="9*********"
                 onBlur={() => this.handleOnBlur("givenName")}
                 invalid={invalid.givenName ? invalid.givenName[0] : ""}
                 value={this.state.user.givenName}
@@ -223,22 +237,17 @@ class PersonalInfo extends React.Component {
                 onChangeText={text => this.onChangeText(text, "email")}
                 ref={this.input_email}
                 onBlur={() => this.handleOnBlur("email")}
+                onSubmitEditing={() => this.input_phoneNumber.current.focus()}
                 invalid={invalid.email ? invalid.email[0] : ""}
                 value={this.state.user.email}
               />
 
-              <PNFormTextBoxMasked
-                type={"cel-phone"}
+              <PNFormTextBoxPhoneNumber
                 title="Mobile Number"
                 onChangeText={text => this.onChangeText(text, "phoneNumber")}
-                // ref={this.input_phoneNumber}
+                ref={this.input_phoneNumber}
                 onSubmitEditing={() => this.input_password.current.focus()}
-                options={{
-                  maskType: 'INTERNATIONAL',
-                  mask: '+639 999 999 999'
-                }}
-                maxLength={16}
-                placeholder='+639 *** *** ***'
+                maxLength={10}
                 value={this.state.user.phoneNumber}
                 onBlur={() => this.handleOnBlur("phoneNumber")}
                 invalid={invalid.phoneNumber ? invalid.phoneNumber[0] : ""}

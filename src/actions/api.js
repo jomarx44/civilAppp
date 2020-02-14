@@ -147,6 +147,53 @@ const checkEmail = userId => {
   return postMethod(json_data);
 };
 
+// TO BE REFACTORED
+// Can reuse the API for signup
+
+const resend_email = userId => {
+  const json_data = {
+    path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
+    body: {
+      action: "resendUserVerification",
+      userid: userId
+    }
+  };
+
+  return dispatch => {
+    dispatch({
+      type: TYPE.RESEND_EMAIL
+    });
+    return postOnly(json_data)
+      .then(response => {
+        console.log("TRIAL: ", response.data);
+        if (response.data.success) {
+          dispatch({
+            type: TYPE.RESEND_EMAIL_SUCCESS,
+            payload: response.data
+          });
+          alertBox("Email Verification successfully resent. Please check your email.")
+        } else {
+          const error = JSON.parse(response.data.log_error);
+          alertBox(error.detail);
+          dispatch({
+            type: TYPE.RESEND_EMAIL_ERROR,
+            payload: response.data
+          });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        dispatch({
+          type: TYPE.RESEND_EMAIL_ERROR,
+          payload: error
+        });
+        alertBox(
+          "Ooops! There's something wrong connecting to the server. Please try again."
+        );
+      });
+  };
+}
+
 const signup = userdata => {
   const json_data = {
     path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
@@ -197,7 +244,6 @@ const signup = userdata => {
         );
       });
   };
-  return postMethod(json_data);
 };
 
 const verifyOTP = ({ token, otp }) => {
@@ -276,11 +322,6 @@ const checkAccount = ({
   return dispatch => {
     dispatch({
       type: TYPE.REQUEST_OTP,
-      payload: {
-        is_fetching: true,
-        success: null,
-        message: ""
-      }
     });
 
     // const test = () => {
@@ -313,7 +354,7 @@ const checkAccount = ({
           dispatch({
             type: TYPE.REQUEST_OTP_SUCCESS,
             payload: {
-              is_fetching: false,
+              isFetching: false,
               success: true,
               message: "",
               token: response_data.token
@@ -324,7 +365,7 @@ const checkAccount = ({
           dispatch({
             type: TYPE.REQUEST_OTP_ERROR,
             payload: {
-              is_fetching: false,
+              isFetching: false,
               success: false,
               message: response_data.ErrorMsg,
               token: ""
@@ -342,9 +383,10 @@ const checkAccount = ({
         dispatch({
           type: REQUEST_OTP_ERROR,
           payload: {
-            is_fetching: false,
+            isFetching: false,
             success: false,
-            message: error
+            message: response_data.ErrorMsg,
+            token: ""
           }
         });
       });
@@ -604,6 +646,7 @@ export default {
   login,
   forgotPassword,
   checkEmail,
+  resend_email,
   signup,
   checkAccount,
   verifyOTP,

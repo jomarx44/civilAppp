@@ -108,7 +108,7 @@ class CIS08 extends React.Component {
       const attribute = {
         contact_information: this.state.cis.contact_information
       };
-      attribute.contact_information = '639' + attribute.contact_information;
+      attribute.contact_information = '63' + attribute.contact_information;
       this.props.addAttributes(attribute);
       NavigationService.navigate("CIS09");
     } else {

@@ -298,7 +298,7 @@ class OTPOpenAccountScreen extends React.Component {
             </View>
           </View>
         </View>
-        { (appAttribute.isUpdating || this.props.otp.isFetching) && (
+        { (appAttribute.isUpdating || otp.isFetching) && (
           <Overlay>
             <ActivityIndicator color="#FFF" size="large" />
           </Overlay>

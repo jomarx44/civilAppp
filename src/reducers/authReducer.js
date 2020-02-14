@@ -107,6 +107,24 @@ export default function loginReducer(state = [], action) {
         message: ""
       };
 
+    case TYPE.RESEND_EMAIL: 
+      return {
+        resending: true, 
+        resent: null
+      }
+
+    case TYPE.RESEND_EMAIL_SUCCESS: 
+      return {
+        resending: false, 
+        resent: true
+      }
+
+    case TYPE.RESEND_EMAIL_ERROR: 
+      return {
+        resending: false, 
+        resent: false
+      }
+
     case TYPE.CHANGE_MENU_NONE:
       return { loggedState: "None" };
 

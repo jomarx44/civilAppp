@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { StyleSheet, View, Text, TextInput } from "react-native";
+import { StyleSheet, View, TextInput, Text } from "react-native";
 import { Item, Label } from "native-base";
 
-class PNFormContactInfo extends Component {
+class PNFormTextBoxPhoneNumber extends Component {
   constructor(props) {
     super(props);
     this.input = React.createRef();
@@ -17,38 +17,42 @@ class PNFormContactInfo extends Component {
     const {
       title,
       onChangeText,
+      password,
       value,
+      maxLength = null,
       onSubmitEditing = null,
+      keyboardType = "default",
       autoCompleteType = "off",
       editable = true,
-      invalid = ''
+      invalid = ""
     } = this.props;
     return (
       <View style={styles.view}>
+        <Label style={styles.label}>{title}</Label>
         <Item style={styles.text}>
           <Text style={styles.prefix_number}>+63</Text>
-          <TextInput 
-            autoCompleteType={autoCompleteType}
-            keyboardType='number-pad'
-            onSubmitEditing={onSubmitEditing}
-            onChangeText={onChangeText}
-            ref={this.input}
-            style={[styles.input, !editable && styles.input_disabled]}
+          <TextInput
+            {...this.props}
             value={value ? value.replace(/^0+/, '') : ''}
-            editable={editable}
+            ref={this.input}
+            keyboardType='number-pad'
+            secureTextEntry={password}
+            style={[styles.input, !editable && styles.input_disabled]}
             maxLength={10}
           />
         </Item>
-      <Text style={[styles.invalidText]}>{ invalid }</Text>
+        <Text style={[styles.invalidText]}>{ invalid }</Text>
       </View>
     );
   }
 }
 
-PNFormContactInfo.propTypes = {
+PNFormTextBoxPhoneNumber.propTypes = {
   title: PropTypes.string.isRequired,
   value: PropTypes.string,
   onChangeText: PropTypes.func,
+  password: PropTypes.bool,
+  keyboardType: PropTypes.string,
   autoCompleteType: PropTypes.string,
   reference: PropTypes.func,
   onSubmitEditing: PropTypes.func
@@ -60,26 +64,32 @@ let styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     marginTop: 5,
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'flex-start'
   },
   prefix_number: {
     fontFamily: "Avenir_Book",
     fontSize: 20,
     color: '#F9A010',
-    width:'20%',
+    width: 40,
     marginRight: 5
   },
   input: {
-    fontFamily: "Avenir_Book",
-    fontSize: 20,
-    color: '#F9A010',
+    color: "#f9a010",
+    fontSize: 18,
+    fontWeight: 'normal',
+    fontFamily: "Avenir_Medium",
     width:'80%'
   },
   input_disabled: {
     backgroundColor: "#EEEEEE"
   },
+  label: {
+    fontSize: 18,
+    fontFamily: "Avenir_Medium",
+    color: "#5d646c"
+  },
   view: {
-    marginBottom: 25
+    marginBottom: 15
   },
   invalidText: {
     marginTop: 5,
@@ -89,4 +99,4 @@ let styles = StyleSheet.create({
   }
 });
 
-export default PNFormContactInfo;
+export default PNFormTextBoxPhoneNumber;
