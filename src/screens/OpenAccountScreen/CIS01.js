@@ -11,10 +11,10 @@ import {
   Text
 } from "react-native";
 import { Container } from "native-base";
-import PNFormInputBox from "../../library/components/PNFormInputBox";
-import PNFormButton from "../../library/components/PNFormButton";
-import PNFormHeader from "../../library/components/PNFormHeader";
-import PNFormNavigation from "../../library/components/PNFormNavigation";
+import PNFormInputBox from "library/components/PNFormInputBox";
+import PNFormButton from "library/components/PNFormButton";
+import PNFormHeader from "library/components/PNFormHeader";
+import PNFormNavigation from "library/components/PNFormNavigation";
 import NavigationService from "navigation/NavigationService.js";
 import { connect } from "react-redux";
 import { addAttributes } from "../../reducers/AppAttributeReducer/AppAttribute_actions";

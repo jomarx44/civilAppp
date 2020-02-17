@@ -21,10 +21,10 @@ import { setLoggedState } from "store/auth";
 
 import { StackNavigator } from "react-navigation";
 import NavigationService from "navigation/NavigationService.js";
-import PNFormNavigation from "../../library/components/PNFormNavigation";
-import PNFormButton from "../../library/components/PNFormButton";
-import PNFormRadio from "../../library/components/PNFormRadio";
-import PNFormHeader from "../../library/components/PNFormHeader";
+import PNFormNavigation from "library/components/PNFormNavigation";
+import PNFormButton from "library/components/PNFormButton";
+import PNFormRadio from "library/components/PNFormRadio";
+import PNFormHeader from "library/components/PNFormHeader";
 import { connect } from "react-redux";
 import { addAttributes } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
 import validate from "validate.js";

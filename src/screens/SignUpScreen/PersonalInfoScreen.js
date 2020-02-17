@@ -10,11 +10,11 @@ import {
 import { Button, Text } from "native-base";
 
 import KeyboardShift from "library/components/CDKeyboardShift.js";
-import * as Profile from "../../store/profile";
+import * as Profile from "store/profile";
 import NavigationService from "navigation/NavigationService.js";
-import PNFormTextBox from "../../library/components/PNFormTextBox";
-import PNFormTextBoxPhoneNumber from "../../library/components/PNFormTextBox-PhoneNumber";
-import PNFormTextBoxMasked from "../../library/components/PNFormTextBoxMasked";
+import PNFormTextBox from "library/components/PNFormTextBox";
+import PNFormTextBoxPhoneNumber from "library/components/PNFormTextBox-PhoneNumber";
+import PNFormTextBoxMasked from "library/components/PNFormTextBoxMasked";
 import PNHeaderBackButtonWhite from "library/components/PNHeaderBackButtonWhite";
 import PNHeaderTitleDesc from "library/components/PNHeaderTitleDesc";
 import { connect } from "react-redux";

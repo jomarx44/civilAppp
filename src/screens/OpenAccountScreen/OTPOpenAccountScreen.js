@@ -22,7 +22,7 @@ import {
   PixelRatio
 } from "react-native";
 import { Container, Button, Text, Input } from "native-base";
-import Overlay from "../../library/components/Overlay";
+import Overlay from "library/components/Overlay";
 
 import styles from "styles/commonStyle";
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";

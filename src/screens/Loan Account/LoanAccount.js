@@ -4,9 +4,9 @@ import { connect } from "react-redux";
 
 // Custom Components
 import KeyboardShift from "library/components/CDKeyboardShift.js";
-import PNHeaderTitleDesc from "../../library/components/PNHeaderTitleDesc";
-import PNFormInputBox from "../../library/components/PNFormInputBox";
-import PNFormButton from "../../library/components/PNFormButton";
+import PNHeaderTitleDesc from "library/components/PNHeaderTitleDesc";
+import PNFormInputBox from "library/components/PNFormInputBox";
+import PNFormButton from "library/components/PNFormButton";
 
 // API
 import { loan } from "../../actions/api";

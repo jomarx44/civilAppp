@@ -1,6 +1,6 @@
 import React from "react";
 import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
-import PNHeaderBlueSkip from "../../library/components/PNHeaderBlueSkip";
+import PNHeaderBlueSkip from "library/components/PNHeaderBlueSkip";
 
 const data = [
   {

@@ -17,12 +17,12 @@ import {
 } from "react-native";
 import { Container } from "native-base";
 
-import PNFormNavigation from "../../library/components/PNFormNavigation";
+import PNFormNavigation from "library/components/PNFormNavigation";
 import NavigationService from "navigation/NavigationService.js";
-import PNFormInputBox from "../../library/components/PNFormInputBox";
-import PNFormButton from "../../library/components/PNFormButton"
-import PNFormHeader from "../../library/components/PNFormHeader";
-import PNRadioFormAddress from "../../library/components/PNRadioFormAddress";
+import PNFormInputBox from "library/components/PNFormInputBox";
+import PNFormButton from "library/components/PNFormButton"
+import PNFormHeader from "library/components/PNFormHeader";
+import PNRadioFormAddress from "library/components/PNRadioFormAddress";
 import { connect } from "react-redux";
 import { addAttributes } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
 import validate from "validate.js";

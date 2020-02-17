@@ -29,8 +29,8 @@ import {
 } from "native-base";
 
 import styles from "styles/commonStyle";
-import PNOrangeButton from "../../library/components/PNOrangeButton";
-import PNTransparentButton from "../../library/components/PNTransparentButton";
+import PNOrangeButton from "library/components/PNOrangeButton";
+import PNTransparentButton from "library/components/PNTransparentButton";
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
 
 let { height, width } = Dimensions.get("window");

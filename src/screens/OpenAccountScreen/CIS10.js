@@ -20,9 +20,9 @@ import {
 } from "native-base";
 
 import NavigationService from "navigation/NavigationService.js";
-import PNFormButton from "../../library/components/PNFormButton"
-import PNFormNavigation from "../../library/components/PNFormNavigation";
-import PNFormHeader from "../../library/components/PNFormHeader";
+import PNFormButton from "library/components/PNFormButton"
+import PNFormNavigation from "library/components/PNFormNavigation";
+import PNFormHeader from "library/components/PNFormHeader";
 import { connect } from "react-redux";
 import { addAttributes } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
 

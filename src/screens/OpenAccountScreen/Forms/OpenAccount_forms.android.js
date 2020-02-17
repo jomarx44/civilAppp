@@ -1,5 +1,5 @@
 import React from "react";
-import PNFormTextBox from "../../../library/components/PNFormTextBox";
+import PNFormTextBox from "library/components/PNFormTextBox";
 
 export const Form1 = ({onChangeText}) => {
   let input_first_number = React.createRef();

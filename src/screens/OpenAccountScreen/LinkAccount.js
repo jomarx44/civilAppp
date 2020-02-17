@@ -9,10 +9,10 @@ import {
 } from "react-native";
 
 import KeyboardShift from "library/components/CDKeyboardShift.js";
-import PNFormTextBox from "../../library/components/PNFormTextBox";
-import PNDatePicker from '../../library/components/PNDatePicker';
+import PNFormTextBox from "library/components/PNFormTextBox";
+import PNDatePicker from 'library/components/PNDatePicker';
 import PNHeaderBackButtonWhite from "library/components/PNHeaderBackButtonWhite";
-import PNHeaderTitleDesc from "../../library/components/PNHeaderTitleDesc";
+import PNHeaderTitleDesc from "library/components/PNHeaderTitleDesc";
 import { connect } from "react-redux";
 import API from "../../actions/api";
 import validate from "validate.js";

@@ -11,8 +11,8 @@ import { IndicatorViewPager, PagerDotIndicator } from "rn-viewpager";
 import NavigationService from "navigation/NavigationService.js";
 import styles from "styles/commonStyle";
 
-import PNHeaderSkip from "../../library/components/PNHeaderSkip";
-import PNFormButton from "../../library/components/PNFormButton"
+import PNHeaderSkip from "library/components/PNHeaderSkip";
+import PNFormButton from "library/components/PNFormButton"
 
 let { height, width } = Dimensions.get("window");
 

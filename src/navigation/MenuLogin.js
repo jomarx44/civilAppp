@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { ScrollView, View, StyleSheet } from "react-native";
-import CDSideMenuItem from "../library/components/CDSideMenuItem";
+import CDSideMenuItem from "library/components/CDSideMenuItem";
 import NavigationService from "../navigation/NavigationService";
-import * as Profile from "../store/profile";
+import * as Profile from "store/profile";
 
 class MenuLogin extends Component {
   render() {

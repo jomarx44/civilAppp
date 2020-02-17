@@ -18,11 +18,11 @@ import {
 import { Container } from "native-base";
 
 import NavigationService from "navigation/NavigationService.js";
-import PNFormNavigation from "../../library/components/PNFormNavigation"
-import PNFormButton from "../../library/components/PNFormButton"
-import PNDropDown from "../../library/components/PNDropDown";
-import PNFormInputBox from "../../library/components/PNFormInputBox";
-import PNFormHeader from "../../library/components/PNFormHeader";
+import PNFormNavigation from "library/components/PNFormNavigation"
+import PNFormButton from "library/components/PNFormButton"
+import PNDropDown from "library/components/PNDropDown";
+import PNFormInputBox from "library/components/PNFormInputBox";
+import PNFormHeader from "library/components/PNFormHeader";
 import { connect } from "react-redux";
 import { addAttributes } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
 import validate from "validate.js";

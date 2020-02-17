@@ -32,7 +32,7 @@ import {
 } from "native-base";
 
 import PNHeaderNoLogoCenterText from "library/components/PNHeaderNoLogo";
-import PNHeaderBlueBack from "../../library/components/PNHeaderBlueBack";
+import PNHeaderBlueBack from "library/components/PNHeaderBlueBack";
 import { connect } from "react-redux";
 import API from "../../actions/api";
 
@@ -80,6 +80,12 @@ function Item({ title, date, amount, index }) {
 }
 
 class AccountHistoryScreen extends React.Component {
+
+  componentDidMount() {
+    if(this.props.accountDetails.account) {
+      this.props.getAccountDetails("001-01-00027-7", "10");
+    }
+  }
   
   static navigationOptions = {
     header: <PNHeaderBlueBack title="Savings Account" navid="Dashboard" />
@@ -109,7 +115,7 @@ class AccountHistoryScreen extends React.Component {
           <View style={localStyles.subtitle_container}>
             <Text style={localStyles.subtitle_static}>PHP</Text>
             <Text style={localStyles.subtitle}>
-               {account.balance.formatted}
+               {account.balance ? account.balance.formatted : ''}
             </Text>
           </View>
           
@@ -227,7 +233,11 @@ const mapStateToProps = (state, props) => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return {};
+  return {
+    getAccountDetails: (acctno, count) => {
+      dispatch(API.getAccountDetails(acctno, count));
+    }
+  };
 };
 
 export default connect(

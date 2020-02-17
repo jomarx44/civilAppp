@@ -17,7 +17,7 @@ import { connect } from "react-redux";
 import API from "actions/api";
 import { requestOTP_TM } from "../../reducers/OTPReducer/OTP_actions";
 import { alertBox } from "../../actions/axiosCalls";
-import * as Profile from "../../store/profile";
+import * as Profile from "store/profile";
 import { relativeTimeThreshold } from "moment";
 import Overlay from "library/components/Overlay";
 

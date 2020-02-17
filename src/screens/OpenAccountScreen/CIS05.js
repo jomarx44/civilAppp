@@ -20,12 +20,12 @@ import {
 } from "native-base";
 
 import NavigationService from "navigation/NavigationService.js";
-import PNFormNavigation from "../../library/components/PNFormNavigation";
-import PNFormInputBox from "../../library/components/PNFormInputBox"
-import PNFormDatePicker from '../../library/components/PNFormDatePicker';
+import PNFormNavigation from "library/components/PNFormNavigation";
+import PNFormInputBox from "library/components/PNFormInputBox"
+import PNFormDatePicker from 'library/components/PNFormDatePicker';
 import PNFormTextBox from "library/components/PNFormTextBox";
-import PNFormButton from "../../library/components/PNFormButton"
-import PNFormHeader from "../../library/components/PNFormHeader";
+import PNFormButton from "library/components/PNFormButton"
+import PNFormHeader from "library/components/PNFormHeader";
 import { connect } from "react-redux";
 import {addAttributes} from '../../reducers/AppAttributeReducer/AppAttribute_actions'
 

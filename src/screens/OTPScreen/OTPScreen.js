@@ -32,7 +32,7 @@ import { setLoggedState } from "store/auth";
 import styles from "styles/commonStyle";
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import Overlay from "../../library/components/Overlay";
+import Overlay from "library/components/Overlay";
 
 import NavigationService from "navigation/NavigationService.js";
 import { connect } from "react-redux";

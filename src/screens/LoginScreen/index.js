@@ -27,7 +27,7 @@ import IBMAppId from "../../actions/ibmappid";
 // Action Creator
 import { getAttributes, putAttributes } from '../../reducers/AppAttributeReducer/AppAttribute_actions';
 import * as LocalAuthentication from "expo-local-authentication";
-import * as Profile from "../../store/profile";
+import * as Profile from "store/profile";
 
 class LoginScreen extends React.Component {
   input_username;

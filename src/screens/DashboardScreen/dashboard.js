@@ -20,7 +20,7 @@ import {
   getLoggedState,
   getToken
 } from "store/auth";
-import { getProfileData, getAccessData } from "../../store/profile";
+import { getProfileData, getAccessData } from "store/profile";
 import { connect } from "react-redux";
 import API from "actions/api";
 
@@ -71,8 +71,7 @@ class DashboardScreen extends React.Component {
       navid = "CIS14";
     }
     // this.props.getAccountDetails(acctno);
-    this.props.getAccountDetails();
-    this.props.navigation.push(navid, { acctno });
+    this.props.navigation.navigate(navid, { acctno });
   };
 
   onAddAccount = (navid) => {
@@ -304,9 +303,6 @@ const mapDispatchToProps = dispatch => {
     getAccounts: (cisno = "1590000062") => {
       dispatch(API.getAccounts(cisno));
     },
-    getAccountDetails: (acctno = "001-01-00027-7", count = "10") => {
-      dispatch(API.getAccountDetails(acctno, count));
-    }
   };
 };
 

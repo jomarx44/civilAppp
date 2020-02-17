@@ -536,7 +536,7 @@ const getAccountDetails = (acctno, count) => {
             alertBox(
               "Ooops! There's something wrong connecting to the server. Please try again."
             );
-            console.error(
+            console.log(
               "Error while fetching Account Info: ",
               info.data.data["Account.Info"]
             );
@@ -547,9 +547,14 @@ const getAccountDetails = (acctno, count) => {
             return;
           }
 
-          if (info.data.data["Account.Info"].ErrorMsg !== "") {
+          console.log("History: ", history.data);
+          if (history.data.data["Account.Info"].ErrorMsg !== "") {
             alertBox(
               "Ooops! There's something wrong connecting to the server. Please try again."
+            );
+            console.log(
+              "Error while fetching Account History: ",
+              history.data
             );
             NavigationService.navigate("Dashboard");
             dispatch({
