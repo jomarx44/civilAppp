@@ -82,7 +82,8 @@ function Item({ title, date, amount, index }) {
 class AccountHistoryScreen extends React.Component {
 
   componentDidMount() {
-    if(this.props.accountDetails.account) {
+    console.log("Account Details: ", this.props.accountDetails.account);
+    if(this.props.accountDetails.account.history.length == 0) {
       this.props.getAccountDetails("001-01-00027-7", "10");
     }
   }

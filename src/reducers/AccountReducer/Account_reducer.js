@@ -52,7 +52,8 @@ export const accountDetailsReducer = (state = accountDetailsState, action) => {
       return {
         ...state,
         is_fetching: true,
-        error: null
+        error: null, 
+        account: {}
       };
     case TYPE.FETCH_ACCOUNTDETAILS_SUCCESS:
       return {
@@ -71,14 +72,15 @@ export const accountDetailsReducer = (state = accountDetailsState, action) => {
     case TYPE.FETCH_ACCOUNTINFO_ERROR:
       return {
         ...state,
+        ...action.payload,
         is_fetching: false,
         error: true
       };
     case TYPE.FETCH_ACCOUNTSHISTORY_ERROR:
       return {
         ...state,
+        ...action.payload,
         is_fetching: false,
-        account: {},
         error: true
       };
     default:
