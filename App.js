@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { AsyncStorage, Platform, StyleSheet } from "react-native";
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
+import { Root } from "native-base";
 import { StyleProvider } from "native-base";
 import getTheme from "./native-base-theme/components";
 import platform from "./native-base-theme/variables/platform";
@@ -53,7 +54,7 @@ class App extends Component {
 
   onProceed = () => {
     AsyncStorage.setItem("isFirstTime", "false");
-    this.setState({isFirstTime: false});
+    this.setState({ isFirstTime: false });
   };
 
   render() {
@@ -62,10 +63,11 @@ class App extends Component {
     }
 
     return (
-      <Provider store={store}>
-        {/* <StyleProvider style={getTheme(platform)}> */}
+      <Root>
+        <Provider store={store}>
+          {/* <StyleProvider style={getTheme(platform)}> */}
           {this.state.isFirstTime === true ? (
-            <OnBoardingScreen onProceed={this.onProceed}/>
+            <OnBoardingScreen onProceed={this.onProceed} />
           ) : (
             <MainDrawer
               ref={navigatorRef => {
@@ -73,8 +75,9 @@ class App extends Component {
               }}
             />
           )}
-        {/* </StyleProvider> */}
-      </Provider>
+          {/* </StyleProvider> */}
+        </Provider>
+      </Root>
     );
   }
 }

@@ -1,5 +1,7 @@
 import React from "react";
-import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { connect } from "react-redux";
+
 import PNHeaderBlueSkip from "library/components/PNHeaderBlueSkip";
 
 const data = [
@@ -40,40 +42,35 @@ const data = [
   }
 ];
 
-class AnnouncementScreen extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+export const AnnouncementScreen = ({announcements}) => {
+  return (
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+    >
+      {announcements.map((announcement, index) => {
+        return (
+          <View style={styles.announcementContainer} key={index}>
+            <Text style={styles.annnouncementTitle}>
+              {announcement.title}
+            </Text>
+            <Text style={styles.announcementDateTime}>
+              {announcement.datetime}
+            </Text>
+            <Text style={styles.announcementContent}>
+              {announcement.content}
+            </Text>
+          </View>
+        );
+      })}
+    </ScrollView>
+  );
+}
 
-  static navigationOptions = {
+AnnouncementScreen.navigationOptions = () => {
+  return ({
     header: <PNHeaderBlueSkip title="Announcements" navid="Dashboard" />
-  };
-
-  render() {
-    const announcements = data;
-    return (
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}
-      >
-        {announcements.map((announcement, index) => {
-          return (
-            <View style={styles.announcementContainer} key={index}>
-              <Text style={styles.annnouncementTitle}>
-                {announcement.title}
-              </Text>
-              <Text style={styles.announcementDateTime}>
-                {announcement.datetime}
-              </Text>
-              <Text style={styles.announcementContent}>
-                {announcement.content}
-              </Text>
-            </View>
-          );
-        })}
-      </ScrollView>
-    );
-  }
+  });
 }
 
 let styles = StyleSheet.create({
@@ -111,4 +108,16 @@ let styles = StyleSheet.create({
   }
 });
 
-export default AnnouncementScreen;
+const mapStateToProps = (state, props) => {
+  const announcements = data;
+  return { announcements };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {};
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AnnouncementScreen);

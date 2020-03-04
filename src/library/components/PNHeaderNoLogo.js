@@ -7,7 +7,7 @@ class PNHeader extends Component {
     const { title } = this.props;
     return (
         <Header style={styles.header}>
-          <Left>
+          <Left style={{flex: 1}}>
             <Button
               transparent
               onPress={() => {this.props.navigation.openDrawer() }}>
@@ -17,6 +17,7 @@ class PNHeader extends Component {
           <Body style={styles.body}>
             <Title style={styles.title}>{title}</Title>
           </Body>
+          <Right style={{flex: 1}}/>
         </Header>
     );
   }
@@ -29,11 +30,12 @@ let styles = StyleSheet.create({
    height: 80
   }, 
   body: {
-   textAlign: 'center'
+   justifyContent: 'center',
+   alignItems: 'center',
+   flex: 3
   },
   title: {
-   color: '#fff',
-   paddingLeft: 20
+   color: '#fff'
   }
 
 });

@@ -17,6 +17,12 @@ class MenuLogin extends Component {
           onPress={() => {NavigationService.navigate("Dashboard")}}
         />
         <CDSideMenuItem
+          title="My Profile"
+          route="Profile"
+          currentRoute={currentRoute}
+          onPress={() => {NavigationService.navigate("ViewProfile")}}
+        />
+        <CDSideMenuItem
           title="FingerPrint Login"
           route="FingerPrint"
           currentRoute={currentRoute}

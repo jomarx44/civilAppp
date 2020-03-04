@@ -32,4 +32,9 @@ target 'pnmobile' do
   use_unimodules!
 
 
+  pod 'react-native-signature-capture', :path => '../node_modules/react-native-signature-capture'
+
+
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
 end

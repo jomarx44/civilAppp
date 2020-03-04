@@ -16,13 +16,7 @@ class PNFormTextBox extends Component {
   render() {
     const {
       title,
-      onChangeText,
       password,
-      value,
-      maxLength = null,
-      onSubmitEditing = null,
-      keyboardType = "default",
-      autoCompleteType = "off",
       editable = true,
       invalid = ""
     } = this.props;

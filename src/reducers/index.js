@@ -4,6 +4,8 @@ import auth from "./authReducer";
 import {accountDetailsReducer, accountsReducer} from "./AccountReducer";
 import {otpReducer} from './OTPReducer'
 import {cisReducer} from './cisReducer';
+import {LoaderReducer} from "./loaderReducer";
+import {profileReducer} from "./profileReducer";
 import AppAttributeReducer from './AppAttributeReducer'
 
 export default combineReducers({
@@ -13,5 +15,7 @@ export default combineReducers({
   accounts: accountsReducer,
   accountDetails: accountDetailsReducer,
   cis: cisReducer,
+  loader: LoaderReducer,
+  profile: profileReducer,
   appAttribute: AppAttributeReducer
 });

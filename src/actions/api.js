@@ -11,6 +11,7 @@ import {
   putMethod,
   putMethodWithToken,
   postOnly,
+  putOnly,
   getDataOnly,
   dispatchOnly,
   alertBox
@@ -640,7 +641,178 @@ const getAccountDetails = (acctno, count) => {
   };
 };
 
-const loan = payload => {};
+
+/*******************************
+ *
+ * Profile
+ *
+ *******************************/
+
+const getProfile = ({id}) => {
+  const json_data = {
+    path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
+    body: {
+      action: "getProfile",
+      user_id: id
+    }
+  }
+
+  return dispatch => {
+    dispatch({
+      type: TYPE.FETCH_PROFILE,
+    });
+    return postOnly(json_data)
+      .then((response) => {
+        console.log(response);
+        if(response.data.success) {
+          dispatch({
+            type: TYPE.FETCH_PROFILE_SUCCESS,
+            payload: {
+              
+            }
+          });
+        } else {
+          dispatch({
+            type: TYPE.FETCH_PROFILE_ERROR,
+            payload: {
+              message: response.data.message.error
+            }
+          });
+        }
+      })
+      .catch((error) => {
+        console.log("Error while saving profile: ", error);
+        alertBox("Ooops! There's something wrong connecting to the server. Please try again.");
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log("Error", error.message);
+        }
+        console.log(error.config);
+      })
+  }
+}
+
+// To be added
+const saveProfile = ({id, givenName, middleName, familyName, email, phoneNumber}) => {
+  const json_data = {
+    path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
+    body: {
+      action: "getProfile",
+      user_id: id,
+      // givenName,
+      // middleName,
+      // familyName,
+      // email,
+      // phoneNumber
+    }
+  }
+
+  console.log(json_data);
+
+  return dispatch => {
+    return postOnly(json_data)
+      .then((response) => {
+        console.log(response);
+        // if(response.data.success) {
+
+        // } else {
+
+        // }
+      })
+      .catch((error) => {
+        console.log("Error while saving profile: ", error);
+        alertBox("Ooops! There's something wrong connecting to the server. Please try again.");
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log("Error", error.message);
+        }
+        console.log(error.config);
+      })
+  }
+}
+
+/*******************************
+ *
+ * Loan
+ *
+ *******************************/
+
+//  To be added
+const loan = ({user_id, firstName, middleName, lastName, birthDate, amount, perCutOff, months}) => {
+  const json_data = {
+    path: "sunsavings/SSCreateLoanRequestMobile",
+    body: {
+      user_id,
+      firstName,
+      middleName,
+      lastName,
+      birthDate,
+      amount,
+      perCutOff,
+      months
+    }
+  };
+  
+  return dispatch => {
+    dispatch({
+      type: TYPE.FETCH
+    });
+    return postOnly(json_data)
+      .then((response) => {
+        let { data } = response;
+        console.log("Data: ", data.msg);
+        if(data.status == 'ok') {
+          Toast.show({
+            text: data.msg,
+            duration: 3000,
+            type: 'success'
+          });
+          dispatch({
+            type: TYPE.FETCH_SUCCESS,
+            payload: {
+              message: data.msg,
+            }
+          });
+        } else {
+          Toast.show({
+            text: data.msg,
+            duration: 3000,
+            type: 'danger'
+          });
+          dispatch({
+            type: TYPE.FETCH_ERROR,
+            payload: {
+              message: data.msg,
+            }
+          });
+        }
+        // 
+      })
+      .catch( (error) => {
+        console.log("Error on processing loan: ", error);
+        // dispatch({
+        //   type: TYPE.LOAN_ERROR,
+        //   payload: {
+        //     is_fetching: false,
+        //     message: error
+        //   }
+        // });
+        alertBox(
+          "Ooops! There's something wrong connecting to the server. Please try again."
+        )
+      });
+  }
+};
 
 const checkStatus = response => {
   return response.data.status == "ok";
@@ -659,5 +831,7 @@ export default {
   getAccountHistory,
   getAccountInfo,
   getAccountDetails,
+  getProfile,
+  saveProfile,
   loan
 };

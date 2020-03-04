@@ -65,6 +65,7 @@ class IBMAppId  {
         .then(response => {
           console.log("getUserInfo: ", response.data);
           action_type = action_type + "_SUCCESS"
+          console.log("Hmmm: ", response);
           dispatch(this.responseData(response.data, action_type, params));
 
           if(json.navid) {
@@ -72,7 +73,7 @@ class IBMAppId  {
           }
         })
         .catch(error => {
-          dispatch(this.responseData(response.data, action_type + "_ERROR", params));
+          dispatch(this.responseData(error, action_type + "_ERROR", params));
           alert("No internet connection. Please try again.");
           console.log("error" + error);
         });

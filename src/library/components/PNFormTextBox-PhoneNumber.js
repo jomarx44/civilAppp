@@ -16,20 +16,15 @@ class PNFormTextBoxPhoneNumber extends Component {
   render() {
     const {
       title,
-      onChangeText,
       password,
       value,
-      maxLength = null,
-      onSubmitEditing = null,
-      keyboardType = "default",
-      autoCompleteType = "off",
       editable = true,
       invalid = ""
     } = this.props;
     return (
       <View style={styles.view}>
         <Label style={styles.label}>{title}</Label>
-        <Item style={styles.text}>
+        <Item style={[styles.text, !editable && styles.disabled]}>
           <Text style={styles.prefix_number}>+63</Text>
           <TextInput
             {...this.props}
@@ -37,7 +32,7 @@ class PNFormTextBoxPhoneNumber extends Component {
             ref={this.input}
             keyboardType='number-pad'
             secureTextEntry={password}
-            style={[styles.input, !editable && styles.input_disabled]}
+            style={styles.input}
             maxLength={10}
           />
         </Item>
@@ -70,17 +65,16 @@ let styles = StyleSheet.create({
     fontFamily: "Avenir_Book",
     fontSize: 20,
     color: '#F9A010',
-    width: 40,
-    marginRight: 5
+    width: '15%',
   },
   input: {
     color: "#f9a010",
     fontSize: 18,
     fontWeight: 'normal',
     fontFamily: "Avenir_Medium",
-    width:'80%'
+    width:'85%'
   },
-  input_disabled: {
+  disabled: {
     backgroundColor: "#EEEEEE"
   },
   label: {
