@@ -1,4 +1,3 @@
-import { NavigationActions } from 'react-navigation';
 import * as TYPE from 'actions/types';
 import { ADD_SUCCESS, DELETE_SUCCESS, FETCH,  FETCH_SUCCESS, FETCH_ERROR } from '../actions/types';
 

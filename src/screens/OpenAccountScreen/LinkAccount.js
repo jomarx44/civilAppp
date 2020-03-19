@@ -8,11 +8,10 @@ import {
   Text
 } from "react-native";
 
-import KeyboardShift from "library/components/CDKeyboardShift.js";
+import KeyboardShift from "library/components/KeyboardShift";
 import PNFormTextBox from "library/components/PNFormTextBox";
 import PNDatePicker from 'library/components/PNDatePicker';
-import PNHeaderBackButtonWhite from "library/components/PNHeaderBackButtonWhite";
-import PNHeaderTitleDesc from "library/components/PNHeaderTitleDesc";
+import PNTitleAndDescription from "library/components/PNTitleAndDescription";
 import { connect } from "react-redux";
 import API from "../../actions/api";
 import validate from "validate.js";
@@ -48,10 +47,6 @@ class LinkAccount extends React.Component {
     tin: "193712983"
   };
 
-  static navigationOptions = {
-    header: <PNHeaderBackButtonWhite />
-  };
-
   handleChangeText = (text, index) => {
     this.setState({ [index]: text });
   };
@@ -83,7 +78,7 @@ class LinkAccount extends React.Component {
         {() => (
           <ScrollView contentContainerStyle={localStyle.container}>
             <View style={localStyle.header}>
-              <PNHeaderTitleDesc
+              <PNTitleAndDescription
                 title="Link My Account"
                 desc="Please fill in the required fields to link your account."
               />

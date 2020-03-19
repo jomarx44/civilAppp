@@ -1,5 +1,5 @@
 import { postOnly, getDataOnly, alertBox } from "../../actions/axiosCalls";
-import NavigationService from "../../navigation/NavigationService.js";
+import * as NavigationService from "../../navigation/NavigationService.js";
 
 export const REQUEST_OTP = "REQUEST_OTP";
 export const REQUEST_OTP_ERROR = "REQUEST_OTP_ERROR";

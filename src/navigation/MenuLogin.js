@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { ScrollView, View, StyleSheet } from "react-native";
 import CDSideMenuItem from "library/components/CDSideMenuItem";
-import NavigationService from "../navigation/NavigationService";
+import * as NavigationService from "../navigation/NavigationService";
 import * as Profile from "store/profile";
 
 class MenuLogin extends Component {
@@ -14,13 +14,13 @@ class MenuLogin extends Component {
           title="Dashboard"
           route="Home"
           currentRoute={currentRoute}
-          onPress={() => {NavigationService.navigate("Dashboard")}}
+          onPress={() => {this.props.navigation.navigate("Dashboard")}}
         />
         <CDSideMenuItem
           title="My Profile"
           route="Profile"
           currentRoute={currentRoute}
-          onPress={() => {NavigationService.navigate("ViewProfile")}}
+          onPress={() => {this.props.navigation.navigate("ViewProfile")}}
         />
         <CDSideMenuItem
           title="FingerPrint Login"
@@ -38,7 +38,7 @@ class MenuLogin extends Component {
           currentRoute={currentRoute}
           onPress={() => {
             Profile.deleteAccessToken();
-            NavigationService.navigate("Login");
+            this.props.navigation.navigate("Login");
           }}
         />
       </ScrollView>

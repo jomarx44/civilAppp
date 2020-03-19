@@ -12,7 +12,6 @@ import {
 import { Container, Button, Text } from "native-base";
 
 import styles from "styles/commonStyle";
-import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
 import { connect } from "react-redux";
 import API from "actions/api";
 import { requestOTP_TM } from "../../reducers/OTPReducer/OTP_actions";
@@ -88,10 +87,6 @@ class EmailVerificationScreen extends React.Component {
       }
     }
   }
-
-  static navigationOptions = {
-    header: <PNHeaderBackButtonBlue />
-  };
 
   render() {
     let { height, width } = Dimensions.get("window");

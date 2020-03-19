@@ -1,7 +1,7 @@
 import React from "react";
 import { Alert, View, StyleSheet, TouchableOpacity, AsyncStorage } from "react-native"
 import { Container, Text } from "native-base";
-import { withNavigation } from 'react-navigation';
+import { withNavigation } from '@react-navigation/compat';
 import { connect } from 'react-redux';
 import API from 'actions/api';
 import moment from 'moment';

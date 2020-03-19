@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { AppRegistry, StyleSheet, View, Dimensions, AsyncStorage } from "react-native";
 import { Button, Text } from "native-base";
-import NavigationService from 'navigation/NavigationService.js';
+import * as NavigationService from 'navigation/NavigationService.js';
 
 class PNBlueButtonSaveAsyncStorage extends Component {
 

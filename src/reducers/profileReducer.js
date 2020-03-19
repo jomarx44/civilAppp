@@ -4,10 +4,32 @@ import {
   UPDATE_PROFILE_SUCCESS,
   FETCH_PROFILE,
   FETCH_PROFILE_SUCCESS,
-  FETCH_PROFILE_ERROR
+  FETCH_PROFILE_ERROR,
+  SET_PROFILE,
+  LOGOUT
 } from "../actions/types";
 
 const initialState = {
+  data: {
+    id: "",
+    sub: "",
+    tokens: {
+      accessToken: "",
+      idToken: "",
+      refreshToken: ""
+    },
+    attributes: {},
+    emails: [],
+    phoneNumbers: [],
+    name: {
+      displayName: "",
+      givenName: "",
+      middleName: "",
+      familyName: ""
+    },
+  },
+  isLoggedIn: false,
+  // data: null,
   isUpdating: false,
   isFetching: false,
   success: null,
@@ -17,6 +39,9 @@ const initialState = {
 export const profileReducer = (state = initialState, action) => {
   let output = {};
   switch (action.type) {
+    case LOGOUT: 
+      output = initialState;
+      return output;
     case UPDATE_PROFILE:
       output = {
         ...state,
@@ -62,10 +87,20 @@ export const profileReducer = (state = initialState, action) => {
     case FETCH_PROFILE_SUCCESS:
       output = {
         ...state,
+        data: action.payload,
+        isLoggedIn: true,
         isFetching: false,
         success: true,
-        message: action.payload.message
+        message: action.payload.message,
       };
+      console.log("FETCH_PROFILE_SUCCESS: ", output);
+      return output;
+    case SET_PROFILE: 
+      output = {
+        ...state,
+        data: action.payload
+      }
+      console.log("Output: ", output);
       return output;
     default:
       return state;

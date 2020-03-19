@@ -20,7 +20,6 @@ import {
 import { Container, Button, Text, Input } from "native-base";
 import Overlay from "library/components/Overlay";
 import styles from "styles/commonStyle";
-import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { connect } from "react-redux";
 import { verifyOTP_TM } from "../../reducers/OTPReducer/OTP_actions";
@@ -68,10 +67,6 @@ class OTPScreen extends React.Component {
   constructor(props) {
     super(props);
   }
-
-  static navigationOptions = {
-    header: <PNHeaderBackButtonBlue />
-  };
 
   state = {
     signup_data: "",

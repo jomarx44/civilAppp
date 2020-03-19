@@ -1,8 +1,6 @@
 import React from "react";
 import AppJson from '../../../app.json';
-
-
-import KeyboardShift from "library/components/CDKeyboardShift.js"
+import KeyboardShift from "library/components/KeyboardShift.js"
 
 import { AsyncStorage, StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio} from "react-native";
 import { Container, Header, Title, Left, Center, Icon, Right, Button, Body, Content,Text, Card, CardItem } from "native-base";
@@ -17,8 +15,6 @@ import PNOrangeButton from "library/components/PNOrangeButton"
 import PNTextBox from "library/components/PNTextBox"
 import PNTransparentButton from "library/components/PNTransparentButton"
 import * as LocalAuthentication from 'expo-local-authentication';
-
-import NavigationService from 'navigation/NavigationService.js'
 
 class LoginScreen extends React.Component {
 
@@ -150,7 +146,7 @@ class LoginScreen extends React.Component {
         <View style={{ flex: 1, flexDirection: 'column-reverse', paddingBottom: 50 }}>
 
          <Button full transparent light
-          onPress={() => NavigationService.navigate("SignUpScreen")}
+          onPress={() => this.props.navigation.navigate("SignUpScreen")}
           style={buttonStyles.buttonTrans}>
           <Text>CREATE MOBILE ACCOUNT</Text>
          </Button>

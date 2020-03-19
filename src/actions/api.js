@@ -1,5 +1,5 @@
 import { Alert } from "react-native";
-import NavigationService from "../navigation/NavigationService";
+import * as NavigationService from "../navigation/NavigationService";
 import { Toast } from "native-base";
 import axios from "axios";
 import {
@@ -131,6 +131,58 @@ const forgotPassword = username => {
   };
 };
 
+const changeUserDetail = ({id, emails, phoneNumbers, userName, password, name}) => {
+  const json_data = {
+    path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
+    body: {
+      action: "updateUserByID",
+      user_data: {
+        id,
+        active: true,
+        emails,
+        phoneNumbers,
+        userName,
+        password,
+        name
+      }
+    }
+  };
+  console.log(json_data);
+  return dispatch => {
+    // dispatch({
+    //   type: TYPE.RESEND_EMAIL
+    // });
+    return postOnly(json_data)
+      .then(response => {
+        console.log("changeUserDetail response: ", response.data);
+        if (response.data.success) {
+          dispatch({
+            type: TYPE.UPDATE_PROFILE_SUCCESS,
+            payload: response.data
+          });
+          alertBox(
+            "Changed Successfully!"
+          );
+        } else {
+          dispatch({
+            type: TYPE.UPDATE_PROFILE_ERROR,
+            payload: { message: "" }
+          });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        dispatch({
+          type: TYPE.UPDATE_PROFILE_ERROR,
+          payload: { message: error }
+        });
+        alertBox(
+          "Ooops! There's something wrong connecting to the server. Please try again."
+        );
+      });
+  };
+}
+
 const checkEmail = userId => {
   const json_data = {
     path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
@@ -172,7 +224,9 @@ const resend_email = userId => {
             type: TYPE.RESEND_EMAIL_SUCCESS,
             payload: response.data
           });
-          alertBox("Email Verification successfully resent. Please check your email.")
+          alertBox(
+            "Email Verification successfully resent. Please check your email."
+          );
         } else {
           const error = JSON.parse(response.data.log_error);
           alertBox(error.detail);
@@ -193,7 +247,7 @@ const resend_email = userId => {
         );
       });
   };
-}
+};
 
 const signup = userdata => {
   const json_data = {
@@ -225,6 +279,7 @@ const signup = userdata => {
           });
           Profile.setSignUpData(response.data);
           NavigationService.navigate("EmailVerification");
+          // NavigationService.navigate("CreateMobileAccount2");
         } else {
           const error = JSON.parse(response.data.log_error);
           alertBox(error.detail);
@@ -322,7 +377,7 @@ const checkAccount = ({
 
   return dispatch => {
     dispatch({
-      type: TYPE.REQUEST_OTP,
+      type: TYPE.REQUEST_OTP
     });
 
     // const test = () => {
@@ -361,6 +416,7 @@ const checkAccount = ({
               token: response_data.token
             }
           });
+
           NavigationService.navigate("OTP");
         } else {
           dispatch({
@@ -541,6 +597,7 @@ const getAccountDetails = (acctno, count) => {
               "Error while fetching Account Info: ",
               info.data.data["Account.Info"]
             );
+
             NavigationService.navigate("Dashboard");
             dispatch({
               type: TYPE.FETCH_ACCOUNTINFO_ERROR
@@ -553,10 +610,9 @@ const getAccountDetails = (acctno, count) => {
             alertBox(
               "Ooops! There's something wrong connecting to the server. Please try again."
             );
-            console.log(
-              "Error while fetching Account History: ",
-              history.data
-            );
+            console.log("Error while fetching Account History: ", history.data);
+
+            
             NavigationService.navigate("Dashboard");
             dispatch({
               type: TYPE.FETCH_ACCOUNTSHISTORY_ERROR
@@ -632,6 +688,7 @@ const getAccountDetails = (acctno, count) => {
         alertBox(
           "Ooops! There's something wrong connecting to the server. Please try again."
         );
+
         NavigationService.navigate("Dashboard");
         console.error("Error while fetching Account Info: ", error);
         dispatch({
@@ -641,34 +698,54 @@ const getAccountDetails = (acctno, count) => {
   };
 };
 
-
 /*******************************
  *
  * Profile
  *
  *******************************/
 
-const getProfile = ({id}) => {
+const getProfile = ({ id }) => {
   const json_data = {
     path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
     body: {
       action: "getProfile",
       user_id: id
     }
-  }
+  };
 
   return dispatch => {
     dispatch({
-      type: TYPE.FETCH_PROFILE,
+      type: TYPE.FETCH_PROFILE
     });
     return postOnly(json_data)
-      .then((response) => {
+      .then(response => {
         console.log(response);
-        if(response.data.success) {
+        if (response.data.success) {
+          const { sub, attributes } = response.data;
+          const {
+            displayName,
+            emails,
+            id,
+            name: { givenName, middleName, familyName },
+            phoneNumbers
+          } = response.data.identities[0].idpUserInfo;
+
+          console.log(attributes);
+
           dispatch({
             type: TYPE.FETCH_PROFILE_SUCCESS,
             payload: {
-              
+              id,
+              sub,
+              attributes,
+              emails,
+              phoneNumbers,
+              name: {
+                displayName,
+                givenName,
+                middleName,
+                familyName
+              }
             }
           });
         } else {
@@ -680,9 +757,11 @@ const getProfile = ({id}) => {
           });
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.log("Error while saving profile: ", error);
-        alertBox("Ooops! There's something wrong connecting to the server. Please try again.");
+        alertBox(
+          "Ooops! There's something wrong connecting to the server. Please try again."
+        );
         if (error.response) {
           console.log(error.response.data);
           console.log(error.response.status);
@@ -693,30 +772,43 @@ const getProfile = ({id}) => {
           console.log("Error", error.message);
         }
         console.log(error.config);
-      })
-  }
-}
+      });
+  };
+};
 
 // To be added
-const saveProfile = ({id, givenName, middleName, familyName, email, phoneNumber}) => {
+const saveProfile = ({
+  id,
+  attributes,
+  givenName,
+  middleName,
+  familyName,
+  email,
+  phoneNumber
+}) => {
   const json_data = {
     path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
     body: {
-      action: "getProfile",
-      user_id: id,
-      // givenName,
-      // middleName,
-      // familyName,
-      // email,
-      // phoneNumber
+      action: "updateProfile",
+      user_data: {
+        id,
+        // email,
+        // given_name: givenName,
+        // family_name: familyName,
+        attributes: {
+          ...attributes,
+          test: "yes"
+          // email
+        }
+      }
     }
-  }
+  };
 
   console.log(json_data);
 
   return dispatch => {
     return postOnly(json_data)
-      .then((response) => {
+      .then(response => {
         console.log(response);
         // if(response.data.success) {
 
@@ -724,9 +816,11 @@ const saveProfile = ({id, givenName, middleName, familyName, email, phoneNumber}
 
         // }
       })
-      .catch((error) => {
+      .catch(error => {
         console.log("Error while saving profile: ", error);
-        alertBox("Ooops! There's something wrong connecting to the server. Please try again.");
+        alertBox(
+          "Ooops! There's something wrong connecting to the server. Please try again."
+        );
         if (error.response) {
           console.log(error.response.data);
           console.log(error.response.status);
@@ -737,9 +831,9 @@ const saveProfile = ({id, givenName, middleName, familyName, email, phoneNumber}
           console.log("Error", error.message);
         }
         console.log(error.config);
-      })
-  }
-}
+      });
+  };
+};
 
 /*******************************
  *
@@ -748,7 +842,16 @@ const saveProfile = ({id, givenName, middleName, familyName, email, phoneNumber}
  *******************************/
 
 //  To be added
-const loan = ({user_id, firstName, middleName, lastName, birthDate, amount, perCutOff, months}) => {
+const loan = ({
+  user_id,
+  firstName,
+  middleName,
+  lastName,
+  birthDate,
+  amount,
+  perCutOff,
+  months
+}) => {
   const json_data = {
     path: "sunsavings/SSCreateLoanRequestMobile",
     body: {
@@ -762,43 +865,43 @@ const loan = ({user_id, firstName, middleName, lastName, birthDate, amount, perC
       months
     }
   };
-  
+
   return dispatch => {
     dispatch({
       type: TYPE.FETCH
     });
     return postOnly(json_data)
-      .then((response) => {
+      .then(response => {
         let { data } = response;
         console.log("Data: ", data.msg);
-        if(data.status == 'ok') {
+        if (data.status == "ok") {
           Toast.show({
             text: data.msg,
             duration: 3000,
-            type: 'success'
+            type: "success"
           });
           dispatch({
             type: TYPE.FETCH_SUCCESS,
             payload: {
-              message: data.msg,
+              message: data.msg
             }
           });
         } else {
           Toast.show({
             text: data.msg,
             duration: 3000,
-            type: 'danger'
+            type: "danger"
           });
           dispatch({
             type: TYPE.FETCH_ERROR,
             payload: {
-              message: data.msg,
+              message: data.msg
             }
           });
         }
-        // 
+        //
       })
-      .catch( (error) => {
+      .catch(error => {
         console.log("Error on processing loan: ", error);
         // dispatch({
         //   type: TYPE.LOAN_ERROR,
@@ -809,9 +912,9 @@ const loan = ({user_id, firstName, middleName, lastName, birthDate, amount, perC
         // });
         alertBox(
           "Ooops! There's something wrong connecting to the server. Please try again."
-        )
+        );
       });
-  }
+  };
 };
 
 const checkStatus = response => {
@@ -822,6 +925,7 @@ export default {
   loginInitial,
   login,
   forgotPassword,
+  changeUserDetail,
   checkEmail,
   resend_email,
   signup,

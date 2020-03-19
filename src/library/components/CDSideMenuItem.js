@@ -7,7 +7,7 @@ import {
   TouchableHighlight
 } from "react-native";
 import { Text } from "native-base";
-import { withNavigation } from "react-navigation";
+import { withNavigation } from '@react-navigation/compat';
 import NavigationService from "navigation/NavigationService.js";
 
 class CDSideMenuItem extends Component {

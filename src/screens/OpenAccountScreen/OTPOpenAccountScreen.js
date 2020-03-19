@@ -11,7 +11,7 @@
 import React from "react";
 import AppJson from "../../../app.json";
 
-import KeyboardShift from "library/components/CDKeyboardShift.js";
+import KeyboardShift from "library/components/KeyboardShift";
 
 import {
   ActivityIndicator,
@@ -25,7 +25,6 @@ import { Container, Button, Text, Input } from "native-base";
 import Overlay from "library/components/Overlay";
 
 import styles from "styles/commonStyle";
-import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
 import { Col, Row, Grid } from "react-native-easy-grid";
 
 import { connect } from "react-redux";
@@ -35,16 +34,10 @@ import {
   putAttributes
 } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
 
-const { height, width } = Dimensions.get("window");
-
 class OTPOpenAccountScreen extends React.Component {
   constructor(props) {
     super(props);
   }
-
-  static navigationOptions = {
-    header: <PNHeaderBackButtonBlue />
-  };
 
   state = {
     signup_data: "",

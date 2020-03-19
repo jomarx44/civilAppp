@@ -16,9 +16,8 @@ import {
 } from "native-base";
 import { connect } from "react-redux";
 import { setLoggedState } from "store/auth";
-import KeyboardShift from "library/components/CDKeyboardShift.js";
+import KeyboardShift from "library/components/KeyboardShift";
 import styles from "styles/commonStyle";
-import NavigationService from "navigation/NavigationService.js";
 
 // APIs
 import API from "actions/api";
@@ -29,6 +28,9 @@ import { getAttributes, putAttributes } from '../../reducers/AppAttributeReducer
 import * as LocalAuthentication from "expo-local-authentication";
 import * as Profile from "store/profile";
 
+// Others
+import config from "../../config";
+
 class LoginScreen extends React.Component {
   input_username;
   input_password;
@@ -38,18 +40,14 @@ class LoginScreen extends React.Component {
     compatible: false,
     fingerprints: false,
     user: {
-      // username: "alvinching.official@gmail.com",
-      // password: "alvinviernes"
-      username: '',
-      password: ''
+      username: "alvin@thousandminds.com",
+      password: "alvinviernes"
+      // username: '',
+      // password: ''
     },
     result: "",
     signupdata: {}
   };
-  
-  static navigationOptions = {
-    header: null
-  }
   
   async componentDidMount() {
     //this.checkDeviceForHardware();
@@ -62,20 +60,18 @@ class LoginScreen extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { response, userInfo, getAppAttributes, updateAppAttributes } = this.props;
-    // if (this.props.response) {
-    //   // NavigationService.navigate("DashboardScreen");
-    //   console.log('HERRE!');
-    //   NavigationService.navigate("AnnouncementScreen");
-    // }
-    if (
-      !response.is_fetching &&
-      response.success &&
-      response.action === "signin"
-    ) {
-      userInfo(response.access_token);
-      Profile.setAccessToken(response.access_token)
+    const { response, userInfo } = this.props;
+    if(prevProps.response !== this.props.response) {
+      if (
+        !response.is_fetching &&
+        response.success &&
+        response.action === "signin"
+      ) {
+        userInfo(response.access_token);
+        Profile.setAccessToken(response.access_token);
+      }
     }
+    
   }
 
   getLoginInformation = async () => {
@@ -176,7 +172,7 @@ class LoginScreen extends React.Component {
                         marginTop: height * 0.2
                       }
                     ]}
-                    source={require("res/images/ic_logo_login.png")}
+                    source={config.company.logo.login}
                   />
                 </View>
                 <View
@@ -212,7 +208,7 @@ class LoginScreen extends React.Component {
                     transparent
                     light
                     onPress={() =>
-                      NavigationService.navigate("ForgotPassword")
+                      this.props.navigation.navigate("ForgotPassword")
                     }
                     style={buttonStyles.forgotButtonTrans}
                   >
@@ -240,13 +236,14 @@ class LoginScreen extends React.Component {
                     light
                     onPress={() => {
                       if (this.state.signupdata) {
-                        NavigationService.navigate("EmailVerification");
+                        this.props.navigation.navigate("EmailVerification");
                       } else {
-                        NavigationService.navigate("CreateMobileAccount");
+                        this.props.navigation.navigate("CreateMobileAccount");
+                        // this.props.navigation.navigate("CreateMobileAccount2");
                       }
-                        // NavigationService.navigate("EmailVerification");
+                        // this.props.navigation.navigate("EmailVerification");
                     }}
-                    // onPress={() => NavigationService.navigate("EmailVerification")}
+                    // onPress={() => this.props.navigation.navigate("EmailVerification")}
                     style={buttonStyles.buttonTrans}
                   >
                     <Text style={buttonStyles.buttonTransText}>
@@ -330,7 +327,7 @@ const mapDispatchToProps = dispatch => {
     login: (username, password) => {
       dispatch(API.login(username, password));
     },
-    userInfo: token => {
+    userInfo: (token) => {
       dispatch(IBMAppId.getUserInfo(token));
     },
     getAttributes: (parameters) => {

@@ -1,6 +1,9 @@
 export const PIN = "PIN";
 export const PIN_SUCCESS = "PIN_SUCCESS";
 
+
+export const SET_LOGGEDIN = "SET_LOGGEDIN";
+
 export const LOGIN = "LOGIN";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_ERROR = "LOGIN_ERROR";
@@ -26,6 +29,8 @@ export const FETCH_PROFILE_ERROR = "FETCH_PROFILE_ERROR";
 export const UPDATE_PROFILE = "UPDATE_PROFILE";
 export const UPDATE_PROFILE_SUCCESS = "UPDATE_PROFILE_SUCCESS";
 export const UPDATE_PROFILE_ERROR = "UPDATE_PROFILE_ERROR";
+
+export const SET_PROFILE = "SET_PROFILE";
 
 export const REQUEST_OTP = "REQUEST_OTP";
 export const REQUEST_OTP_ERROR = "REQUEST_OTP_ERROR";

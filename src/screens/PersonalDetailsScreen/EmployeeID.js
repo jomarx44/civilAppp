@@ -1,20 +1,14 @@
 import React from "react";
 import { StyleSheet, View, Dimensions, TouchableOpacity } from "react-native";
 import { Container, Header, Title, Button, Text } from "native-base";
-import CDHeaderBackButton from "library/components/CDHeaderBackButton.js"
 
 export default class EmployeeID extends React.Component {
-
-	static navigationOptions = {
-		header: null,
-	};
 
 	render(){
 		let {height, width} = Dimensions.get('window');
 		const { params } = this.props.navigation.state;
 		return(
 			<Container>
-			<CDHeaderBackButton />
 				<View>
 					<View>
 		            	<Text allowFontScaling={false} style={styles.TitleText}>EMPLOYEE ID</Text>

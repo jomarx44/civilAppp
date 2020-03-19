@@ -1,7 +1,7 @@
 import React from "react";
 import AppJson from "../../../app.json";
 
-import KeyboardShift from "library/components/CDKeyboardShift.js";
+import KeyboardShift from "library/components/KeyboardShift";
 
 import {
   ScrollView,
@@ -19,7 +19,6 @@ import {
   Container,
 } from "native-base";
 
-import NavigationService from "navigation/NavigationService.js";
 import PNFormContactInfo from "library/components/PNFormContactInfo";
 import PNFormNavigation from "library/components/PNFormNavigation";
 import PNFormButton from "library/components/PNFormButton";
@@ -110,7 +109,7 @@ class CIS08 extends React.Component {
       };
       attribute.contact_information = '63' + attribute.contact_information;
       this.props.addAttributes(attribute);
-      NavigationService.navigate("CIS09");
+      this.props.navigation.navigate("CIS09");
     } else {
       this.setState({
         invalid: invalid

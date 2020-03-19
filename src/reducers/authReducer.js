@@ -1,5 +1,5 @@
 import { AsyncStorage } from "react-native";
-import NavigationService from "../navigation/NavigationService";
+import * as NavigationService from "../navigation/NavigationService";
 import * as TYPE from "../actions/types";
 import * as Auth from "store/auth";
 import * as Profile from "store/profile";
@@ -78,6 +78,7 @@ export default function loginReducer(state = [], action) {
       };
 
     case TYPE.LOGIN_INITIAL_SUCCESS:
+      console.log("LOGIN_INITIAL_SUCCESS: ", action.payload);
       Profile.setAccessData(action.payload);
       return action.payload;
 

@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types'
 import { Dimensions, View, StyleSheet, ScrollView } from "react-native";
-import KeyboardShift from "library/components/CDKeyboardShift.js";
+import KeyboardShift from "library/components/KeyboardShift";
 
 const {
   height,

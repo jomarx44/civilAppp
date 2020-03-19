@@ -1,7 +1,7 @@
 import React from "react";
 import AppJson from "../../../app.json";
 
-import KeyboardShift from "library/components/CDKeyboardShift.js";
+import KeyboardShift from "library/components/KeyboardShift";
 
 import {
   ScrollView,
@@ -19,7 +19,6 @@ import {
   Container,
 } from "native-base";
 
-import NavigationService from "navigation/NavigationService.js";
 import PNFormButton from "library/components/PNFormButton"
 import PNFormNavigation from "library/components/PNFormNavigation";
 import PNFormHeader from "library/components/PNFormHeader";
@@ -87,7 +86,7 @@ class CIS10 extends React.Component {
     
     // if (!invalid) {
     //   this.props.addAttributes(this.state.cis);
-    //   NavigationService.navigate("CIS11");
+    //   this.props.navigation.navigate("CIS11");
     // } else {
     //   this.setState({
     //     invalid: invalid
@@ -95,7 +94,7 @@ class CIS10 extends React.Component {
     // }
 
     this.props.addAttributes(this.state.cis);
-    NavigationService.navigate("CIS11");
+    this.props.navigation.navigate("CIS11");
   };
 
   onChangeText = (value, field) => {

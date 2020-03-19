@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { AppRegistry, StyleSheet, View, Dimensions} from "react-native";
 import { Button, Text } from "native-base";
-import { withNavigation } from 'react-navigation';
+import { withNavigation } from '@react-navigation/compat';
 
 class CDFaqButtons extends Component {
 

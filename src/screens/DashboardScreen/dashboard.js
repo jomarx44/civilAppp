@@ -1,7 +1,5 @@
 import React from "react";
 import {
-  Alert,
-  Dimensions,
   StyleSheet,
   View,
   AsyncStorage,
@@ -10,27 +8,14 @@ import {
 } from "react-native";
 import { Accordion, Container, Icon, Text } from "native-base";
 
-import KeyboardShift from "library/components/CDKeyboardShift.js";
-import NavigationService from "navigation/NavigationService.js";
-import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
-import PNHeaderNoLogo from "library/components/PNHeaderNoLogo.js";
-import {
-  isPinAuthenticated,
-  isLoggedIn,
-  getLoggedState,
-  getToken
-} from "store/auth";
 import { getProfileData, getAccessData } from "store/profile";
 import { connect } from "react-redux";
-import API from "actions/api";
+import { setProfileData } from "../../actions/actionCreators";
+import API from "../../actions/api";
 
 class DashboardScreen extends React.Component {
   state = {
     modalVisible: false,
-    profileDetails: {
-      name: "",
-      email: ""
-    },
     loanAccounts: {
       title: "Loan Accounts",
       data: []
@@ -50,16 +35,35 @@ class DashboardScreen extends React.Component {
   }
 
   async componentDidMount() {
-    let authData = await getAccessData();
-    let profileDetails = await getProfileData();
-    this.props.getAccounts();
-    this.setState({ profileDetails });
-    NavigationService.navigate("Announcement");
-  }
+    // let authData = await getAccessData();
+    let profile = await getProfileData();
+    const { setProfileData, navigation } = this.props;
 
-  static navigationOptions = {
-    header: <PNHeaderNoLogo title="My Accounts" />
-  };
+    if (!this.props.profile.data) {
+      const { sub } = profile;
+      const {
+        displayName,
+        emails,
+        id,
+        name: { givenName, middleName, familyName },
+        phoneNumbers
+      } = profile.identities[0].idpUserInfo;
+      this.props.getProfile(sub);
+      // setProfileData({
+      //   id,
+      //   sub,
+      //   emails,
+      //   phoneNumbers,
+      //   displayName,
+      //   givenName,
+      //   middleName,
+      //   familyName
+      // });
+    }
+    
+    this.props.getAccounts();
+    navigation.navigate("Announcement");
+  }
 
   checkCiS14 = async () => {
     return await AsyncStorage.getItem("cis14");
@@ -74,11 +78,11 @@ class DashboardScreen extends React.Component {
     this.props.navigation.navigate(navid, { acctno });
   };
 
-  onAddAccount = (navid) => {
+  onAddAccount = navid => {
     this.props.navigation.navigate(navid);
-  }
+  };
 
-  _renderHeader = (section, expanded) => {
+  renderHeader = (section, expanded) => {
     return (
       <View style={styles.header}>
         <Text style={expanded ? styles.headerTextActive : styles.headerText}>
@@ -92,16 +96,14 @@ class DashboardScreen extends React.Component {
     );
   };
 
-  _renderContent = section => {
+  renderContent = section => {
     let viewdata = [];
 
     if (section.data && section.data.length > 0) {
       viewdata = section.data.map(data => {
         return (
           <TouchableOpacity
-            onPress={() =>
-              this.onPressCard("AccountHistory", data.acctno)
-            }
+            onPress={() => this.onPressCard("AccountHistory", data.acctno)}
             key={data.key}
             style={{ paddingHorizontal: 20, paddingVertical: 5 }}
           >
@@ -148,33 +150,23 @@ class DashboardScreen extends React.Component {
   };
 
   render() {
-    
-    if(this.props.appAttribute) {
-      console.log('APPATTRIBUTE: ', this.props.appAttribute);
-    }
+    const {
+      accounts,
+      profile: { data, isFetching }
+    } = this.props;
 
-    if(this.props.accounts.error) {
-      Alert.alert("Sun Savings Bank", "Ooops! There's something wrong connecting to the server. Please try again.");
-    }
-    
-    if(!this.props.accounts.is_fetching) {
-      const {profileDetails: {
-        name = 'NA',
-        email = 'NA'
-      }} = this.state;
-      console.log(this.state.profileDetails)
+    if (!isFetching && !accounts.is_fetching && data) {
       return (
         <Container>
           <View style={styles.viewHeader}>
-            <Text style={styles.title}>{name}</Text>
-            <Text style={styles.subtitle}>{email}</Text>
+            <Text style={styles.title}>{data.name.displayName}</Text>
+            <Text style={styles.subtitle}>{data.emails[0].value}</Text>
           </View>
           <View style={styles.viewAccounts}>
             <Accordion
-              renderHeader={this._renderHeader}
-              renderContent={this._renderContent}
-              animation={true}
-              dataArray={this.props.accounts.list}
+              renderHeader={this.renderHeader}
+              renderContent={this.renderContent}
+              dataArray={accounts.list}
               contentStyle={{ backgroundColor: "#ddecf8" }}
             />
           </View>
@@ -183,9 +175,7 @@ class DashboardScreen extends React.Component {
     }
 
     return (
-      <View
-        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-      >
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" color="#f9a010" />
       </View>
     );
@@ -229,14 +219,14 @@ let styles = StyleSheet.create({
   },
   cardTextBalanceValue: {
     textAlign: "right",
-    color: '#3e4a59',
+    color: "#3e4a59",
     fontSize: 17,
     fontFamily: "Avenir_Heavy"
   },
   cardTextBalance: {
     textAlign: "right",
     fontSize: 9,
-    color: '#5d646c',
+    color: "#5d646c",
     fontFamily: "Avenir_Book"
   },
   header: {
@@ -282,7 +272,7 @@ let styles = StyleSheet.create({
     marginBottom: 3
   },
   subtitle: {
-    color: '#ffffff',
+    color: "#ffffff",
     opacity: 0.7,
     fontSize: 12,
     fontFamily: "Avenir_Medium"
@@ -294,15 +284,21 @@ let styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state, props) => {
-  const { accounts, appAttribute, auth } = state;
-  return { accounts,appAttribute, auth };
+  const { profile, accounts, appAttribute, auth } = state;
+  return { profile, accounts, appAttribute, auth };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    getProfile: (id) => {
+      dispatch(API.getProfile({id}));
+    },
     getAccounts: (cisno = "1590000062") => {
       dispatch(API.getAccounts(cisno));
     },
+    setProfileData: data => {
+      dispatch(setProfileData(data));
+    }
   };
 };
 

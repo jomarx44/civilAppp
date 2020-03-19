@@ -10,7 +10,7 @@
 import React from "react";
 import AppJson from "../../../app.json";
 
-import KeyboardShift from "library/components/CDKeyboardShift.js";
+import KeyboardShift from "library/components/KeyboardShift";
 
 import {
   ActivityIndicator,
@@ -30,11 +30,9 @@ import * as Profile from "store/profile";
 import { setLoggedState } from "store/auth";
 
 import styles from "styles/commonStyle";
-import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Overlay from "library/components/Overlay";
 
-import NavigationService from "navigation/NavigationService.js";
 import { connect } from "react-redux";
 import { verifyOTP_BytePerByte, verifyOTP_TM } from "../../reducers/OTPReducer/OTP_actions"
 import API from "../../actions/api";
@@ -97,10 +95,6 @@ class OTPScreen extends React.Component {
         });
       }
     }
-  };
-
-  static navigationOptions = {
-    header: <PNHeaderBackButtonBlue />
   };
 
   render() {

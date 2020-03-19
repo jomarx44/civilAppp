@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 // Custom Component
 import { PNElectronicSignature } from "../../library/components/PNElectronicSignature";
-import PNHeaderCancelDone from "../../library/components/PNHeaderCancelDone";
+// import PNHeaderCancelDone from "../../library/components/PNHeaderCancelDone";
 
 // Others
 // var RNFS = require("react-native-fs");
@@ -49,17 +49,17 @@ export const ElectronicSignatureScreen = ({ navigation }) => {
   );
 };
 
-ElectronicSignatureScreen.navigationOptions = ({ navigation }) => {
-  const { params = {} } = navigation.state;
-  return {
-    header: (
-      <PNHeaderCancelDone
-        navId="CreateMobileAccount"
-        onDone={() => params.handleOnDone()}
-      />
-    )
-  };
-};
+// ElectronicSignatureScreen.navigationOptions = ({ navigation }) => {
+//   const { params = {} } = navigation.state;
+//   return {
+//     header: (
+//       <PNHeaderCancelDone
+//         navId="CreateMobileAccount"
+//         onDone={() => params.handleOnDone()}
+//       />
+//     )
+//   };
+// };
 
 const mapStateToProps = state => ({});
 

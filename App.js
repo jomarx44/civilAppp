@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import React, { Component } from "react";
 import { AsyncStorage, Platform, StyleSheet } from "react-native";
 import { AppLoading } from "expo";
@@ -7,29 +8,32 @@ import { StyleProvider } from "native-base";
 import getTheme from "./native-base-theme/components";
 import platform from "./native-base-theme/variables/platform";
 
-import NavigationService from "./src/navigation/NavigationService";
-import MainDrawer from "./src/navigation";
-
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import { createStore, applyMiddleware } from "redux";
 import rootReducer from "./src/reducers";
 
+// Custom Component
 import OnBoardingScreen from "./src/screens/OnBoardingScreen";
+
+// Others
+import Navigator from "./src/navigation";
+import * as Profile from "store/profile";
+// import NavigationService from "./src/navigation/NavigationService";
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
 class App extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      isReady: false,
-      isFirstTime: true
-    };
   }
+  
+  state = {
+    isReady: false,
+    isFirstTime: true
+  };
 
-  async componentWillMount() {
+  async componentDidMount() {
     await Font.loadAsync({
       Avenir_Black: require("./src/res/fonts/AvenirLTStd-Black.otf"),
       Avenir_BlackOblique: require("./src/res/fonts/AvenirLTStd-BlackOblique.otf"),
@@ -56,7 +60,7 @@ class App extends Component {
     AsyncStorage.setItem("isFirstTime", "false");
     this.setState({ isFirstTime: false });
   };
-
+  
   render() {
     if (!this.state.isReady) {
       return <AppLoading />;
@@ -69,11 +73,7 @@ class App extends Component {
           {this.state.isFirstTime === true ? (
             <OnBoardingScreen onProceed={this.onProceed} />
           ) : (
-            <MainDrawer
-              ref={navigatorRef => {
-                NavigationService.setTopLevelNavigator(navigatorRef);
-              }}
-            />
+            <Navigator/>
           )}
           {/* </StyleProvider> */}
         </Provider>

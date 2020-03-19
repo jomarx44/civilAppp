@@ -9,14 +9,12 @@ import {
 } from "react-native";
 import { Button, Text } from "native-base";
 
-import KeyboardShift from "library/components/CDKeyboardShift.js";
+import KeyboardShift from "library/components/KeyboardShift";
 import * as Profile from "store/profile";
-import NavigationService from "navigation/NavigationService.js";
 import PNFormTextBox from "library/components/PNFormTextBox";
 import PNFormTextBoxPhoneNumber from "library/components/PNFormTextBox-PhoneNumber";
 import PNFormTextBoxMasked from "library/components/PNFormTextBoxMasked";
-import PNHeaderBackButtonWhite from "library/components/PNHeaderBackButtonWhite";
-import PNHeaderTitleDesc from "library/components/PNHeaderTitleDesc";
+import PNTitleAndDescription from "library/components/PNTitleAndDescription";
 import { connect } from "react-redux";
 import API from "actions/api";
 import {
@@ -100,10 +98,6 @@ class PersonalInfo extends React.Component {
     this.input_familyName = React.createRef();
     this.input_phoneNumber = React.createRef();
   }
-
-  static navigationOptions = {
-    header: <PNHeaderBackButtonWhite />
-  };
 
   onChangeText = (value, field) => {
     const { user } = this.state;
@@ -196,7 +190,7 @@ class PersonalInfo extends React.Component {
         {() => (
           <ScrollView style={localStyle.container}>
             <View style={localStyle.header}>
-              <PNHeaderTitleDesc
+              <PNTitleAndDescription
                 title="Create Account"
                 desc="To verify your identity, please fill in personal information."
               />

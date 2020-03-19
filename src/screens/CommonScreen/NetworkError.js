@@ -7,12 +7,11 @@ import {
   Text,
   StyleSheet
 } from 'react-native';
-import NavigationService from "../../navigation/NavigationService";
 
 const NetworkError = ({callerNav}) => {
 
   const handlePress = () => {
-    NavigationService.navigate(callerNav);
+    this.props.navigation.navigate(callerNav);
   }
 
   const styles = StyleSheet.create({

@@ -12,7 +12,7 @@
     "name": "pnmobile",
     "slug": "expo-template-bare",
     "privacy": "unlisted",
-    "sdkVersion": "34.0.0",
+    "sdkVersion": "36.0.0",
     "version": "1.0.0",
     "entryPoint": "node_modules/expo/AppEntry.js",
     "icon": "./assets/images/ic_launcher_xxxhdpi.png",
@@ -26,7 +26,10 @@
         "resizeMode": "cover"
       }
     },
-
-    "platforms": ["ios", "android", "web"]
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ]
   }
 }

@@ -1,9 +1,6 @@
 import React from "react";
-import CDHeader from "library/components/CDHeader.js"
 import { AsyncStorage, StyleSheet, View, Dimensions, TouchableOpacity,Image } from "react-native";
 import { Container, Header, Title, Button, Text } from "native-base";
-import { StackNavigator } from "react-navigation";
-import NavigationService from 'navigation/NavigationService.js'
 
 import { connect } from 'react-redux';
 
@@ -59,12 +56,6 @@ export default class PersonalDetails extends React.Component {
     this.getUserProfile();
   }
 
-  static navigationOptions = {
-    header: (
-      <CDHeader title="Profile" />
-    )
-  };
-
   render(){
     let {height, width} = Dimensions.get('window');
     return(
@@ -80,7 +71,7 @@ export default class PersonalDetails extends React.Component {
 
           <View style={{ marginTop: 25 }}>
             <TouchableOpacity style={{ flexDirection: 'row', width: width * 0.8, height: 30, alignItems: 'center', marginLeft: width * 0.1}}
-                onPress={() => NavigationService.navigate('EmployeeID', { emp_id: this.state.emp_id })}>
+                onPress={() => this.props.navigation.navigate('EmployeeID', { emp_id: this.state.emp_id })}>
               <View style={{ alignItems: 'center', width: 30 }}>
                 <Image source={require('res/images/personal_details_icon/ic_info.png')} />
               </View>
@@ -115,7 +106,7 @@ export default class PersonalDetails extends React.Component {
             </View>
 
             <TouchableOpacity style={{ flexDirection: 'row', width: width * 0.8, height: 30, alignItems: 'center', marginLeft: width * 0.1, marginTop: 40}}
-                onPress={() => NavigationService.navigate('OtherInfo', { sss: this.state.sss, tin: this.state.tin })}>
+                onPress={() => this.props.navigation.navigate('OtherInfo', { sss: this.state.sss, tin: this.state.tin })}>
               <View style={{ alignItems: 'center', width: 30 }}>
                 <Image source={require('res/images/personal_details_icon/ic_id.png')} />
               </View>
@@ -128,7 +119,7 @@ export default class PersonalDetails extends React.Component {
             </TouchableOpacity>
 
             <TouchableOpacity style={{ flexDirection: 'row', width: width * 0.8, height: 30, alignItems: 'center', marginLeft: width * 0.1, marginTop: 40}}
-                onPress={() => NavigationService.navigate('ChangePass')}>
+                onPress={() => this.props.navigation.navigate('ChangePass')}>
               <View style={{ alignItems: 'center', width: 30 }}>
                 <Image source={require('res/images/personal_details_icon/ic_lock.png')} />
               </View>

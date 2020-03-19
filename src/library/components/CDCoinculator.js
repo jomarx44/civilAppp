@@ -4,7 +4,7 @@ import CDCoinculatorOnly from "library/components/CDCoinculatorOnly.js";
 import PrivacyPolicyScreen from "screens/PrivacyPolicyScreen/";
 import StringsMain from "res/strings/main.js";
 import KeyboardShift from "library/components/CDKeyboardShift.js"
-import { withNavigation } from "react-navigation";
+import { withNavigation } from '@react-navigation/compat';
 import NavigationService from "navigation/NavigationService.js"
 import { AppRegistry, StyleSheet, View, Dimensions, Image, TextInput, ScrollView, BackHandler, TouchableOpacity, Linking } from "react-native";
 import { Container, Card, CardItem, Body, Content, Icon, Title, Button, Text } from "native-base";

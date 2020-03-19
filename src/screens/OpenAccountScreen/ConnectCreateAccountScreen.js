@@ -31,22 +31,11 @@ import {
 import styles from "styles/commonStyle";
 import PNOrangeButton from "library/components/PNOrangeButton";
 import PNTransparentButton from "library/components/PNTransparentButton";
-import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
 
 let { height, width } = Dimensions.get("window");
 
-class ConnectCreateAccountScreen extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  static navigationOptions = {
-    header: <PNHeaderBackButtonBlue navid="Dashboard" />
-  };
-
-  render() {
-    return (
-      <ImageBackground
+export const ConnectCreateAccountScreen = () => (
+  <ImageBackground
         source={require("res/images/SSB-Splash.png")}
         style={buttonStyles.backgroundImage}
       >
@@ -70,9 +59,7 @@ class ConnectCreateAccountScreen extends React.Component {
           </TouchableOpacity>
         </View>
       </ImageBackground>
-    );
-  }
-}
+);
 
 let buttonStyles = StyleSheet.create({
   button: {

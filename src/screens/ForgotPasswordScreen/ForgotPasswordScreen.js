@@ -1,17 +1,12 @@
 import React from "react";
 
-import KeyboardShift from "library/components/CDKeyboardShift.js";
-import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
+import KeyboardShift from "library/components/KeyboardShift";
 import styles from "styles/commonStyle";
 
 import { ActivityIndicator, View, TextInput, StyleSheet } from "react-native";
 import {
-  Header,
   Container,
   Button,
-  Input,
-  Form,
-  Label,
   Text
 } from "native-base";
 import API from "../../actions/api";
@@ -24,10 +19,6 @@ class ForgotPasswordScreen extends React.Component {
       email: ""
     };
   }
-
-  static navigationOptions = {
-    header: <PNHeaderBackButtonBlue />
-  };
 
   onChangeText = text => {
     this.setState({ email: text });

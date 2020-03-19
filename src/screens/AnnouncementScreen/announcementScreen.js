@@ -2,8 +2,6 @@ import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { connect } from "react-redux";
 
-import PNHeaderBlueSkip from "library/components/PNHeaderBlueSkip";
-
 const data = [
   {
     title:
@@ -65,12 +63,6 @@ export const AnnouncementScreen = ({announcements}) => {
       })}
     </ScrollView>
   );
-}
-
-AnnouncementScreen.navigationOptions = () => {
-  return ({
-    header: <PNHeaderBlueSkip title="Announcements" navid="Dashboard" />
-  });
 }
 
 let styles = StyleSheet.create({

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Dimensions, View, Text, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 
-import KeyboardShift from "library/components/CDKeyboardShift.js";
+import KeyboardShift from "library/components/KeyboardShift";
 import OpenAccountLayout from "./OpenAccount_layout";
 
 class OpenAccountContainer extends Component {

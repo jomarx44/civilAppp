@@ -1,7 +1,7 @@
 import React from "react";
 import AppJson from "../../../app.json";
 
-import KeyboardShift from "library/components/CDKeyboardShift.js";
+import KeyboardShift from "library/components/KeyboardShift";
 
 import {
   ScrollView,
@@ -17,7 +17,6 @@ import {
 } from "react-native";
 import { Container } from "native-base";
 
-import NavigationService from "navigation/NavigationService.js";
 import PNFormNavigation from "library/components/PNFormNavigation";
 import PNFormInputBox from "library/components/PNFormInputBox";
 import PNDropDown from "library/components/PNDropDown";
@@ -161,7 +160,7 @@ class CIS11 extends React.Component {
     
     if (!invalid) {
       this.props.addAttributes(this.state.cis);
-      NavigationService.navigate("CIS12");
+      this.props.navigation.navigate("CIS12");
     } else {
       this.setState({
         invalid: invalid

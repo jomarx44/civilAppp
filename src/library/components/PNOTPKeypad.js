@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { AppRegistry, StyleSheet, View, Dimensions} from "react-native";
 import { Container, Header, Content, Input, Item, Button, Text } from "native-base";
 import { Col, Row, Grid } from 'react-native-easy-grid';
-import NavigationService from 'navigation/NavigationService.js'
+import * as NavigationService from 'navigation/NavigationService.js'
 
 
 

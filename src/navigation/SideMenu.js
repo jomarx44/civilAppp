@@ -1,31 +1,18 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import { NavigationActions, SafeAreaView } from "react-navigation";
+
+import { CommonActions } from '@react-navigation/native';
+
 import {
   Alert,
-  ScrollView,
-  View,
-  LayoutAnimation,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  Image,
   AppState
 } from "react-native";
 import {
   Container,
-  Header,
-  Left,
-  Body,
-  Right,
-  Button,
-  Icon,
-  Title
 } from "native-base";
 
 import { connect } from "react-redux";
 import AppJson from "../../app.json";
-import NavigationService from "navigation/NavigationService.js";
 
 import { isPinAuthenticated, isLoggedIn, getLoggedState } from "store/auth";
 import {
@@ -131,7 +118,7 @@ class SideMenu extends Component {
   }
 
   navigateToScreen = route => () => {
-    const navigateAction = NavigationActions.navigate({
+    const navigateAction = CommonActions.navigate({
       routeName: route
     });
     this.props.navigation.dispatch(navigateAction);

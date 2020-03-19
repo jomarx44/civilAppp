@@ -1,26 +1,13 @@
 import React from "react";
-import AppJson from "../../../app.json";
-
-import KeyboardShift from "library/components/CDKeyboardShift.js";
-
 import {
   ScrollView,
-  StatusBar,
-  Image,
   Dimensions,
   StyleSheet,
-  ImageBackground,
-  TextInput,
-  TouchableOpacity,
   View,
-  Text
 } from "react-native";
 import { Container } from "native-base";
-import * as Profile from "store/profile";
-import { setLoggedState } from "store/auth";
 
-import { StackNavigator } from "react-navigation";
-import NavigationService from "navigation/NavigationService.js";
+import KeyboardShift from "library/components/KeyboardShift";
 import PNFormNavigation from "library/components/PNFormNavigation";
 import PNFormButton from "library/components/PNFormButton";
 import PNFormRadio from "library/components/PNFormRadio";
@@ -96,7 +83,7 @@ class CIS13 extends React.Component {
 
     if (!invalid) {
       this.props.addAttributes(this.state.cis);
-      NavigationService.navigate("CIS14");
+      this.props.navigation.navigate("CIS14");
     } else {
       this.setState({
         invalid: invalid

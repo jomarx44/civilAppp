@@ -1,6 +1,6 @@
 import React from "react";
 import AppJson from "../../../app.json";
-import KeyboardShift from "library/components/CDKeyboardShift.js";
+import KeyboardShift from "library/components/KeyboardShift";
 import {
   ScrollView,
   Button,
@@ -15,7 +15,6 @@ import PNFormInputBox from "library/components/PNFormInputBox";
 import PNFormButton from "library/components/PNFormButton";
 import PNFormHeader from "library/components/PNFormHeader";
 import PNFormNavigation from "library/components/PNFormNavigation";
-import NavigationService from "navigation/NavigationService.js";
 import { connect } from "react-redux";
 import { addAttributes } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
 import validate from "validate.js";
@@ -96,7 +95,7 @@ class CIS01 extends React.Component {
     
     if (!invalid) {
       this.props.addAttributes(this.state.cis);
-      NavigationService.navigate("CIS02");
+      this.props.navigation.navigate("CIS02");
     } else {
       this.setState({
         invalid: invalid

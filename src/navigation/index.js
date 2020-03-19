@@ -1,13 +1,24 @@
-import React, { Component } from "react";
-import {
-  createDrawerNavigator,
-  createAppContainer,
-  createSwitchNavigator,
-  createStackNavigator
-} from "react-navigation";
-import { Dimensions } from "react-native";
+import React from "react";
+import { connect } from "react-redux";
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { navigationRef } from "../navigation/NavigationService";
 
-import Login from "screens/LoginScreen";
+// Styles
+import { blueNavigationStyle } from "./style";
+
+// Drawer Components
+import MainDrawerContent from "./MainDrawerContent";
+
+// Header Components
+import PNHeaderNoLogo from "library/Layout/Header/PNHeaderNoLogo";
+import PNHeaderBlueSkip from "library/Layout/Header/PNHeaderBlueSkip";
+import PNHeaderBlueBack from "library/Layout/Header/PNHeaderBlueBack";
+import PNHeaderBackButton from "../library/Layout/Header/PNHeaderBackButton";
+import PNHeaderCancelDone from "../library/Layout/Header/PNHeaderCancelDone";
+
+import LoginScreen from "screens/LoginScreen";
 import PersonalInfoScreen from "screens/SignUpScreen/PersonalInfoScreen";
 import SignUpScreen2 from "screens/SignUpScreen/SignUpScreen2";
 import EmailVerificationScreen from "screens/SignUpScreen/EmailVerificationScreen";
@@ -16,9 +27,8 @@ import LoginFingerPrintScreen from "screens/LoginScreen/fingerprint";
 import ForgotPasswordScreen from "screens/ForgotPasswordScreen";
 
 import SideMenu from "./SideMenu";
-import PersonalDetailsScreen from "screens/PersonalDetailsScreen/";
-import OpenAccountScreen from "screens/OpenAccountScreen/";
-import AnnouncementScreen from "screens/AnnouncementScreen/";
+// import PersonalDetailsScreen from "screens/PersonalDetailsScreen/";
+import AnnouncementScreen from "screens/AnnouncementScreen";
 
 import DashboardScreen from "screens/DashboardScreen/dashboard";
 import AccountHistoryScreen from "screens/DashboardScreen/accountHistory";
@@ -41,90 +51,250 @@ import OTPScreen from "screens/OTPScreen/OTPScreen";
 import ConnectCreateAccountScreen from "screens/OpenAccountScreen/ConnectCreateAccountScreen";
 import LinkAccount from "screens/OpenAccountScreen/LinkAccount";
 import LoanAccountScreen from "../screens/LoanAccountScreen/LoanAccountScreen";
+
+// Profile
 import ProfileScreen from "../screens/ProfileScreen";
+import ChangePasswordScreen from "../screens/ChangePasswordScreen";
+import ChangeMobileNumberScreen from "../screens/ChangeMobileNumberScreen";
 
-const AuthenticationNavigator = createStackNavigator(
-  {
-    Login: {
-      screen: Login
-    },
-    CreateMobileAccount: { screen: PersonalInfoScreen },
-    CreateMobileAccount2: { screen: SignUpScreen2 },
-    EmailVerification: { screen: EmailVerificationScreen },
-    TakeAPhotoOfID: { screen: TakeAPhotoOfIDScreen },
-    ForgotPassword: { screen: ForgotPasswordScreen },
-    OTPSignUp: { screen: OTPOpenAccountScreen }
-  },
-  {
-    initialRouteName: "CreateMobileAccount2"
+const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
+
+const MyTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: "#FFFFFF"
   }
-);
+};
 
-const DashboardStack = createStackNavigator(
-  {
-    Dashboard: { screen: DashboardScreen },
-    AccountHistory: { screen: AccountHistoryScreen },
-    LoanAccount: { screen: LoanAccountScreen },
-    FingerPrint: { screen: LoginFingerPrintScreen },
-    CIS01: { screen: CIS01 },
-    CIS02: { screen: CIS02 },
-    CIS03: { screen: CIS03 },
-    CIS04: { screen: CIS04 },
-    CIS05: { screen: CIS05 },
-    CIS06: { screen: CIS06 },
-    CIS07: { screen: CIS07 },
-    CIS08: { screen: CIS08 },
-    CIS09: { screen: CIS09 },
-    CIS10: { screen: CIS10 },
-    CIS11: { screen: CIS11 },
-    CIS12: { screen: CIS12 },
-    CIS13: { screen: CIS13 },
-    CIS14: { screen: CIS14 },
-    OTPOpenAccount: { screen: OTPOpenAccountScreen },
-    OTP: { screen: OTPScreen },
-    ConnectCreateAccount: { screen: ConnectCreateAccountScreen },
-    LinkAccount: { screen: LinkAccount }
-  },
-  {
-    initialRouteName: "Dashboard"
-  }
-);
+const Dashboard = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Dashboard"
+        component={DashboardScreen}
+        options={{ header: () => <PNHeaderNoLogo title="My Accounts" /> }}
+      />
+      <Stack.Screen
+        name="Announcement"
+        component={AnnouncementScreen}
+        options={{
+          header: ({ navigation }) => {
+            return (
+              <PNHeaderBlueSkip
+                title="Announcements"
+                onPressSkip={navigation.goBack}
+              />
+            );
+          }
+        }}
+      />
+      <Stack.Screen
+        name="AccountHistory"
+        component={AccountHistoryScreen}
+        options={{
+          header: ({ navigation }) => {
+            return (
+              <PNHeaderBlueBack
+                title="Savings Account"
+                onPress={navigation.goBack}
+              />
+            );
+          }
+        }}
+      />
+      <Stack.Screen name="LoanAccount" component={LoanAccountScreen} />
+      <Stack.Screen name="Fingerprint" component={LoginFingerPrintScreen} />
+      <Stack.Screen name="CIS01" component={CIS01} />
+      <Stack.Screen name="CIS02" component={CIS02} />
+      <Stack.Screen name="CIS03" component={CIS03} />
+      <Stack.Screen name="CIS04" component={CIS04} />
+      <Stack.Screen name="CIS05" component={CIS05} />
+      <Stack.Screen name="CIS06" component={CIS06} />
+      <Stack.Screen name="CIS07" component={CIS07} />
+      <Stack.Screen name="CIS08" component={CIS08} />
+      <Stack.Screen name="CIS09" component={CIS09} />
+      <Stack.Screen name="CIS10" component={CIS10} />
+      <Stack.Screen name="CIS11" component={CIS11} />
+      <Stack.Screen name="CIS12" component={CIS12} />
+      <Stack.Screen name="CIS13" component={CIS13} />
+      <Stack.Screen name="CIS14" component={CIS14} />
+      <Stack.Screen name="OTPOpenAccount" component={OTPOpenAccountScreen} />
+      <Stack.Screen
+        name="OTP"
+        component={OTPScreen}
+        options={{
+          header: ({ navigation }) => {
+            return (
+              <PNHeaderBackButton
+                onPress={navigation.goBack}
+                headerStyle={blueNavigationStyle.headerStyle}
+                iconStyle={blueNavigationStyle.iconStyle}
+              />
+            );
+          }
+        }}
+      />
+      <Stack.Screen
+        name="ConnectCreateAccount"
+        component={ConnectCreateAccountScreen}
+        options={{
+          header: ({ navigation }) => {
+            return <PNHeaderBlueBack onPress={navigation.goBack} />;
+          }
+        }}
+      />
+      <Stack.Screen
+        name="LinkAccount"
+        component={LinkAccount}
+        options={{
+          header: ({ navigation }) => {
+            return <PNHeaderBackButton onPress={navigation.goBack} />;
+          }
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
 
-const ProfileStack = createStackNavigator(
-  {
-    ViewProfile: { screen: ProfileScreen}
-  },
-  {
-    initialRouteName: "ViewProfile"
-  }
-);
+const Profile = () => {
+  return (
+    <Stack.Navigator initialRouteName="ViewProfile">
+      <Stack.Screen
+        name="ViewProfile"
+        component={ProfileScreen}
+        options={{ header: () => <PNHeaderNoLogo title="My Profile" /> }}
+      />
+      <Stack.Screen
+        name="ChangePassword"
+        component={ChangePasswordScreen}
+        options={{
+          header: ({ navigation }) => {
+            return (
+              <PNHeaderBlueBack
+                title="Change Password"
+                onPress={navigation.goBack}
+              />
+            );
+          }
+        }}
+      />
+      <Stack.Screen
+        name="ChangeMobileNumber"
+        component={ChangeMobileNumberScreen}
+        options={{
+          header: ({ navigation }) => {
+            return (
+              <PNHeaderBlueBack
+                title="Change Mobile Number"
+                onPress={navigation.goBack}
+              />
+            );
+          }
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
 
-const HomeNavigator = createDrawerNavigator(
-  {
-    Home: { screen: DashboardStack },
-    Announcement: {
-      screen: AnnouncementScreen,
-      header: null
-    },
-    OpenAccountScreen: { screen: OpenAccountScreen },
-    Profile: { screen: ProfileStack },
-    PersonalDetails: {
-      screen: PersonalDetailsScreen,
-      navigationOptions: ({ navigation }) => ({
-        title: "Personal Details"
-      })
-    }
-  },
-  {
-    initialRouteName: "Home",
-    contentComponent: SideMenu
-  }
-);
+export const Navigator = ({ profile }) => {
+  return (
+    <NavigationContainer theme={MyTheme} ref={navigationRef}>
+      {profile.isLoggedIn ? (
+        <Drawer.Navigator
+          initialRouteName="Home"
+          drawerStyle={{
+            width: "85%"
+          }}
+          drawerContent={props => <MainDrawerContent {...props} />}
+        >
+          <Drawer.Screen
+            name="Home"
+            component={Dashboard}
+            options={{ drawerLabel: "My Accounts" }}
+          />
+          <Drawer.Screen
+            name="Profile"
+            component={Profile}
+            options={{ drawerLabel: "My Profile" }}
+          />
+          {/* <Drawer.Screen name="PersonalDetails" component={PersonalDetailsScreen} /> */}
+        </Drawer.Navigator>
+      ) : (
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="CreateMobileAccount"
+            component={PersonalInfoScreen}
+            options={{
+              header: ({ navigation }) => {
+                return <PNHeaderBackButton onPress={navigation.goBack} />;
+              }
+            }}
+          />
+          <Stack.Screen
+            name="CreateMobileAccount2"
+            component={SignUpScreen2}
+            options={{
+              header: ({ navigation }) => {
+                return (
+                  <PNHeaderCancelDone onCancel={() => navigation.goBack()} />
+                );
+              }
+            }}
+          />
+          <Stack.Screen
+            name="EmailVerification"
+            component={EmailVerificationScreen}
+            options={{
+              header: ({ navigation }) => {
+                return <PNHeaderBlueBack onPress={navigation.goBack} />;
+              }
+            }}
+          />
+          <Stack.Screen
+            name="TakeAPhotoOfID"
+            component={TakeAPhotoOfIDScreen}
+          />
+          <Stack.Screen
+            name="ForgotPassword"
+            component={ForgotPasswordScreen}
+            options={{
+              header: ({ navigation }) => {
+                return <PNHeaderBlueBack onPress={navigation.goBack} />;
+              }
+            }}
+          />
+          <Stack.Screen
+            name="OTPSignUp"
+            component={OTPOpenAccountScreen}
+            options={{
+              header: ({ navigation }) => {
+                return (
+                  <PNHeaderBackButton
+                    onPress={navigation.goBack}
+                    headerStyle={blueNavigationStyle.headerStyle}
+                    iconStyle={blueNavigationStyle.iconStyle}
+                  />
+                );
+              }
+            }}
+          />
+        </Stack.Navigator>
+      )}
+    </NavigationContainer>
+  );
+};
 
-const AppNavigator = createSwitchNavigator({
-  Auth: AuthenticationNavigator,
-  Home: HomeNavigator
+const mapStateToProps = state => ({
+  profile: state.profile
 });
 
-export const Navigator = createAppContainer(AppNavigator);
-export default Navigator;
+const mapDispatchToProps = {};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navigator);

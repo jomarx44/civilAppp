@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { Image } from 'react-native';
 import { Container, Header, Left, Body, Right, Button, Icon, Title } from 'native-base';
-import { withNavigation } from 'react-navigation';
+import { withNavigation } from '@react-navigation/compat';
 class CDHeaderSideMenu extends Component {
   render() {
     return (

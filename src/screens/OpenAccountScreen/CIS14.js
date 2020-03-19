@@ -1,7 +1,7 @@
 import React from "react";
 import AppJson from "../../../app.json";
 
-import KeyboardShift from "library/components/CDKeyboardShift.js";
+import KeyboardShift from "library/components/KeyboardShift";
 
 import {
   ActivityIndicator,
@@ -18,7 +18,6 @@ import {
 } from "react-native";
 import { Container } from "native-base";
 import Overlay from "library/components/Overlay";
-import NavigationService from "navigation/NavigationService.js";
 import PNFormNavigation from "library/components/PNFormNavigation";
 import PNFormInitialDeposit from "library/components/PNFormInitialDeposit";
 import PNFormButton from "library/components/PNFormButton";

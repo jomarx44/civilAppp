@@ -1,5 +1,5 @@
 import { postOnly, alertBox, responseData } from "../../actions/axiosCalls";
-import NavigationService from "../../navigation/NavigationService"
+import * as NavigationService from "../../navigation/NavigationService"
 
 // Actions
 export const ADD_ATTRIBUTES = "ADD_ATTRIBUTES";

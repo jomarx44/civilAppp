@@ -2,7 +2,7 @@ import React from "react";
 import AppJson from "../../../app.json";
 import { WebView } from "react-native-webview";
 
-import KeyboardShift from "library/components/CDKeyboardShift.js";
+import KeyboardShift from "library/components/KeyboardShift";
 
 import {
   StatusBar,

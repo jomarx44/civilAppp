@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { Image, TouchableOpacity } from 'react-native';
 import { Container, Header, Left, Body, Right, Button, Icon, Title } from 'native-base';
-import { withNavigation } from 'react-navigation';
+import { withNavigation } from '@react-navigation/compat';
 import NavigationService from 'navigation/NavigationService.js'
 class CDHeader extends Component {
   render() {

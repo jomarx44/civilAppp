@@ -1,7 +1,7 @@
 import React from "react";
 import AppJson from "../../../app.json";
 
-import KeyboardShift from "library/components/CDKeyboardShift.js";
+import KeyboardShift from "library/components/KeyboardShift";
 
 import {
   ScrollView,
@@ -19,7 +19,6 @@ import {
   Container,
 } from "native-base";
 
-import NavigationService from "navigation/NavigationService.js";
 import PNFormNavigation from "library/components/PNFormNavigation";
 import PNFormInputBox from "library/components/PNFormInputBox"
 import PNFormDatePicker from 'library/components/PNFormDatePicker';
@@ -101,7 +100,7 @@ class CIS05 extends React.Component {
     const { cis } = this.state;
     cis.beneficiary_birth_date = cis.beneficiary_birth_date.toISOString().slice(0,10);
     this.props.addAttributes(cis);
-    NavigationService.navigate('CIS06');
+    this.props.navigation.navigate('CIS06');
   };
 
   handleDateChange = (date) => {

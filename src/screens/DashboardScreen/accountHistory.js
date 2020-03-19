@@ -1,38 +1,17 @@
 import React from "react";
 
 import {
-  Alert,
   ActivityIndicator,
-  StatusBar,
-  Image,
-  Dimensions,
   StyleSheet,
-  ImageBackground,
-  TextInput,
   View,
-  BackHandler,
-  PixelRatio,
   SafeAreaView,
-  FlatList
+  FlatList,
+  Text,
 } from "react-native";
 import {
   Container,
-  Header,
-  Title,
-  Left,
-  Center,
-  Icon,
-  Right,
-  Button,
-  Body,
-  Content,
-  Text,
-  Card,
-  CardItem
 } from "native-base";
 
-import PNHeaderNoLogoCenterText from "library/components/PNHeaderNoLogo";
-import PNHeaderBlueBack from "library/components/PNHeaderBlueBack";
 import { connect } from "react-redux";
 import API from "../../actions/api";
 
@@ -87,10 +66,6 @@ class AccountHistoryScreen extends React.Component {
       this.props.getAccountDetails("001-01-00027-7", "10");
     }
   }
-  
-  static navigationOptions = {
-    header: <PNHeaderBlueBack title="Savings Account" navid="Dashboard" />
-  };
 
   render() {
     const { is_fetching, account, error } = this.props.accountDetails;

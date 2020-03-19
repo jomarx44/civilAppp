@@ -3,8 +3,8 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { connect } from "react-redux";
 
 // Custom Components
-import KeyboardShift from "library/components/CDKeyboardShift.js";
-import PNHeaderTitleDesc from "library/components/PNHeaderTitleDesc";
+import KeyboardShift from "library/components/KeyboardShift";
+import PNTitleAndDescription from "library/components/PNTitleAndDescription";
 import PNFormTextBox from "library/components/PNFormTextBox";
 import PNFormButton from "library/components/PNFormButton";
 
@@ -202,7 +202,7 @@ export class LoanAccountScreen extends Component {
         {() => (
           <View style={styles.container}>
             <View style={styles.header}>
-              <PNHeaderTitleDesc
+              <PNTitleAndDescription
                 title="Loan Money"
                 desc="Please provide the required field with appropriate values."
               />

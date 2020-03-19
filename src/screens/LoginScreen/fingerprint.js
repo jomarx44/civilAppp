@@ -2,19 +2,12 @@ import React from "react";
 import AppJson from '../../../app.json';
 import { WebView } from "react-native-webview";
 
-
-
-
-import KeyboardShift from "library/components/CDKeyboardShift.js"
-
 import { StatusBar, Image, Dimensions, StyleSheet, ImageBackground, TextInput, View, BackHandler, PixelRatio, TouchableOpacity} from "react-native";
 import { Container, Header, Title, Left, Center, Icon, Right, Button, Body, Content,Text, Card, CardItem } from "native-base";
 import * as Profile from 'store/profile';
 import { setLoggedState } from "store/auth";
 
 import styles from "styles/commonStyle";
-
-import NavigationService from 'navigation/NavigationService.js'
 
 import * as LocalAuthentication from 'expo-local-authentication';
 
@@ -54,7 +47,7 @@ class LoginFingerPrintScreen extends React.Component {
    let result = await LocalAuthentication.authenticateAsync({promptMessage : 'Scan your finger.'});
    console.log('Scan Result:', result)
    alert("Success!");
-   NavigationService.navigate("DashboardScreen");
+   this.props.navigation.navigate("DashboardScreen");
   }
 
   showAndroidAlert = () => {
