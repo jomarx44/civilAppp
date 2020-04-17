@@ -1,108 +1,193 @@
-import React, { useState } from "react";
-import { View, Text } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { ActivityIndicator, Alert, View, Text } from "react-native";
 import PropTypes from "prop-types";
 
 // Custom Components
 import PNFormTextBox from "library/components/PNFormTextBox";
 import PNContentWithTitleAndDescription from "../../library/Layout/Content/PNContentWithTitleAndDescription";
-import PNFormButton from "library/components/PNFormButton";
+import PNContainedButton from "library/components/Buttons/PNContainedButton";
 
 // Others
 import { connect } from "react-redux";
 import API from "../../actions/api";
+import { UPDATE_PROFILE_INITIALIZE } from "../../actions/types";
+import validate from "validate.js";
+import Modal from "react-native-modal";
 
 const constraints = {
   password: {
     presence: {
-      allowEmpty: false
+      allowEmpty: false,
     },
     length: {
       minimum: 8,
-      message: "must be atleast 8 characters"
-    }
+      message: "must be atleast 8 characters",
+    },
   },
   confirmPassword: {
     presence: {
-      allowEmpty: false
+      allowEmpty: false,
     },
     equality: {
       attribute: "password",
-      message: "and Password did not matched."
-    }
-  }
+      message: "and Password did not matched.",
+    },
+  },
 };
 
-export const ChangePasswordScreen = ({ profile, changeUserDetail }) => {
+export const ChangePasswordScreen = ({
+  profile,
+  updateUserInformation,
+  navigation,
+  initializeReducers,
+}) => {
+  const [passwords, setPasswords] = useState({});
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [invalids, setInvalids] = useState({});
 
+  const input_password = useRef();
+  const input_confirmPassword = useRef();
+
+  useEffect(() => {
+    if (profile.isUpdated === true) {
+      Alert.alert(
+        "Change Mobile Number",
+        "Password was successfully changed.",
+        [
+          {
+            text: "Ok",
+            onPress: () => {
+              initializeReducers();
+              navigation.navigate("ViewProfile");
+            },
+          },
+        ]
+      );
+    }
+  }, [profile.isUpdated]);
+
   const handlePress = () => {
-    console.log("Profile Data: ", profile);
-    const { id, emails, phoneNumbers, name } = profile.data;
-    changeUserDetail({
-      id,
-      emails,
-      phoneNumbers,
-      userName: emails[0].value,
-      password: newPassword,
-      name
-    });
+    const currentInvalids = validate(passwords, constraints);
+    if (!currentInvalids) {
+      const { id, emails, phoneNumbers, name } = profile.data;
+      updateUserInformation({
+        id,
+        emails,
+        phoneNumbers,
+        userName: emails[0].value,
+        password: passwords.password,
+        name,
+      });
+    } else {
+      setInvalids(currentInvalids);
+    }
+  };
+
+  const handleOnBlur = (index, additionalValidate = {}) => {
+    const invalid = validate(
+      {
+        ...additionalValidate,
+        [index]: passwords[index],
+      },
+      {
+        [index]: constraints[index],
+      }
+    );
+
+    if (invalid) {
+      // Add invalid
+      setInvalids({
+        ...invalids,
+        ...invalid,
+      });
+    } else {
+      // Then remove the invalid message on selected index
+      const temporary_invalids = {
+        ...invalids,
+      };
+      delete temporary_invalids[index];
+      setInvalids(temporary_invalids);
+    }
   };
 
   return (
-    <PNContentWithTitleAndDescription title="Change Password" desc="">
-      {/* <PNFormTextBox 
-        title="Old Password"
-        onChangeText={text => setOldPassword(text)}
-        value={oldPassword}
-        secureTextEntry={true}
-        // onSubmitEditing={() => this.input_middlename.current.focus()}
-        // ref={this.input_firstname}
-      /> */}
-      <PNFormTextBox
-        title="New Password"
-        onChangeText={text => setNewPassword(text)}
-        value={newPassword}
-        secureTextEntry={true}
-        // onSubmitEditing={() => this.input_middlename.current.focus()}
-        // ref={this.input_firstname}
-      />
-      <PNFormTextBox
-        title="Confirm Password"
-        onChangeText={text => setConfirmPassword(text)}
-        value={confirmPassword}
-        secureTextEntry={true}
-        // onSubmitEditing={() => this.input_middlename.current.focus()}
-        // ref={this.input_firstname}
-      />
-      <PNFormButton
-        onPress={() => {
-          handlePress();
-        }}
-        // disabled={this.props.is_fetching}
-        label="Save"
-        // loading={this.props.is_fetching}
-      />
-    </PNContentWithTitleAndDescription>
+    <React.Fragment>
+      <PNContentWithTitleAndDescription
+        title="Change Password"
+        desc=""
+        containerStyle={{ backgroundColor: "#F7F7F7" }}
+      >
+        <PNFormTextBox
+          label="New Password"
+          onChangeText={(text) =>
+            setPasswords({ ...passwords, password: text })
+          }
+          value={passwords.password}
+          password={true}
+          onSubmitEditing={() => input_confirmPassword.current.focus()}
+          ref={input_password}
+          onBlur={() => handleOnBlur("password")}
+          invalid={invalids.password ? invalids.password[0] : ""}
+        />
+        <PNFormTextBox
+          label="Confirm Password"
+          onChangeText={(text) =>
+            setPasswords({ ...passwords, confirmPassword: text })
+          }
+          value={passwords.confirmPassword}
+          password={true}
+          onSubmitEditing={() => handlePress()}
+          ref={input_confirmPassword}
+          onBlur={() =>
+            handleOnBlur("confirmPassword", { password: passwords.password })
+          }
+          invalid={invalids.confirmPassword ? invalids.confirmPassword[0] : ""}
+        />
+        <PNContainedButton
+          buttonStyle={{ marginTop: 30 }}
+          onPress={() => handlePress()}
+          disabled={profile.isUpdating}
+          label="Save"
+          loading={profile.isUpdating}
+        />
+      </PNContentWithTitleAndDescription>
+      <Modal isVisible={profile.isUpdating}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          <ActivityIndicator color="#FFF" size="large" />
+          <Text style={{ color: "white" }}>Saving...</Text>
+        </View>
+      </Modal>
+    </React.Fragment>
   );
 };
 
 ChangePasswordScreen.propTypes = {};
 
-const mapStateToProps = state => {
-  console.log();
+const mapStateToProps = (state) => {
   return {
-    profile: state.profile
+    profile: state.profile,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    changeUserDetail: payload => {
-      dispatch(API.changeUserDetail(payload));
-    }
+    updateUserInformation: (payload) => {
+      dispatch(API.updateUserInformation(payload));
+    },
+    initializeReducers: () => {
+      dispatch({
+        type: UPDATE_PROFILE_INITIALIZE,
+      });
+    },
   };
 };
 

@@ -1,0 +1,70 @@
+import React, { useState, useEffect } from 'react';
+import { PropTypes } from 'prop-types';
+import { Animated, Dimensions, Keyboard, StyleSheet, TextInput, UIManager } from 'react-native';
+
+const { State: TextInputState } = TextInput;
+const {height: windowHeight} = Dimensions.get('window');
+
+// Config
+const GAP_AMOUNT = 50; // Maybe the size of input??
+const GAP_AMOUNT2 = 20 // Maybe the size of the actual gap?
+const ANIMATION_DURATION = 500;
+
+export const KeyboardShift = ({children}) => {
+  const [shift, setShift] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', handleKeyboardDidHide);
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow);
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    }
+  }, []);
+
+  const handleKeyboardDidShow = (event) => {
+    const { height: keyboardHeight } = event.endCoordinates;
+    const activeField = TextInputState.currentlyFocusedField();
+    UIManager.measure(activeField, (originX, originY, width, height, pageX, pageY) => {
+      const gap = (windowHeight - keyboardHeight) - (pageY + height + GAP_AMOUNT);
+      if(gap < 0) {
+        Animated.timing(
+          shift,
+          {
+            toValue: (gap - GAP_AMOUNT2),
+            duration: ANIMATION_DURATION,
+            useNativeDriver: true,
+          }
+        ).start();
+      }
+    });
+  }
+
+  const handleKeyboardDidHide = () => {
+    Animated.timing(
+      shift,
+      {
+        toValue: 0,
+        duration: ANIMATION_DURATION,
+        useNativeDriver: true,
+      }
+    ).start();
+  }
+
+  return (
+    <Animated.View style={[styles.container, { transform: [{translateY: shift}] }]}>
+      {children}
+    </Animated.View>
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    height: '100%',
+    left: 0,
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+  }
+});

@@ -64,6 +64,19 @@ class OTPScreen extends React.Component {
     d7: ""
   };
 
+  componentDidUpdate = (prevProps) => {
+    if(prevProps.cis !== this.props.cis) {
+      if(this.props.cis.id) {
+        console.log("CIS Entered..", this.props.cis.id);
+        console.log("Access Token: ", this.props.token.tokens.access_token);
+        API.linkAccount({
+          cis_no: this.props.cis.id,
+          access_token: this.props.token.tokens.access_token
+        });
+      }
+    }
+  }
+
   onRemove = async() => {
     let {otp, counter} = this.state;
     otp = otp.slice(0, -1);

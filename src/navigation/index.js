@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
+
+// Others
+// import UserInactivity from "react-native-user-inactivity";
 import { connect } from "react-redux";
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  DefaultTheme,
+  DrawerActions,
+} from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { navigationRef } from "../navigation/NavigationService";
@@ -12,40 +19,30 @@ import { blueNavigationStyle } from "./style";
 import MainDrawerContent from "./MainDrawerContent";
 
 // Header Components
-import PNHeaderNoLogo from "library/Layout/Header/PNHeaderNoLogo";
+import PNHeaderDrawerTitle from "library/Layout/Header/PNHeaderDrawerTitle";
+import PNHeaderBackTitle from "../library/Layout/Header/PNHeaderBackTitle";
 import PNHeaderBlueSkip from "library/Layout/Header/PNHeaderBlueSkip";
 import PNHeaderBlueBack from "library/Layout/Header/PNHeaderBlueBack";
 import PNHeaderBackButton from "../library/Layout/Header/PNHeaderBackButton";
 import PNHeaderCancelDone from "../library/Layout/Header/PNHeaderCancelDone";
 
+// Authentication
 import LoginScreen from "screens/LoginScreen";
 import PersonalInfoScreen from "screens/SignUpScreen/PersonalInfoScreen";
 import SignUpScreen2 from "screens/SignUpScreen/SignUpScreen2";
 import EmailVerificationScreen from "screens/SignUpScreen/EmailVerificationScreen";
 import TakeAPhotoOfIDScreen from "screens/TakeAPhotoOfIDScreen";
-import LoginFingerPrintScreen from "screens/LoginScreen/fingerprint";
 import ForgotPasswordScreen from "screens/ForgotPasswordScreen";
+// import ImageTester from "screens/ElectronicSignatureScreen/ImageTester";
+import ElectronicSignatureScreen from "../screens/ElectronicSignatureScreen";
 
-import SideMenu from "./SideMenu";
 // import PersonalDetailsScreen from "screens/PersonalDetailsScreen/";
-import AnnouncementScreen from "screens/AnnouncementScreen";
 
+// Main
+import AnnouncementScreen from "screens/AnnouncementScreen";
 import DashboardScreen from "screens/DashboardScreen/dashboard";
 import AccountHistoryScreen from "screens/DashboardScreen/accountHistory";
-import CIS01 from "screens/OpenAccountScreen/CIS01";
-import CIS02 from "screens/OpenAccountScreen/CIS02";
-import CIS03 from "screens/OpenAccountScreen/CIS03";
-import CIS04 from "screens/OpenAccountScreen/CIS04";
-import CIS05 from "screens/OpenAccountScreen/CIS05";
-import CIS06 from "screens/OpenAccountScreen/CIS06";
-import CIS07 from "screens/OpenAccountScreen/CIS07";
-import CIS08 from "screens/OpenAccountScreen/CIS08";
-import CIS09 from "screens/OpenAccountScreen/CIS09";
-import CIS10 from "screens/OpenAccountScreen/CIS10";
-import CIS11 from "screens/OpenAccountScreen/CIS11";
-import CIS12 from "screens/OpenAccountScreen/CIS12";
-import CIS13 from "screens/OpenAccountScreen/CIS13";
-import CIS14 from "screens/OpenAccountScreen/CIS14";
+import CreateBankAccount from "../screens/BankAccountScreen/CreateBankAccountScreen";
 import OTPOpenAccountScreen from "screens/OpenAccountScreen/OTPOpenAccountScreen";
 import OTPScreen from "screens/OTPScreen/OTPScreen";
 import ConnectCreateAccountScreen from "screens/OpenAccountScreen/ConnectCreateAccountScreen";
@@ -54,27 +51,59 @@ import LoanAccountScreen from "../screens/LoanAccountScreen/LoanAccountScreen";
 
 // Profile
 import ProfileScreen from "../screens/ProfileScreen";
+import EditProfileScreen from "../screens/ProfileScreen/EditProfileScreen";
 import ChangePasswordScreen from "../screens/ChangePasswordScreen";
 import ChangeMobileNumberScreen from "../screens/ChangeMobileNumberScreen";
+import { FingerprintScreen } from "../screens/FingerprintScreen";
 
+// OTPs
+import OTPChangeMobileNumberScreen from "../screens/ChangeMobileNumberScreen/OTPChangeMobileNumberScreen"
+import OTPCreateBankAccountScreen from "../screens/BankAccountScreen/OTPCreateBankAccountScreen"
+
+// Navigators
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
+// Theme
 const MyTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: "#FFFFFF"
-  }
+    background: "#FFFFFF",
+  },
 };
 
 const Dashboard = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      initialRouteName="CreateBankAccount"
+      screenOptions={{
+        header: ({ navigation }) => {
+          return (
+            // Default Header
+            <PNHeaderBackTitle
+              title="Create Account"
+              onBack={navigation.goBack}
+            />
+          );
+        },
+      }}
+    >
       <Stack.Screen
         name="Dashboard"
         component={DashboardScreen}
-        options={{ header: () => <PNHeaderNoLogo title="My Accounts" /> }}
+        options={{
+          header: ({ navigation }) => {
+            return (
+              <PNHeaderDrawerTitle
+                title="My Accounts"
+                openDrawer={() => {
+                  navigation.dispatch(DrawerActions.openDrawer());
+                }}
+              />
+            );
+          },
+        }}
       />
       <Stack.Screen
         name="Announcement"
@@ -87,7 +116,7 @@ const Dashboard = () => {
                 onPressSkip={navigation.goBack}
               />
             );
-          }
+          },
         }}
       />
       <Stack.Screen
@@ -101,25 +130,36 @@ const Dashboard = () => {
                 onPress={navigation.goBack}
               />
             );
-          }
+          },
         }}
       />
       <Stack.Screen name="LoanAccount" component={LoanAccountScreen} />
-      <Stack.Screen name="Fingerprint" component={LoginFingerPrintScreen} />
-      <Stack.Screen name="CIS01" component={CIS01} />
-      <Stack.Screen name="CIS02" component={CIS02} />
-      <Stack.Screen name="CIS03" component={CIS03} />
-      <Stack.Screen name="CIS04" component={CIS04} />
-      <Stack.Screen name="CIS05" component={CIS05} />
-      <Stack.Screen name="CIS06" component={CIS06} />
-      <Stack.Screen name="CIS07" component={CIS07} />
-      <Stack.Screen name="CIS08" component={CIS08} />
-      <Stack.Screen name="CIS09" component={CIS09} />
-      <Stack.Screen name="CIS10" component={CIS10} />
-      <Stack.Screen name="CIS11" component={CIS11} />
-      <Stack.Screen name="CIS12" component={CIS12} />
-      <Stack.Screen name="CIS13" component={CIS13} />
-      <Stack.Screen name="CIS14" component={CIS14} />
+      <Stack.Screen
+        name="CreateBankAccount"
+        component={CreateBankAccount}
+        options={{
+          header: ({ navigation }) => {
+            return (
+              // Default Header
+              <PNHeaderBackTitle
+                title="Create Account"
+                onBack={navigation.goBack}
+              />
+            );
+          },
+        }}
+      />
+      <Stack.Screen
+        name="ElectronicSignature"
+        component={ElectronicSignatureScreen}
+        options={{
+          header: ({ navigation }) => {
+            return (
+              <PNHeaderBackTitle title="Signature" onBack={navigation.goBack} />
+            );
+          },
+        }}
+      />
       <Stack.Screen name="OTPOpenAccount" component={OTPOpenAccountScreen} />
       <Stack.Screen
         name="OTP"
@@ -133,7 +173,22 @@ const Dashboard = () => {
                 iconStyle={blueNavigationStyle.iconStyle}
               />
             );
-          }
+          },
+        }}
+      />
+      <Stack.Screen
+        name="OTPCreateBankAccountScreen"
+        component={OTPCreateBankAccountScreen}
+        options={{
+          header: ({ navigation }) => {
+            return (
+              <PNHeaderBackButton
+                onPress={navigation.goBack}
+                headerStyle={blueNavigationStyle.headerStyle}
+                iconStyle={blueNavigationStyle.iconStyle}
+              />
+            );
+          },
         }}
       />
       <Stack.Screen
@@ -142,7 +197,7 @@ const Dashboard = () => {
         options={{
           header: ({ navigation }) => {
             return <PNHeaderBlueBack onPress={navigation.goBack} />;
-          }
+          },
         }}
       />
       <Stack.Screen
@@ -151,7 +206,7 @@ const Dashboard = () => {
         options={{
           header: ({ navigation }) => {
             return <PNHeaderBackButton onPress={navigation.goBack} />;
-          }
+          },
         }}
       />
     </Stack.Navigator>
@@ -164,7 +219,34 @@ const Profile = () => {
       <Stack.Screen
         name="ViewProfile"
         component={ProfileScreen}
-        options={{ header: () => <PNHeaderNoLogo title="My Profile" /> }}
+        options={{
+          header: ({ navigation }) => {
+            return (
+              <PNHeaderDrawerTitle
+                title="My Profile"
+                openDrawer={() => {
+                  navigation.dispatch(DrawerActions.openDrawer());
+                }}
+              />
+            );
+          },
+        }}
+      />
+      <Stack.Screen
+        name="EditProfile"
+        component={EditProfileScreen}
+        options={{
+          header: ({ navigation }) => {
+            return (
+              <PNHeaderDrawerTitle
+                title="Edit Profile"
+                openDrawer={() => {
+                  navigation.dispatch(DrawerActions.openDrawer());
+                }}
+              />
+            );
+          },
+        }}
       />
       <Stack.Screen
         name="ChangePassword"
@@ -172,12 +254,12 @@ const Profile = () => {
         options={{
           header: ({ navigation }) => {
             return (
-              <PNHeaderBlueBack
+              <PNHeaderBackTitle
                 title="Change Password"
-                onPress={navigation.goBack}
+                onBack={navigation.goBack}
               />
             );
-          }
+          },
         }}
       />
       <Stack.Screen
@@ -186,12 +268,41 @@ const Profile = () => {
         options={{
           header: ({ navigation }) => {
             return (
-              <PNHeaderBlueBack
+              <PNHeaderBackTitle
                 title="Change Mobile Number"
-                onPress={navigation.goBack}
+                onBack={navigation.goBack}
               />
             );
-          }
+          },
+        }}
+      />
+      <Stack.Screen
+        name="OTPChangeMobileNumberScreen"
+        component={OTPChangeMobileNumberScreen}
+        options={{
+          header: ({ navigation }) => {
+            return (
+              <PNHeaderBackButton
+                onPress={navigation.goBack}
+                headerStyle={blueNavigationStyle.headerStyle}
+                iconStyle={blueNavigationStyle.iconStyle}
+              />
+            );
+          },
+        }}
+      />
+      <Stack.Screen
+        name="FingerprintScreen"
+        component={FingerprintScreen}
+        options={{
+          header: ({ navigation }) => {
+            return (
+              <PNHeaderBackTitle
+                title="Fingerprint"
+                onBack={navigation.goBack}
+              />
+            );
+          },
         }}
       />
     </Stack.Navigator>
@@ -199,28 +310,40 @@ const Profile = () => {
 };
 
 export const Navigator = ({ profile }) => {
+  // const [active, setActive] = useState(true);
+  // const [timer, setTimer] = useState(300000);
+
   return (
     <NavigationContainer theme={MyTheme} ref={navigationRef}>
       {profile.isLoggedIn ? (
-        <Drawer.Navigator
-          initialRouteName="Home"
-          drawerStyle={{
-            width: "85%"
-          }}
-          drawerContent={props => <MainDrawerContent {...props} />}
-        >
-          <Drawer.Screen
-            name="Home"
-            component={Dashboard}
-            options={{ drawerLabel: "My Accounts" }}
-          />
-          <Drawer.Screen
-            name="Profile"
-            component={Profile}
-            options={{ drawerLabel: "My Profile" }}
-          />
-          {/* <Drawer.Screen name="PersonalDetails" component={PersonalDetailsScreen} /> */}
-        </Drawer.Navigator>
+        // <UserInactivity
+        //   isActive={active}
+        //   timeForInactivity={timer}
+        //   onAction={(isActive) => {
+        //     setActive(isActive);
+        //   }}
+        //   style={{ flex: 1 }}
+        // >
+          <Drawer.Navigator
+            initialRouteName="Home"
+            drawerStyle={{
+              width: "85%",
+            }}
+            drawerContent={(props) => <MainDrawerContent {...props} />}
+          >
+            <Drawer.Screen
+              name="Home"
+              component={Dashboard}
+              options={{ drawerLabel: "My Accounts" }}
+            />
+            <Drawer.Screen
+              name="Profile"
+              component={Profile}
+              options={{ drawerLabel: "My Profile" }}
+            />
+            {/* <Drawer.Screen name="PersonalDetails" component={PersonalDetailsScreen} /> */}
+          </Drawer.Navigator>
+        // </UserInactivity>
       ) : (
         <Stack.Navigator>
           <Stack.Screen
@@ -234,7 +357,7 @@ export const Navigator = ({ profile }) => {
             options={{
               header: ({ navigation }) => {
                 return <PNHeaderBackButton onPress={navigation.goBack} />;
-              }
+              },
             }}
           />
           <Stack.Screen
@@ -245,7 +368,7 @@ export const Navigator = ({ profile }) => {
                 return (
                   <PNHeaderCancelDone onCancel={() => navigation.goBack()} />
                 );
-              }
+              },
             }}
           />
           <Stack.Screen
@@ -254,7 +377,7 @@ export const Navigator = ({ profile }) => {
             options={{
               header: ({ navigation }) => {
                 return <PNHeaderBlueBack onPress={navigation.goBack} />;
-              }
+              },
             }}
           />
           <Stack.Screen
@@ -267,7 +390,7 @@ export const Navigator = ({ profile }) => {
             options={{
               header: ({ navigation }) => {
                 return <PNHeaderBlueBack onPress={navigation.goBack} />;
-              }
+              },
             }}
           />
           <Stack.Screen
@@ -282,7 +405,7 @@ export const Navigator = ({ profile }) => {
                     iconStyle={blueNavigationStyle.iconStyle}
                   />
                 );
-              }
+              },
             }}
           />
         </Stack.Navigator>
@@ -291,8 +414,8 @@ export const Navigator = ({ profile }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  profile: state.profile
+const mapStateToProps = (state) => ({
+  profile: state.profile,
 });
 
 const mapDispatchToProps = {};

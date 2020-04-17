@@ -8,14 +8,12 @@ import {
   FlatList,
   Text,
 } from "react-native";
-import {
-  Container,
-} from "native-base";
+import { Container } from "native-base";
 
 import { connect } from "react-redux";
 import API from "../../actions/api";
 
-numFixed = amount => {
+numFixed = (amount) => {
   amount = Math.abs(amount);
   amount = amount.toFixed(2);
 
@@ -31,12 +29,17 @@ numFixed = amount => {
 
 function Item({ title, date, amount, index }) {
   return (
-    <View style={[localStyles.listItem, {backgroundColor: index % 2 == 0 ? '#FFF' : '#FAFAFB'}]}>
+    <View
+      style={[
+        localStyles.listItem,
+        { backgroundColor: index % 2 == 0 ? "#FFF" : "#FAFAFB" },
+      ]}
+    >
       <View
         style={{
           flex: 4,
           flexDirection: "column",
-          justifyContent: "space-between" 
+          justifyContent: "space-between",
         }}
       >
         <Text style={localStyles.itemText}>{title}</Text>
@@ -46,7 +49,7 @@ function Item({ title, date, amount, index }) {
         <Text
           style={[
             localStyles.amountText,
-            { color: Math.sign(amount) === -1 ? "#679D1D" : "#DC6061" }
+            { color: Math.sign(amount) === -1 ? "#679D1D" : "#DC6061" },
           ]}
         >
           {Math.sign(amount) === 1
@@ -59,31 +62,41 @@ function Item({ title, date, amount, index }) {
 }
 
 class AccountHistoryScreen extends React.Component {
-
   componentDidMount() {
-    console.log("Account Details: ", this.props.accountDetails.account);
-    if(this.props.accountDetails.account.history.length == 0) {
-      this.props.getAccountDetails("001-01-00027-7", "10");
+    const {
+      route: {
+        params: { accountNumber },
+      },
+      account,
+      getAccountDetails,
+    } = this.props;
+    if (!account.accounts[accountNumber]) {
+      getAccountDetails(accountNumber, "10");
     }
   }
 
   render() {
-    const { is_fetching, account, error } = this.props.accountDetails;
+    const {
+      account: { isFetching, accounts },
+      route: {
+        params: { accountNumber },
+      },
+    } = this.props;
 
-    if (is_fetching) {
+    if (isFetching || !accounts[accountNumber]) {
       return (
         <View
           style={{
             flex: 1,
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <ActivityIndicator size="large" color="#f9a010" />
         </View>
       );
     }
-    
+
     return (
       <Container>
         <View style={localStyles.viewHeader}>
@@ -91,19 +104,20 @@ class AccountHistoryScreen extends React.Component {
           <View style={localStyles.subtitle_container}>
             <Text style={localStyles.subtitle_static}>PHP</Text>
             <Text style={localStyles.subtitle}>
-               {account.balance ? account.balance.formatted : ''}
+              {accounts[accountNumber].balance
+                ? accounts[accountNumber].balance.formatted
+                : ""}
             </Text>
           </View>
-          
         </View>
         <View style={localStyles.viewAccounts}>
           <View style={localStyles.bodyTitle_container}>
             <Text style={localStyles.bodyTitle}>TRANSACTIONS</Text>
           </View>
           <SafeAreaView style={localStyles.listStyle}>
-            {account.history && (
+            {accounts[accountNumber].history && (
               <FlatList
-                data={account.history}
+                data={accounts[accountNumber].history}
                 renderItem={({ item, index }) => (
                   <Item
                     index={index}
@@ -112,9 +126,21 @@ class AccountHistoryScreen extends React.Component {
                     date={item.date}
                   />
                 )}
-                keyExtractor={item => item.id}
+                keyExtractor={(item) => item.id}
               />
             )}
+            {accounts[accountNumber].history &&
+              accounts[accountNumber].history.length == 0 && (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text>Empty Transactions</Text>
+                </View>
+              )}
           </SafeAreaView>
         </View>
       </Container>
@@ -128,11 +154,11 @@ let localStyles = StyleSheet.create({
     backgroundColor: "#309fe7",
     padding: 20,
     justifyContent: "center",
-    alignItems: 'center'
+    alignItems: "center",
   },
   viewAccounts: {
     flex: 4,
-    backgroundColor: "#f2f4f5"
+    backgroundColor: "#f2f4f5",
   },
   title: {
     // color: "#292929",
@@ -140,37 +166,37 @@ let localStyles = StyleSheet.create({
     fontFamily: "Avenir_Heavy",
     // marginBottom: 10,
     fontSize: 18,
-    marginBottom: 10
+    marginBottom: 10,
   },
   subtitle_container: {
-    flexDirection: 'row',
-    alignItems: 'center'
+    flexDirection: "row",
+    alignItems: "center",
   },
   subtitle_static: {
     color: "#FFFFFF",
     fontFamily: "Avenir_Medium",
-    fontSize: 20
+    fontSize: 20,
   },
   subtitle: {
     // color: "#555555",
     color: "#FFFFFF",
     fontFamily: "Avenir_Medium",
-    fontSize: 50, 
-    margin: 0
+    fontSize: 50,
+    margin: 0,
   },
   bodyTitle_container: {
     marginVertical: 10,
     height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   bodyTitle: {
     color: "#5D646C",
     marginBottom: 0,
     fontFamily: "Avenir_Medium",
     letterSpacing: 1.56,
-    textAlign: 'center',
-    fontSize: 18
+    textAlign: "center",
+    fontSize: 18,
   },
   listStyle: {
     flex: 1,
@@ -187,32 +213,32 @@ let localStyles = StyleSheet.create({
     color: "#444444",
     textTransform: "capitalize",
     fontFamily: "Avenir_Medium",
-    fontSize: 16
+    fontSize: 16,
   },
   dateText: {
     textAlign: "left",
     color: "#868686",
     fontFamily: "Avenir_Light",
-    fontSize: 12
+    fontSize: 12,
   },
   amountText: {
     fontSize: 15,
     textAlign: "right",
     alignItems: "center",
-    fontFamily: "Avenir_Medium"
-  }
+    fontFamily: "Avenir_Medium",
+  },
 });
 
 const mapStateToProps = (state, props) => {
-  const { accountDetails } = state;
-  return { accountDetails };
+  const { account } = state;
+  return { account };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     getAccountDetails: (acctno, count) => {
       dispatch(API.getAccountDetails(acctno, count));
-    }
+    },
   };
 };
 

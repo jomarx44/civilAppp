@@ -70,7 +70,7 @@ export class LoanAccountScreen extends Component {
   // To be added
   componentDidMount = async () => {
     let profile = await Profile.getProfileData();
-    console.log("Profile: ", profile);
+    
     const { id } = profile.identities[0];
     const {
       givenName,
@@ -97,17 +97,15 @@ export class LoanAccountScreen extends Component {
   };
 
   handlePress = () => {
-    // console.log("State: ", this.state);
     constraints.perCutOff.numericality.lessThanOrEqualTo = parseFloat(
       this.state.data.amount
     );
-    console.log("NEW CONSTRAINTS: ", constraints);
+    
     const invalid = validate(this.state.data, constraints);
     if (!invalid) {
       this.props.loan(this.state);
     } else {
       this.setInvalid(invalid);
-      console.log("INVALID: ", invalid);
     }
   };
 
@@ -138,8 +136,7 @@ export class LoanAccountScreen extends Component {
                 ...state.invalid,
                 ...invalid
               }
-            }),
-            () => console.log("Invalid State: ", this.state.invalid)
+            })
           );
         } else {
           const { invalid } = this.state;
@@ -213,7 +210,7 @@ export class LoanAccountScreen extends Component {
             >
               {/* To be added (All input fields and buttons) */}
               <PNFormTextBox
-                title="Loan Amount"
+                label="Loan Amount"
                 keyboardType="decimal-pad"
                 onChangeText={text =>
                   this.handleEvents("onChangeText", {
@@ -229,7 +226,7 @@ export class LoanAccountScreen extends Component {
               />
 
               <PNFormTextBox
-                title="Amount per Cut Off"
+                label="Amount per Cut Off"
                 keyboardType="decimal-pad"
                 onChangeText={text =>
                   this.handleEvents("onChangeText", {
@@ -247,7 +244,7 @@ export class LoanAccountScreen extends Component {
               />
 
               <PNFormTextBox
-                title="Months"
+                label="Months"
                 keyboardType="decimal-pad"
                 onChangeText={text =>
                   this.handleEvents("onChangeText", {

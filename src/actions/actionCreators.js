@@ -1,5 +1,9 @@
 import {
-  SET_PROFILE, LOGOUT
+  SET_PROFILE,
+  CLEAR_ACCOUNTS,
+  CLEAR_ACCOUNTDETAILS,
+  CLEAR_PROFILE,
+  CLEAR_TOKENS,
 } from "./types";
 
 /**
@@ -14,7 +18,7 @@ export const setProfileData = ({
   displayName,
   givenName,
   middleName,
-  familyName
+  familyName,
 }) => ({
   type: SET_PROFILE,
   payload: {
@@ -26,12 +30,31 @@ export const setProfileData = ({
       displayName,
       givenName,
       middleName,
-      familyName
-    }
-  }
+      familyName,
+    },
+  },
 });
 
-export const logout = () => ({
-  type: LOGOUT,
-  payload: {}
-})
+export const logout = () => {
+  return (dispatch) => {
+    // Clear Accounts
+    dispatch({
+      type: CLEAR_ACCOUNTS,
+    });
+
+    // Clear Accounts Details
+    dispatch({
+      type: CLEAR_ACCOUNTDETAILS,
+    });
+
+    // Clear Profile Info
+    dispatch({
+      type: CLEAR_PROFILE,
+    });
+
+    // Clear Tokens
+    dispatch({
+      type: CLEAR_TOKENS,
+    });
+  };
+};

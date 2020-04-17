@@ -1,18 +1,20 @@
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { connect } from "react-redux";
+
+// Other
 import {
   DrawerContentScrollView,
   DrawerItemList,
-  DrawerItem
+  DrawerItem,
+  useIsDrawerOpen
 } from "@react-navigation/drawer";
-
-// Other
+import { DrawerActions } from "@react-navigation/native";
+import { connect } from "react-redux";
 import { logout } from "../actions/actionCreators";
 import * as Profile from "store/profile";
 import { config } from "../config";
 
-const MainDrawerContent = props => {
+const MainDrawerContent = ({ logout, ...props }) => {
   return (
     <DrawerContentScrollView
       {...props}
@@ -42,8 +44,8 @@ const MainDrawerContent = props => {
         label="Logout"
         onPress={() => {
           Profile.deleteAccessToken();
-          props.logout();
-          // props.navigation.navigate("Login");
+          props.navigation.dispatch(DrawerActions.closeDrawer());
+          logout();
         }}
       />
     </DrawerContentScrollView>

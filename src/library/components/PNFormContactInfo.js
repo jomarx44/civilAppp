@@ -1,49 +1,37 @@
-import React, { Component } from "react";
+import React, { useRef, useImperativeHandle, forwardRef } from "react";
 import PropTypes from "prop-types";
 import { StyleSheet, View, Text, TextInput } from "react-native";
 import { Item, Label } from "native-base";
 
-class PNFormContactInfo extends Component {
-  constructor(props) {
-    super(props);
-    this.input = React.createRef();
-  }
+export function PNFormContactInfo ({invalid = "", value, editable = true, ...props}, ref) {
+  const input = useRef(null);
 
-  focus = () => {
-    this.input.current.focus();
-  };
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      input.current.focus();
+    }
+  }));
 
-  render() {
-    const {
-      title,
-      onChangeText,
-      value,
-      onSubmitEditing = null,
-      autoCompleteType = "off",
-      editable = true,
-      invalid = ''
-    } = this.props;
-    return (
-      <View style={styles.view}>
-        <Item style={styles.text}>
-          <Text style={styles.prefix_number}>+63</Text>
-          <TextInput 
-            autoCompleteType={autoCompleteType}
-            keyboardType='number-pad'
-            onSubmitEditing={onSubmitEditing}
-            onChangeText={onChangeText}
-            ref={this.input}
-            style={[styles.input, !editable && styles.input_disabled]}
-            value={value ? value.replace(/^0+/, '') : ''}
-            editable={editable}
-            maxLength={10}
-          />
-        </Item>
+  return (
+    <View style={styles.view}>
+      <Item style={styles.text}>
+        <Text style={styles.prefix_number}>+63</Text>
+        <TextInput 
+          {...props}
+          editable={editable}
+          keyboardType='number-pad'
+          ref={input}
+          style={[styles.input, !editable && styles.input_disabled]}
+          value={value ? value.replace(/^0+/, '') : ''}
+          maxLength={10}
+        />
+      </Item>
       <Text style={[styles.invalidText]}>{ invalid }</Text>
-      </View>
-    );
-  }
+    </View>
+  )
 }
+
+PNFormContactInfo = forwardRef(PNFormContactInfo);
 
 PNFormContactInfo.propTypes = {
   title: PropTypes.string.isRequired,

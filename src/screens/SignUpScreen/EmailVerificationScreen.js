@@ -39,7 +39,6 @@ class EmailVerificationScreen extends React.Component {
 
   resend_email = () => {
     let { signup_data } = this.state;
-    console.log("Signup Data: ", signup_data);
     this.props.resend_email(signup_data.id);
   }
 
@@ -49,7 +48,6 @@ class EmailVerificationScreen extends React.Component {
 
   checkEmailAndGoNext() {
     let { signup_data } = this.state;
-    console.log("Signup Data: ", signup_data);
     if (signup_data) {
       this.props.checkEmail(signup_data.id);
     }
@@ -63,12 +61,12 @@ class EmailVerificationScreen extends React.Component {
         this.props.response.action === "isEmailVerified"
       ) {
         // save the data
-        console.log("Email Verified Response: ", this.props.response);
         if (this.props.response.isEmailVerified) {
           AsyncStorage.getItem("FORM_DATA").then(response => {
             response = JSON.parse(response);
             this.props.requestOTP_TM({
               mobile_number: response.phoneNumber,
+              email: response.email,
               save_info: response,
               otpScreen: "OTPSignUp",
               toNavId: "Login",
@@ -82,7 +80,6 @@ class EmailVerificationScreen extends React.Component {
           });
         } else {
           alertBox("Please verify you email account first.");
-          console.log("status is " + this.props.response.status);
         }
       }
     }
@@ -197,7 +194,6 @@ let localStyle = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  console.log("OTP: ", state.otp);
   return {
     response: state.auth,
     otp: state.otp

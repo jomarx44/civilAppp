@@ -15,7 +15,7 @@ class PNFormTextBoxPhoneNumber extends Component {
 
   render() {
     const {
-      title,
+      label,
       password,
       value,
       editable = true,
@@ -23,7 +23,7 @@ class PNFormTextBoxPhoneNumber extends Component {
     } = this.props;
     return (
       <View style={styles.view}>
-        <Label style={styles.label}>{title}</Label>
+        <Label style={styles.label}>{label}</Label>
         <Item style={[styles.text, !editable && styles.disabled]}>
           <Text style={styles.prefix_number}>+63</Text>
           <TextInput
@@ -43,7 +43,6 @@ class PNFormTextBoxPhoneNumber extends Component {
 }
 
 PNFormTextBoxPhoneNumber.propTypes = {
-  title: PropTypes.string.isRequired,
   value: PropTypes.string,
   onChangeText: PropTypes.func,
   password: PropTypes.bool,

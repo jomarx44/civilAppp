@@ -39,12 +39,12 @@ class LinkAccount extends React.Component {
   }
 
   state = {
-    acctno: "1238912830",
-    first_name: "marc clemen",
-    middle_name: "conejos",
-    last_name: "andres",
-    date_of_birth: new Date(1985, 8, 3),
-    tin: "193712983"
+    acctno: "",
+    first_name: "",
+    middle_name: "",
+    last_name: "",
+    date_of_birth: new Date(),
+    tin: ""
   };
 
   handleChangeText = (text, index) => {
@@ -85,7 +85,7 @@ class LinkAccount extends React.Component {
             </View>
             <View style={{ flex: 4, paddingTop: 30 }}>
               <PNFormTextBox
-                title="Acccount Number"
+                label="Acccount Number"
                 onChangeText={text => this.handleChangeText(text, "acctno")}
                 value={acctno}
                 onSubmitEditing={() => this.input_firstname.current.focus()}
@@ -93,7 +93,7 @@ class LinkAccount extends React.Component {
               />
               <PNFormTextBox
                 autoCompleteType="name"
-                title="First Name"
+                label="First Name"
                 onChangeText={text => this.handleChangeText(text, "first_name")}
                 value={first_name}
                 onSubmitEditing={() => this.input_middlename.current.focus()}
@@ -101,7 +101,7 @@ class LinkAccount extends React.Component {
               />
               <PNFormTextBox
                 autoCompleteType="name"
-                title="Middle Name"
+                label="Middle Name"
                 onChangeText={text =>
                   this.handleChangeText(text, "middle_name")
                 }
@@ -111,7 +111,7 @@ class LinkAccount extends React.Component {
               />
               <PNFormTextBox
                 autoCompleteType="name"
-                title="Last Name"
+                label="Last Name"
                 onChangeText={text => this.handleChangeText(text, "last_name")}
                 value={last_name}
                 ref={this.input_lastname}
@@ -124,7 +124,7 @@ class LinkAccount extends React.Component {
                 maximumDate={new Date()}
               />
               <PNFormTextBox
-                title="TIN"
+                label="TIN"
                 keyboardType="number-pad"
                 onChangeText={text => this.handleChangeText(text, "tin")}
                 value={tin}
@@ -177,6 +177,7 @@ let localStyle = StyleSheet.create({
 
 const mapStateToProps = (state, props) => {
   const { otp, token } = state;
+  console.log("OTP State: ", otp);
   return { otp, token };
 };
 

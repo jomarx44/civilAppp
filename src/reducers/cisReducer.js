@@ -1,7 +1,7 @@
 import * as TYPE from "../actions/types";
 
 const cisState = {
-  id: ""
+  id: null
 };
 
 export const cisReducer = (state = cisState, action) => {

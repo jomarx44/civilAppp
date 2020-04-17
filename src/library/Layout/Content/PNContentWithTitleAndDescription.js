@@ -5,12 +5,12 @@ import { StyleSheet, ScrollView, View } from "react-native";
 import KeyboardShift from "library/components/KeyboardShift";
 import PNTitleAndDescription from "library/components/PNTitleAndDescription";
 
-const PNContentWithTitleAndDescription = ({title, desc, children}) => {
+const PNContentWithTitleAndDescription = ({title, desc, children, containerStyle}) => {
   return (
     <KeyboardShift>
       {() => (
-        <View style={styles.container}>
-          <View style={styles.header}>
+        <View style={[styles.defaultContainerStyle, containerStyle]}>
+          <View style={styles.defaultHeaderStyle}>
             <PNTitleAndDescription
               title={title}
               desc={desc}
@@ -31,14 +31,14 @@ const PNContentWithTitleAndDescription = ({title, desc, children}) => {
 export default PNContentWithTitleAndDescription;
 
 const styles = StyleSheet.create({
-  container: {
+  defaultContainerStyle: {
     flex: 1,
     flexDirection: "column",
     padding: 25
   },
-  header: {
+  defaultHeaderStyle: {
     paddingTop: 20,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "transparent",
     flex: 1
   },
   content: {},

@@ -1,4 +1,4 @@
-import 'react-native-gesture-handler';
+import "react-native-gesture-handler";
 import React, { Component } from "react";
 import { AsyncStorage, Platform, StyleSheet } from "react-native";
 import { AppLoading } from "expo";
@@ -11,26 +11,31 @@ import platform from "./native-base-theme/variables/platform";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import { createStore, applyMiddleware } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
 import rootReducer from "./src/reducers";
 
 // Custom Component
 import OnBoardingScreen from "./src/screens/OnBoardingScreen";
 
 // Others
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import Navigator from "./src/navigation";
 import * as Profile from "store/profile";
 // import NavigationService from "./src/navigation/NavigationService";
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
+const store = createStore(
+  rootReducer,
+  composeWithDevTools(applyMiddleware(thunk))
+);
 
 class App extends Component {
   constructor(props) {
     super(props);
   }
-  
+
   state = {
     isReady: false,
-    isFirstTime: true
+    isFirstTime: true,
   };
 
   async componentDidMount() {
@@ -49,7 +54,13 @@ class App extends Component {
       Avenir_Roman: require("./src/res/fonts/AvenirLTStd-Roman.otf"),
       Roboto_medium: require("./src/res/fonts/AvenirLTStd-Medium.otf"),
       Poppins_medium: require("./src/res/fonts/AvenirLTStd-Medium.otf"),
-      Poppins: require("./src/res/fonts/AvenirLTStd-Light.otf")
+      Poppins: require("./src/res/fonts/AvenirLTStd-Light.otf"),
+      Gilroy_Bold: require("./src/res/fonts/Gilroy/Gilroy-Bold.ttf"),
+      Gilroy_ExtraBold: require("./src/res/fonts/Gilroy/Gilroy-ExtraBold.otf"),
+      Gilroy_Heavy: require("./src/res/fonts/Gilroy/Gilroy-Heavy.ttf"),
+      Gilroy_Light: require("./src/res/fonts/Gilroy/Gilroy-Light.ttf"),
+      Gilroy_Medium: require("./src/res/fonts/Gilroy/Gilroy-Medium.ttf"),
+      Gilroy_Regular: require("./src/res/fonts/Gilroy/Gilroy-Regular.ttf"),
     });
 
     const isFirstTime = (await AsyncStorage.getItem("isFirstTime")) !== "false";
@@ -60,7 +71,7 @@ class App extends Component {
     AsyncStorage.setItem("isFirstTime", "false");
     this.setState({ isFirstTime: false });
   };
-  
+
   render() {
     if (!this.state.isReady) {
       return <AppLoading />;
@@ -69,13 +80,15 @@ class App extends Component {
     return (
       <Root>
         <Provider store={store}>
-          {/* <StyleProvider style={getTheme(platform)}> */}
-          {this.state.isFirstTime === true ? (
-            <OnBoardingScreen onProceed={this.onProceed} />
-          ) : (
-            <Navigator/>
-          )}
-          {/* </StyleProvider> */}
+          <SafeAreaProvider>
+            {/* <StyleProvider style={getTheme(platform)}> */}
+            {this.state.isFirstTime === true ? (
+              <OnBoardingScreen onProceed={this.onProceed} />
+            ) : (
+              <Navigator />
+            )}
+            {/* </StyleProvider> */}
+          </SafeAreaProvider>
         </Provider>
       </Root>
     );

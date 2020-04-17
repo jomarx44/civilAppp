@@ -20,7 +20,32 @@ import * as Profile from "store/profile";
 import * as TYPE from "./types";
 import * as Auth from "store/auth";
 
-// Authentication
+// Helpers
+import {dispatcher, optionsDispatch} from "../library/helpers";
+
+
+/*******************************
+ *
+ * Tokens
+ *
+ *******************************/
+
+ const getTokenByRefreshToken = (refreshToken) => {
+  const json_data = {
+    path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
+    body: {
+      action: "refresh_token",
+      refresh_token: refreshToken,
+    }
+  };
+ }
+
+
+/*******************************
+ *
+ * Authentication
+ *
+ *******************************/
 
 const loginInitial = (username, password) => {
   const json_data = {
@@ -56,6 +81,17 @@ const login = (username, password) => {
             type: TYPE.LOGIN_SUCCESS,
             payload: response.data
           });
+          dispatch({
+            type: TYPE.STORE_TOKENS,
+            payload: {
+              tokens: {
+                access_token: response.data.access_token,
+                id_token: response.data.id_token,
+                refresh_token: response.data.refresh_token
+              },
+              expires_in: response.data.expires_in,
+            }
+          })
         } else {
           dispatch({
             type: TYPE.LOGIN_ERROR,
@@ -76,6 +112,59 @@ const login = (username, password) => {
       });
   };
 };
+
+const loginByFingerprint = (refreshToken) => {
+  const json_data = {
+    path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
+    body: {
+      action: "refresh_token",
+      refresh_token: refreshToken,
+    }
+  };
+
+  return dispatch => {
+    dispatch({
+      type: TYPE.LOGIN
+    });
+    return postOnly(json_data)
+      .then(response => {
+        if (response.data.success) {
+          console.log("Response: ", response.data);
+          dispatch({
+            type: TYPE.LOGIN_SUCCESS,
+            payload: response.data
+          });
+          dispatch({
+            type: TYPE.STORE_TOKENS,
+            payload: {
+              tokens: {
+                access_token: response.data.access_token,
+                id_token: response.data.id_token,
+                refresh_token: response.data.refresh_token
+              },
+              expires_in: response.data.expires_in,
+            }
+          })
+        } else {
+          dispatch({
+            type: TYPE.LOGIN_ERROR,
+            payload: response.data
+          });
+          alertBox(response.data.message);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        dispatch({
+          type: TYPE.LOGIN_ERROR,
+          payload: error
+        });
+        alertBox(
+          "Ooops! There's something wrong connecting to the server. Please try again."
+        );
+      });
+  };
+}
 
 const forgotPassword = username => {
   const json_data = {
@@ -131,8 +220,15 @@ const forgotPassword = username => {
   };
 };
 
-const changeUserDetail = ({id, emails, phoneNumbers, userName, password, name}) => {
-  const json_data = {
+const updateUserInformation = ({
+  id,
+  emails,
+  phoneNumbers,
+  userName,
+  password,
+  name
+}) => {
+  let json_data = {
     path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
     body: {
       action: "updateUserByID",
@@ -142,27 +238,28 @@ const changeUserDetail = ({id, emails, phoneNumbers, userName, password, name}) 
         emails,
         phoneNumbers,
         userName,
-        password,
+        password: password ? password : null,
         name
       }
     }
   };
-  console.log(json_data);
+
+  Object.keys(json_data.body.user_data)
+    .forEach((key) => (json_data.body.user_data[key] == null) && delete json_data.body.user_data[key]);
+
+  console.log("updateUserInformation JSON: ", json_data);
   return dispatch => {
-    // dispatch({
-    //   type: TYPE.RESEND_EMAIL
-    // });
+    dispatch({
+      type: TYPE.UPDATE_PROFILE
+    });
     return postOnly(json_data)
       .then(response => {
-        console.log("changeUserDetail response: ", response.data);
+        console.log("updateUserInformation response: ", response.data);
         if (response.data.success) {
           dispatch({
             type: TYPE.UPDATE_PROFILE_SUCCESS,
             payload: response.data
           });
-          alertBox(
-            "Changed Successfully!"
-          );
         } else {
           dispatch({
             type: TYPE.UPDATE_PROFILE_ERROR,
@@ -181,7 +278,7 @@ const changeUserDetail = ({id, emails, phoneNumbers, userName, password, name}) 
         );
       });
   };
-}
+};
 
 const checkEmail = userId => {
   const json_data = {
@@ -302,60 +399,6 @@ const signup = userdata => {
   };
 };
 
-const verifyOTP = ({ token, otp }) => {
-  const json_data = {
-    path: "byteperbyte/CISVerify",
-    params: {
-      token,
-      otp
-    }
-  };
-  console.log("Verify OTP and Token: ", json_data);
-
-  return dispatch => {
-    dispatch({
-      type: TYPE.CHECK_OTP
-    });
-
-    return getDataOnly(json_data)
-      .then(response => {
-        const response_data = response.data.data["Register.Info"];
-        const has_data = checkStatus(response) && !response_data.ErrorMsg;
-
-        dispatch(
-          has_data
-            ? {
-                type: TYPE.CHECK_OTP_SUCCESS,
-                payload: {
-                  id: response.cis_no //CIS id
-                }
-              }
-            : {
-                type: TYPE.CHECK_OTP_ERROR,
-                payload: {
-                  isFetching: false,
-                  success: false,
-                  message: response_data.ErrorMsg
-                }
-              }
-        );
-      })
-      .catch(error => {
-        alertBox(
-          "Ooops! There's something wrong connecting to the server. Please try again."
-        );
-        dispatch({
-          type: TYPE.CHECK_OTP_ERROR,
-          payload: {
-            success: false,
-            is_fetching: false,
-            message: error
-          }
-        });
-      });
-  };
-};
-
 // Accounts
 
 const checkAccount = ({
@@ -384,10 +427,7 @@ const checkAccount = ({
     //   dispatch({
     //     type: TYPE.REQUEST_OTP_SUCCESS,
     //     payload: {
-    //       isFetching: false,
-    //       message: "",
-    //       success: true,
-    //       token: "8399796"
+    //       token: "6952304"
     //     }
     //   });
     //   NavigationService.navigate("OTP");
@@ -404,15 +444,11 @@ const checkAccount = ({
       .then(response => {
         const response_data = response.data.data["Register.Info"];
         const has_data = checkStatus(response) && !response_data.ErrorMsg;
-        console.log(response_data);
 
         if (has_data) {
           dispatch({
             type: TYPE.REQUEST_OTP_SUCCESS,
             payload: {
-              isFetching: false,
-              success: true,
-              message: "",
               token: response_data.token
             }
           });
@@ -422,10 +458,7 @@ const checkAccount = ({
           dispatch({
             type: TYPE.REQUEST_OTP_ERROR,
             payload: {
-              isFetching: false,
-              success: false,
               message: response_data.ErrorMsg,
-              token: ""
             }
           });
           alertBox(
@@ -450,6 +483,114 @@ const checkAccount = ({
   };
 };
 
+// const getAccounts = cisno => {
+//   const json_data = {
+//     path: "byteperbyte/CISAccountInquiry",
+//     params: {
+//       cisno: cisno
+//     }
+//   };
+
+//   console.log(json_data);
+
+//   return dispatch => {
+//     console.log(json_data);
+//     return getDataOnly(json_data)
+//       .then(response => {
+//         console.log(response.data);
+//         if (response.data.status == "ok") {
+//           let accountListFormatted = [
+//             {
+//               title: "Loan Accounts",
+//               data: []
+//             },
+//             {
+//               title: "Time Deposit",
+//               data: []
+//             },
+//             {
+//               title: "Savings Account",
+//               data: []
+//             }
+//           ];
+
+//           const { data: output } = response;
+//           const accountList = output.data["Account.Info"].accts.a;
+
+//           if (accountList instanceof Array) {
+//             accountList.map((account, index) => {
+//               let idx = 0;
+//               switch (account.accttype) {
+//                 case "LN":
+//                   idx = 0;
+//                   break;
+//                 case "TD":
+//                   idx = 1;
+//                   break;
+//                 case "SA":
+//                   idx = 2;
+//                   break;
+//               }
+
+//               accountListFormatted[idx].data.push({
+//                 key: index,
+//                 title: account.Name1,
+//                 acctno: account.AcctNoFormatted,
+//                 balance: `PHP ${account.LedgerFormatted}`
+//               });
+//             });
+//           } else {
+//             // Object
+//             let idx = 0;
+//               switch (accountList.accttype) {
+//                 case "LN":
+//                   idx = 0;
+//                   break;
+//                 case "TD":
+//                   idx = 1;
+//                   break;
+//                 case "SA":
+//                   idx = 2;
+//                   break;
+//               }
+
+//               accountListFormatted[idx].data.push({
+//                 key: 1,
+//                 title: accountList.Name1,
+//                 acctno: accountList.AcctNoFormatted,
+//                 balance: `PHP ${accountList.LedgerFormatted}`
+//               });
+//           }
+
+//           dispatch({
+//             type: TYPE.FETCH_ACCOUNTS_SUCCESS,
+//             payload: accountListFormatted
+//           });
+//         } else {
+//           dispatch({
+//             type: TYPE.FETCH_ACCOUNTS_ERROR,
+//             payload: {
+//               is_fetching: false,
+//               error: true,
+//               list: []
+//             }
+//           });
+//         }
+//       })
+//       .catch(error => {
+//         dispatch({
+//           type: TYPE.FETCH_ACCOUNTS_ERROR,
+//           payload: {
+//             is_fetching: false,
+//             error: true,
+//             list: []
+//           }
+//         });
+//         throw error;
+//       });
+//   };
+// };
+
 const getAccounts = cisno => {
   const json_data = {
     path: "byteperbyte/CISAccountInquiry",
@@ -457,59 +598,65 @@ const getAccounts = cisno => {
       cisno: cisno
     }
   };
-
-  console.log(json_data);
+  
+  console.log("getAccouts JSON: ", json_data);
 
   return dispatch => {
-    console.log(json_data);
     return getDataOnly(json_data)
       .then(response => {
         console.log(response.data);
         if (response.data.status == "ok") {
-          let accountListFormatted = [
-            {
+          let accountList = {
+            LN: {
               title: "Loan Accounts",
-              data: []
+              accounts: {},
+              accountsById: []
             },
-            {
+            TD: {
               title: "Time Deposit",
-              data: []
+              accounts: {},
+              accountsById: []
             },
-            {
+            SA: {
               title: "Savings Account",
-              data: []
+              accounts: {},
+              accountsById: []
             }
-          ];
+          };
 
           const { data: output } = response;
-          const accountList = output.data["Account.Info"].accts.a;
-
-          accountList.map((account, index) => {
-            let idx = 0;
-            switch (account.accttype) {
-              case "LN":
-                idx = 0;
-                break;
-              case "TD":
-                idx = 1;
-                break;
-              case "SA":
-                idx = 2;
-                break;
-            }
-
-            accountListFormatted[idx].data.push({
-              key: index,
-              title: account.Name1,
-              acctno: account.AcctNoFormatted,
-              balance: `PHP ${account.LedgerFormatted}`
+          const accounts = output.data["Account.Info"].accts.a;
+          
+          if (accounts instanceof Array) {
+            accounts.map((account, index) => {
+              if(accountList[account.accttype]) {
+                accountList[account.accttype].accounts[account.AcctNoFormatted] = {
+                  key: index,
+                  title: account.Name1,
+                  acctno: account.AcctNoFormatted,
+                  balance: `PHP ${account.LedgerFormatted}`
+                };
+                accountList[account.accttype].accountsById.push(account.AcctNoFormatted)
+              }
             });
-          });
+          } else {
+            // Object
+            if(accountList[accounts.accttype]) {
+              accountList[accounts.accttype].accounts[accounts.AcctNoFormatted] = {
+                key: 1,
+                title: accounts.Name1,
+                acctno: accounts.AcctNoFormatted,
+                balance: `PHP ${accounts.LedgerFormatted}`
+              };
+              accountList[accounts.accttype].accountsById.push(accounts.AcctNoFormatted)
+            }
+          }
 
           dispatch({
             type: TYPE.FETCH_ACCOUNTS_SUCCESS,
-            payload: accountListFormatted
+            payload: accountList
           });
+
         } else {
           dispatch({
             type: TYPE.FETCH_ACCOUNTS_ERROR,
@@ -612,7 +759,6 @@ const getAccountDetails = (acctno, count) => {
             );
             console.log("Error while fetching Account History: ", history.data);
 
-            
             NavigationService.navigate("Dashboard");
             dispatch({
               type: TYPE.FETCH_ACCOUNTSHISTORY_ERROR
@@ -662,25 +808,32 @@ const getAccountDetails = (acctno, count) => {
             code: AccountStatusNo ? AccountStatusNo : ""
           };
           accountDetails.currency = CurrencyCode ? CurrencyCode : "";
-          // accountDetails.name = Name2 ? Name2 : Name1;
-          accountDetails.history = history.data.data["Account.Info"].tis.ti.map(
-            (history, index) => {
-              return {
-                id: index.toString(),
-                title: history.tn,
-                date: history.td,
-                amount: history.dr
-                  ? parseInt(history.dr)
-                  : -Math.abs(parseInt(history.cr))
-              };
-            }
-          );
+          
+          if(history.data.data["Account.Info"].tis !== null && history.data.data["Account.Info"].tis.ti instanceof Array) {
+            accountDetails.history = history.data.data["Account.Info"].tis.ti.map(
+              (history, index) => {
+                return {
+                  id: index.toString(),
+                  title: history.tn,
+                  date: history.td,
+                  amount: history.dr
+                    ? parseInt(history.dr)
+                    : -Math.abs(parseInt(history.cr))
+                };
+              }
+            );
+          }
+          
           accountDetails.name = Name1 ? Name1 : "";
           accountDetails.product = Product ? Product : "";
 
           dispatch({
             type: TYPE.FETCH_ACCOUNTDETAILS_SUCCESS,
-            payload: accountDetails
+            payload: {
+              account: {
+                [acctno]: accountDetails
+              }
+            }
           });
         })
       )
@@ -697,6 +850,175 @@ const getAccountDetails = (acctno, count) => {
       });
   };
 };
+
+const createBankAccount = accountData => {
+  const json_data = {
+    path: "sunsavings/SSCreateAccountRequest",
+    body: accountData
+  };
+
+  return postOnly(json_data);
+};
+
+const addBankAccount = ({
+  id,
+  accountData,
+  access_token
+}) => {
+  return (dispatch) => {
+    return putAttributes({
+      name: id,
+      value: accountData,
+      access_token
+    })
+      .then(({data: {data, status, msg}}) => {
+        console.log(data);
+      })
+      .catch(() => {
+        dispatch({
+          type: TYPE.ADD_ACCOUNT_ERROR
+        })
+      })
+  }
+}
+
+const linkAccount = ({
+  cis_no,
+  access_token
+}) => {
+
+  return putAttributes({
+    name: "cis_no",
+    value: cis_no,
+    access_token
+  })
+    // .then(({data: {data, status, msg}}) => {
+    .then(({data}) => {
+      console.log(data);
+      if(data.status == "error") {
+
+      } else {
+        NavigationService.navigate("Dashboard");
+        alertBox("Linked Account successfully!");
+      }
+    })
+    .catch((error) => {
+      console.log("Error on Linking Account: ", error);
+    })
+}
+
+const createBankAccout = ({
+  uniqueId,
+  attributes,
+  access_token
+}) => {
+  return putAttributes({
+    name: uniqueId,
+    value: attributes,
+    access_token
+  })
+    // .then(({data: {data, status, msg}}) => {
+    .then(({data}) => {
+      console.log(data);
+      if(data.status == "error") {
+
+      } else {
+        NavigationService.navigate("Dashboard");
+        alertBox("Created Bank Account successfully!");
+      }
+    })
+    .catch((error) => {
+      console.log("Error on Linking Account: ", error);
+    })
+}
+
+const putAttributes = ({name, value, access_token}) => {
+  const json_data = {
+    path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
+    body: {
+      action: "put_attribute_name",
+      attribute_name: name,
+      attribute_value: value,
+      access_token: access_token
+    }
+  };
+
+  console.log("putAttributes JSON: ", json_data)
+
+  return postOnly(json_data);
+}
+
+/*******************************
+ *
+ * CIS
+ *
+ *******************************/
+
+const CISVerify = ({ token, otp }) => {
+  const json_data = {
+    path: "byteperbyte/CISVerify",
+    params: {
+      token,
+      otp
+    }
+  };
+
+  return getDataOnly(json_data);
+};
+
+// const CISVerify = ({ token, otp }) => {
+//   const json_data = {
+//     path: "byteperbyte/CISVerify",
+//     params: {
+//       token,
+//       otp
+//     }
+//   };
+//   console.log("Verify OTP and Token: ", json_data);
+
+//   return dispatch => {
+//     dispatch({
+//       type: TYPE.CHECK_OTP
+//     });
+
+//     return getDataOnly(json_data)
+//       .then(response => {
+//         const response_data = response.data.data["Register.Info"];
+//         const has_data = checkStatus(response) && !response_data.ErrorMsg;
+
+//         dispatch(
+//           has_data
+//             ? {
+//                 type: TYPE.CHECK_OTP_SUCCESS,
+//                 payload: {
+//                   id: response.cis_no //CIS id
+//                 }
+//               }
+//             : {
+//                 type: TYPE.CHECK_OTP_ERROR,
+//                 payload: {
+//                   isFetching: false,
+//                   success: false,
+//                   message: response_data.ErrorMsg
+//                 }
+//               }
+//         );
+//       })
+//       .catch(error => {
+//         alertBox(
+//           "Ooops! There's something wrong connecting to the server. Please try again."
+//         );
+//         dispatch({
+//           type: TYPE.CHECK_OTP_ERROR,
+//           payload: {
+//             success: false,
+//             is_fetching: false,
+//             message: error
+//           }
+//         });
+//       });
+//   };
+// };
 
 /*******************************
  *
@@ -783,7 +1105,7 @@ const saveProfile = ({
   givenName,
   middleName,
   familyName,
-  email,
+  emails,
   phoneNumber
 }) => {
   const json_data = {
@@ -792,14 +1114,11 @@ const saveProfile = ({
       action: "updateProfile",
       user_data: {
         id,
-        // email,
-        // given_name: givenName,
-        // family_name: familyName,
-        attributes: {
-          ...attributes,
-          test: "yes"
-          // email
-        }
+        emails,
+        given_name: givenName,
+        middle_name: middleName,
+        family_name: familyName,
+        attributes: attributes
       }
     }
   };
@@ -809,7 +1128,7 @@ const saveProfile = ({
   return dispatch => {
     return postOnly(json_data)
       .then(response => {
-        console.log(response);
+        console.log(response.data);
         // if(response.data.success) {
 
         // } else {
@@ -917,6 +1236,273 @@ const loan = ({
   };
 };
 
+/*******************************
+ *
+ * Search
+ *
+ *******************************/
+
+const searchByCity = city => {
+  const json_data = {
+    path: "/byteperbyte/MISSearch",
+    params: {
+      search: city
+    }
+  };
+
+  return dispatch => {
+    dispatch({
+      type: TYPE.SEARCH_CITY
+    });
+
+    return getDataOnly(json_data)
+      .then(response => {
+        // console.log("searchByCity: ", response.data)
+        // const response_data = response.data.data["Register.Info"];
+        // const has_data = checkStatus(response) && !response_data.ErrorMsg;
+
+        dispatcher({
+          dispatch,
+          action: TYPE.SEARCH_CITY_SUCCESS,
+          payload: response.data.data
+        });
+      })
+      .catch(error => {
+        alertBox(
+          "Ooops! There's something wrong connecting to the server. Please try again."
+        );
+        dispatcher({
+          dispatch,
+          action: TYPE.SEARCH_CITY_ERROR,
+          payload: {}
+        });
+        console.log("Error: ", error)
+      });
+  };
+};
+
+/*******************************
+ *
+ * Lists
+ *
+ *******************************/
+
+const getList = (type, additionalParams) => {
+  const json_data = {
+    path: "/byteperbyte//MISDropDown",
+    params: {
+      type,
+      ...additionalParams
+    }
+  };
+
+  return getDataOnly(json_data);
+};
+
+const getBarangays = (city) => {
+  return dispatch => {
+    dispatcher({
+      dispatch,
+      action: TYPE.FETCH_BARANGAYS
+    })
+    return getList("address", {city_code: city})
+      .then(({data}) => {
+        if(data.status == "ok" && data.data instanceof Array) {
+          const { data: lists } = data;
+          let payload = {
+            data: {},
+            listsById: []
+          };
+      
+          lists.map((item) => {
+            payload.data[item.id_code] = {
+              label: item.description,
+              value: item.path
+            }
+            payload.listsById.push(item.id_code);
+          })
+          console.log(payload);
+          dispatcher({
+            dispatch,
+            action: TYPE.FETCH_BARANGAYS_SUCCESS,
+            payload: payload
+          })
+        } else {
+          dispatcher({
+            dispatch,
+            action: TYPE.FETCH_BARANGAYS_ERROR
+          })
+        }
+      })
+      .catch((error) => {
+        alertBox(
+          "Ooops! There's something wrong connecting to the server. Please try again."
+        );
+        dispatcher({
+          dispatch,
+          action: TYPE.FETCH_BARANGAYS_ERROR
+        })
+      })
+  }
+}
+
+const getLists = () => {
+  return dispatch => {
+    dispatch({
+      type: TYPE.FETCH_LISTS
+    });
+    console.log("Fetching lists...");
+    axios
+      .all([
+        getList("civil_status"),
+        getList("home_ownership"),
+        getList("id_list"),
+        getList("job_title"),
+        getList("nationality"),
+        getList("source_of_fund"),
+      ])
+      .then(
+        axios.spread(
+          (
+            civilStatus,
+            homeOwnership,
+            idList,
+            jobTitle,
+            nationality,
+            sourceOfFund,
+          ) => {
+            // Civil Status
+            optionsDispatch({
+              data: civilStatus.data,
+              type: "CIVILSTATUS",
+              dispatch
+            });
+
+            // Home Ownership
+            optionsDispatch({
+              data: homeOwnership.data,
+              type: "HOMEOWNERSHIP",
+              dispatch
+            });
+
+            // ID List
+            optionsDispatch({
+              data: idList.data,
+              type: "IDTYPE",
+              dispatch
+            });
+
+            // Job Title
+            optionsDispatch({
+              data: jobTitle.data,
+              type: "JOBTITLE",
+              dispatch
+            });
+
+            // Nationality
+            optionsDispatch({
+              data: nationality.data,
+              type: "NATIONALITY",
+              dispatch
+            });
+
+            // Source of Fund
+            optionsDispatch({
+              data: sourceOfFund.data,
+              type: "FUNDSOURCE",
+              dispatch
+            });
+
+            dispatch({
+              type: TYPE.FETCH_LISTS_SUCCESS
+            });
+          }
+        )
+      )
+      .catch((error) => {
+        alertBox(
+          "Ooops! There's something wrong connecting to the server. Please try again."
+        );
+        dispatch({
+          type: TYPE.FETCH_LISTS_ERROR
+        });
+      })
+  };
+};
+
+// Uploader
+const upload = ({file_name, content_type, data64}) => {
+  const json_data = {
+    path: "sunsavings/SSFileUpload",
+    body: {
+      file_name: file_name,
+      content_type: content_type,
+      data64: data64
+    }
+  };
+
+  return postOnly(json_data);
+}
+
+/*******************************
+ *
+ * OTP
+ *
+ *******************************/
+
+const requestOTP = ({
+  mobile_number,
+  email,
+  save_info
+}) => {
+  const json_data = {
+    path: "tm/otp",
+    body: {
+      mobile_number,
+      email,
+      save_info,
+    },
+  };
+
+  Object.keys(json_data.body)
+    .forEach((key) => (json_data.body[key] == null) && delete json_data.body[key]);
+
+  return postOnly(json_data);
+}
+
+const verifyOTP = ({
+  token,
+  otp,
+}) => {
+  const json_data = {
+    path: "tm/otp_verify",
+    body: {
+      token: token + otp,
+    },
+  };
+
+  return postOnly(json_data);
+}
+
+const createBankAccountOTP = ({
+  mobileNumber,
+  data
+}) => {
+  return (dispatch) => {
+    requestOTP({
+      mobile_number: mobileNumber,
+      save_info: data
+    })
+      .then((response) => {
+
+      })
+      .catch((error) => {
+
+      });
+  }
+  
+}
+
 const checkStatus = response => {
   return response.data.status == "ok";
 };
@@ -924,18 +1510,30 @@ const checkStatus = response => {
 export default {
   loginInitial,
   login,
+  loginByFingerprint,
   forgotPassword,
-  changeUserDetail,
+  updateUserInformation,
   checkEmail,
   resend_email,
   signup,
   checkAccount,
-  verifyOTP,
   getAccounts,
   getAccountHistory,
   getAccountInfo,
   getAccountDetails,
+  createBankAccount,
+  addBankAccount,
+  CISVerify,
+  linkAccount,
+  createBankAccout,
   getProfile,
   saveProfile,
-  loan
+  loan,
+  getList,
+  getLists,
+  getBarangays,
+  searchByCity,
+  upload, 
+  requestOTP,
+  verifyOTP
 };

@@ -22,7 +22,7 @@ export const OnBoardingScreen = ({onProceed}) => {
         { justifyContent: "space-between", paddingVertical: height * 0.07 }
       ]}
     >
-      <ViewPager style={{ flex: 1 }} showPageIndicator={true} initialPage={0} ind>
+      <ViewPager style={{ flex: 1 }} showPageIndicator={true} initialPage={0}>
         <View style={style.slideContainer} key="1">
           <Image
             source={require("../../res/images/ic_onboarding.png")}

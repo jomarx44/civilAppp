@@ -43,38 +43,6 @@ class IBMAppId {
    *
    **********************************/
 
-  // getMethodWithToken = (json, navigation) => {
-  //   const params = json['params'];
-  //   let action_type = json['reducer_type'];
-  //   let token = json['token'];
-  //   const headers = {
-  //     'Content-Type': 'application/json;charset=UTF-8',
-  //     'Authorization' : 'Bearer ' + token,
-  //     'Access-Control-Allow-Origin': '*'
-  //   };
-  //   const config = {
-  //     headers: headers
-  //   };
-
-  //   return (dispatch) => {
-  //     dispatch({
-  //       type: action_type
-  //     });
-  //     return this.axios_obj.get(json["path"], config )
-  //       .then(response => {
-  //         console.log("getUserInfo: ", response.data);
-  //         action_type = action_type + "_SUCCESS"
-  //         console.log("Hmmm: ", response);
-  //         dispatch(this.responseData(response.data, action_type, params));
-  //       })
-  //       .catch(error => {
-  //         dispatch(this.responseData(error, action_type + "_ERROR", params));
-  //         alert("No internet connection. Please try again.");
-  //         console.log("error" + error);
-  //       });
-  //    };
-  // };
-
   getMethodWithToken = (json, navigation) => {
     let token = json["token"];
     const headers = {
@@ -101,17 +69,16 @@ class IBMAppId {
         type: TYPE.FETCH_PROFILE
       });
       return this.getMethodWithToken(json_data)
-        .then(response => {
-          if (response.data.identities && response.data.identities.length > 0) {
-            const { sub } = response.data;
+        .then(({data: {identities, sub}}) => {
+          if (identities && identities.length > 0) {
             const {
               displayName,
               emails,
               id,
               name: { givenName, middleName, familyName },
               phoneNumbers
-            } = response.data.identities[0].idpUserInfo;
-            console.log("response.data.identities[0].idpUserInfo: ", response.data.identities[0].idpUserInfo)
+            } = identities[0].idpUserInfo;
+            console.log("identities[0].idpUserInfo: ", identities[0].idpUserInfo)
             const payload = {
               id,
               sub,

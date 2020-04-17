@@ -4,38 +4,112 @@ import {
   View,
   AsyncStorage,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import { Accordion, Container, Icon, Text } from "native-base";
 
+// Others
 import { getProfileData, getAccessData } from "store/profile";
 import { connect } from "react-redux";
 import { setProfileData } from "../../actions/actionCreators";
 import API from "../../actions/api";
+
+export const AccountItemHeader = ({
+  item,
+  expanded,
+  headerStyle,
+  textStyle,
+  textActiveStyle,
+  iconStyle,
+  iconActiveStyle,
+}) => {
+  const { title } = item;
+  return (
+    <View style={[styles.defaultHeaderStyle, headerStyle]}>
+      <Text
+        style={[
+          expanded
+            ? styles.defaultHeaderTextActiveStyle
+            : styles.defaultHeaderTextStyle,
+          expanded ? textActiveStyle : textStyle,
+        ]}
+      >
+        {title}
+      </Text>
+      <Icon
+        style={[
+          expanded ? styles.defaultIconActiveStyle : styles.defaultIconStyle,
+          expanded ? iconActiveStyle : iconStyle,
+        ]}
+        name={expanded ? "ios-arrow-up" : "ios-arrow-down"}
+      />
+    </View>
+  );
+};
+
+export const AccountItemContainer = ({ containerStyle, children }) => {
+  return (
+    <View style={[styles.defaultItemContainer, containerStyle]}>
+      {children}
+    </View>
+  );
+};
+
+export const AccountItem = ({ onPress, item: { acctno, title, balance } }) => {
+  return (
+    <TouchableOpacity onPress={onPress} style={itemStyles.defaultButton}>
+      <View style={itemStyles.defaultItem}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.cardTitle}>{title}</Text>
+          <Text style={styles.cardSubTitle}>{acctno}</Text>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.cardTextBalanceValue}>{balance}</Text>
+          <Text style={styles.cardTextBalance}>Current Balance</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+export const AccountAddButton = ({ onPress }) => {
+  return (
+    <TouchableOpacity onPress={onPress} style={itemStyles.defaultButton}>
+      <View
+        style={[
+          itemStyles.defaultItem,
+          { flexDirection: "row", justifyContent: "space-between" },
+        ]}
+      >
+        <View style={{ flex: 3, flexDirection: "row", alignItems: "center" }}>
+          <Text style={styles.cardTitle}>Add Account</Text>
+        </View>
+        <View style={{ flex: 1, alignItems: "flex-end" }}>
+          <Icon style={styles.iconArrow} name="ios-arrow-forward" />
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 class DashboardScreen extends React.Component {
   state = {
     modalVisible: false,
     loanAccounts: {
       title: "Loan Accounts",
-      data: []
+      data: [],
     },
     timeDeposit: {
       title: "Time Deposit",
-      data: []
+      data: [],
     },
     savingsAccount: {
       title: "Savings Account",
-      data: []
-    }
+      data: [],
+    },
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   async componentDidMount() {
-    // let authData = await getAccessData();
     let profile = await getProfileData();
     const { setProfileData, navigation } = this.props;
 
@@ -46,7 +120,7 @@ class DashboardScreen extends React.Component {
         emails,
         id,
         name: { givenName, middleName, familyName },
-        phoneNumbers
+        phoneNumbers,
       } = profile.identities[0].idpUserInfo;
       this.props.getProfile(sub);
       // setProfileData({
@@ -60,99 +134,27 @@ class DashboardScreen extends React.Component {
       //   familyName
       // });
     }
-    
-    this.props.getAccounts();
+
+    this.props.getAccounts(this.props.appAttribute.attributes.cis_no);
+    // this.props.getAccounts("1590000062");
     navigation.navigate("Announcement");
   }
 
-  checkCiS14 = async () => {
-    return await AsyncStorage.getItem("cis14");
+  onPress = (navid, accountNumber) => {
+    this.props.navigation.navigate(
+      navid,
+      accountNumber ? { accountNumber } : null
+    );
   };
 
-  onPressCard = async (navid, acctno = "") => {
-    const cis14 = await this.checkCiS14();
-    if (cis14 && cis14.initial_deposit) {
-      navid = "CIS14";
-    }
-    // this.props.getAccountDetails(acctno);
-    this.props.navigation.navigate(navid, { acctno });
-  };
-
-  onAddAccount = navid => {
+  onAddAccount = (navid) => {
     this.props.navigation.navigate(navid);
-  };
-
-  renderHeader = (section, expanded) => {
-    return (
-      <View style={styles.header}>
-        <Text style={expanded ? styles.headerTextActive : styles.headerText}>
-          {section.title}
-        </Text>
-        <Icon
-          style={expanded ? styles.iconActive : styles.icon}
-          name={expanded ? "ios-arrow-up" : "ios-arrow-down"}
-        />
-      </View>
-    );
-  };
-
-  renderContent = section => {
-    let viewdata = [];
-
-    if (section.data && section.data.length > 0) {
-      viewdata = section.data.map(data => {
-        return (
-          <TouchableOpacity
-            onPress={() => this.onPressCard("AccountHistory", data.acctno)}
-            key={data.key}
-            style={{ paddingHorizontal: 20, paddingVertical: 5 }}
-          >
-            <View style={styles.card}>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.cardTitle}>{data.title}</Text>
-                <Text style={styles.cardSubTitle}>{data.acctno}</Text>
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.cardTextBalanceValue}>{data.balance}</Text>
-                <Text style={styles.cardTextBalance}>Current Balance</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        );
-      });
-    }
-
-    return (
-      <View style={styles.content}>
-        {viewdata}
-        <TouchableOpacity
-          onPress={() => this.onAddAccount("ConnectCreateAccount")}
-          style={{ paddingHorizontal: 20, paddingVertical: 5 }}
-        >
-          <View
-            style={[
-              styles.card,
-              { flex: 1, flexDirection: "row", justifyContent: "space-between" }
-            ]}
-          >
-            <View
-              style={{ flex: 3, flexDirection: "row", alignItems: "center" }}
-            >
-              <Text style={styles.cardTitle}>Add Account</Text>
-            </View>
-            <View style={{ flex: 1, alignItems: "flex-end" }}>
-              <Icon style={styles.iconArrow} name="ios-arrow-forward" />
-            </View>
-          </View>
-        </TouchableOpacity>
-      </View>
-    );
   };
 
   render() {
     const {
       accounts,
-      profile: { data, isFetching }
+      profile: { data, isFetching },
     } = this.props;
 
     if (!isFetching && !accounts.is_fetching && data) {
@@ -164,9 +166,34 @@ class DashboardScreen extends React.Component {
           </View>
           <View style={styles.viewAccounts}>
             <Accordion
-              renderHeader={this.renderHeader}
-              renderContent={this.renderContent}
-              dataArray={accounts.list}
+              renderHeader={(item, expanded) => (
+                <AccountItemHeader item={item} expanded={expanded} />
+              )}
+              renderContent={(items) => {
+                return (
+                  <AccountItemContainer>
+                    {items.accountsById &&
+                      items.accountsById.map((itemId, id) => { 
+                        console.log("Acctno: ", items.accounts[itemId].acctno);
+                        return (
+                        <AccountItem
+                          key={id}
+                          item={items.accounts[itemId]}
+                          onPress={() =>
+                            this.onPress(
+                              "AccountHistory",
+                              items.accounts[itemId].acctno
+                            )
+                          }
+                        />
+                      )})}
+                    <AccountAddButton
+                      onPress={() => this.onPress("ConnectCreateAccount")}
+                    />
+                  </AccountItemContainer>
+                );
+              }}
+              dataArray={Object.values(accounts.list)}
               contentStyle={{ backgroundColor: "#ddecf8" }}
             />
           </View>
@@ -175,25 +202,25 @@ class DashboardScreen extends React.Component {
     }
 
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Container
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      >
         <ActivityIndicator size="large" color="#f9a010" />
-      </View>
+      </Container>
     );
   }
 }
 
-let styles = StyleSheet.create({
-  viewHeader: {
+const itemStyles = StyleSheet.create({
+  defaultContainer: {
+    marginVertical: 20,
+  },
+  defaultButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+  },
+  defaultItem: {
     flex: 1,
-    backgroundColor: "#309fe7",
-    padding: 20,
-    flexDirection: "column",
-    justifyContent: "center"
-  },
-  content: {
-    marginVertical: 20
-  },
-  card: {
     paddingVertical: 10,
     paddingHorizontal: 15,
     backgroundColor: "#ffffff",
@@ -205,100 +232,116 @@ let styles = StyleSheet.create({
     borderRightColor: "#e5eced",
     borderLeftColor: "#f9a010",
     borderLeftWidth: 3,
-    borderRadius: 5
+    borderRadius: 5,
   },
+});
+
+const styles = StyleSheet.create({
+  viewHeader: {
+    flex: 1,
+    backgroundColor: "#309fe7",
+    padding: 20,
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  defaultItemContainer: {
+    marginVertical: 20,
+  },
+  card: {},
   cardTitle: {
     color: "#444444",
     fontSize: 15,
-    fontFamily: "Avenir_Heavy"
+    fontFamily: "Avenir_Heavy",
   },
   cardSubTitle: {
     color: "#5d646c",
     fontSize: 11,
-    fontFamily: "Avenir_Book"
+    fontFamily: "Avenir_Book",
   },
   cardTextBalanceValue: {
     textAlign: "right",
     color: "#3e4a59",
     fontSize: 17,
-    fontFamily: "Avenir_Heavy"
+    fontFamily: "Avenir_Heavy",
   },
   cardTextBalance: {
     textAlign: "right",
     fontSize: 9,
     color: "#5d646c",
-    fontFamily: "Avenir_Book"
+    fontFamily: "Avenir_Book",
   },
-  header: {
+  defaultHeaderStyle: {
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     marginTop: -1,
     borderWidth: 1,
-    borderColor: "#cbcdd0"
+    borderColor: "#cbcdd0",
   },
-  headerText: {
+  defaultHeaderTextStyle: {
     fontFamily: "Avenir_Medium",
     marginLeft: 20,
     color: "#5d646c",
-    fontSize: 16
+    fontSize: 16,
   },
-  headerTextActive: {
+  defaultHeaderTextActiveStyle: {
     fontFamily: "Avenir_Medium",
     marginLeft: 20,
     color: "#f5ac14",
-    fontSize: 16
+    fontSize: 16,
   },
-  icon: {
+  defaultIconStyle: {
     marginTop: 16,
     marginBottom: 16,
     marginRight: 32,
-    color: "#5d646c"
+    color: "#5d646c",
   },
-  iconArrow: {
-    color: "#5d646c"
-  },
-  iconActive: {
+  defaultIconActiveStyle: {
     marginTop: 16,
     marginBottom: 16,
     marginRight: 30,
-    color: "#309fe7"
+    color: "#309fe7",
+  },
+  iconArrow: {
+    color: "#5d646c",
   },
   title: {
     color: "#ffffff",
     fontSize: 18,
     fontFamily: "Avenir_Heavy",
-    marginBottom: 3
+    marginBottom: 3,
   },
   subtitle: {
     color: "#ffffff",
     opacity: 0.7,
     fontSize: 12,
-    fontFamily: "Avenir_Medium"
+    fontFamily: "Avenir_Medium",
   },
   viewAccounts: {
     flex: 7,
-    backgroundColor: "#f2f4f5"
-  }
+    backgroundColor: "#f2f4f5",
+  },
 });
 
 const mapStateToProps = (state, props) => {
-  const { profile, accounts, appAttribute, auth } = state;
-  return { profile, accounts, appAttribute, auth };
+  const { profile, accounts, appAttribute, auth, token } = state;
+  return { profile, accounts, appAttribute, auth , token};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     getProfile: (id) => {
-      dispatch(API.getProfile({id}));
+      dispatch(API.getProfile({ id }));
     },
-    getAccounts: (cisno = "1590000062") => {
+    // getAccounts: (cisno = "1590000062") => {
+    // getAccounts: (cisno = "1590000081") => {
+    getAccounts: (cisno) => {
       dispatch(API.getAccounts(cisno));
     },
-    setProfileData: data => {
+    setProfileData: (data) => {
       dispatch(setProfileData(data));
-    }
+    },
   };
 };
 

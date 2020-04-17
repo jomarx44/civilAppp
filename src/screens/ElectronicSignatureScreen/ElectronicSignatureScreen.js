@@ -1,10 +1,12 @@
-import React, { Component, useState, useEffect } from "react";
-import { View, Text } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Text } from "react-native";
 import { connect } from "react-redux";
 
 // Custom Component
-import { PNElectronicSignature } from "../../library/components/PNElectronicSignature";
-// import PNHeaderCancelDone from "../../library/components/PNHeaderCancelDone";
+import PNElectronicSignature from "../../library/components/PNElectronicSignature";
+import PNStackedButtons from "library/Layout/Content/PNStackedButtons";
+import PNContainedButton from "library/components/Buttons/PNContainedButton";
+import PNOutlineButton from "library/components/Buttons/PNOutlineButton";
 
 // Others
 // var RNFS = require("react-native-fs");
@@ -13,57 +15,51 @@ import { PNElectronicSignature } from "../../library/components/PNElectronicSign
  * @requires PNElectronicSignature
  * @param navigation
  */
-export const ElectronicSignatureScreen = ({ navigation }) => {
-  const [imageBase64, setImageBase64] = useState("");
-  const [showDone, setShowDone] = useState(false);
+export const ElectronicSignatureScreen = ({ navigation, containerStyle }) => {
+  const [isVisibile, setVisibility] = useState(false);
+  const [imageData, setImageData] = useState("")
 
   useEffect(() => {
-    navigation.setParams({
-      handleOnDone,
-      showDone
-    });
-  }, [showDone]);
-
-  handleOnDone = () => {
-    // const path = `${RNFS.TemporaryDirectoryPath}siganture.png`;
-    // RNFS.writeFile(path, imageBase64, 'base64')
-    // .then(() => {
-    //   console.log('Image saved at ' + path)
-    // });
-  };
-
-  handleOnSignaturePadChange = ({ base64DataUrl }) => {
-    console.log("Changed");
-    setImageBase64(base64DataUrl);
-    setShowDone(true);
-  };
-
-  handleOnSignaturePadError = error => {
-    console.log("handleOnSignaturePadError: ", error);
-  };
-
+    // Known Bug (Need to delay the loading of electronic signature)
+    setTimeout(() => setVisibility(true), 10)
+  }, [isVisibile])
+  
   return (
-    <View>
-      <PNElectronicSignature
-        onChange={handleOnSignaturePadChange}
-        onError={handleOnSignaturePadError}
-      />
+    <View style={[styles.defaultContainerStyle, containerStyle]}>
+      <View style={styles.signatureContainerStyle}>
+        { isVisibile &&
+          <PNElectronicSignature onChange={({base64DataUrl}) => {setImageData(base64DataUrl)}} onError={() => {}} />
+        }
+      </View>
+      <View style={styles.contentContainerStyle}>
+        <Text style={styles.contentTitle}>Please sign here if the customer is present</Text>
+        <Text  style={styles.contentSubtitle}>
+          By signing above, you agree to authorize change and all the terms and
+          conditions.
+        </Text>
+      </View>
+      <PNStackedButtons
+        containerStyle={{ flex: 1, justifyContent: "flex-end" }}
+      >
+        <PNContainedButton
+          label="DONE SIGNING"
+          buttonStyle={{ width: "100%", height: 50, marginBottom: 20 }}
+          onPress={() => {
+            navigation.navigate("ImageTester", { imageData })
+          }}
+        />
+        <PNOutlineButton
+          label="CLEAR SIGNATURE"
+          buttonStyle={{ width: "100%", height: 50 }}
+          onPress={() => {
+            setVisibility(false);
+            setImageData("");
+          }}
+        />
+      </PNStackedButtons>
     </View>
-    
   );
 };
-
-// ElectronicSignatureScreen.navigationOptions = ({ navigation }) => {
-//   const { params = {} } = navigation.state;
-//   return {
-//     header: (
-//       <PNHeaderCancelDone
-//         navId="CreateMobileAccount"
-//         onDone={() => params.handleOnDone()}
-//       />
-//     )
-//   };
-// };
 
 const mapStateToProps = state => ({});
 
@@ -73,3 +69,35 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(ElectronicSignatureScreen);
+
+const styles = StyleSheet.create({
+  defaultContainerStyle: {
+    flex: 1, 
+    paddingHorizontal: 30, 
+    paddingVertical: 50
+  },
+  signatureContainerStyle: {
+    flex: 2
+  },
+  contentContainerStyle: {
+    alignItems: "center",
+    borderTopColor: "#979797",
+    borderTopWidth: 1,
+    flex: 2,
+    flexDirection: "column",
+    padding: 15
+  },
+  contentTitle: {
+    color: "#444444",
+    fontFamily: 'Avenir_Medium',
+    fontSize: 14,
+    marginBottom: 10,
+    textAlign: 'center'
+  },
+  contentSubtitle: {
+    color: "#868686",
+    fontFamily: 'Avenir_Book',
+    fontSize: 12,
+    textAlign: 'center'
+  }
+});

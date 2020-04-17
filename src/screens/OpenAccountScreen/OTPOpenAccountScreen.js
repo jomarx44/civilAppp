@@ -60,7 +60,6 @@ class OTPOpenAccountScreen extends React.Component {
     const { otp, putAttributes, requestUniqueId, appAttribute } = this.props;
 
     if (prevProps.otp !== otp) {
-      console.log("REQUEST ID");
       if (!otp.isFetching && otp.success) {
         requestUniqueId(appAttribute.temporary_attributes);
       }
@@ -72,17 +71,14 @@ class OTPOpenAccountScreen extends React.Component {
         !appAttribute.is_fetching &&
         appAttribute.temporary_key
       ) {
-        console.log("HERE NA!", this.props.navigation.getParam('shouldPutAttributes'));
-        console.log('App Attribute: ', appAttribute);
-        if(this.props.navigation.getParam('shouldPutAttributes') == true) {
+        if(this.props.route.params.shouldPutAttributes == true) {
           AsyncStorage.getItem("ACCESS_TOKEN").then(response => {
             const data = {
               attribute_name: appAttribute.temporary_key,
               attribute_value: appAttribute.temporary_attributes,
               access_token: response
             };
-            console.log("appAttribute: ", appAttribute)
-              putAttributes(data);
+            putAttributes(data);
           });
         }
       }
@@ -109,14 +105,13 @@ class OTPOpenAccountScreen extends React.Component {
 
     this.setState({ [`d${counter}`]: value });
     if (counter == 7) {
-      const { getParam } = this.props.navigation;
-      // console.log(this.props.navigation.getParam('navid'));
+      const { navid, message, next } = this.props.route.params;
       this.props.verifyOTP_TM({
         token: this.props.otp.token,
         otp,
-        navid: getParam('navid') ? getParam('navid') : '',
-        message: getParam('message') ? getParam('message') : '',
-        next: getParam('next') ? getParam ('next') : null
+        navid: navid ? navid : '',
+        message: message ? message : '',
+        next: next ? next : null
       });
     }
   };

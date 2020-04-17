@@ -127,7 +127,7 @@ class PersonalInfo extends React.Component {
       ...additionalValidate,
       [index]: this.state.user[index]
     };
-    console.log("Current: ", current);
+    
     const invalid = validate(current, { [index]: constraints[index] });
     if (invalid) {
       this.setState(
@@ -137,8 +137,7 @@ class PersonalInfo extends React.Component {
             ...this.state.invalid,
             ...invalid
           }
-        },
-        () => console.log("Invalid State: ", this.state.invalid)
+        }
       );
     } else {
       const { invalid } = this.state;
@@ -151,7 +150,6 @@ class PersonalInfo extends React.Component {
   };
 
   handleBlurPhone = (index) => {
-    console.log(parseInt(this.state.user.phoneNumber, 10).toString());
     this.setState({
       ...this.state,
       user: {
@@ -159,7 +157,6 @@ class PersonalInfo extends React.Component {
         phoneNumber: this.state.user.phoneNumber ? parseInt(this.state.user.phoneNumber.toString(), 10) : ''
       }
     }, () => {
-      console.log(this.state.user.phoneNumber)
       this.handleOnBlur(index)
     });
   }
@@ -171,7 +168,6 @@ class PersonalInfo extends React.Component {
     if (!invalid) {
       const user = { ...this.state.user };
       user.phoneNumber = '63' + user.phoneNumber;
-      console.log("USER: ", user);
       Profile.setFormData(user);
       this.props.signup(user);
     } else {
@@ -197,7 +193,7 @@ class PersonalInfo extends React.Component {
             </View>
             <View style={{ flex: 4, paddingTop: 30 }}>
               <PNFormTextBox
-                title="First Name"
+                label="First Name"
                 onChangeText={text => {
                   this.onChangeText(text, "givenName");
                 }}
@@ -208,7 +204,7 @@ class PersonalInfo extends React.Component {
                 value={this.state.user.givenName}
               />
               <PNFormTextBox
-                title="Middle Name"
+                label="Middle Name"
                 onChangeText={text => this.onChangeText(text, "middleName")}
                 ref={this.input_middleName}
                 onSubmitEditing={() => this.input_familyName.current.focus()}
@@ -216,7 +212,7 @@ class PersonalInfo extends React.Component {
               />
 
               <PNFormTextBox
-                title="Last Name"
+                label="Last Name"
                 onChangeText={text => this.onChangeText(text, "familyName")}
                 ref={this.input_familyName}
                 onSubmitEditing={() => this.input_email.current.focus()}
@@ -226,7 +222,7 @@ class PersonalInfo extends React.Component {
               />
 
               <PNFormTextBox
-                title="Email Address"
+                label="Email Address"
                 onChangeText={text => this.onChangeText(text, "email")}
                 ref={this.input_email}
                 onBlur={() => this.handleOnBlur("email")}
@@ -236,7 +232,7 @@ class PersonalInfo extends React.Component {
               />
 
               <PNFormTextBoxPhoneNumber
-                title="Mobile Number"
+                label="Mobile Number"
                 onChangeText={text => this.onChangeText(text, "phoneNumber")}
                 ref={this.input_phoneNumber}
                 onSubmitEditing={() => this.input_password.current.focus()}
@@ -247,7 +243,7 @@ class PersonalInfo extends React.Component {
               />
 
               <PNFormTextBox
-                title="Password"
+                label="Password"
                 password={true}
                 onChangeText={text => this.onChangeText(text, "password")}
                 ref={this.input_password}
@@ -260,7 +256,7 @@ class PersonalInfo extends React.Component {
               />
 
               <PNFormTextBox
-                title="Confirm Password"
+                label="Confirm Password"
                 password={true}
                 onChangeText={text =>
                   this.onChangeText(text, "confirmPassword")

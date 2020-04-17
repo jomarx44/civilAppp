@@ -7,6 +7,7 @@ export const ADD_ATTRIBUTES = "ADD_ATTRIBUTES";
 export const PUT_ATTRIBUTES = "PUT_ATTRIBUTES";
 export const PUT_ATTRIBUTES_SUCCESS = "PUT_ATTRIBUTES_SUCCESS";
 export const PUT_ATTRIBUTES_ERROR = "PUT_ATTRIBUTES_ERROR";
+export const PUT_ATTRIBUTES_INITIALIZE = "PUT_ATTRIBUTES_INITIALIZE";
 
 export const FETCH_ATTRIBUTES = "FETCH_ATTRIBUTES";
 export const FETCH_ATTRIBUTES_SUCCESS = "FETCH_ATTRIBUTES_SUCCESS";
@@ -35,7 +36,11 @@ export const getAttributes = ({ name, access_token }) => {
         console.log("GETATTR Response: ", response.data);
         dispatch({
           type: FETCH_ATTRIBUTES_SUCCESS,
-          payload: response.data[name]
+          payload: {
+            attribute: {
+              [name]: JSON.parse(response.data[name])
+            }
+          }
         });
       })
       .catch(error => {
@@ -64,9 +69,9 @@ export const putAttributes = ({
   };
   
   return dispatch => {
-    // dispatch({
-    //   type: PUT_ATTRIBUTES
-    // });
+    dispatch({
+      type: PUT_ATTRIBUTES
+    });
     return postOnly(json_data)
       .then(response => {
         console.log("PUTATTR Response: ", response.data);
@@ -125,15 +130,19 @@ export const requestUniqueId = attributes => {
     body: attributes
   };
   return dispatch => {
+    dispatch({
+      type: REQUEST_ID
+    });
+    console.log("Create Bank Account User Attributes: ", attributes)
     return postOnly(json_data)
-      .then(response => {
-        console.log("requestUniqueId Response: ", response.data);
+      .then(({data: {status, data}}) => {
+        console.log("requestUniqueId Response: ", data);
         dispatch({
           type:
-            response.data.status == "ok"
+            status == "ok"
               ? REQUEST_ID_SUCCESS
               : REQUEST_ID_ERROR,
-          payload: response.data.status == "ok" ? response.data.data[0] : {}
+          payload: status == "ok" ? data[0] : {}
         });
       })
       .catch(error => {
