@@ -72,7 +72,7 @@ class CIS03 extends React.Component {
   };
 
   componentDidMount() {
-    console.log('APPATTRIBUTE: ', this.props.appAttribute);
+    
   }
 
   handleOnBlur = ( index, additionalValidate = {} ) => {
@@ -90,7 +90,7 @@ class CIS03 extends React.Component {
             ...invalid
           }
         },
-        () => console.log("Invalid State: ", this.state.invalid)
+        () => 
       );
     } else {
       const { invalid } = this.state;

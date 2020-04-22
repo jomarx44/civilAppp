@@ -33,7 +33,7 @@ export const FingerprintScreen = ({ auth, navigation }) => {
 
   useEffect(() => {
     if (!fingerprintToken && isCompatible && isEnrolled) {
-      console.log("Scanning...");
+      
       scan();
     }
   }, [isCompatible, isEnrolled, fingerprintToken]);

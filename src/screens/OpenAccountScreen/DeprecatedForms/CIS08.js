@@ -81,7 +81,7 @@ class CIS08 extends React.Component {
   };
 
   componentDidMount() {
-    console.log("APPATTRIBUTE: ", this.props.appAttribute);
+    
   }
 
   handleOnBlur = ( index, additionalValidate = {} ) => {
@@ -99,7 +99,7 @@ class CIS08 extends React.Component {
             ...invalid
           }
         },
-        () => console.log("Invalid State: ", this.state.invalid)
+        () => 
       );
     } else {
       const { invalid } = this.state;
@@ -158,7 +158,7 @@ class CIS08 extends React.Component {
                     ref={this.input_email}
                     onChangeText={text => this.onChangeText(text, "email")}
                     // onSubmitEditing={() => {
-                    //   console.log('KWAKWAK', this.input_middle_name);
+                    //   
                     //   this.input_middle_name.current.focus();
                     // }}
                     value={this.state.cis.email}

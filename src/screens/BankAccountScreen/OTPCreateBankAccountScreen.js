@@ -62,7 +62,7 @@ const mapDispatchToProps = (dispatch) => {
 
       API.verifyOTP({token, otp})
         .then(({data: {data}}) => {
-          console.log("OTP Response: ", data);
+          
           if(data.status == "ok") {
             dispatch({
               type: CHECK_OTPTM_SUCCESS,
@@ -81,7 +81,7 @@ const mapDispatchToProps = (dispatch) => {
           // });
         })
         .catch((error) => {
-          console.log("Error verifyOTP: ", error);
+          
           dispatch({
             type: CHECK_OTP_ERROR,
             payload: {

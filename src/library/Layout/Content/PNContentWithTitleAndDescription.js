@@ -48,6 +48,6 @@ const styles = StyleSheet.create({
   defaultContentContainerStyle: {
     paddingTop: 30,
     paddingHorizontal: 30,
-    paddingBottom: 100
+    paddingBottom: 200
   },
 });

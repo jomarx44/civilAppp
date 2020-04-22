@@ -69,7 +69,6 @@ export const profileReducer = (state = initialState, action) => {
         isUpdated: false,
         message: action.payload.message
       };
-      console.log("Output: ", output);
       return output;
     case UPDATE_PROFILE_SUCCESS:
       output = {
@@ -86,7 +85,6 @@ export const profileReducer = (state = initialState, action) => {
         success: null,
         message: ""
       };
-      console.log("HIT REDUCER!")
       return output;
     case FETCH_PROFILE_ERROR:
       output = {
@@ -105,14 +103,12 @@ export const profileReducer = (state = initialState, action) => {
         success: true,
         message: action.payload.message,
       };
-      console.log("FETCH_PROFILE_SUCCESS: ", output);
       return output;
     case SET_PROFILE: 
       output = {
         ...state,
         data: action.payload
       }
-      console.log("Output: ", output);
       return output;
     default:
       return state;

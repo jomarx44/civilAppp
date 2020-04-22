@@ -101,7 +101,7 @@ class CIS12 extends React.Component {
             ...invalid
           }
         },
-        () => console.log("Invalid State: ", this.state.invalid)
+        () => 
       );
     } else {
       const { invalid } = this.state;

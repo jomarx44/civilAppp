@@ -1,14 +1,7 @@
-import { Alert } from "react-native";
-import { Toast } from "native-base";
 import axios from "axios";
-import querystring from "querystring";
-import Constants from "expo-constants";
 import * as TYPE from "./types";
-import * as Auth from "store/auth";
-import * as PROFILE from "../store/profile";
-import moment from "moment";
 import AppJson from "../../app.json";
-import * as NavigationService from "navigation/NavigationService.js";
+import { APIErrorLogging } from "../library/helpers";
 
 class IBMAppId {
   token = null;
@@ -25,7 +18,7 @@ class IBMAppId {
 
   constructor() {
     this.axios_obj = axios.create({
-      baseURL: AppJson.appid.APPID_AUTH_SERVER_HOST
+      baseURL: AppJson.appid.APPID_AUTH_SERVER_HOST,
     });
   }
 
@@ -33,7 +26,7 @@ class IBMAppId {
     return {
       type: type,
       payload: data,
-      params: params
+      params: params,
     };
   };
 
@@ -48,10 +41,10 @@ class IBMAppId {
     const headers = {
       "Content-Type": "application/json;charset=UTF-8",
       Authorization: "Bearer " + token,
-      "Access-Control-Allow-Origin": "*"
+      "Access-Control-Allow-Origin": "*",
     };
     const config = {
-      headers: headers
+      headers: headers,
     };
 
     return this.axios_obj.get(json["path"], config);
@@ -62,23 +55,22 @@ class IBMAppId {
     const _url = "/oauth/v4/" + AppJson.appid.IBM_TENANT_ID + "/userinfo";
     const json_data = {
       token: token,
-      path: _url
+      path: _url,
     };
-    return dispatch => {
+    return (dispatch) => {
       dispatch({
-        type: TYPE.FETCH_PROFILE
+        type: TYPE.FETCH_PROFILE,
       });
       return this.getMethodWithToken(json_data)
-        .then(({data: {identities, sub}}) => {
+        .then(({ data: { identities, sub } }) => {
           if (identities && identities.length > 0) {
             const {
               displayName,
               emails,
               id,
               name: { givenName, middleName, familyName },
-              phoneNumbers
+              phoneNumbers,
             } = identities[0].idpUserInfo;
-            console.log("identities[0].idpUserInfo: ", identities[0].idpUserInfo)
             const payload = {
               id,
               sub,
@@ -88,31 +80,31 @@ class IBMAppId {
                 displayName,
                 givenName,
                 middleName,
-                familyName
-              }
+                familyName,
+              },
             };
             dispatch({
               type: TYPE.FETCH_PROFILE_SUCCESS,
-              payload
+              payload,
             });
           } else {
             dispatch({
               type: TYPE.FETCH_PROFILE_ERROR,
               payload: {
-                message: "Not yet registered."
-              }
+                message: "Not yet registered.",
+              },
             });
             alert("It seems that you are not yet registered.");
           }
         })
-        .catch(error => {
+        .catch((error) => {
+          APIErrorLogging("getUserInfo", error);
           dispatch({
             type: TYPE.FETCH_PROFILE_ERROR,
             payload: {
-              message: error
-            }
+              message: error,
+            },
           });
-          console.log("Error has occured: ", error);
           alert("No internet connection. Please try again.");
         });
     };

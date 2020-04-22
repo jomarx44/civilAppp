@@ -61,7 +61,7 @@ let styles = StyleSheet.create({
     justifyContent: 'flex-start'
   },
   prefix_number: {
-    fontFamily: "Avenir_Book",
+    fontFamily: "Gilroy_Medium",
     fontSize: 20,
     color: '#F9A010',
     width: '15%',
@@ -69,8 +69,7 @@ let styles = StyleSheet.create({
   input: {
     color: "#f9a010",
     fontSize: 18,
-    fontWeight: 'normal',
-    fontFamily: "Avenir_Medium",
+    fontFamily: "Gilroy_Medium",
     width:'85%'
   },
   disabled: {
@@ -78,7 +77,7 @@ let styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
-    fontFamily: "Avenir_Medium",
+    fontFamily: "Gilroy_Medium",
     color: "#5d646c"
   },
   view: {
@@ -86,7 +85,7 @@ let styles = StyleSheet.create({
   },
   invalidText: {
     marginTop: 5,
-    fontFamily: 'Avenir_Medium',
+    fontFamily: 'Gilroy_Medium',
     fontSize: 12,
     color: '#DC6061'
   }

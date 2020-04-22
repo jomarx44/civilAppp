@@ -426,9 +426,10 @@ const mapDispatchToProps = (dispatch, { navigation }) => {
       //   dispatch({
       //     type: REQUEST_OTP_SUCCESS,
       //     payload: {
-      //       token: "5479244",
+      //       token: "8174955",
       //     },
       //   });
+      //   // otp = 1617542:
       // navigation.navigate("OTPCreateBankAccountScreen");
       // };
 

@@ -26,13 +26,13 @@ const styles = StyleSheet.create({
   defaultTitleStyle: {
     fontSize: 32,
     color: "#042C5C",
-    fontFamily: "Avenir_Heavy",
+    fontFamily: "Gilroy_Bold",
     marginBottom: 10,
   },
   defaultDescriptionStyle: {
     color: "#5D646C",
     lineHeight: 24,
-    fontFamily: "Avenir_Medium",
+    fontFamily: "Gilroy_Medium",
     fontSize: 16,
   },
 });

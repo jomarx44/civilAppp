@@ -40,8 +40,7 @@ let styles = StyleSheet.create({
   input: {
     color: "#f9a010",
     fontSize: 18,
-    fontWeight: 'normal',
-    fontFamily: "Avenir_Medium",
+    fontFamily: "Gilroy_Medium",
     width: "100%"
   },
   input_disabled: {
@@ -49,11 +48,11 @@ let styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
-    fontFamily: "Avenir_Medium",
+    fontFamily: "Gilroy_Medium",
     color: "#5d646c"
   },
   invalidText: {
-    fontFamily: 'Avenir_Medium',
+    fontFamily: 'Gilroy_Medium',
     fontSize: 12,
     color: '#DC6061'
   }

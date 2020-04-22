@@ -17,11 +17,13 @@ import PNStackedButtons from "library/Layout/Content/PNStackedButtons";
 import PNContainedButton from "library/components/Buttons/PNContainedButton";
 import PNOutlineButton from "library/components/Buttons/PNOutlineButton";
 import PNContentWithTitle from "library/Layout/Content/PNContentWithTitle";
+
 import PNFormContactInfo from "library/components/PNFormContactInfo";
 import PNFormInputBox from "library/components/PNFormInputBox";
 import PNFormRadio from "library/components/PNFormRadio";
 import PNFormDatePicker from "library/components/PNFormDatePicker";
 import PNDropDown from "../../../../library/components/PNDropDown";
+
 import PNFormButton from "library/components/PNFormButton";
 import FormButtonContainer from "library/Layout/Containers/FormButtonContainer";
 import { InputModal } from "../../../../library/components/Form/Inputs/Modal";
@@ -112,24 +114,6 @@ export const PersonalInformationScreen = ({
           invalid={invalids.title ? invalids.title[0] : ""}
         />
         <PNFormInputBox
-          placeholder="Appellation"
-          ref={input_appellation}
-          onChangeText={(text) =>
-            handleEvent("onChange", {
-              index: "appellation",
-              value: text,
-            })
-          }
-          onSubmitEditing={() => {
-            input_firstName.current.focus();
-          }}
-          value={appellation}
-          onBlur={() =>
-            handleEvent("onBlur", { constraints, index: "appellation" })
-          }
-          invalid={invalids.appellation ? invalids.appellation[0] : ""}
-        />
-        <PNFormInputBox
           placeholder="First Name"
           ref={input_firstName}
           onChangeText={(text) =>
@@ -182,6 +166,24 @@ export const PersonalInformationScreen = ({
             handleEvent("onBlur", { constraints, index: "lastName" })
           }
           invalid={invalids.lastName ? invalids.lastName[0] : ""}
+        />
+        <PNFormInputBox
+          placeholder="Appellation"
+          ref={input_appellation}
+          onChangeText={(text) =>
+            handleEvent("onChange", {
+              index: "appellation",
+              value: text,
+            })
+          }
+          onSubmitEditing={() => {
+            input_firstName.current.focus();
+          }}
+          value={appellation}
+          onBlur={() =>
+            handleEvent("onBlur", { constraints, index: "appellation" })
+          }
+          invalid={invalids.appellation ? invalids.appellation[0] : ""}
         />
         <PNFormContactInfo
           title="Phone Number"
@@ -357,7 +359,7 @@ export const AdditionalInformationScreen = ({
             })
           }
           // onSubmitEditing={() => {
-          //   console.log('KWAKWAK', this.input_middle_name);
+          //   
           //   this.input_middle_name.current.focus();
           // }}
           value={mothers_maiden_name}
@@ -473,6 +475,8 @@ export const HomeInformationScreen = ({
     home_barangay_or_district,
     home_ownership,
     home_phone,
+    home_stayed_since,
+    home_ownership_desc
   },
   modalVisible,
   search,
@@ -493,17 +497,17 @@ export const HomeInformationScreen = ({
         allowEmpty: false,
       },
     },
-    // home_barangay_or_district: {
-    //   presence: {
-    //     allowEmpty: false,
-    //   },
-    // },
-    // home_stayed_since: {
-    //   presence: {
-    //     allowEmpty: false,
-    //   },
-    // },
-    home_ownership_desc: {
+    home_barangay_or_district: {
+      presence: {
+        allowEmpty: false,
+      },
+    },
+    home_stayed_since: {
+      presence: {
+        allowEmpty: false,
+      },
+    },
+    home_ownership: {
       presence: {
         allowEmpty: false,
       },
@@ -520,7 +524,7 @@ export const HomeInformationScreen = ({
     },
   };
 
-  console.log("home_barangay_or_district: ", home_barangay_or_district)
+  
 
   return (
     <React.Fragment>
@@ -667,6 +671,10 @@ export const HomeInformationScreen = ({
                 home_address,
                 home_village,
                 home_phone,
+                home_barangay_or_district,
+                home_stayed_since,
+                city_description,
+                home_ownership
               },
               constraints,
             });
@@ -893,22 +901,33 @@ export const IDScreen = ({
     government_id_1,
     government_id_2,
     government_type_1,
-    government_type_2,
-    ...data
+    government_type_2
   },
 }) => {
   const constraints = {
-    source_of_fund: {
+    government_type_1: {
       presence: {
         allowEmpty: false,
       },
     },
-    job_title: {
+    government_id_1: {
+      presence: {
+        allowEmpty: false,
+      },
+    },
+    government_type_2: {
+      presence: {
+        allowEmpty: false,
+      },
+    },
+    government_id_2: {
       presence: {
         allowEmpty: false,
       },
     },
   };
+
+  
   return (
     <React.Fragment>
       <PNContentWithTitle title="Government IDs">
@@ -1058,7 +1077,7 @@ export const ElectronicSignatureScreen = ({ handleEvent, data }) => {
     API.upload({file_name: "esignature.png", content_type: "image", data64: imageData.replace("data:image/png;base64,", "") })
       .then(({data: {data: response, status, msg}}) => {
         if(status == "ok" && response.length > 0) {
-          console.log("Raw: ", JSON.stringify(data));
+          
           const formData = {
             title: data.title,
             appelation: data.appellation,
@@ -1102,7 +1121,7 @@ export const ElectronicSignatureScreen = ({ handleEvent, data }) => {
   
             eSignatureId: response[0]
           };
-          console.log("Create Bank Account Form: ", JSON.stringify(formData));
+          
           handleEvent("onAddFormData", {data: formData});
           handleEvent("onSubmit", {data: formData});
         } else {
@@ -1110,7 +1129,7 @@ export const ElectronicSignatureScreen = ({ handleEvent, data }) => {
         }
       })
       .catch((error) => {
-        console.log("Error on uploading Electronic Signature", error);
+        
       })
       .finally(() => {
         setUploading(false);

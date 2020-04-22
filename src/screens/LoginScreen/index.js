@@ -105,7 +105,7 @@ export const LoginScreen = ({
   });
 
   useEffect(() => {
-    console.log("response: ", response);
+    
     if (token.tokens) {
       getAttributes({
         name: "cis_no",
@@ -131,9 +131,9 @@ export const LoginScreen = ({
 
   useEffect(() => {
     if (isCompatible && isEnrolled) {
-      console.log("Compatible and Enrolled");
+      
       if (fingerprintToken && isScanning == false) {
-        console.log("Scanning...");
+        
         setModalVisibility(true);
         scan();
       }
@@ -155,9 +155,9 @@ export const LoginScreen = ({
 
   const scan = async () => {
     setScanningStatus(true);
-    console.log("Scan()");
+    
     const { success, error } = await authenticateAsync({ promptMessage: "" });
-    console.log("Error: ", error);
+    
     if (success) {
       setScanningStatus(false);
       setIsFingerprintSuccess(true);
@@ -377,7 +377,7 @@ const modalStyle = StyleSheet.create({
 });
 
 const mapStateToProps = ({ auth, token }) => {
-  console.log("Token: ", token);
+  
   return {
     response: auth,
     token,

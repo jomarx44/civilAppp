@@ -33,10 +33,8 @@ export const PNFormInputBox = forwardRef(
 
         case "onBlur":
           if (!isEmpty()) {
-            console.log("EMPTY")
             setBorderBottomWidth(0);
           } else {
-            console.log("NOT EMPTY")
             setBorderBottomColor("#E1E1E5");
             setBorderBottomWidth(1);
           }

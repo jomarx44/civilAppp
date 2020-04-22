@@ -17,7 +17,6 @@ export const cityReducer = (state = initialState, action) => {
       return initialState;
 
     case SEARCH_CITY_SUCCESS:
-      console.log(action.payload);
       return {
         isFetching: false,
         data: action.payload

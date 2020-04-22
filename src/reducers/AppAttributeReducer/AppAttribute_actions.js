@@ -33,7 +33,7 @@ export const getAttributes = ({ name, access_token }) => {
     });
     return postOnly(json_data)
       .then(response => {
-        console.log("GETATTR Response: ", response.data);
+        
         dispatch({
           type: FETCH_ATTRIBUTES_SUCCESS,
           payload: {
@@ -44,7 +44,7 @@ export const getAttributes = ({ name, access_token }) => {
         });
       })
       .catch(error => {
-        console.log("Error: ", error);
+        
         dispatch({
           type: FETCH_ATTRIBUTES_ERROR,
           payload: {}
@@ -74,7 +74,7 @@ export const putAttributes = ({
     });
     return postOnly(json_data)
       .then(response => {
-        console.log("PUTATTR Response: ", response.data);
+        
         if(response.data.success) {
           dispatch({
             type: PUT_ATTRIBUTES_SUCCESS,
@@ -95,22 +95,22 @@ export const putAttributes = ({
       })
       .catch(error => {
         alertBox("Error has occured!");
-        console.log("Error: ", error);
+        
         dispatch({
           type: PUT_ATTRIBUTES_ERROR,
           payload: {}
         });
 
         if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
+          
+          
+          
         } else if (error.request) {
-          console.log(error.request);
+          
         } else {
-          console.log("Error", error.message);
+          
         }
-        console.log(error.config);
+        
       });
   };
 };
@@ -133,10 +133,10 @@ export const requestUniqueId = attributes => {
     dispatch({
       type: REQUEST_ID
     });
-    console.log("Create Bank Account User Attributes: ", attributes)
+    
     return postOnly(json_data)
       .then(({data: {status, data}}) => {
-        console.log("requestUniqueId Response: ", data);
+        
         dispatch({
           type:
             status == "ok"
@@ -147,7 +147,7 @@ export const requestUniqueId = attributes => {
       })
       .catch(error => {
         alertBox("Error has occured!");
-        console.log("Error: ", error);
+        
         dispatch({
           type: REQUEST_ID_ERROR,
           payload: {}

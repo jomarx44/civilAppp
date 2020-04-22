@@ -78,7 +78,7 @@ class CIS01 extends React.Component {
             ...invalid
           }
         },
-        () => console.log("Invalid State: ", this.state.invalid)
+        () => 
       );
     } else {
       const { invalid } = this.state;
@@ -127,7 +127,7 @@ class CIS01 extends React.Component {
                   ref={this.input_first_name}
                   onChangeText={text => this.onChangeText(text, "first_name")}
                   // onSubmitEditing={() => {
-                  //   console.log('KWAKWAK', this.input_middle_name);
+                  //   
                   //   this.input_middle_name.current.focus();
                   // }}
                   value={this.state.cis.first_name}

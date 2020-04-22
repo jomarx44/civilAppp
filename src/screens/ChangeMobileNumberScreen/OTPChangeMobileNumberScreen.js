@@ -107,7 +107,7 @@ const mapDispatchToProps = (dispatch) => {
           }
         })
         .catch((error) => {
-          console.log("Error verifyOTP: ", error);
+          
           dispatch({
             type: CHECK_OTP_ERROR,
             payload: {

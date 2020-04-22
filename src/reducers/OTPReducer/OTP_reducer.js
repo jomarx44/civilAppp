@@ -39,7 +39,7 @@ export const otpReducer = (state = otpState, action) => {
         message: "",
         token: ''
       };
-      console.log("Request OTP Reducer: ", output);
+      
       return output;
 
     case REQUEST_OTP_SUCCESS:
@@ -49,7 +49,7 @@ export const otpReducer = (state = otpState, action) => {
         message: "",
         token: action.payload.token,
       }
-      console.log("Request OTP (Success) Reducer: ", output);
+      
       return output;
 
     case REQUEST_OTP_ERROR:
@@ -59,7 +59,7 @@ export const otpReducer = (state = otpState, action) => {
         message: action.payload.message,
         token: "",
       };
-      console.log("Request OTP (Error) Reducer: ", output)
+      
       return output;
 
     case CHECK_OTP_INITIALIZE:
@@ -79,7 +79,7 @@ export const otpReducer = (state = otpState, action) => {
         message: "",
         isVerified: null
       };
-      console.log("Check OTP Reducer: ", output);
+      
       return output;
 
     case CHECK_OTPTM_SUCCESS: 
@@ -88,7 +88,7 @@ export const otpReducer = (state = otpState, action) => {
         isFetching: false,
         isVerified: true
       };
-      console.log("Check OTP (Success) Reducer: ", output);
+      
       return output;
 
     case CHECK_OTP_ERROR:
@@ -98,7 +98,7 @@ export const otpReducer = (state = otpState, action) => {
         isVerified: false,
         message: action.payload.message
       };
-      console.log("Check OTP (Error) Reducer: ", output)
+      
       return output;
 
     default:

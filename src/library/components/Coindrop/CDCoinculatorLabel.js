@@ -3,7 +3,7 @@ import { Text, StyleSheet, View, TouchableNativeFeedback, Dimensions } from 'rea
 import StringsMain from "res/strings/main.js";
 
 export default function CDCoinculatorLabel ({ data, focus }) {
-	console.log("data in CDCoinculatorLabel: " + JSON.stringify(data))
+	
 	let {height, width} = Dimensions.get('window');
 	return(
 

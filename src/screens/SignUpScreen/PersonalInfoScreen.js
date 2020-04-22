@@ -1,23 +1,15 @@
 import React from "react";
 import {
-  AsyncStorage,
-  ActivityIndicator,
-  ScrollView,
   Dimensions,
   StyleSheet,
-  View
 } from "react-native";
-import { Button, Text } from "native-base";
 
-import KeyboardShift from "library/components/KeyboardShift";
 import * as Profile from "store/profile";
 import PNContentWithTitleAndDescription from "../../library/Layout/Content/PNContentWithTitleAndDescription";
 import PNContainedButton from "../../library/components/Buttons/PNContainedButton";
 import FormButtonContainer from "../../library/Layout/Containers/FormButtonContainer";
 import PNFormTextBox from "library/components/PNFormTextBox";
 import PNFormTextBoxPhoneNumber from "library/components/PNFormTextBox-PhoneNumber";
-import PNFormTextBoxMasked from "library/components/PNFormTextBoxMasked";
-import PNTitleAndDescription from "library/components/PNTitleAndDescription";
 import { connect } from "react-redux";
 import API from "actions/api";
 import {

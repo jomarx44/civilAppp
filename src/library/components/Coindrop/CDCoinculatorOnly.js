@@ -28,7 +28,7 @@ class CDCoinculatorOnly extends Component {
 
   onChangeText = (expected_cd_deduct) => {
   	this.setState({expected_cd_deduct: expected_cd_deduct})
-  	console.log(this.state.expected_cd_deduct)
+  	
   }
 
   calculateExpectedTakeHomePay(){
@@ -49,7 +49,7 @@ class CDCoinculatorOnly extends Component {
         };
         return toRet;
       });
-    console.log('pieData: ' + JSON.stringify(ret_data))
+    
     return ret_data;
   }
 

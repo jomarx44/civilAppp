@@ -1,6 +1,7 @@
 import { postOnly, getDataOnly, alertBox } from "../../actions/axiosCalls";
 import * as NavigationService from "../../navigation/NavigationService.js";
 import * as TYPE from "../../actions/types";
+import { APIErrorLogging } from "../../library/helpers";
 
 export const verifyOTP_BytePerByte = ({ token, otp }) => {
   const json_data = {
@@ -10,7 +11,7 @@ export const verifyOTP_BytePerByte = ({ token, otp }) => {
       otp,
     },
   };
-  console.log("Verify OTP and Token: ", json_data);
+  
   return (dispatch) => {
     dispatch({
       type: TYPE.CHECK_OTP,
@@ -19,7 +20,7 @@ export const verifyOTP_BytePerByte = ({ token, otp }) => {
       .then((response) => {
         const response_data = response.data.data["Register.Info"];
         const has_data = checkStatus(response) && !response_data.ErrorMsg;
-        console.log("Verify OTP and Token Response: ", response_data);
+        
         // return;
         if (has_data) {
           dispatch({
@@ -53,16 +54,7 @@ export const verifyOTP_BytePerByte = ({ token, otp }) => {
         //     message: error
         //   }
         // });
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log("Error", error.message);
-        }
-        console.log(error.config);
+        APIErrorLogging(error);
       });
   };
 };
@@ -96,7 +88,7 @@ export const requestOTP_TM = ({
   Object.keys(json_data.body)
     .forEach((key) => (json_data.body[key] == null) && delete json_data.body[key]);
 
-  console.log("Request OTP and Token: ", json_data);
+  
   return (dispatch) => {
     dispatch({
       type: TYPE.REQUEST_OTP,
@@ -104,7 +96,7 @@ export const requestOTP_TM = ({
 
     return postOnly(json_data)
       .then((response) => {
-        console.log("Request OTP response: ", response.data);
+        
         const response_data = response.data;
         const has_data = response_data.status == "ok";
         if (has_data) {
@@ -132,7 +124,7 @@ export const requestOTP_TM = ({
               message: response_data.msg,
             },
           });
-          console.log(response_data);
+          
           alertBox(response_data.msg);
         }
       })
@@ -149,15 +141,15 @@ export const requestOTP_TM = ({
           },
         });
         if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
+          
+          
+          
         } else if (error.request) {
-          console.log(error.request);
+          
         } else {
-          console.log("Error", error.message);
+          
         }
-        console.log(error.config);
+        
       });
   };
 };
@@ -175,14 +167,14 @@ export const verifyOTP_TM = ({
       token: token + otp,
     },
   };
-  console.log("Verify OTP and Token: ", json_data);
+  
   return (dispatch) => {
     dispatch({
       type: TYPE.CHECK_OTP,
     });
     return postOnly(json_data)
       .then((response) => {
-        console.log("Verify Token and OTP response: ", response.data);
+        
         const response_data = response.data.data;
         const has_data = response_data.status == "ok";
 

@@ -64,7 +64,7 @@ class CDCoinculator extends Component {
 
     },(errorMsg) =>
     {
-        console.log( errorMsg );
+        
     });
 	
   }

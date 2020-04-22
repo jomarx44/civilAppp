@@ -42,7 +42,7 @@ export const AppAttributeReducer = (state = initialState, action) => {
       };
       
     case REQUEST_ID_SUCCESS:
-      console.log('REQUEST_ID_SUCCESS');
+      
       return {
         ...state,
         temporary_key: action.payload,
@@ -62,7 +62,7 @@ export const AppAttributeReducer = (state = initialState, action) => {
       };
 
     case FETCH_ATTRIBUTES_SUCCESS:
-      console.log("Action payload: ", action.payload);
+      
       return {
         ...state,
         isFetching: false,

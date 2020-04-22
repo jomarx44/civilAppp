@@ -70,7 +70,7 @@ class CDCoinculatorRemit extends Component {
     let { remitFields  } = this.state;
     let { otherParams  } = this.state;
     if (profile) {
-      console.log('checkuser profile ' + profile);
+      
       remitFields['sender_name'] = profile.first_name + " " + profile.last_name;
       remitFields['sender_address'] = profile.permanent_address;
       remitFields['sender_number'] = profile.mobile_number;
@@ -89,14 +89,14 @@ class CDCoinculatorRemit extends Component {
   checkUserToken = async () => {
     const token = await AsyncStorage.getItem('USER_TOKEN');
     if (token) {
-      console.log('checkuser token ' + token);
+      
       this.setState({ token: token});
     }
   };
 
   onChangeText = (expected_cd_deduct) => {
   	this.setState({expected_cd_deduct: expected_cd_deduct})
-  	console.log(this.state.expected_cd_deduct)
+  	
   }
 
   onBackButtonPressAndroid = () => {
@@ -131,7 +131,7 @@ class CDCoinculatorRemit extends Component {
   }
 
   onApplyPress = () => {
-  	console.log("apply_enable: " + this.props.product_details.apply_enabled)
+  	
   	if(this.props.product_details.apply_enabled){
   		if(this.validateInput()){
   			// alertBox('Validated!')
@@ -148,7 +148,7 @@ class CDCoinculatorRemit extends Component {
 				send_mobile: this.state.remitFields.sender_number,
 				smart_money_accnt: this.state.smart_money_num
   			}
-  			console.log('remit params: ' + JSON.stringify(params))
+  			
   			this.props.applyRemit(params);
   			this.clearInput();
   			NavigationService.navigate(this.props.product)
@@ -196,7 +196,7 @@ class CDCoinculatorRemit extends Component {
     	smart_money_parts : smart_money_parts,
     	smart_money_num: smart_money_parts['smart_money_num1'] + '-' + smart_money_parts['smart_money_num2'] + '-' + smart_money_parts['smart_money_num3'] + '-' + smart_money_parts['smart_money_num4']
     })
-    console.log('smart_money_num: ' + smart_money_parts['smart_money_num1'] + '-' + smart_money_parts['smart_money_num2'] + '-' + smart_money_parts['smart_money_num3'] + '-' + smart_money_parts['smart_money_num4'])
+    
   }
 
   onRemitFieldTextChange(value, field){
@@ -205,12 +205,12 @@ class CDCoinculatorRemit extends Component {
     this.setState({
     	remitFields : remitFields,
     })
-    console.log('remitFields: ' + JSON.stringify(remitFields))
+    
   }
 
   onPickerChange(itemValue){
   	this.setState({pay_sched: itemValue})
-  	console.log('pay_sched: ' + itemValue)
+  	
   }
 
   setPickerItems(array){
@@ -232,11 +232,11 @@ class CDCoinculatorRemit extends Component {
   }
 
   generatePercentageArray = (state) => {
-  	console.log('state: ' + JSON.stringify(state));
+  	
 	let total = parseFloat(state.gross_pay) + parseFloat(state.gov_deduct) + parseFloat(state.corp_deduct) + parseFloat(state.cd_deduct);
 	let return_array = [parseFloat(state.gross_pay)/total, parseFloat(state.gov_deduct)/total, parseFloat(state.corp_deduct)/total, parseFloat(state.cd_deduct)/total];
-	console.log('data: ' + [parseFloat(state.gross_pay)/total, parseFloat(state.gov_deduct)/total, parseFloat(state.corp_deduct)/total, parseFloat(state.cd_deduct)/total])
-	console.log('return_array: ' + return_array)
+	
+	
 	return return_array.includes(NaN) ? [1] : return_array;
   }
 
@@ -252,7 +252,7 @@ class CDCoinculatorRemit extends Component {
         };
         return toRet;
       });
-  	console.log('pieData: ' + JSON.stringify(ret_data))
+  	
   	return ret_data;
   }
 
@@ -287,7 +287,7 @@ class CDCoinculatorRemit extends Component {
         	<ScrollView contentContainerStyle={{flexGrow: 1}}>
         	<View>
         		<View style={{marginTop: 10, flexDirection: 'column', justifyContent: 'center'}}>
-        		{console.log('provider_img: ' + this.props.product_details.background_img_url)}
+        		{
 		      		<Image 
 			        	style={{width: width * 0.5, aspectRatio: 178/65, alignSelf: 'center'}}
 			        	source={{uri: this.props.product_details.background_img_url}}
@@ -613,8 +613,8 @@ let styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  console.log(JSON.stringify(state));
-  console.log("pasok dito");
+  
+  
   const response = state.common ? state.common : {}
   return {
     data : response

@@ -158,9 +158,9 @@ class DashboardScreen extends React.Component {
       profile: { data, ...profile },
     } = this.props;
 
-    console.log("profile isFetching", profile.isFetching);
+    
 
-    console.log("accounts isFetching", accounts.is_fetching);
+    
 
     if (profile.isFetching || accounts.is_fetching) {
       return (
@@ -187,7 +187,7 @@ class DashboardScreen extends React.Component {
                 <AccountItemContainer>
                   {items.accountsById &&
                     items.accountsById.map((itemId, id) => {
-                      console.log("Acctno: ", items.accounts[itemId].acctno);
+                      
                       return (
                         <AccountItem
                           key={id}

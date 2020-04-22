@@ -27,22 +27,22 @@ class CDPortAppNotifHeader extends React.Component {
 
 
   getPortfolio = () => {
-    console.log("napasok dto..")
+    
     this.props.getPortfolio(this.state.token)
     this.props.navigation.navigate("Portfolio")
-    console.log("this.propsP: ",this.props)
+    
   }
 
   getNotification = () => {
     this.props.getNotification(this.state.token)
     this.props.navigation.navigate("Notifications")
-    console.log("this.propsN: ",this.props)
+    
   }
 
   getApplication = () => {
     this.props.getApplication(this.state.token)
     this.props.navigation.navigate("Applications")
-    console.log("this.propsN: ",this.props)
+    
   }
 
 

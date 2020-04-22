@@ -22,8 +22,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerText: {
-    fontFamily: 'Avenir_Book',
-    fontSize: 32
+    fontFamily: 'Gilroy_Medium',
+    fontSize: 32,
+     color: '#042c5c'
   }
 });
 
