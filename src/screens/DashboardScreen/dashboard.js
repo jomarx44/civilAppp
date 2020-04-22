@@ -134,8 +134,9 @@ class DashboardScreen extends React.Component {
       //   familyName
       // });
     }
-
+    
     this.props.getAccounts(this.props.appAttribute.attributes.cis_no);
+
     // this.props.getAccounts("1590000062");
     navigation.navigate("Announcement");
   }
@@ -154,28 +155,40 @@ class DashboardScreen extends React.Component {
   render() {
     const {
       accounts,
-      profile: { data, isFetching },
+      profile: { data, ...profile },
     } = this.props;
 
-    if (!isFetching && !accounts.is_fetching && data) {
+    console.log("profile isFetching", profile.isFetching);
+
+    console.log("accounts isFetching", accounts.is_fetching);
+
+    if (profile.isFetching || accounts.is_fetching) {
       return (
-        <Container>
-          <View style={styles.viewHeader}>
-            <Text style={styles.title}>{data.name.displayName}</Text>
-            <Text style={styles.subtitle}>{data.emails[0].value}</Text>
-          </View>
-          <View style={styles.viewAccounts}>
-            <Accordion
-              renderHeader={(item, expanded) => (
-                <AccountItemHeader item={item} expanded={expanded} />
-              )}
-              renderContent={(items) => {
-                return (
-                  <AccountItemContainer>
-                    {items.accountsById &&
-                      items.accountsById.map((itemId, id) => { 
-                        console.log("Acctno: ", items.accounts[itemId].acctno);
-                        return (
+        <Container
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size="large" color="#f9a010" />
+        </Container>
+      );
+    }
+    return (
+      <Container>
+        <View style={styles.viewHeader}>
+          <Text style={styles.title}>{data.name.displayName}</Text>
+          <Text style={styles.subtitle}>{data.emails[0].value}</Text>
+        </View>
+        <View style={styles.viewAccounts}>
+          <Accordion
+            renderHeader={(item, expanded) => (
+              <AccountItemHeader item={item} expanded={expanded} />
+            )}
+            renderContent={(items) => {
+              return (
+                <AccountItemContainer>
+                  {items.accountsById &&
+                    items.accountsById.map((itemId, id) => {
+                      console.log("Acctno: ", items.accounts[itemId].acctno);
+                      return (
                         <AccountItem
                           key={id}
                           item={items.accounts[itemId]}
@@ -186,26 +199,18 @@ class DashboardScreen extends React.Component {
                             )
                           }
                         />
-                      )})}
-                    <AccountAddButton
-                      onPress={() => this.onPress("ConnectCreateAccount")}
-                    />
-                  </AccountItemContainer>
-                );
-              }}
-              dataArray={Object.values(accounts.list)}
-              contentStyle={{ backgroundColor: "#ddecf8" }}
-            />
-          </View>
-        </Container>
-      );
-    }
-
-    return (
-      <Container
-        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-      >
-        <ActivityIndicator size="large" color="#f9a010" />
+                      );
+                    })}
+                  <AccountAddButton
+                    onPress={() => this.onPress("ConnectCreateAccount")}
+                  />
+                </AccountItemContainer>
+              );
+            }}
+            dataArray={Object.values(accounts.list)}
+            contentStyle={{ backgroundColor: "#ddecf8" }}
+          />
+        </View>
       </Container>
     );
   }
@@ -326,7 +331,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state, props) => {
   const { profile, accounts, appAttribute, auth, token } = state;
-  return { profile, accounts, appAttribute, auth , token};
+  return { profile, accounts, appAttribute, auth, token };
 };
 
 const mapDispatchToProps = (dispatch) => {

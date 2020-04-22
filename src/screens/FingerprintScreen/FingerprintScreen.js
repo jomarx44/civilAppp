@@ -14,6 +14,7 @@ import {
   hasHardwareAsync,
   isEnrolledAsync,
   authenticateAsync,
+  cancelAuthenticate,
 } from "expo-local-authentication";
 import PNContainedButton from "../../library/components/Buttons/PNContainedButton";
 
@@ -37,59 +38,46 @@ export const FingerprintScreen = ({ auth, navigation }) => {
     }
   }, [isCompatible, isEnrolled, fingerprintToken]);
 
-  const checkDeviceHardware = () => {
-    hasHardwareAsync()
-      .then((response) => {
-        if (!response) {
-          Alert.alert(
-            "Fingerprint Compatibilty",
-            "Your phone doesn't support Fingerprint Login.",
-            [
-              {
-                text: "Ok",
-                onPress: () => navigation.goBack(),
-              },
-            ]
-          );
-        }
-        setIsCompatible(response);
-      })
-      .catch((error) => {
-        console.log("Error while checking hardware on this device: ", error);
-      });
+  const checkDeviceHardware = async () => {
+    const isHardwareSupported = await hasHardwareAsync();
+    setIsCompatible(isHardwareSupported);
+    if (!isHardwareSupported) {
+      Alert.alert(
+        "Fingerprint Compatibilty",
+        "Your phone doesn't support Fingerprint Login.",
+        [
+          {
+            text: "Ok",
+            onPress: () => navigation.goBack(),
+          },
+        ]
+      );
+    }
   };
 
-  const checkEnrolledFingerprints = () => {
-    isEnrolledAsync()
-      .then((response) => {
-        if (!response) {
-          Alert.alert(
-            "No Fingerprints found",
-            "It seems that you haven't enrolled fingerprint to your device yet. Please register a fingerprint to your device.",
-            [
-              {
-                text: "Ok",
-                onPress: () => navigation.goBack(),
-              },
-            ]
-          );
-        }
-        setIsEnrolled(response);
-      })
-      .catch((error) => {
-        console.log(
-          "Error while enrolled fingerprints on this device: ",
-          error
-        );
-      });
+  const checkEnrolledFingerprints = async () => {
+    const hasEnrolledFingerprint = await isEnrolledAsync();
+    setIsEnrolled(hasEnrolledFingerprint);
+    if (!hasEnrolledFingerprint) {
+      Alert.alert(
+        "No Fingerprints found",
+        "It seems that you haven't enrolled fingerprint to your device yet. Please register a fingerprint to your device.",
+        [
+          {
+            text: "Ok",
+            onPress: () => navigation.goBack(),
+          },
+        ]
+      );
+    }
   };
 
   const scan = async () => {
-    const { success } = await authenticateAsync({ promptMessage: "" });
+    const { success, error } = await authenticateAsync({ promptMessage: "" });
     if (success) {
       AsyncStorage.setItem("fingerprintToken", auth.refresh_token);
       setFingerprintToken(auth.refresh_token);
-    } else {
+    } else if (error == "authentication_failed" || error == "too_fast") {
       Alert.alert(
         "Invalid Fingerprint",
         "Please try touching the fingerprint sensor again.",
@@ -100,6 +88,8 @@ export const FingerprintScreen = ({ auth, navigation }) => {
           },
         ]
       );
+    } else {
+      cancelAuthenticate();
     }
   };
 

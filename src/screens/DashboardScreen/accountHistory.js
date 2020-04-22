@@ -110,39 +110,43 @@ class AccountHistoryScreen extends React.Component {
             </Text>
           </View>
         </View>
-        <View style={localStyles.viewAccounts}>
-          <View style={localStyles.bodyTitle_container}>
-            <Text style={localStyles.bodyTitle}>TRANSACTIONS</Text>
-          </View>
-          <SafeAreaView style={localStyles.listStyle}>
-            {accounts[accountNumber].history && (
-              <FlatList
-                data={accounts[accountNumber].history}
-                renderItem={({ item, index }) => (
-                  <Item
-                    index={index}
-                    title={item.title}
-                    amount={item.amount}
-                    date={item.date}
-                  />
-                )}
-                keyExtractor={(item) => item.id}
-              />
-            )}
-            {accounts[accountNumber].history &&
-              accounts[accountNumber].history.length == 0 && (
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text>Empty Transactions</Text>
-                </View>
-              )}
-          </SafeAreaView>
-        </View>
+
+        {accounts[accountNumber].history &&
+          accounts[accountNumber].history.length > 0 && (
+            <View style={localStyles.viewAccounts}>
+              <View style={localStyles.bodyTitle_container}>
+                <Text style={localStyles.bodyTitle}>TRANSACTIONS</Text>
+              </View>
+              <SafeAreaView style={localStyles.listStyle}>
+                <FlatList
+                  data={accounts[accountNumber].history}
+                  renderItem={({ item, index }) => (
+                    <Item
+                      index={index}
+                      title={item.title}
+                      amount={item.amount}
+                      date={item.date}
+                    />
+                  )}
+                  keyExtractor={(item) => item.id}
+                />
+              </SafeAreaView>
+            </View>
+          )}
+
+        {accounts[accountNumber].history &&
+          accounts[accountNumber].history.length == 0 && (
+            <View
+              style={{
+                flex: 4,
+                backgroundColor: "#f2f4f5",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text style={localStyles.bodyTitle}>Empty Transactions</Text>
+            </View>
+          )}
       </Container>
     );
   }

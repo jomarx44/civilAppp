@@ -18,7 +18,7 @@ import {
   HomeInformationScreen,
   IDScreen,
   PersonalInformationScreen,
-  ElectronicSignatureScreen
+  ElectronicSignatureScreen,
 } from "./forms/SunSavingsBank/BankAccountFormScreen";
 
 // Others
@@ -32,10 +32,10 @@ import {
   ADD_ACCOUNT_INITIALIZE,
   ADDFIELD_ACCOUNT_FORMDATA,
   REQUEST_OTP_INITIALIZE,
-  CHECK_OTP_INITIALIZE
-} from "../../actions/types"
+  CHECK_OTP_INITIALIZE,
+} from "../../actions/types";
 
-const DEBUG = true;
+const DEBUG = false;
 
 export const CreateBankAccountScreen = ({
   createBankAccount,
@@ -58,41 +58,41 @@ export const CreateBankAccountScreen = ({
 }) => {
   const [page, setPage] = useState(0);
   const [accountInfo, setAccountInfo] = useState({
-      title: 'N/A',
-      appelation: 'N/A',
-      firstName: 'Sample',
-      middleName: 'Account',
-      lastName: 'Lang',
-      email: 'alvin@thousandminds.com',
-      phoneNumber: '9953186216',
-      gender: '1',
-      birth_date: new Date(),
-      place_of_birth: 'Taipei, Taiwan',
-      mothers_maiden_name: 'Salvacion Viernes',
-      home_address: 'Sample',
-      home_village: 'Sample',
-      home_phone: 'N/A',
-      home_stayed_since: new Date(),
-      government_id_1: 'Sample',
-      government_id_2: 'Sample',
-      id1_code: 'ID15',
-      id2_code: 'ID22',
-      job_title: 'ENG',
-      job_title_desc: 'Engineer',
-      nationality: 'PH',
-      nationality_desc: 'Filipino',
-      source_of_fund: 'REMIT',
-      source_of_fund_desc: 'Allottee / Beneficiary',
-      home_barangay_or_district: 'L/NCR/NCRD4/MAKATI/MAK100',
-      civil_status: '3',
-      civil_status_desc: 'Separated',
-      city: 'MAKATI',
-      city_description: 'City Of Makati',
-      home_ownership: 'HO2',
-      home_ownership_desc: 'Mortgaged',
-      government_type_1: 'Seaman`s Book',
-      government_type_2: 'School ID'
-    });
+    // title: 'N/A',
+    // appelation: 'N/A',
+    // firstName: 'Sample',
+    // middleName: 'Account',
+    // lastName: 'Lang',
+    // email: 'alvin@thousandminds.com',
+    // phoneNumber: '9953186216',
+    // gender: '1',
+    // birth_date: new Date(),
+    // place_of_birth: 'Taipei, Taiwan',
+    // mothers_maiden_name: 'Salvacion Viernes',
+    // home_address: 'Sample',
+    // home_village: 'Sample',
+    // home_phone: 'N/A',
+    // home_stayed_since: new Date(),
+    // government_id_1: 'Sample',
+    // government_id_2: 'Sample',
+    // id1_code: 'ID15',
+    // id2_code: 'ID22',
+    // job_title: 'ENG',
+    // job_title_desc: 'Engineer',
+    // nationality: 'PH',
+    // nationality_desc: 'Filipino',
+    // source_of_fund: 'REMIT',
+    // source_of_fund_desc: 'Allottee / Beneficiary',
+    // home_barangay_or_district: 'L/NCR/NCRD4/MAKATI/MAK100',
+    // civil_status: '3',
+    // civil_status_desc: 'Separated',
+    // city: 'MAKATI',
+    // city_description: 'City Of Makati',
+    // home_ownership: 'HO2',
+    // home_ownership_desc: 'Mortgaged',
+    // government_type_1: 'Seaman`s Book',
+    // government_type_2: 'School ID'
+  });
   const [invalids, setInvalids] = useState({});
   const [isFetched, setFetch] = useState(false);
   const [isModalVisible, toggleModal] = useState(false);
@@ -106,8 +106,10 @@ export const CreateBankAccountScreen = ({
   }, []);
 
   useEffect(() => {
-    getLists();
-    setFetch(true);
+    setTimeout(() => {
+      getLists();
+      setFetch(true);
+    }, 300);
   }, [isFetched]);
 
   const handleOnBack = () => {
@@ -203,7 +205,7 @@ export const CreateBankAccountScreen = ({
           next();
         }
         break;
-      
+
       case "onAddFormData":
         addFormData(options.data);
         break;
@@ -211,8 +213,8 @@ export const CreateBankAccountScreen = ({
       case "onSubmit":
         requestOTP({
           mobile_number: options.data.home_mobile,
-          save_info: options.data
-        })
+          save_info: options.data,
+        });
         break;
 
       case "onModalOpen":
@@ -246,7 +248,7 @@ export const CreateBankAccountScreen = ({
       go(newPage);
     }
   };
-  
+
   return (
     <AndroidBackHandler onBackPress={handleOnBack}>
       <View style={styles.containerStyle}>
@@ -306,20 +308,30 @@ export const CreateBankAccountScreen = ({
             />
           </View>
         </ViewPager>
-        <Modal
-          isVisible={lists.isFetching || barangays.isFetching}
-        >
-          <View style={{flex: 1, justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
+        <Modal isVisible={lists.isFetching || barangays.isFetching}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
             <ActivityIndicator color="#FFF" size="large" />
-            <Text style={{color: "white"}}>Loading</Text>
+            <Text style={{ color: "white" }}>Loading</Text>
           </View>
         </Modal>
-        <Modal
-          isVisible={account.isSaving}
-        >
-          <View style={{flex: 1, justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
+        <Modal isVisible={account.isSaving}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
             <ActivityIndicator color="#FFF" size="large" />
-            <Text style={{color: "white"}}>Creating Account...</Text>
+            <Text style={{ color: "white" }}>Creating Account...</Text>
           </View>
         </Modal>
       </View>
@@ -337,7 +349,8 @@ const styles = StyleSheet.create({
   slideContainerStyle: {
     flex: 1,
   },
-});const mapStateToProps = (state) => {
+});
+const mapStateToProps = (state) => {
   const {
     lists: {
       meta,
@@ -350,15 +363,15 @@ const styles = StyleSheet.create({
       fundSources,
     },
     city,
-    appAttribute
+    appAttribute,
   } = state;
 
   return {
     account: {
-      isSaving: appAttribute.isSaving
+      isSaving: appAttribute.isSaving,
     },
     barangays: {
-      isFetching: barangays.isFetching
+      isFetching: barangays.isFetching,
     },
     city,
     lists: {
@@ -374,26 +387,26 @@ const styles = StyleSheet.create({
   };
 };
 
-const mapDispatchToProps = (dispatch, {navigation}) => {
+const mapDispatchToProps = (dispatch, { navigation }) => {
   return {
     initializeReducer: () => {
       dispatch({
         type: ADD_ACCOUNT_INITIALIZE,
-      })
+      });
       dispatch({
         type: REQUEST_OTP_INITIALIZE,
-      })
+      });
       dispatch({
         type: CHECK_OTP_INITIALIZE,
-      })
+      });
     },
     addFormData: (data) => {
       dispatch({
         type: ADDFIELD_ACCOUNT_FORMDATA,
         payload: {
-          formData: data
-        }
-      })
+          formData: data,
+        },
+      });
     },
     getLists: () => {
       dispatch(API.getLists());

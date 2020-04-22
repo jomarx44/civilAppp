@@ -39,7 +39,7 @@ const constraints = {
       allowEmpty: false
     },
     email: {
-      message: "This doesn't look like a valid email"
+      message: "isn't valid"
     }
   }
 }

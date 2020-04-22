@@ -88,10 +88,13 @@ export const requestOTP_TM = ({
     path: "tm/otp",
     body: {
       mobile_number,
-      // email: email,
+      email: email,
       save_info,
     },
   };
+
+  Object.keys(json_data.body)
+    .forEach((key) => (json_data.body[key] == null) && delete json_data.body[key]);
 
   console.log("Request OTP and Token: ", json_data);
   return (dispatch) => {

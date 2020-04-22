@@ -1,33 +1,40 @@
-import React, { Component } from 'react';
-import { Image, View, StyleSheet } from 'react-native';
-import { Container, Header, Left, Body, Right, Button, Icon, Title, Text } from 'native-base';
-import styles2 from "styles/commonStyle";
+import React, { Component } from "react";
+import { Dimensions, View, Text, StyleSheet } from "react-native";
 
-class PNTitleAndDescription extends Component {
-  render() {
-    const { title, desc } = this.props;  
-    return (
-        <View style={{ flex: 1 }}>
-          <Text style={styles.text}>{title}</Text>
-          <Text style={styles.desc}>{desc}</Text>
-        </View>
-     );
-  }
-}
+const { width, height } = Dimensions.get("window");
 
-let styles = StyleSheet.create({
-  text: {
-    fontSize: 32,
-    fontFamily: 'Avenir_Heavy',
-    color: '#F5AC14',
-    marginBottom: 10
+export const PNTitleAndDescription = (props) => {
+  const { title, desc, containerStyle, titleStyle, descriptionStyle } = props;
+  return (
+    <View style={[styles.defaultContainerStyle, containerStyle]}>
+      <Text style={[styles.defaultTitleStyle, titleStyle]}>{title}</Text>
+      <Text style={[styles.defaultDescriptionStyle, descriptionStyle]}>
+        {desc}
+      </Text>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  defaultContainerStyle: {
+    backgroundColor: "#FFFFFF",
+    height: height * 0.22,
+    paddingHorizontal: 30,
+    paddingVertical: 20,
+    justifyContent: "center",
   },
-  desc: {
-    color: "#5d646c",
-    fontFamily: 'Avenir_Medium',
+  defaultTitleStyle: {
+    fontSize: 32,
+    color: "#042C5C",
+    fontFamily: "Avenir_Heavy",
+    marginBottom: 10,
+  },
+  defaultDescriptionStyle: {
+    color: "#5D646C",
+    lineHeight: 24,
+    fontFamily: "Avenir_Medium",
     fontSize: 16,
-  }
+  },
 });
-
 
 export default PNTitleAndDescription;

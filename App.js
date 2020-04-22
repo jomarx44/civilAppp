@@ -16,6 +16,7 @@ import rootReducer from "./src/reducers";
 
 // Custom Component
 import OnBoardingScreen from "./src/screens/OnBoardingScreen";
+import AppLoaderScreen from "./src/screens/AppLoaderScreen/AppLoaderScreen"
 
 // Others
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -75,6 +76,7 @@ class App extends Component {
   render() {
     if (!this.state.isReady) {
       return <AppLoading />;
+      // return <AppLoaderScreen />
     }
 
     return (

@@ -29,12 +29,11 @@ import PNHeaderCancelDone from "../library/Layout/Header/PNHeaderCancelDone";
 // Authentication
 import LoginScreen from "screens/LoginScreen";
 import PersonalInfoScreen from "screens/SignUpScreen/PersonalInfoScreen";
-import SignUpScreen2 from "screens/SignUpScreen/SignUpScreen2";
 import EmailVerificationScreen from "screens/SignUpScreen/EmailVerificationScreen";
 import TakeAPhotoOfIDScreen from "screens/TakeAPhotoOfIDScreen";
 import ForgotPasswordScreen from "screens/ForgotPasswordScreen";
-// import ImageTester from "screens/ElectronicSignatureScreen/ImageTester";
 import ElectronicSignatureScreen from "../screens/ElectronicSignatureScreen";
+import TesterScreen from "../screens/TesterScreen/TesterScreen";
 
 // import PersonalDetailsScreen from "screens/PersonalDetailsScreen/";
 
@@ -76,7 +75,7 @@ const MyTheme = {
 const Dashboard = () => {
   return (
     <Stack.Navigator
-      initialRouteName="CreateBankAccount"
+      initialRouteName="Dashboard"
       screenOptions={{
         header: ({ navigation }) => {
           return (
@@ -346,6 +345,11 @@ export const Navigator = ({ profile }) => {
         // </UserInactivity>
       ) : (
         <Stack.Navigator>
+          {/* <Stack.Screen
+            name="TesterScreen"
+            component={TesterScreen}
+            options={{ headerShown: false }}
+          /> */}
           <Stack.Screen
             name="Login"
             component={LoginScreen}
@@ -357,17 +361,6 @@ export const Navigator = ({ profile }) => {
             options={{
               header: ({ navigation }) => {
                 return <PNHeaderBackButton onPress={navigation.goBack} />;
-              },
-            }}
-          />
-          <Stack.Screen
-            name="CreateMobileAccount2"
-            component={SignUpScreen2}
-            options={{
-              header: ({ navigation }) => {
-                return (
-                  <PNHeaderCancelDone onCancel={() => navigation.goBack()} />
-                );
               },
             }}
           />

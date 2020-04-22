@@ -36,11 +36,11 @@ import API from "../../../../actions/api";
 export const PersonalInformationScreen = ({
   handleEvent,
   invalids,
-  data: { title, appelation, firstName, middleName, lastName, email, gender,
+  data: { title, appellation, firstName, middleName, lastName, email, gender,
     phoneNumber },
 }) => {
   const input_title = useRef();
-  const input_appelation = useRef();
+  const input_appellation = useRef();
   const input_firstName = useRef();
   const input_middleName = useRef();
   const input_lastName = useRef();
@@ -53,7 +53,7 @@ export const PersonalInformationScreen = ({
         allowEmpty: false,
       },
     },
-    appelation: {
+    appellation: {
       presence: {
         allowEmpty: false,
       },
@@ -73,7 +73,7 @@ export const PersonalInformationScreen = ({
         allowEmpty: false,
       },
       email: {
-        message: "This doesn't look like a valid email",
+        message: "isn't valid",
       },
     },
     gender: {
@@ -105,29 +105,29 @@ export const PersonalInformationScreen = ({
             })
           }
           onSubmitEditing={() => {
-            input_appelation.current.focus();
+            input_appellation.current.focus();
           }}
           value={title}
           onBlur={() => handleEvent("onBlur", { constraints, index: "title" })}
           invalid={invalids.title ? invalids.title[0] : ""}
         />
         <PNFormInputBox
-          placeholder="Appelation"
-          ref={input_appelation}
+          placeholder="Appellation"
+          ref={input_appellation}
           onChangeText={(text) =>
             handleEvent("onChange", {
-              index: "appelation",
+              index: "appellation",
               value: text,
             })
           }
           onSubmitEditing={() => {
             input_firstName.current.focus();
           }}
-          value={appelation}
+          value={appellation}
           onBlur={() =>
-            handleEvent("onBlur", { constraints, index: "appelation" })
+            handleEvent("onBlur", { constraints, index: "appellation" })
           }
-          invalid={invalids.appelation ? invalids.appelation[0] : ""}
+          invalid={invalids.appellation ? invalids.appellation[0] : ""}
         />
         <PNFormInputBox
           placeholder="First Name"
@@ -251,7 +251,7 @@ export const PersonalInformationScreen = ({
             handleEvent("onNext", {
               fields: {
                 title,
-                appelation,
+                appellation,
                 firstName,
                 middleName,
                 lastName,
@@ -1064,7 +1064,7 @@ export const ElectronicSignatureScreen = ({ handleEvent, data }) => {
           console.log("Raw: ", JSON.stringify(data));
           const formData = {
             title: data.title,
-            appelation: data.appelation,
+            appelation: data.appellation,
             fname: data.firstName,
             mname: data.middleName,
             lname: data.lastName,

@@ -11,6 +11,9 @@ import { Button, Text } from "native-base";
 
 import KeyboardShift from "library/components/KeyboardShift";
 import * as Profile from "store/profile";
+import PNContentWithTitleAndDescription from "../../library/Layout/Content/PNContentWithTitleAndDescription";
+import PNContainedButton from "../../library/components/Buttons/PNContainedButton";
+import FormButtonContainer from "../../library/Layout/Containers/FormButtonContainer";
 import PNFormTextBox from "library/components/PNFormTextBox";
 import PNFormTextBoxPhoneNumber from "library/components/PNFormTextBox-PhoneNumber";
 import PNFormTextBoxMasked from "library/components/PNFormTextBoxMasked";
@@ -30,7 +33,7 @@ const constraints = {
       allowEmpty: false
     },
     email: {
-      message: "This doesn't look like a valid email"
+      message: "isn't valid"
     }
   },
   password: {
@@ -182,112 +185,99 @@ class PersonalInfo extends React.Component {
     const { user, invalid } = this.state;
 
     return (
-      <KeyboardShift>
-        {() => (
-          <ScrollView style={localStyle.container}>
-            <View style={localStyle.header}>
-              <PNTitleAndDescription
-                title="Create Account"
-                desc="To verify your identity, please fill in personal information."
-              />
-            </View>
-            <View style={{ flex: 4, paddingTop: 30 }}>
-              <PNFormTextBox
-                label="First Name"
-                onChangeText={text => {
-                  this.onChangeText(text, "givenName");
-                }}
-                ref={this.input_givenName}
-                onSubmitEditing={() => this.input_middleName.current.focus()}
-                onBlur={() => this.handleOnBlur("givenName")}
-                invalid={invalid.givenName ? invalid.givenName[0] : ""}
-                value={this.state.user.givenName}
-              />
-              <PNFormTextBox
-                label="Middle Name"
-                onChangeText={text => this.onChangeText(text, "middleName")}
-                ref={this.input_middleName}
-                onSubmitEditing={() => this.input_familyName.current.focus()}
-                value={this.state.user.middleName}
-              />
+      <React.Fragment>
+        <PNContentWithTitleAndDescription
+          title="Verify Identity"
+          desc="To verify your identity, please fill in personal information."
+        >
+          <PNFormTextBox
+            label="First Name"
+            onChangeText={text => {
+              this.onChangeText(text, "givenName");
+            }}
+            ref={this.input_givenName}
+            onSubmitEditing={() => this.input_middleName.current.focus()}
+            onBlur={() => this.handleOnBlur("givenName")}
+            invalid={invalid.givenName ? invalid.givenName[0] : ""}
+            value={this.state.user.givenName}
+          />
+          <PNFormTextBox
+            label="Middle Name"
+            onChangeText={text => this.onChangeText(text, "middleName")}
+            ref={this.input_middleName}
+            onSubmitEditing={() => this.input_familyName.current.focus()}
+            value={this.state.user.middleName}
+          />
 
-              <PNFormTextBox
-                label="Last Name"
-                onChangeText={text => this.onChangeText(text, "familyName")}
-                ref={this.input_familyName}
-                onSubmitEditing={() => this.input_email.current.focus()}
-                onBlur={() => this.handleOnBlur("familyName")}
-                invalid={invalid.familyName ? invalid.familyName[0] : ""}
-                value={this.state.user.familyName}
-              />
+          <PNFormTextBox
+            label="Last Name"
+            onChangeText={text => this.onChangeText(text, "familyName")}
+            ref={this.input_familyName}
+            onSubmitEditing={() => this.input_email.current.focus()}
+            onBlur={() => this.handleOnBlur("familyName")}
+            invalid={invalid.familyName ? invalid.familyName[0] : ""}
+            value={this.state.user.familyName}
+          />
 
-              <PNFormTextBox
-                label="Email Address"
-                onChangeText={text => this.onChangeText(text, "email")}
-                ref={this.input_email}
-                onBlur={() => this.handleOnBlur("email")}
-                onSubmitEditing={() => this.input_phoneNumber.current.focus()}
-                invalid={invalid.email ? invalid.email[0] : ""}
-                value={this.state.user.email}
-              />
+          <PNFormTextBox
+            label="Email Address"
+            onChangeText={text => this.onChangeText(text, "email")}
+            ref={this.input_email}
+            onBlur={() => this.handleOnBlur("email")}
+            onSubmitEditing={() => this.input_phoneNumber.current.focus()}
+            invalid={invalid.email ? invalid.email[0] : ""}
+            value={this.state.user.email}
+          />
 
-              <PNFormTextBoxPhoneNumber
-                label="Mobile Number"
-                onChangeText={text => this.onChangeText(text, "phoneNumber")}
-                ref={this.input_phoneNumber}
-                onSubmitEditing={() => this.input_password.current.focus()}
-                maxLength={10}
-                value={this.state.user.phoneNumber}
-                onBlur={() => this.handleOnBlur("phoneNumber")}
-                invalid={invalid.phoneNumber ? invalid.phoneNumber[0] : ""}
-              />
+          <PNFormTextBoxPhoneNumber
+            label="Mobile Number"
+            onChangeText={text => this.onChangeText(text, "phoneNumber")}
+            ref={this.input_phoneNumber}
+            onSubmitEditing={() => this.input_password.current.focus()}
+            maxLength={10}
+            value={this.state.user.phoneNumber}
+            onBlur={() => this.handleOnBlur("phoneNumber")}
+            invalid={invalid.phoneNumber ? invalid.phoneNumber[0] : ""}
+          />
 
-              <PNFormTextBox
-                label="Password"
-                password={true}
-                onChangeText={text => this.onChangeText(text, "password")}
-                ref={this.input_password}
-                onSubmitEditing={() =>
-                  this.input_confirmPassword.current.focus()
-                }
-                onBlur={() => this.handleOnBlur("password")}
-                invalid={invalid.password ? invalid.password[0] : ""}
-                value={this.state.user.password}
-              />
+          <PNFormTextBox
+            label="Password"
+            password={true}
+            onChangeText={text => this.onChangeText(text, "password")}
+            ref={this.input_password}
+            onSubmitEditing={() =>
+              this.input_confirmPassword.current.focus()
+            }
+            onBlur={() => this.handleOnBlur("password")}
+            invalid={invalid.password ? invalid.password[0] : ""}
+            value={this.state.user.password}
+          />
 
-              <PNFormTextBox
-                label="Confirm Password"
-                password={true}
-                onChangeText={text =>
-                  this.onChangeText(text, "confirmPassword")
-                }
-                ref={this.input_confirmPassword}
-                onBlur={() => this.handleOnBlur("confirmPassword", { password: this.state.user.password })}
-                invalid={
-                  invalid.confirmPassword ? invalid.confirmPassword[0] : ""
-                }
-                editable={!this.state.invalid.password}
-                value={this.state.user.confirmPassword}
-              />
-            </View>
-            <View style={{ flex: 1, paddingBottom: 100 }}>
-              <Button
-                full
-                primary
-                // disabled={}
-                style={localStyle.button}
-                onPress={() => this.signup()}
-              >
-                {this.props.response.is_fetching ? (
-                  <ActivityIndicator color="#FFFFFF" />
-                ) : (
-                  <Text>NEXT</Text>
-                )}
-              </Button>
-            </View>
-          </ScrollView>
-        )}
-      </KeyboardShift>
+          <PNFormTextBox
+            label="Confirm Password"
+            password={true}
+            onChangeText={text =>
+              this.onChangeText(text, "confirmPassword")
+            }
+            ref={this.input_confirmPassword}
+            onBlur={() => this.handleOnBlur("confirmPassword", { password: this.state.user.password })}
+            invalid={
+              invalid.confirmPassword ? invalid.confirmPassword[0] : ""
+            }
+            value={this.state.user.confirmPassword}
+          />
+        </PNContentWithTitleAndDescription>
+        <FormButtonContainer>
+          <PNContainedButton 
+            loading={this.props.response.is_fetching}
+            disabled={this.props.response.is_fetching}
+            onPress={() => this.signup()}
+            buttonStyle={{backgroundColor: "#309fe7"}}
+            labelStyle={{}}
+            label="NEXT"
+          />
+        </FormButtonContainer>
+      </React.Fragment>
     );
   }
 }

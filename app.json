@@ -22,7 +22,7 @@
         "xhdpi": "./assets/images/SSB-Splash.png",
         "xxhdpi": "./assets/images/SSB-Splash@2x.png",
         "xxxhdpi": "./assets/images/SSB-Splash@3x.png",
-        "resizeMode": "cover"
+        "resizeMode": "contain"
       }
     },
     "platforms": [

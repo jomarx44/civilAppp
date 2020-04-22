@@ -4,7 +4,10 @@ import React, {
   forwardRef,
   useImperativeHandle
 } from "react";
-import { Text, TextInput, StyleSheet, View } from "react-native";
+import { Animated, Text, TextInput, StyleSheet, View } from "react-native";
+
+const COLOR_EMPTYVALUE = "E1E1E5"
+const COLOR_NONEMPTYVALUE = "";
 
 export const PNFormInputBox = forwardRef(
   ({ value, invalid = "", onBlur, onFocus, ...props }, ref) => {
@@ -29,9 +32,11 @@ export const PNFormInputBox = forwardRef(
           break;
 
         case "onBlur":
-          if (isEmpty()) {
+          if (!isEmpty()) {
+            console.log("EMPTY")
             setBorderBottomWidth(0);
           } else {
+            console.log("NOT EMPTY")
             setBorderBottomColor("#E1E1E5");
             setBorderBottomWidth(1);
           }
@@ -48,7 +53,6 @@ export const PNFormInputBox = forwardRef(
           {...props}
           value={value}
           ref={input}
-        
           style={[
             styles.input,
             {

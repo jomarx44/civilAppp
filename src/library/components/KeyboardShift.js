@@ -4,6 +4,8 @@ import { Animated, Dimensions, Keyboard, StyleSheet, TextInput, UIManager } from
 
 const { State: TextInputState } = TextInput;
 
+const DURATION = 250;
+
 export default class KeyboardShift extends React.Component {
   state = {
     shift: new Animated.Value(0),
@@ -56,7 +58,7 @@ export default class KeyboardShift extends React.Component {
       this.state.shift,
       {
         toValue: 0,
-        duration: 500,
+        duration: DURATION,
         useNativeDriver: true,
       }
     ).start();

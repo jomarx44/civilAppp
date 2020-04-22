@@ -443,8 +443,7 @@ const checkAccount = ({
     return getDataOnly(json_data)
       .then(response => {
         const response_data = response.data.data["Register.Info"];
-        const has_data = checkStatus(response) && !response_data.ErrorMsg;
-
+        const has_data = !response_data.ErrorMsg;
         if (has_data) {
           dispatch({
             type: TYPE.REQUEST_OTP_SUCCESS,
@@ -462,7 +461,7 @@ const checkAccount = ({
             }
           });
           alertBox(
-            "Ooops! There's something wrong connecting to the server. Please try again."
+            response_data.ErrorMsg
           );
         }
       })
@@ -625,30 +624,33 @@ const getAccounts = cisno => {
           };
 
           const { data: output } = response;
-          const accounts = output.data["Account.Info"].accts.a;
-          
-          if (accounts instanceof Array) {
-            accounts.map((account, index) => {
-              if(accountList[account.accttype]) {
-                accountList[account.accttype].accounts[account.AcctNoFormatted] = {
-                  key: index,
-                  title: account.Name1,
-                  acctno: account.AcctNoFormatted,
-                  balance: `PHP ${account.LedgerFormatted}`
+          console.log("accts: ", output.data["Account.Info"]);
+          if(output.data["Account.Info"].accts) {
+            const accounts = output.data["Account.Info"].accts.a;
+            
+            if (accounts instanceof Array) {
+              accounts.map((account, index) => {
+                if(accountList[account.accttype]) {
+                  accountList[account.accttype].accounts[account.AcctNoFormatted] = {
+                    key: index,
+                    title: account.Name1,
+                    acctno: account.AcctNoFormatted,
+                    balance: `PHP ${account.LedgerFormatted}`
+                  };
+                  accountList[account.accttype].accountsById.push(account.AcctNoFormatted)
+                }
+              });
+            } else {
+              // Object
+              if(accountList[accounts.accttype]) {
+                accountList[accounts.accttype].accounts[accounts.AcctNoFormatted] = {
+                  key: 1,
+                  title: accounts.Name1,
+                  acctno: accounts.AcctNoFormatted,
+                  balance: `PHP ${accounts.LedgerFormatted}`
                 };
-                accountList[account.accttype].accountsById.push(account.AcctNoFormatted)
+                accountList[accounts.accttype].accountsById.push(accounts.AcctNoFormatted)
               }
-            });
-          } else {
-            // Object
-            if(accountList[accounts.accttype]) {
-              accountList[accounts.accttype].accounts[accounts.AcctNoFormatted] = {
-                key: 1,
-                title: accounts.Name1,
-                acctno: accounts.AcctNoFormatted,
-                balance: `PHP ${accounts.LedgerFormatted}`
-              };
-              accountList[accounts.accttype].accountsById.push(accounts.AcctNoFormatted)
             }
           }
 

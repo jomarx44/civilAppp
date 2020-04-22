@@ -18,7 +18,7 @@ import { connect } from "react-redux";
 // Custom Components
 import Modal from "react-native-modal";
 import KeyboardShift from "library/components/KeyboardShift";
-import PNContainedButton from "../../library/components/Buttons/PNContainedButton"
+import PNContainedButton from "../../library/components/Buttons/PNContainedButton";
 
 // Others
 import config from "../../config";
@@ -29,6 +29,7 @@ import {
   hasHardwareAsync,
   isEnrolledAsync,
   authenticateAsync,
+  cancelAuthenticate,
 } from "expo-local-authentication";
 import {
   getAttributes,
@@ -37,7 +38,11 @@ import {
 
 const { height, width } = Dimensions.get("window");
 
-export const ModalLoginFingerprint = ({ isVisible, isFingerprintSuccess, setModalVisibility }) => (
+export const ModalLoginFingerprint = ({
+  isVisible,
+  isFingerprintSuccess,
+  setModalVisibility,
+}) => (
   <Modal
     isVisible={isVisible}
     style={modalStyle.defaultContainerStyle}
@@ -63,10 +68,13 @@ export const ModalLoginFingerprint = ({ isVisible, isFingerprintSuccess, setModa
           ? "Fingerprint Verified"
           : "Touch the fingerprint sensor to login."}
       </Text>
-      <PNContainedButton 
-        onPress={() => setModalVisibility(false)}
+      <PNContainedButton
+        onPress={() => {
+          setModalVisibility(false);
+          cancelAuthenticate();
+        }}
         label="Try login instead"
-        buttonStyle={{marginTop: 20}}
+        buttonStyle={{ marginTop: 20 }}
         disabled={isFingerprintSuccess}
       />
     </View>
@@ -88,9 +96,12 @@ export const LoginScreen = ({
   const [signupData, setSignupData] = useState({});
   const [isModalVisible, setModalVisibility] = useState(false);
   const [isFingerprintSuccess, setIsFingerprintSuccess] = useState(false);
+  const [isScanning, setScanningStatus] = useState(false);
   const [user, setUser] = useState({
-    username: "alvin@thousandminds.com",
-    password: "alvinviernes",
+    // username: "alvin@thousandminds.com",
+    // password: "alvinviernes",
+    username: "",
+    password: "",
   });
 
   useEffect(() => {
@@ -119,34 +130,39 @@ export const LoginScreen = ({
   }, []);
 
   useEffect(() => {
-    if (fingerprintToken && isCompatible && isEnrolled) {
-      console.log("Scanning...");
-      setModalVisibility(true);
-      scan();
+    if (isCompatible && isEnrolled) {
+      console.log("Compatible and Enrolled");
+      if (fingerprintToken && isScanning == false) {
+        console.log("Scanning...");
+        setModalVisibility(true);
+        scan();
+      }
     }
   }, [fingerprintToken, isCompatible, isEnrolled]);
 
   const input_username = useRef();
   const input_password = useRef();
 
-  const checkDeviceHardware = () => {
-    hasHardwareAsync().then((isCompatible) => {
-      setIsCompatible(isCompatible);
-    });
+  const checkDeviceHardware = async () => {
+    const isHardwareSupported = await hasHardwareAsync();
+    setIsCompatible(isHardwareSupported);
   };
 
-  const checkEnrolledFingerprints = () => {
-    isEnrolledAsync().then((hasFingerprint) => {
-      setIsEnrolled(hasFingerprint);
-    });
+  const checkEnrolledFingerprints = async () => {
+    const hasEnrolledFingerprint = await isEnrolledAsync();
+    setIsEnrolled(hasEnrolledFingerprint);
   };
 
-  const scan = () => {
-    authenticateAsync({ promptMessage: "" }).then(({ success }) => {
-      if (success) {
-        setIsFingerprintSuccess(true);
-        loginByFingerprint(fingerprintToken);
-      } else {
+  const scan = async () => {
+    setScanningStatus(true);
+    console.log("Scan()");
+    const { success, error } = await authenticateAsync({ promptMessage: "" });
+    console.log("Error: ", error);
+    if (success) {
+      setScanningStatus(false);
+      setIsFingerprintSuccess(true);
+      loginByFingerprint(fingerprintToken);
+    } else if( error == "authentication_failed" || error == "too_fast"){
         Alert.alert(
           "Invalid Fingerprint",
           "Please try touching the fingerprint sensor again.",
@@ -157,8 +173,9 @@ export const LoginScreen = ({
             },
           ]
         );
-      }
-    });
+    } else {
+      cancelAuthenticate();
+    }
   };
 
   const onChangeText = (field, value) => {
@@ -251,7 +268,7 @@ export const LoginScreen = ({
                   transparent
                   light
                   onPress={() => {
-                    if (this.state.signupdata) {
+                    if (signupData) {
                       navigation.navigate("EmailVerification");
                     } else {
                       navigation.navigate("CreateMobileAccount");
