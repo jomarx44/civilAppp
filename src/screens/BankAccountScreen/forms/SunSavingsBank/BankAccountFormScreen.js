@@ -503,7 +503,7 @@ export const HomeInformationScreen = ({
         allowEmpty: false,
       },
     },
-    home_ownership: {
+    home_ownership_desc: {
       presence: {
         allowEmpty: false,
       },
@@ -513,17 +513,14 @@ export const HomeInformationScreen = ({
         allowEmpty: false,
       },
     },
-    home_city: {
-      presence: {
-        allowEmpty: false,
-      },
-    },
-    home_barangay_or_district: {
+    city_description: {
       presence: {
         allowEmpty: false,
       },
     },
   };
+
+  console.log("home_barangay_or_district: ", home_barangay_or_district)
 
   return (
     <React.Fragment>

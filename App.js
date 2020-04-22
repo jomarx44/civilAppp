@@ -41,7 +41,6 @@ class App extends Component {
 
   async componentDidMount() {
     await Font.loadAsync({
-      Avenir_Black: require("./src/res/fonts/AvenirLTStd-Black.otf"),
       Avenir_BlackOblique: require("./src/res/fonts/AvenirLTStd-BlackOblique.otf"),
       Avenir_Book: require("./src/res/fonts/AvenirLTStd-Book.otf"),
       Avenir_BookOblique: require("./src/res/fonts/AvenirLTStd-BookOblique.otf"),
