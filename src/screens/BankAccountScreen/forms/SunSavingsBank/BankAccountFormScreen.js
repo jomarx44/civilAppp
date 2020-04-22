@@ -493,16 +493,16 @@ export const HomeInformationScreen = ({
         allowEmpty: false,
       },
     },
-    home_barangay_or_district: {
-      presence: {
-        allowEmpty: false,
-      },
-    },
-    home_stayed_since: {
-      presence: {
-        allowEmpty: false,
-      },
-    },
+    // home_barangay_or_district: {
+    //   presence: {
+    //     allowEmpty: false,
+    //   },
+    // },
+    // home_stayed_since: {
+    //   presence: {
+    //     allowEmpty: false,
+    //   },
+    // },
     home_ownership_desc: {
       presence: {
         allowEmpty: false,
