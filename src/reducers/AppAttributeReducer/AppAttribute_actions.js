@@ -16,6 +16,7 @@ export const FETCH_ATTRIBUTES_ERROR = "FETCH_ATTRIBUTES_ERROR";
 export const REQUEST_ID = "REQUEST_ID";
 export const REQUEST_ID_SUCCESS = "REQUEST_ID_SUCCESS";
 export const REQUEST_ID_ERROR = "REQUEST_ID_ERROR";
+export const CLEAR_TEMPORARY_KEY = "CLEAR_TEMPORARY_KEY";
 
 // Action Creators
 export const getAttributes = ({ name, access_token }) => {

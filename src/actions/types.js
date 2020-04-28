@@ -136,6 +136,9 @@ export const CLEAR_ACCOUNTDETAILS = "CLEAR_ACCOUNTDETAILS";
 export const STORE_TOKENS = "STORE_TOKENS";
 export const CLEAR_TOKENS = "REMOVE_TOKENS";
 
+// App Attribnute
+export const CLEAR_TEMPORARY_KEY = "CLEAR_TEMPORARY_KEY";
+
 export const CHECK_ACCOUNT = "CHECK_ACCOUNT";
 
 export const FETCH_LISTS = "FETCH_LISTS";

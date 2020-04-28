@@ -11,26 +11,24 @@ const PNContentWithTitleAndDescription = ({
   children,
   containerStyle,
   inputsContainer,
-  contentContainerStyle
+  contentContainerStyle,
 }) => {
   return (
     <View style={[styles.defaultContainerStyle, containerStyle]}>
       <KeyboardShift>
-        {() => (
-          <View style={{ flex: 1, justifyContent: "space-between" }}>
-            <PNTitleAndDescription title={title} desc={desc} />
-            <ScrollView
-              persistentScrollbar={true}
-              style={[styles.defaultInputsContainer, inputsContainer]}
-              contentContainerStyle={[
-                styles.defaultContentContainerStyle,
-                contentContainerStyle,
-              ]}
-            >
-              {children}
-            </ScrollView>
-          </View>
-        )}
+        <View style={{ flex: 1, justifyContent: "space-between" }}>
+          <PNTitleAndDescription title={title} desc={desc} />
+          <ScrollView
+            persistentScrollbar={true}
+            style={[styles.defaultInputsContainer, inputsContainer]}
+            contentContainerStyle={[
+              styles.defaultContentContainerStyle,
+              contentContainerStyle,
+            ]}
+          >
+            {children}
+          </ScrollView>
+        </View>
       </KeyboardShift>
     </View>
   );
@@ -43,11 +41,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   defaultInputsContainerStyle: {
-    paddingHorizontal: 30
+    paddingHorizontal: 30,
   },
   defaultContentContainerStyle: {
     paddingTop: 30,
     paddingHorizontal: 30,
-    paddingBottom: 200
+    paddingBottom: 200,
   },
 });

@@ -14,6 +14,11 @@ import { Container, Button, Text } from "native-base";
 import styles from "styles/commonStyle";
 import { connect } from "react-redux";
 import API from "actions/api";
+import {
+  REQUEST_OTP_INITIALIZE,
+  CHECK_OTP_INITIALIZE,
+  CLEAR_TOKENS
+} from "../../actions/types"
 import { requestOTP_TM } from "../../reducers/OTPReducer/OTP_actions";
 import { alertBox } from "../../actions/axiosCalls";
 import * as Profile from "store/profile";
@@ -44,6 +49,7 @@ class EmailVerificationScreen extends React.Component {
 
   componentDidMount() {
     this.getSignupData();
+    this.props.initializeReducer();
   }
 
   checkEmailAndGoNext() {
@@ -202,6 +208,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    initializeReducer: () => {
+      dispatch({
+        type: REQUEST_OTP_INITIALIZE,
+      });
+      dispatch({
+        type: CHECK_OTP_INITIALIZE,
+      });
+    },
     checkEmail: userId => {
       dispatch(API.checkEmail(userId));
     },

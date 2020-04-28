@@ -1,32 +1,11 @@
 import React from "react";
 
 import {
-  StatusBar,
-  Image,
   Dimensions,
   StyleSheet,
   ImageBackground,
-  TextInput,
   View,
-  BackHandler,
-  TouchableOpacity,
-  PixelRatio
 } from "react-native";
-import {
-  Container,
-  Header,
-  Title,
-  Left,
-  Center,
-  Icon,
-  Right,
-  Button,
-  Body,
-  Content,
-  Text,
-  Card,
-  CardItem
-} from "native-base";
 
 import styles from "styles/commonStyle";
 
@@ -36,9 +15,6 @@ import PNStackedButtons from "library/Layout/Content/PNStackedButtons";
 import PNContainedButton from "library/components/Buttons/PNContainedButton";
 import PNOutlineButton from "library/components/Buttons/PNOutlineButton";
 import PNTextButton from "library/components/Buttons/PNTextButton";
-
-import PNOrangeButton from "library/components/PNOrangeButton";
-import PNTransparentButton from "library/components/PNTransparentButton";
 
 let { height, width } = Dimensions.get("window");
 

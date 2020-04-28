@@ -1,8 +1,6 @@
 import React from "react";
 import AppJson from "../../../app.json";
 
-import KeyboardShift from "library/components/KeyboardShift";
-
 import {
   Dimensions,
   StyleSheet,

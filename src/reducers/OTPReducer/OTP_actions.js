@@ -2,6 +2,7 @@ import { postOnly, getDataOnly, alertBox } from "../../actions/axiosCalls";
 import * as NavigationService from "../../navigation/NavigationService.js";
 import * as TYPE from "../../actions/types";
 import { APIErrorLogging } from "../../library/helpers";
+import * as Profile from "../../store/profile"
 
 export const verifyOTP_BytePerByte = ({ token, otp }) => {
   const json_data = {
@@ -195,9 +196,8 @@ export const verifyOTP_TM = ({
             NavigationService.navigate(navid);
           }
 
-          if (next) {
-            next();
-          }
+          Profile.deleteSignUpData();
+          Profile.deleteFormData();
         } else {
           dispatch({
             type: TYPE.CHECK_OTP_ERROR,

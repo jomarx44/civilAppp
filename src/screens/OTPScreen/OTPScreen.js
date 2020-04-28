@@ -8,9 +8,6 @@
 // * Separated Components for each Items
 
 import React from "react";
-import AppJson from "../../../app.json";
-
-import KeyboardShift from "library/components/KeyboardShift";
 
 import {
   ActivityIndicator,

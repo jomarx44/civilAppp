@@ -21,16 +21,6 @@ export default class KeyboardShift extends React.Component {
     this.keyboardDidHideSub.remove();
   }
 
-  render() {
-    const { children: renderProp } = this.props;
-    const { shift } = this.state;
-    return (
-      <Animated.View style={[styles.container, { transform: [{translateY: shift}] }]}>
-        {renderProp()}
-      </Animated.View>
-    );
-  }
-
   handleKeyboardDidShow = (event) => {
     const { height: windowHeight } = Dimensions.get('window');
     const keyboardHeight = event.endCoordinates.height;
@@ -63,6 +53,16 @@ export default class KeyboardShift extends React.Component {
       }
     ).start();
   }
+
+  render() {
+    const { children: renderProp } = this.props;
+    const { shift } = this.state;
+    return (
+      <Animated.View style={[styles.container, { transform: [{translateY: shift}] }]}>
+        {this.props.children}
+      </Animated.View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -76,5 +76,5 @@ const styles = StyleSheet.create({
 });
 
 KeyboardShift.propTypes = {
-  children: PropTypes.func.isRequired,
+  // children: PropTypes.func.isRequired,
 };

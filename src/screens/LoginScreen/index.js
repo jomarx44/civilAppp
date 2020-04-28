@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   Alert,
-  ActivityIndicator,
   ScrollView,
   AsyncStorage,
   Image,
   Dimensions,
   StyleSheet,
   TextInput,
+  Text,
   View,
 } from "react-native";
-import { Container, Button, Text } from "native-base";
+import { Button } from "native-base";
 import { connect } from "react-redux";
 
 // APIs
@@ -18,7 +18,9 @@ import { connect } from "react-redux";
 // Custom Components
 import Modal from "react-native-modal";
 import KeyboardShift from "library/components/KeyboardShift";
+import PlaceholderInputBox from "../../library/components/Form/Inputs/InputBox/PlaceholderInputBox";
 import PNContainedButton from "../../library/components/Buttons/PNContainedButton";
+import PNTextButton from "../../library/components/Buttons/PNTextButton";
 
 // Others
 import config from "../../config";
@@ -35,8 +37,8 @@ import {
   getAttributes,
   putAttributes,
 } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
+import { useSafeArea } from 'react-native-safe-area-context';
 
-const { height, width } = Dimensions.get("window");
 
 export const ModalLoginFingerprint = ({
   isVisible,
@@ -104,8 +106,9 @@ export const LoginScreen = ({
     password: "",
   });
 
+  const inset = useSafeArea();
+
   useEffect(() => {
-    
     if (token.tokens) {
       getAttributes({
         name: "cis_no",
@@ -131,9 +134,7 @@ export const LoginScreen = ({
 
   useEffect(() => {
     if (isCompatible && isEnrolled) {
-      
       if (fingerprintToken && isScanning == false) {
-        
         setModalVisibility(true);
         scan();
       }
@@ -155,24 +156,24 @@ export const LoginScreen = ({
 
   const scan = async () => {
     setScanningStatus(true);
-    
+
     const { success, error } = await authenticateAsync({ promptMessage: "" });
-    
+
     if (success) {
       setScanningStatus(false);
       setIsFingerprintSuccess(true);
       loginByFingerprint(fingerprintToken);
-    } else if( error == "authentication_failed" || error == "too_fast"){
-        Alert.alert(
-          "Invalid Fingerprint",
-          "Please try touching the fingerprint sensor again.",
-          [
-            {
-              text: "Ok",
-              onPress: () => scan(),
-            },
-          ]
-        );
+    } else if (error == "authentication_failed" || error == "too_fast") {
+      Alert.alert(
+        "Invalid Fingerprint",
+        "Please try touching the fingerprint sensor again.",
+        [
+          {
+            text: "Ok",
+            onPress: () => scan(),
+          },
+        ]
+      );
     } else {
       cancelAuthenticate();
     }
@@ -186,164 +187,95 @@ export const LoginScreen = ({
   };
 
   return (
-    <Container
-      style={{
-        flex: 1,
-        backgroundColor: "#309fe7",
-      }}
-    >
+    <React.Fragment>
       <KeyboardShift>
-        {() => (
-          <View>
-            <ScrollView>
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Image
-                  resizeMode="contain"
-                  style={[
-                    buttonStyles.logo,
-                    {
-                      width: width - 30,
-                      height: height * 0.09,
-                      marginTop: height * 0.2,
-                    },
-                  ]}
-                  source={config.company.logo.login}
-                />
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
-                <TextInput
-                  placeholder="Email"
-                  onChangeText={(text) => onChangeText("username", text)}
-                  ref={input_username}
-                  style={[buttonStyles.textbox, {}]}
-                  value={user.username}
-                />
-
-                <TextInput
-                  placeholder="Password"
-                  secureTextEntry={true}
-                  onChangeText={(text) => onChangeText("password", text)}
-                  ref={input_password}
-                  style={[buttonStyles.textbox, {}]}
-                  value={user.password}
-                />
-
-                <Button
-                  full
-                  transparent
-                  light
-                  onPress={() => navigation.navigate("ForgotPassword")}
-                  style={buttonStyles.forgotButtonTrans}
-                >
-                  <Text style={{ margin: 0, padding: 0 }}>FORGOT PASSWORD</Text>
-                </Button>
-
-                <Button
-                  full
-                  style={buttonStyles.button}
-                  onPress={() => login(user.username, user.password)}
-                  disabled={response.is_fetching}
-                >
-                  {response.is_fetching ? (
-                    <ActivityIndicator color="#FFFFFF" />
-                  ) : (
-                    <Text style={buttonStyles.buttonText}>LOGIN</Text>
-                  )}
-                </Button>
-
-                <Button
-                  full
-                  transparent
-                  light
-                  onPress={() => {
-                    if (signupData) {
-                      navigation.navigate("EmailVerification");
-                    } else {
-                      navigation.navigate("CreateMobileAccount");
-                    }
-                  }}
-                  style={buttonStyles.buttonTrans}
-                >
-                  <Text style={buttonStyles.buttonTransText}>
-                    CREATE MOBILE ACCOUNT
-                  </Text>
-                </Button>
-              </View>
-            </ScrollView>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "#309fe7",
+            paddingHorizontal: 30,
+          }}
+        >
+          <View
+            style={{
+              flex: 3,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Image
+              resizeMode="contain"
+              style={[buttonStyles.logo]}
+              source={config.company.logo.login}
+            />
           </View>
-        )}
+          <View style={{ flex: 4 }}>
+            <PlaceholderInputBox
+              onChangeText={(text) => onChangeText("username", text)}
+              onSubmitEditing={() => input_password.current.focus()}
+              placeholder="Email"
+              ref={input_username}
+              value={user.username}
+            />
+            <PlaceholderInputBox
+              onChangeText={(text) => onChangeText("password", text)}
+              placeholder="Password"
+              ref={input_password}
+              secureTextEntry={true}
+              style={{marginBottom: 0}}
+              value={user.password}
+            />
+            <Button
+              full
+              transparent
+              light
+              onPress={() => navigation.navigate("ForgotPassword")}
+              style={buttonStyles.forgotButtonTrans}
+            >
+              <Text style={{ color: "#FFF", margin: 0, padding: 0 }}>
+                FORGOT PASSWORD
+              </Text>
+            </Button>
+
+            <PNContainedButton
+              disabled={response.is_fetching}
+              label="LOGIN"
+              loading={response.is_fetching}
+              onPress={() => login(user.username, user.password)}
+            />
+
+            <PNTextButton
+              disabled={response.is_fetching}
+              label="CREATE MOBILE ACCOUNT"
+              loading={response.is_fetching}
+              onPress={() => {
+                signupData
+                  ? navigation.navigate("EmailVerification")
+                  : navigation.navigate("CreateMobileAccount");
+              }}
+              buttonStyle={{ marginTop: 10 }}
+            />
+          </View>
+        </View>
       </KeyboardShift>
       <ModalLoginFingerprint
         isVisible={isModalVisible}
         isFingerprintSuccess={isFingerprintSuccess}
         setModalVisibility={setModalVisibility}
       />
-    </Container>
+    </React.Fragment>
   );
 };
 
 let buttonStyles = StyleSheet.create({
   logo: {
     // height: 70,
-    marginBottom: 70,
-  },
-  button: {
-    borderRadius: 4,
-    height: 50,
-    marginTop: 20,
-    marginLeft: 30,
-    marginRight: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    fontSize: 18,
-    backgroundColor: "#f5ac14",
-  },
-  buttonText: {
-    fontFamily: "Avenir_Heavy",
-    fontSize: 16,
-  },
-  buttonTrans: {
-    fontSize: 18,
-    marginBottom: 20,
-    marginTop: 20,
-    marginLeft: 30,
-    marginRight: 30,
-    borderColor: "#FFFFFF",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonTransText: {
-    fontFamily: "Avenir_Heavy",
-    fontSize: 16,
-  },
-  textbox: {
-    height: 48,
-    marginTop: 20,
-    marginLeft: 30,
-    paddingLeft: 20,
-    marginRight: 30,
-    borderRadius: 4,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    width: 270,
+    height: 45,
   },
   forgotButtonTrans: {
     fontSize: 18,
     marginTop: 5,
-    marginLeft: 30,
-    marginRight: 30,
     borderColor: "#FFFFFF",
     justifyContent: "flex-end",
     alignItems: "center",
@@ -377,7 +309,6 @@ const modalStyle = StyleSheet.create({
 });
 
 const mapStateToProps = ({ auth, token }) => {
-  
   return {
     response: auth,
     token,

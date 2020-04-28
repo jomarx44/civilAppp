@@ -5,7 +5,9 @@ import { connect } from "react-redux";
 
 // Custom Components
 import PNFormTextBoxPhoneNumber from "library/components/PNFormTextBox-PhoneNumber";
-import PNContentWithTitleAndDescription from "../../library/Layout/Content/PNContentWithTitleAndDescription";
+// import PNContentWithTitleAndDescription from "../../library/Layout/Content/PNContentWithTitleAndDescription";
+import PNContentWithTitle from "../../library/Layout/Content/PNContentWithTitle"
+import FormButtonContainer from "../../library/Layout/Containers/FormButtonContainer"
 import PNContainedButton from "../../library/components/Buttons/PNContainedButton";
 import validate from "validate.js";
 import Modal from "react-native-modal";
@@ -76,10 +78,10 @@ export const ChangeMobileNumberScreen = ({
 
   return (
     <React.Fragment>
-      <PNContentWithTitleAndDescription
+      <PNContentWithTitle
         title="Change Mobile Number"
-        desc=""
-        containerStyle={{ backgroundColor: "#F7F7F7" }}
+        // desc=""
+        // containerStyle={{ backgroundColor: "#F7F7F7" }}
       >
         <PNFormTextBoxPhoneNumber
           label="New Mobile Number"
@@ -90,6 +92,8 @@ export const ChangeMobileNumberScreen = ({
           onBlur={() => handleOnBlur()}
           invalid={invalids.newMobileNumber ? invalids.newMobileNumber[0] : ""}
         />
+      </PNContentWithTitle>
+      <FormButtonContainer>
         <PNContainedButton
           buttonStyle={{ marginTop: 30 }}
           onPress={() => handlePress()}
@@ -97,7 +101,7 @@ export const ChangeMobileNumberScreen = ({
           label="Next"
           loading={otp.isFetching}
         />
-      </PNContentWithTitleAndDescription>
+      </FormButtonContainer>
       <Modal isVisible={otp.isFetching}>
         <View
           style={{

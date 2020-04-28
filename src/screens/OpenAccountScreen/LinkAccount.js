@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
   View,
   Text,
 } from "react-native";
@@ -17,6 +16,11 @@ import PNDatePicker from "library/components/PNDatePicker";
 
 import { connect } from "react-redux";
 import API from "../../actions/api";
+import {
+  REQUEST_OTP_INITIALIZE,
+  CHECK_OTP_INITIALIZE,
+  CLEAR_TEMPORARY_KEY,
+} from "../../actions/types"
 import { getFormattedDate } from "../../library/helpers";
 import validate from "validate.js";
 
@@ -40,6 +44,10 @@ class LinkAccount extends React.Component {
     date_of_birth: new Date(),
     tin: "",
   };
+
+  componentDidMount() {
+    this.props.initializeReducer();
+  }
 
   handleChangeText = (text, index) => {
     this.setState({ [index]: text });
@@ -140,6 +148,17 @@ const mapStateToProps = ({otp}, props) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    initializeReducer: () => {
+      dispatch({
+        type: REQUEST_OTP_INITIALIZE,
+      });
+      dispatch({
+        type: CHECK_OTP_INITIALIZE,
+      });
+      dispatch({
+        type: CLEAR_TEMPORARY_KEY
+      })
+    },
     checkAccount: (account_info) => {
       dispatch(API.checkAccount(account_info));
     },

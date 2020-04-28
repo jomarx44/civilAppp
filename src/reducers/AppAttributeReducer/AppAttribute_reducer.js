@@ -8,7 +8,8 @@ import {
   PUT_ATTRIBUTES_ERROR,
   REQUEST_ID,
   REQUEST_ID_SUCCESS,
-  REQUEST_ID_ERROR
+  REQUEST_ID_ERROR,
+  CLEAR_TEMPORARY_KEY
 } from "./AppAttribute_actions";
 
 import {alertBox} from "../../actions/axiosCalls"
@@ -17,7 +18,7 @@ const initialState = {
   isFetching: false,
   isSaving: false,
   isUpdating: false,
-  success: true,
+  success: null,
   message: "",
   attributes: {},
   temporary_key: null,
@@ -34,6 +35,12 @@ export const AppAttributeReducer = (state = initialState, action) => {
           ...action.attributes
         }
       };
+
+    case CLEAR_TEMPORARY_KEY: 
+      return {
+        ...state,
+        temporary_key: null
+      }
 
     case REQUEST_ID:
       return {

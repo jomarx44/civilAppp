@@ -1,21 +1,50 @@
-import React, { useRef, useImperativeHandle, forwardRef } from "react";
+import React, { useState, useRef, useImperativeHandle, forwardRef } from "react";
 import PropTypes from "prop-types";
 import { StyleSheet, View, Text, TextInput } from "react-native";
-import { Item, Label } from "native-base";
 
 export const PNFormContactInfo = forwardRef(
-  ({ invalid = "", value, editable = true, ...props }, ref) => {
+  ({ invalid = "", value, editable = true, onFocus, onBlur, ...props }, ref) => {
+    const [borderBottomColor, setBorderBottomColor] = useState("#E1E1E5");
+    const [borderBottomWidth, setBorderBottomWidth] = useState(1);
     const input = useRef(null);
 
     useImperativeHandle(ref, () => ({
       focus: () => {
         input.current.focus();
-      },
+      }
     }));
+
+    const isEmpty = () => {
+      return value == "";
+    };
+
+    const handleEvent = (event, options) => {
+      switch (event) {
+        case "onFocus":
+          setBorderBottomColor("#F5AC14");
+          break;
+
+        case "onBlur":
+          if (!isEmpty()) {
+            setBorderBottomWidth(0);
+          } else {
+            setBorderBottomColor("#E1E1E5");
+            setBorderBottomWidth(1);
+          }
+          break;
+
+        default:
+          break;
+      }
+    };
 
     return (
       <View style={styles.view}>
-        <Item style={styles.text}>
+        <View style={{
+          flexDirection: "row", 
+          borderBottomColor,
+          borderBottomWidth
+        }}>
           <Text style={styles.prefix_number}>+63</Text>
           <TextInput
             {...props}
@@ -25,8 +54,19 @@ export const PNFormContactInfo = forwardRef(
             style={[styles.input, !editable && styles.input_disabled]}
             value={value ? value.replace(/^0+/, "") : ""}
             maxLength={10}
+            onFocus={() => {
+              // Do props.onFocus if given
+              onFocus && onFocus();
+              handleEvent("onFocus");
+            }}
+            onBlur={() => {
+              // Do props.onBlur if given
+              onBlur && onBlur();
+              handleEvent("onBlur");
+            }}
           />
-        </Item>
+        </View>
+        
         <Text style={[styles.invalidText]}>{invalid}</Text>
       </View>
     );
@@ -34,7 +74,6 @@ export const PNFormContactInfo = forwardRef(
 );
 
 PNFormContactInfo.propTypes = {
-  title: PropTypes.string.isRequired,
   value: PropTypes.string,
   onChangeText: PropTypes.func,
   autoCompleteType: PropTypes.string,

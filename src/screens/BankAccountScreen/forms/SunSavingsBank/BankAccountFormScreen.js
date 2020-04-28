@@ -14,7 +14,7 @@ import Modal from "react-native-modal";
 import SlideContainer from "library/components/SlideContainer";
 import PNElectronicSignature from "library/components/PNElectronicSignature";
 import PNStackedButtons from "library/Layout/Content/PNStackedButtons";
-import PNContainedButton from "library/components/Buttons/PNContainedButton";
+import PNContainedButton from "../../../../library/components/Buttons/PNContainedButton";
 import PNOutlineButton from "library/components/Buttons/PNOutlineButton";
 import PNContentWithTitle from "library/Layout/Content/PNContentWithTitle";
 
@@ -107,7 +107,7 @@ export const PersonalInformationScreen = ({
             })
           }
           onSubmitEditing={() => {
-            input_appellation.current.focus();
+            input_firstName.current.focus();
           }}
           value={title}
           onBlur={() => handleEvent("onBlur", { constraints, index: "title" })}
@@ -159,7 +159,7 @@ export const PersonalInformationScreen = ({
             })
           }
           onSubmitEditing={() => {
-            input_phoneNumber.current.focus();
+            input_appellation.current.focus();
           }}
           value={lastName}
           onBlur={() =>
@@ -177,7 +177,7 @@ export const PersonalInformationScreen = ({
             })
           }
           onSubmitEditing={() => {
-            input_firstName.current.focus();
+            input_phoneNumber.current.focus();
           }}
           value={appellation}
           onBlur={() =>
@@ -1161,6 +1161,8 @@ export const ElectronicSignatureScreen = ({ handleEvent, data }) => {
         containerStyle={{ flex: 1, justifyContent: "flex-end" }}
       >
         <PNContainedButton
+          disabled={isUploading}
+          loading={isUploading}
           label="Save"
           buttonStyle={{ width: "100%", height: 50, marginBottom: 20 }}
           onPress={() => {
