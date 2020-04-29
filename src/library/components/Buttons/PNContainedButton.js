@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   },
   defaultLabelStyle: {
     color: "#FFFFFF",
-    fontFamily: "Avenir_Heavy",
+    fontFamily: "Gilroy_Bold",
     fontSize: 16,
   },
   defaultDisabledStyle: {

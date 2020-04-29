@@ -26,6 +26,9 @@ import PNHeaderBlueBack from "library/Layout/Header/PNHeaderBlueBack";
 import PNHeaderBackButton from "../library/Layout/Header/PNHeaderBackButton";
 import PNHeaderCancelDone from "../library/Layout/Header/PNHeaderCancelDone";
 
+// New Components
+import EmailConfirmationScreen from "../screens/Email/EmailConfirmationScreen";
+
 // Authentication
 import LoginScreen from "screens/LoginScreen";
 import PersonalInfoScreen from "screens/SignUpScreen/PersonalInfoScreen";
@@ -345,11 +348,11 @@ export const Navigator = ({ profile }) => {
         // </UserInactivity>
       ) : (
         <Stack.Navigator>
-          {/* <Stack.Screen
-            name="TesterScreen"
-            component={TesterScreen}
+          <Stack.Screen
+            name="EmailConfirmationScreen"
+            component={EmailConfirmationScreen}
             options={{ headerShown: false }}
-          /> */}
+          />
           <Stack.Screen
             name="Login"
             component={LoginScreen}

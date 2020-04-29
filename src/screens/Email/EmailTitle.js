@@ -12,7 +12,7 @@ export default EmailTitle;
 
 const styles = StyleSheet.create({
   defaultTextStyle: {
-    color: config.colors.emailTitle,
+    color: config.colors.emailPrimary,
     fontFamily: "Gilroy_Medium",
     fontSize: 32,
   },

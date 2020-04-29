@@ -12,9 +12,10 @@ export default EmailDescription;
 
 const styles = StyleSheet.create({
   defaultTextStyle: {
-    color: config.colors.EmailDescription,
+    color: config.colors.emailPrimary,
     fontFamily: "Gilroy_Medium",
     fontSize: 16,
     lineHeight: 22,
+    textAlign: 'center'
   },
 });

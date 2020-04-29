@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
   defaultLabelStyle: {
     color: "#F9AE34",
-    fontFamily: "Avenir_Heavy",
+    fontFamily: "Gilroy_Bold",
     fontSize: 16
   }
 })

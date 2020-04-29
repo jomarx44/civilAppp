@@ -5,7 +5,7 @@ export const EmailLogo = ({ image, style }) => {
   return (
     <Image 
       resizeMode="contain"
-      src={image}
+      source={image}
       style={[styles.defaultImageStyle, style]}
     />
   )
@@ -15,7 +15,7 @@ export default EmailLogo;
 
 const styles = StyleSheet.create({
   defaultImageStyle: {
-    height: 200,
-    width: 200
+    height: 275,
+    width: 275,
   }
 })

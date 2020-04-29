@@ -1,7 +1,7 @@
 export const config = {
   colors: {
-    emailTitle: "#444444",
-    emailDescription: "#444444",
+    emailPrimary: "#444444",
+    emailSecondary: "#309fe7",
     transactionType: "#003d6f",
     transactionAmountDebit: "#003d6f",
     transactionAmountCredit: "#00b87b",
