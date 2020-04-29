@@ -1,4 +1,12 @@
 export const config = {
+  colors: {
+    emailTitle: "#444444",
+    emailDescription: "#444444",
+    transactionType: "#003d6f",
+    transactionAmountDebit: "#003d6f",
+    transactionAmountCredit: "#00b87b",
+    transactionDate: "#77869e", 
+  },
   company: {
     id: "SunSavingsBank",
     name: "Sun Savings Bank",
