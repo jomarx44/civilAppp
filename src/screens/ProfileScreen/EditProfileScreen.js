@@ -1,6 +1,6 @@
 // To be added
 import React, { createRef, useState, useEffect } from "react";
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import { connect } from "react-redux";
 
 // Custom Component
@@ -13,6 +13,7 @@ import PNOutlineButton from "../../library/components/Buttons/PNOutlineButton";
 // Others
 import validate from "validate.js";
 import API from "../../actions/api";
+import { UPDATE_PROFILE_INITIALIZE } from "../../actions/types";
 
 const constraints = {
   email: {
@@ -42,10 +43,12 @@ export const EditProfileScreen = ({
       emails,
       name: { givenName, middleName, familyName },
       phoneNumbers
-    }
+    },
+    ...profile
   },
   saveProfile,
   updateUserInformation,
+  initializeReducers,
   navigation,
 }) => {
   const [userInfo, setUserInfo] = useState({
@@ -53,7 +56,7 @@ export const EditProfileScreen = ({
     givenName,
     middleName,
     familyName,
-    email: emails[0].value,
+    emails,
     phoneNumbers
   });
   const [invalids, setInvalids] = useState({});
@@ -61,7 +64,7 @@ export const EditProfileScreen = ({
   const input_givenName = createRef();
   const input_middleName = createRef();
   const input_familyName = createRef();
-  const input_email = createRef();
+  // const input_email = createRef();
 
   const constraints = {
     givenName: {
@@ -79,15 +82,25 @@ export const EditProfileScreen = ({
         allowEmpty: false,
       },
     },
-    email: {
-      presence: {
-        allowEmpty: false,
-      },
-      email: {
-        message: "isn't valid",
-      },
-    }
   };
+
+  useEffect(() => {
+    if (profile.isUpdated === true) {
+      Alert.alert(
+        "Edit Profile",
+        "Profile was successfully edited.",
+        [
+          {
+            text: "Ok",
+            onPress: () => {
+              initializeReducers();
+              navigation.navigate("ViewProfile");
+            },
+          },
+        ]
+      );
+    }
+  }, [profile.isUpdated]);
 
   const handleEvent = (event, options = {}) => {
     const { additionalValidate, index, fields } = options;
@@ -152,12 +165,7 @@ export const EditProfileScreen = ({
               middleName: userInfo.middleName,
               familyName: userInfo.familyName,
             },
-            emails: [
-              {
-                "primary": true,
-                "value": userInfo.email,
-              },
-            ],
+            emails,
             phoneNumbers
           });
         } else {
@@ -220,7 +228,7 @@ export const EditProfileScreen = ({
             })
           }
           ref={input_familyName}
-          onSubmitEditing={() => input_email.current.focus()}
+          // onSubmitEditing={() => input_email.current.focus()}
           onBlur={() =>
             handleEvent("onBlur", {
               index: "familyName",
@@ -229,33 +237,19 @@ export const EditProfileScreen = ({
           invalid={invalids.familyName ? invalids.familyName[0] : ""}
           value={userInfo.familyName}
         />
-
-        <PNFormTextBox
-          label="Email Address"
-          onChangeText={(text) =>
-            handleEvent("onChange", {
-              index: "email",
-              value: text,
-            })
-          }
-          ref={input_email}
-          onBlur={() =>
-            handleEvent("onBlur", {
-              index: "email",
-            })
-          }
-          invalid={invalids.email ? invalids.email[0] : ""}
-          value={userInfo.email}
-        />
       </PNContentWithTitle>
       <FormButtonContainer>
-        <PNContainedButton 
+        <PNContainedButton
+          disabled={profile.isUpdating} 
           label="Save"
+          loading={profile.isUpdating}
+          buttonStyle={{marginBottom: 10}}
           onPress={() => {
             handleEvent("onSubmit")
           }}
         />
         <PNOutlineButton 
+          disabled={profile.isUpdating} 
           label="Cancel"
           onPress={() => {
             navigation.goBack();
@@ -276,6 +270,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    initializeReducers: () => {
+      dispatch({
+        type: UPDATE_PROFILE_INITIALIZE,
+      });
+    },
     updateUserInformation: (payload) => {
       dispatch(API.updateUserInformation(payload));
     },

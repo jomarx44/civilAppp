@@ -222,16 +222,7 @@ const Profile = () => {
         name="ViewProfile"
         component={ProfileScreen}
         options={{
-          header: ({ navigation }) => {
-            return (
-              <PNHeaderDrawerTitle
-                title="My Profile"
-                openDrawer={() => {
-                  navigation.dispatch(DrawerActions.openDrawer());
-                }}
-              />
-            );
-          },
+          headerShown: false
         }}
       />
       <Stack.Screen
@@ -240,11 +231,10 @@ const Profile = () => {
         options={{
           header: ({ navigation }) => {
             return (
-              <PNHeaderDrawerTitle
+              // Default Header
+              <PNHeaderBackTitle
                 title="Edit Profile"
-                openDrawer={() => {
-                  navigation.dispatch(DrawerActions.openDrawer());
-                }}
+                onBack={navigation.goBack}
               />
             );
           },
@@ -348,11 +338,11 @@ export const Navigator = ({ profile }) => {
         // </UserInactivity>
       ) : (
         <Stack.Navigator>
-          <Stack.Screen
+          {/* <Stack.Screen
             name="EmailConfirmationScreen"
             component={EmailConfirmationScreen}
             options={{ headerShown: false }}
-          />
+          /> */}
           <Stack.Screen
             name="Login"
             component={LoginScreen}

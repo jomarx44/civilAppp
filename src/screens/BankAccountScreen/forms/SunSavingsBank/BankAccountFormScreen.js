@@ -919,6 +919,10 @@ export const IDScreen = ({
       presence: {
         allowEmpty: false,
       },
+      exclusion: {
+        within: [government_type_1],
+        message: "^Please choose another ID Type"
+      }
     },
     government_id_2: {
       presence: {
