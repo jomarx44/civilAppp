@@ -97,7 +97,10 @@ export const profileReducer = (state = initialState, action) => {
     case FETCH_PROFILE_SUCCESS:
       output = {
         ...state,
-        data: action.payload,
+        data: {
+          ...state.data,
+          ...action.payload
+        },
         isLoggedIn: true,
         isFetching: false,
         success: true,
@@ -107,7 +110,10 @@ export const profileReducer = (state = initialState, action) => {
     case SET_PROFILE: 
       output = {
         ...state,
-        data: action.payload
+        data: {
+          ...state.data,
+          ...action.payload
+        }
       }
       return output;
     default:

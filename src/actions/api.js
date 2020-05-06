@@ -399,23 +399,23 @@ const checkAccount = ({
       type: TYPE.REQUEST_OTP,
     });
 
-    const test = () => {
-      dispatch({
-        type: TYPE.REQUEST_OTP_SUCCESS,
-        payload: {
-          token: "1961875",
-        },
-      });
-      NavigationService.navigate("LinkAccountOTP");
-    };
+    // const test = () => {
+    //   dispatch({
+    //     type: TYPE.REQUEST_OTP_SUCCESS,
+    //     payload: {
+    //       token: "1961875",
+    //     },
+    //   });
+    //   NavigationService.navigate("LinkAccountOTP");
+    // };
 
-    const testingInterval = setInterval(() => {
-      test();
-      // otp = 8526710:
-      clearInterval(testingInterval);
-    }, 2000);
+    // const testingInterval = setInterval(() => {
+    //   test();
+    //   // otp = 8526710:
+    //   clearInterval(testingInterval);
+    // }, 2000);
 
-    return;
+    // return;
 
     return getDataOnly(json_data)
       .then((response) => {
@@ -851,7 +851,8 @@ const getProfile = ({ id }) => {
     return postOnly(json_data)
       .then((response) => {
         if (response.data.success) {
-          const { sub, attributes } = response.data;
+          console.log("Response Data", response.data);
+          const { attributes } = response.data;
           const {
             displayName,
             emails,
@@ -864,7 +865,6 @@ const getProfile = ({ id }) => {
             type: TYPE.FETCH_PROFILE_SUCCESS,
             payload: {
               id,
-              sub,
               attributes,
               emails,
               phoneNumbers,
@@ -911,6 +911,7 @@ const saveProfile = ({
       user_data: {
         id,
         emails,
+        phoneNumber,
         given_name: givenName,
         middle_name: middleName,
         family_name: familyName,
@@ -919,10 +920,38 @@ const saveProfile = ({
     },
   };
 
+  Object.keys(json_data.body.user_data).forEach(
+    (key) => json_data.body.user_data[key] == null && delete json_data.body.user_data[key]
+  );
+
+  console.log("json_data", json_data);
+
   return (dispatch) => {
+    dispatch({
+      type: TYPE.UPDATE_PROFILE,
+    });
     return postOnly(json_data)
-      .then((response) => {})
+      .then(({data}) => {
+        if(data.errorCode && data.errorCode !== "") {
+          dispatch({
+            type: TYPE.UPDATE_PROFILE_ERROR,
+            payload: {
+              message: data.message
+            }
+          });
+        } else {
+          dispatch({
+            type: TYPE.UPDATE_PROFILE_SUCCESS,
+            payload: {
+              message: ""
+            }
+          });
+        }
+        
+        console.log("response data: ", data);
+      })
       .catch((error) => {
+        console.log("error:", error)
         APIErrorLogging("saveProfile", error);
         alertBox(
           "Ooops! There's something wrong connecting to the server. Please try again."

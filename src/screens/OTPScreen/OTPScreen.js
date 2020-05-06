@@ -52,11 +52,9 @@ class OTPScreen extends React.Component {
     d7: "",
   };
 
-  c0omponentDidUpdate = (prevProps) => {
+  componentDidUpdate = (prevProps) => {
     if (prevProps.cis !== this.props.cis) {
-      console.log("Entered!")
       if (this.props.cis.id) {
-        console.log("Entered! 2")
         this.props.linkAccount(
           this.props.cis.id,
           this.props.token.tokens.access_token

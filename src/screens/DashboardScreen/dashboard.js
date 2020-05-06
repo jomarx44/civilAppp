@@ -136,7 +136,7 @@ class DashboardScreen extends React.Component {
       //   familyName
       // });
     }
-    
+
     this.props.getAccounts(this.props.appAttribute.attributes.cis_no);
 
     // this.props.getAccounts("1590000062");
@@ -145,7 +145,7 @@ class DashboardScreen extends React.Component {
 
   onRefresh = () => {
     this.props.getAccounts(this.props.appAttribute.attributes.cis_no);
-  }
+  };
 
   onPress = (navid, accountNumber) => {
     this.props.navigation.navigate(
@@ -164,24 +164,24 @@ class DashboardScreen extends React.Component {
       profile: { data, ...profile },
     } = this.props;
 
-    if (profile.isFetching || accounts.is_fetching) {
-      return (
-        <Container
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <ActivityIndicator size="large" color="#f9a010" />
-        </Container>
-      );
-    }
     return (
       <Container>
         <View style={styles.viewHeader}>
-          <Text style={styles.title}>{data.name.displayName}</Text>
-          <Text style={styles.subtitle}>{data.emails[0].value}</Text>
+          {!profile.isFetching && (
+            <React.Fragment>
+              <Text style={styles.title}>{data.name.displayName}</Text>
+              <Text style={styles.subtitle}>{data.emails[0].value}</Text>
+            </React.Fragment>
+          )}
         </View>
         <View style={styles.viewAccounts}>
           <Accordion
-            refreshControl={<RefreshControl refreshing={accounts.is_fetching} onRefresh={() => this.onRefresh()} />}
+            refreshControl={
+              <RefreshControl
+                refreshing={accounts.is_fetching}
+                onRefresh={() => this.onRefresh()}
+              />
+            }
             renderHeader={(item, expanded) => (
               <AccountItemHeader item={item} expanded={expanded} />
             )}
@@ -190,7 +190,6 @@ class DashboardScreen extends React.Component {
                 <AccountItemContainer>
                   {items.accountsById &&
                     items.accountsById.map((itemId, id) => {
-                      
                       return (
                         <AccountItem
                           key={id}

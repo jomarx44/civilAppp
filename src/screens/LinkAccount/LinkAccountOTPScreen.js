@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Alert, View, Text } from "react-native";
+import { Alert } from "react-native";
 import { connect } from "react-redux";
 
 // Custom Component
 import { OTPScreen } from "../OTPScreen";
 import API from "../../actions/api";
-import { requestUniqueId } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
-import {
-  CHECK_OTP,
-  CHECK_OTPTM_SUCCESS,
-  CHECK_OTP_ERROR,
-} from "../../actions/types";
 
 export const LinkAccountOTPScreen = ({
+  appAttribute,
   cis,
   otp,
   token,
@@ -20,6 +15,7 @@ export const LinkAccountOTPScreen = ({
   navigation: { navigate },
   verifyOTP,
   linkAccount,
+  getAccounts
 }) => {
   const [OTPValue, setOTPValue] = useState("");
 
@@ -39,7 +35,11 @@ export const LinkAccountOTPScreen = ({
       Alert.alert("Link Account", "Linked Account Successfully.", [
         {
           text: "Ok",
-          onPress: () => navigate("Dashboard"),
+          onPress: () => {
+
+            getAccounts(appAttribute.attributes.cis_no);
+            navigate("Dashboard")
+          },
         },
       ]);
     }
@@ -62,7 +62,8 @@ export const LinkAccountOTPScreen = ({
   );
 };
 
-const mapStateToProps = ({ otp, account, token, cis }) => ({
+const mapStateToProps = ({ appAttribute, otp, account, token, cis }) => ({
+  appAttribute,
   cis,
   otp,
   token,
@@ -76,7 +77,10 @@ const mapDispatchToProps = (dispatch) => {
     },
     linkAccount: (payload) => {
       dispatch(API.linkAccountWithDispatch(payload));
-    }
+    },
+    getAccounts: (cisno) => {
+      dispatch(API.getAccounts(cisno));
+    },
   };
 };
 

@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   Alert,
-  ScrollView,
   AsyncStorage,
   Image,
-  Dimensions,
   StyleSheet,
-  TextInput,
   Text,
   View,
 } from "react-native";

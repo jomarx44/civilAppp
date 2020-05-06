@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react'
-import { Alert, View, Text } from 'react-native'
-import { connect } from 'react-redux'
+import React, { useState, useEffect } from "react";
+import { Alert, View, Text } from "react-native";
+import { connect } from "react-redux";
 
 // Custom Component
-import { OTPScreen } from "../OTPScreen"
+import { OTPScreen } from "../OTPScreen";
 import API from "../../actions/api";
 import {
   CHECK_OTP,
@@ -12,32 +12,38 @@ import {
   CHECK_OTPTM_SUCCESS,
   CHECK_OTP_INITIALIZE,
   REQUEST_OTP_INITIALIZE,
-  UPDATE_PROFILE_INITIALIZE
-} from "../../actions/types"
+  UPDATE_PROFILE_INITIALIZE,
+} from "../../actions/types";
 
-export const OTPChangeMobileNumberScreen = ({otp, verifyOTP, profile, updateUserInformation, navigation, route, initializeReducers}) => {
+export const OTPChangeMobileNumberScreen = ({
+  otp,
+  verifyOTP,
+  profile,
+  updateUserInformation,
+  navigation,
+  route,
+  initializeReducers,
+  getProfile,
+}) => {
   const [OTPValue, setOTPValue] = useState("");
 
   useEffect(() => {
-    if(otp.isVerified === true) {
+    if (otp.isVerified === true) {
       let { id, emails, phoneNumbers, name } = profile.data;
       phoneNumbers[0].value = route.params.phoneNumber;
       updateUserInformation({
         id,
         phoneNumbers,
         emails,
-        name
+        name,
       });
-    } else if(otp.success === false) {
-      Alert.alert(
-        "OTP",
-        "Wrong OTP Code. Please try again"
-      )
+    } else if (otp.success === false) {
+      Alert.alert("OTP", "Wrong OTP Code. Please try again");
     }
   }, [otp.isVerified]);
 
   useEffect(() => {
-    if(profile.isUpdated === true) {
+    if (profile.isUpdated === true) {
       Alert.alert(
         "Change Mobile Number",
         "Mobile Number was successfully changed.",
@@ -46,31 +52,36 @@ export const OTPChangeMobileNumberScreen = ({otp, verifyOTP, profile, updateUser
             text: "Ok",
             onPress: () => {
               initializeReducers();
+              getProfile(profile.data.sub);
               navigation.navigate("ViewProfile");
             },
           },
         ]
-      )
+      );
     }
-    
-  }, [profile.isUpdated])
+  }, [profile.isUpdated]);
 
   const onDone = () => {
     verifyOTP({
       token: otp.token,
-      otp: OTPValue
+      otp: OTPValue,
     });
-  }
-  
-  return (
-    <OTPScreen onDone={onDone} otp={otp} value={OTPValue} setValue={setOTPValue} />
-  )
-}
+  };
 
-const mapStateToProps = ({otp, cis, profile}) => ({
+  return (
+    <OTPScreen
+      onDone={onDone}
+      otp={otp}
+      value={OTPValue}
+      setValue={setOTPValue}
+    />
+  );
+};
+
+const mapStateToProps = ({ otp, cis, profile }) => ({
   otp,
   cis,
-  profile
+  profile,
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -86,14 +97,14 @@ const mapDispatchToProps = (dispatch) => {
         type: CHECK_OTP_INITIALIZE,
       });
     },
-    verifyOTP: ({token, otp}) => {
+    verifyOTP: ({ token, otp }) => {
       dispatch({
         type: CHECK_OTP,
       });
 
-      API.verifyOTP({token, otp})
-        .then(({data: {data}}) => {
-          if(data.status == "ok") {
+      API.verifyOTP({ token, otp })
+        .then(({ data: { data } }) => {
+          if (data.status == "ok") {
             dispatch({
               type: CHECK_OTPTM_SUCCESS,
             });
@@ -101,25 +112,30 @@ const mapDispatchToProps = (dispatch) => {
             dispatch({
               type: CHECK_OTP_ERROR,
               payload: {
-                message: ""
-              }
+                message: "",
+              },
             });
           }
         })
         .catch((error) => {
-          
           dispatch({
             type: CHECK_OTP_ERROR,
             payload: {
-              message: error
-            }
+              message: error,
+            },
           });
         });
     },
-    updateUserInformation: payload => {
+    updateUserInformation: (payload) => {
       dispatch(API.updateUserInformation(payload));
-    }
-  }
-}
+    },
+    getProfile: (id) => {
+      dispatch(API.getProfile({ id }));
+    },
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(OTPChangeMobileNumberScreen)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OTPChangeMobileNumberScreen);

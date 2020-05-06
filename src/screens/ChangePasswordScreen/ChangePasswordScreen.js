@@ -42,11 +42,9 @@ export const ChangePasswordScreen = ({
   updateUserInformation,
   navigation,
   initializeReducers,
+  getProfile,
 }) => {
   const [passwords, setPasswords] = useState({});
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [invalids, setInvalids] = useState({});
 
   const input_password = useRef();
@@ -62,6 +60,7 @@ export const ChangePasswordScreen = ({
             text: "Ok",
             onPress: () => {
               initializeReducers();
+              // getProfile(profile.data.sub);
               navigation.navigate("ViewProfile");
             },
           },
@@ -176,9 +175,9 @@ export const ChangePasswordScreen = ({
 
 ChangePasswordScreen.propTypes = {};
 
-const mapStateToProps = (state) => {
+const mapStateToProps = ({profile}) => {
   return {
-    profile: state.profile,
+    profile,
   };
 };
 
@@ -191,6 +190,9 @@ const mapDispatchToProps = (dispatch) => {
       dispatch({
         type: UPDATE_PROFILE_INITIALIZE,
       });
+    },
+    getProfile: (id) => {
+      dispatch(API.getProfile({ id }));
     },
   };
 };

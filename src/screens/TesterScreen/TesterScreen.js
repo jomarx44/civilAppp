@@ -25,7 +25,6 @@ export default () => {
         value={contact}
         onChangeText={(text) => setContact(text)}
         onSubmitEditing={() => {
-          // console.log(inputDate.current);
           inputDate.current.focus()
         }}
       />

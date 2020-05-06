@@ -13,6 +13,7 @@ import PNOutlineButton from "../../library/components/Buttons/PNOutlineButton";
 // Others
 import validate from "validate.js";
 import API from "../../actions/api";
+import IBMAppId from "../../actions/ibmappid";
 import { UPDATE_PROFILE_INITIALIZE } from "../../actions/types";
 
 const constraints = {
@@ -40,13 +41,18 @@ export const EditProfileScreen = ({
   profile: {
     data: {
       id,
+      sub,
       emails,
+      attributes,
       name: { givenName, middleName, familyName },
       phoneNumbers
     },
     ...profile
   },
+  token,
   saveProfile,
+  getUser,
+  getProfile,
   updateUserInformation,
   initializeReducers,
   navigation,
@@ -94,6 +100,8 @@ export const EditProfileScreen = ({
             text: "Ok",
             onPress: () => {
               initializeReducers();
+              getUser(token.tokens.access_token);
+              // getProfile(profile.data.sub);
               navigation.navigate("ViewProfile");
             },
           },
@@ -160,14 +168,21 @@ export const EditProfileScreen = ({
           // Submit
           updateUserInformation({
             id: userInfo.id,
+            emails,
+            phoneNumbers,
             name: {
               givenName: userInfo.givenName,
               middleName: userInfo.middleName,
               familyName: userInfo.familyName,
-            },
-            emails,
-            phoneNumbers
+            }
           });
+          // saveProfile({
+          //   id,
+          //   attributes,
+          //   givenName: userInfo.givenName,
+          //   middleName: userInfo.middleName,
+          //   familyName: userInfo.familyName,
+          // });
         } else {
           setInvalids(currentInvalids);
         }
@@ -261,10 +276,10 @@ export const EditProfileScreen = ({
   );
 };
 
-const mapStateToProps = (state) => {
-  const { profile } = state;
+const mapStateToProps = ({profile, token}) => {
   return {
     profile,
+    token
   };
 };
 
@@ -284,6 +299,9 @@ const mapDispatchToProps = (dispatch) => {
     getProfile: (payload) => {
       dispatch(API.getProfile(payload));
     },
+    getUser: (token) => {
+      dispatch(IBMAppId.getUserInfo(token));
+    }
   };
 };
 

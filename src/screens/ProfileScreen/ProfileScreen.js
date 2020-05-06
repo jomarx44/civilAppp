@@ -2,35 +2,35 @@ import React, { useEffect } from "react";
 import {
   Dimensions,
   Image,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { MaterialIcons } from '@expo/vector-icons';
-import PropTypes from "prop-types";
+import { MaterialIcons } from "@expo/vector-icons";
 import { connect } from "react-redux";
 
 // Others
 import { config } from "../../config";
 import { useSafeArea } from "react-native-safe-area-context";
-import {
-  DrawerActions,
-} from "@react-navigation/native";
+import { DrawerActions } from "@react-navigation/native";
 import {
   UPDATE_PROFILE_INITIALIZE,
   REQUEST_OTP_INITIALIZE,
   CHECK_OTP_INITIALIZE,
 } from "../../actions/types";
+import API from "../../actions/api"
 
 const { height, width } = Dimensions.get("window");
 
-export const ProfileNavigationBar = ({ onPressLeftButton, onPressRightButton }) => {
+export const ProfileNavigationBar = ({
+  onPressLeftButton,
+  onPressRightButton,
+}) => {
   return (
-    <View
-      style={styles.defaultNavigationBarContainer}
-    >
+    <View style={styles.defaultNavigationBarContainer}>
       <View style={{ flex: 1, alignItems: "center" }}>
         <TouchableOpacity onPress={() => onPressLeftButton()}>
           {/* <MaterialIcons
@@ -46,16 +46,20 @@ export const ProfileNavigationBar = ({ onPressLeftButton, onPressRightButton }) 
         </TouchableOpacity>
       </View>
       <View style={{ flex: 3, alignItems: "center", justifyContent: "center" }}>
-        <Text style={{ color: "#FFF", fontFamily: "Gilroy_Bold", fontSize: 23, textAlign: "center" }}>Settings</Text>
+        <Text
+          style={{
+            color: "#FFF",
+            fontFamily: "Gilroy_Bold",
+            fontSize: 23,
+            textAlign: "center",
+          }}
+        >
+          Settings
+        </Text>
       </View>
       <View style={{ flex: 1, alignItems: "center" }}>
-
-      <TouchableOpacity onPress={() => onPressRightButton()}>
-        <MaterialIcons 
-          color="#FFF"
-          name="edit"
-          size={30}
-        />
+        <TouchableOpacity onPress={() => onPressRightButton()}>
+          <MaterialIcons color="#FFF" name="edit" size={30} />
         </TouchableOpacity>
       </View>
     </View>
@@ -112,8 +116,8 @@ export const ProfileItem = ({
 export const ProfileScreen = ({
   navigation,
   profile,
-  otp,
   initializeReducers,
+  getProfile,
 }) => {
   const inset = useSafeArea();
 
@@ -121,11 +125,15 @@ export const ProfileScreen = ({
     initializeReducers();
   }, []);
 
+  const handleRefresh = () => {
+    getProfile(profile.data.sub)
+  }
+
   return (
     <View
       style={{
         flex: 1,
-        backgroundColor: '#f7f7f7'
+        backgroundColor: "#f7f7f7",
       }}
     >
       <View
@@ -159,8 +167,21 @@ export const ProfileScreen = ({
           backgroundColor: "transparent",
         }}
       >
-        <ProfileNavigationBar onPressLeftButton={() => navigation.dispatch(DrawerActions.openDrawer())} onPressRightButton={() => navigation.navigate("EditProfile") } />
-        <ScrollView contentContainerStyle={{ padding: 24 }}>
+        <ProfileNavigationBar
+          onPressLeftButton={() =>
+            navigation.dispatch(DrawerActions.openDrawer())
+          }
+          onPressRightButton={() => navigation.navigate("EditProfile")}
+        />
+        <ScrollView
+          contentContainerStyle={{ padding: 24 }}
+          refreshControl={
+            <RefreshControl
+              refreshing={profile.isFetching}
+              onRefresh={() => handleRefresh()}
+            />
+          }
+        >
           <ProfileHeader
             name={profile.data.name.displayName}
             email={profile.data.emails[0].value}
@@ -177,17 +198,17 @@ export const ProfileScreen = ({
             onPress={() => navigation.navigate("ChangeMobileNumber")}
           />
           {/* <ProfileItem
-          disabled={true}
-          imagePath={require("res/images/icons/ic_lock.png")}
-          text="Activity Logs"
-          onPress={() => navigation.navigate("")}
-        />
-        <ProfileItem
-          disabled={true}
-          imagePath={require("res/images/icons/ic_lock.png")}
-          text="Notifications"
-          onPress={() => navigation.navigate("")}
-        /> */}
+            disabled={true}
+            imagePath={require("res/images/icons/ic_lock.png")}
+            text="Activity Logs"
+            onPress={() => navigation.navigate("")}
+          />
+          <ProfileItem
+            disabled={true}
+            imagePath={require("res/images/icons/ic_lock.png")}
+            text="Notifications"
+            onPress={() => navigation.navigate("")}
+          /> */}
           <ProfileItem
             imagePath={require("res/images/icons/ic_finger.png")}
             text="Fingerprint"
@@ -221,6 +242,9 @@ const mapDispatchToProps = (dispatch) => {
       dispatch({
         type: CHECK_OTP_INITIALIZE,
       });
+    },
+    getProfile: (id) => {
+      dispatch(API.getProfile({ id }));
     },
   };
 };
@@ -288,7 +312,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   itemLogoContainer: {
-    flex: 1
+    flex: 1,
   },
   itemLogo: {
     height: 40,
