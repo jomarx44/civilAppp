@@ -1,10 +1,12 @@
 import React from "react";
 import {
-  StyleSheet,
-  View,
-  AsyncStorage,
-  TouchableOpacity,
   ActivityIndicator,
+  AsyncStorage,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { Accordion, Container, Icon, Text } from "native-base";
 
@@ -141,6 +143,10 @@ class DashboardScreen extends React.Component {
     navigation.navigate("Announcement");
   }
 
+  onRefresh = () => {
+    this.props.getAccounts(this.props.appAttribute.attributes.cis_no);
+  }
+
   onPress = (navid, accountNumber) => {
     this.props.navigation.navigate(
       navid,
@@ -157,10 +163,6 @@ class DashboardScreen extends React.Component {
       accounts,
       profile: { data, ...profile },
     } = this.props;
-
-    
-
-    
 
     if (profile.isFetching || accounts.is_fetching) {
       return (
@@ -179,6 +181,7 @@ class DashboardScreen extends React.Component {
         </View>
         <View style={styles.viewAccounts}>
           <Accordion
+            refreshControl={<RefreshControl refreshing={accounts.is_fetching} onRefresh={() => this.onRefresh()} />}
             renderHeader={(item, expanded) => (
               <AccountItemHeader item={item} expanded={expanded} />
             )}
@@ -339,8 +342,6 @@ const mapDispatchToProps = (dispatch) => {
     getProfile: (id) => {
       dispatch(API.getProfile({ id }));
     },
-    // getAccounts: (cisno = "1590000062") => {
-    // getAccounts: (cisno = "1590000081") => {
     getAccounts: (cisno) => {
       dispatch(API.getAccounts(cisno));
     },
