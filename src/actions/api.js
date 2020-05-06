@@ -2,23 +2,15 @@ import { Alert } from "react-native";
 import * as NavigationService from "../navigation/NavigationService";
 import { Toast } from "native-base";
 import axios from "axios";
+import { postMethod, postOnly, getDataOnly, alertBox } from "./axiosCalls";
 import {
-  getMethod,
-  postMethod,
-  getMethodWithToken,
-  postMethodWithToken,
-  postMethodWithTokenApply,
-  putMethod,
-  putMethodWithToken,
-  postOnly,
-  putOnly,
-  getDataOnly,
-  dispatchOnly,
-  alertBox,
-} from "./axiosCalls";
+  accountLink,
+  accountLinkError,
+  accountLinkInitialize,
+  accountLinkSuccess,
+} from "../redux/account/actions";
 import * as Profile from "store/profile";
 import * as TYPE from "./types";
-import * as Auth from "store/auth";
 
 // Helpers
 import {
@@ -48,19 +40,6 @@ const getTokenByRefreshToken = (refreshToken) => {
  * Authentication
  *
  *******************************/
-
-const loginInitial = (username, password) => {
-  const json_data = {
-    path: "bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage",
-    reducer_type: TYPE.LOGIN_INITIAL,
-    params: {
-      action: "signin",
-      username: username,
-      password: password,
-    },
-  };
-  return postMethod(json_data);
-};
 
 const login = (username, password) => {
   const json_data = {
@@ -155,7 +134,7 @@ const loginByFingerprint = (refreshToken) => {
         }
       })
       .catch((error) => {
-        APIErrorLogging('loginByFingerprint', error);
+        APIErrorLogging("loginByFingerprint", error);
         dispatch({
           type: TYPE.LOGIN_ERROR,
           payload: error,
@@ -271,7 +250,7 @@ const updateUserInformation = ({
         }
       })
       .catch((error) => {
-        APIErrorLogging("updateUserInformation", error)
+        APIErrorLogging("updateUserInformation", error);
         dispatch({
           type: TYPE.UPDATE_PROFILE_ERROR,
           payload: { message: error },
@@ -335,7 +314,7 @@ const resend_email = (userId) => {
         }
       })
       .catch((error) => {
-        APIErrorLogging("resend_email", error)
+        APIErrorLogging("resend_email", error);
         dispatch({
           type: TYPE.RESEND_EMAIL_ERROR,
           payload: error,
@@ -385,7 +364,7 @@ const signup = (userdata) => {
         }
       })
       .catch((error) => {
-        APIErrorLogging("signup" ,error);
+        APIErrorLogging("signup", error);
         dispatch({
           type: TYPE.SIGNUP_ERROR,
           payload: error,
@@ -420,23 +399,23 @@ const checkAccount = ({
       type: TYPE.REQUEST_OTP,
     });
 
-    // const test = () => {
-    //   dispatch({
-    //     type: TYPE.REQUEST_OTP_SUCCESS,
-    //     payload: {
-    //       token: "8174955"
-    //     }
-    //   });
-    //   NavigationService.navigate("OTP");
-    // }
+    const test = () => {
+      dispatch({
+        type: TYPE.REQUEST_OTP_SUCCESS,
+        payload: {
+          token: "1961875",
+        },
+      });
+      NavigationService.navigate("LinkAccountOTP");
+    };
 
-    // const testingInterval = setInterval(() => {
-    //   test();
-    //   otp = 1617542:
-    //   clearInterval(testingInterval);
-    // }, 2000);
+    const testingInterval = setInterval(() => {
+      test();
+      // otp = 8526710:
+      clearInterval(testingInterval);
+    }, 2000);
 
-    // return;
+    return;
 
     return getDataOnly(json_data)
       .then((response) => {
@@ -450,7 +429,7 @@ const checkAccount = ({
             },
           });
 
-          NavigationService.navigate("OTP");
+          NavigationService.navigate("LinkAccountOTP");
         } else {
           dispatch({
             type: TYPE.REQUEST_OTP_ERROR,
@@ -490,7 +469,7 @@ const getAccounts = (cisno) => {
   return (dispatch) => {
     dispatch({
       type: TYPE.FETCH_ACCOUNTS,
-    })
+    });
     return getDataOnly(json_data)
       .then((response) => {
         if (response.data.status == "ok") {
@@ -761,8 +740,7 @@ const addBankAccount = ({ id, accountData, access_token }) => {
       value: accountData,
       access_token,
     })
-      .then(({ data: { data, status, msg } }) => {
-      })
+      .then(({ data: { data, status, msg } }) => {})
       .catch((error) => {
         APIErrorLogging("addBankAccount", error);
         dispatch({
@@ -773,24 +751,29 @@ const addBankAccount = ({ id, accountData, access_token }) => {
 };
 
 const linkAccount = ({ cis_no, access_token }) => {
-  return (
-    putAttributes({
-      name: "cis_no",
-      value: cis_no,
-      access_token,
-    })
-      // .then(({data: {data, status, msg}}) => {
+  return putAttributes({
+    name: "cis_no",
+    value: cis_no,
+    access_token,
+  });
+};
+
+const linkAccountWithDispatch = ({ cis_no, access_token }) => {
+  return (dispatch) => {
+    dispatch(accountLink());
+    return linkAccount({ cis_no, access_token })
       .then(({ data }) => {
-        if (data.status == "error") {
+        if(data.success == true) {
+          dispatch(accountLinkSuccess());
         } else {
-          NavigationService.navigate("Dashboard");
-          alertBox("Linked Account successfully!");
+          dispatch(accountLinkError("Error"))
         }
       })
       .catch((error) => {
-        APIErrorLogging("linkAccount", error);
-      })
-  );
+        APIErrorLogging("linkAccountWithDispatch", error);
+        dispatch(accountLinkError(error));
+      });
+  };
 };
 
 const createBankAccout = ({ uniqueId, attributes, access_token }) => {
@@ -938,8 +921,7 @@ const saveProfile = ({
 
   return (dispatch) => {
     return postOnly(json_data)
-      .then((response) => {
-      })
+      .then((response) => {})
       .catch((error) => {
         APIErrorLogging("saveProfile", error);
         alertBox(
@@ -1257,6 +1239,56 @@ const requestOTP = ({ mobile_number, email, save_info }) => {
   return postOnly(json_data);
 };
 
+const verifyOTPBPB = ({ token, otp }) => {
+  const json_data = {
+    path: "byteperbyte/CISVerify",
+    params: {
+      token,
+      otp,
+    },
+  };
+
+  return getDataOnly(json_data);
+};
+
+const verifyOTPBPBwithDispatch = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      type: TYPE.CHECK_OTP,
+    });
+
+    return verifyOTPBPB(payload)
+      .then(({ data: { data } }) => {
+        if (data["Register.Info"].cis_no) {
+          dispatch({
+            type: TYPE.CHECK_OTP_SUCCESS,
+            payload: {
+              id: data["Register.Info"].cis_no, //CIS id
+            },
+          });
+          dispatch({
+            type: TYPE.CHECK_OTPTM_SUCCESS,
+          });
+        } else {
+          dispatch({
+            type: TYPE.CHECK_OTP_ERROR,
+            payload: {
+              message: data["Register.Info"].ErrorMsg,
+            },
+          });
+        }
+      })
+      .catch((error) => {
+        dispatch({
+          type: TYPE.CHECK_OTP_ERROR,
+          payload: {
+            message: error,
+          },
+        });
+      });
+  };
+};
+
 const verifyOTP = ({ token, otp }) => {
   const json_data = {
     path: "tm/otp_verify",
@@ -1284,7 +1316,6 @@ const checkStatus = (response) => {
 };
 
 export default {
-  loginInitial,
   login,
   loginByFingerprint,
   forgotPassword,
@@ -1301,6 +1332,7 @@ export default {
   addBankAccount,
   CISVerify,
   linkAccount,
+  linkAccountWithDispatch,
   createBankAccout,
   getProfile,
   saveProfile,
@@ -1312,4 +1344,6 @@ export default {
   upload,
   requestOTP,
   verifyOTP,
+  verifyOTPBPB,
+  verifyOTPBPBwithDispatch,
 };

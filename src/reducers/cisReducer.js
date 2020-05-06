@@ -1,4 +1,7 @@
-import * as TYPE from "../actions/types";
+import {
+  CHECK_OTP_SUCCESS,
+  CLEAR_CIS
+} from "../actions/types";
 
 const cisState = {
   id: null
@@ -6,8 +9,12 @@ const cisState = {
 
 export const cisReducer = (state = cisState, action) => {
   switch (action.type) {
-    case TYPE.CHECK_OTP_SUCCESS:
+    case CHECK_OTP_SUCCESS:
       return action.payload;
+      
+    case CLEAR_CIS: 
+      return cisState;
+      
     default:
       return state;
   }

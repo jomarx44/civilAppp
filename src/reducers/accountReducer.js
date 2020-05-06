@@ -11,14 +11,21 @@ import {
   FETCH_ACCOUNTDETAILS,
   FETCH_ACCOUNTDETAILS_ERROR,
   FETCH_ACCOUNTDETAILS_SUCCESS,
+  ACCOUNT_LINK_INITIALIZE,
+  ACCOUNT_LINK,
+  ACCOUNT_LINK_ERROR,
+  ACCOUNT_LINK_SUCCESS
 } from "../actions/types";
 
 const initialState = {
   accounts: {},
   accountsList: {},
+  error: null,
   formData: {},
   isAdding: false,
   isAdded: null,
+  isLinking: false,
+  isLinked: null,
   isFetching: null,
 };
 
@@ -111,6 +118,35 @@ export const accountReducer = (state = initialState, action) => {
           ...action.payload.account,
         },
       };
+
+    case ACCOUNT_LINK_INITIALIZE:
+      return {
+        ...state,
+        isLinked: null,
+        isLinking: false,
+      }
+
+    case ACCOUNT_LINK: 
+      return {
+        ...state,
+        isLinked: null,
+        isLinking: true,
+      }
+    
+    case ACCOUNT_LINK_ERROR:
+      return {
+        ...state,
+        error: action.payload.error,
+        isLinked: false,
+        isLinking: false,
+      }
+
+    case ACCOUNT_LINK_SUCCESS: 
+      return {
+        ...state,
+        isLinked: true,
+        isLinking: false,
+      }
     default:
       return state;
   }

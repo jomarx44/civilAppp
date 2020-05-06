@@ -46,9 +46,9 @@ import DashboardScreen from "screens/DashboardScreen/dashboard";
 import AccountHistoryScreen from "screens/DashboardScreen/accountHistory";
 import CreateBankAccount from "../screens/BankAccountScreen/CreateBankAccountScreen";
 import OTPOpenAccountScreen from "screens/OpenAccountScreen/OTPOpenAccountScreen";
-import OTPScreen from "screens/OTPScreen/OTPScreen";
 import ConnectCreateAccountScreen from "screens/OpenAccountScreen/ConnectCreateAccountScreen";
-import LinkAccount from "screens/OpenAccountScreen/LinkAccount";
+import LinkAccount from "screens/LinkAccount";
+import LinkAccountOTPScreen from "../screens/LinkAccount/LinkAccountOTPScreen";
 import LoanAccountScreen from "../screens/LoanAccountScreen/LoanAccountScreen";
 
 // Profile
@@ -164,8 +164,8 @@ const Dashboard = () => {
       />
       <Stack.Screen name="OTPOpenAccount" component={OTPOpenAccountScreen} />
       <Stack.Screen
-        name="OTP"
-        component={OTPScreen}
+        name="LinkAccountOTP"
+        component={LinkAccountOTPScreen}
         options={{
           header: ({ navigation }) => {
             return (
