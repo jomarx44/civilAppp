@@ -488,6 +488,9 @@ const getAccounts = (cisno) => {
   };
 
   return (dispatch) => {
+    dispatch({
+      type: TYPE.FETCH_ACCOUNTS,
+    })
     return getDataOnly(json_data)
       .then((response) => {
         if (response.data.status == "ok") {

@@ -8,7 +8,7 @@ import {
 } from "../../actions/types";
 
 const accountState = {
-  is_fetching: true,
+  is_fetching: false,
   error: null,
   list: []
 };
@@ -18,7 +18,10 @@ export const accountsReducer = (state = accountState, action) => {
     case CLEAR_ACCOUNTS: 
       return accountState;
     case FETCH_ACCOUNTS:
-      return state;
+      return {
+        ...state,
+        is_fetching: true,
+      };
     case FETCH_ACCOUNTS_SUCCESS:
       return {
         is_fetching: false,
