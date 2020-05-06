@@ -50,31 +50,6 @@ export default function loginReducer(state = [], action) {
     case TYPE.FORGOT_PASSWORD_ERROR:
       return action.payload;
 
-    case TYPE.USERINFO: 
-      return {
-        is_fetching: true
-      }
-
-    case TYPE.USERINFO_SUCCESS:
-      Profile.setProfileData(action.payload);
-      return {
-        ...action.payload,
-        action: 'USERINFO',
-        is_fetching: false
-      };
-
-    case TYPE.USERINFO_ERROR: 
-      
-      return {
-        ...action.payload,
-        is_fetching: false,
-        success: false
-      };
-
-    case TYPE.LOGIN_INITIAL_SUCCESS:
-      Profile.setAccessData(action.payload);
-      return action.payload;
-
     case TYPE.CHANGE_MENU_LOGIN:
       return { loggedState: "Login" };
 

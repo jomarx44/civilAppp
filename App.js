@@ -1,12 +1,9 @@
 import "react-native-gesture-handler";
 import React, { Component } from "react";
-import { AsyncStorage, Platform, StyleSheet } from "react-native";
+import { AsyncStorage } from "react-native";
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
 import { Root } from "native-base";
-import { StyleProvider } from "native-base";
-import getTheme from "./native-base-theme/components";
-import platform from "./native-base-theme/variables/platform";
 
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
@@ -16,12 +13,10 @@ import rootReducer from "./src/reducers";
 
 // Custom Component
 import OnBoardingScreen from "./src/screens/OnBoardingScreen";
-import AppLoaderScreen from "./src/screens/AppLoaderScreen/AppLoaderScreen"
 
 // Others
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Navigator from "./src/navigation";
-import * as Profile from "store/profile";
 // import NavigationService from "./src/navigation/NavigationService";
 
 const store = createStore(

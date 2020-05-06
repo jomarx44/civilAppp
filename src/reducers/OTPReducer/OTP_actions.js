@@ -30,6 +30,9 @@ export const verifyOTP_BytePerByte = ({ token, otp }) => {
               id: response_data.cis_no, //CIS id
             },
           });
+          dispatch({
+            type: TYPE.CHECK_OTPTM_SUCCESS
+          })
         } else {
           dispatch({
             type: TYPE.CHECK_OTP_ERROR,
