@@ -1,42 +1,125 @@
 import React, { Component } from "react";
-import { createDrawerNavigator, createAppContainer, createSwitchNavigator } from "react-navigation";
+import {
+  createDrawerNavigator,
+  createAppContainer,
+  createSwitchNavigator,
+  createStackNavigator
+} from "react-navigation";
 import { Dimensions } from "react-native";
-import SideMenu from "./SideMenu.js";
+
 import Login from "screens/LoginScreen";
+import PersonalInfoScreen from "screens/SignUpScreen/PersonalInfoScreen";
+import SignUpScreen2 from "screens/SignUpScreen/SignUpScreen2";
+import EmailVerificationScreen from "screens/SignUpScreen/EmailVerificationScreen";
+import TakeAPhotoOfIDScreen from "screens/TakeAPhotoOfIDScreen";
 import LoginFingerPrintScreen from "screens/LoginScreen/fingerprint";
+import ForgotPasswordScreen from "screens/ForgotPasswordScreen";
+
+import SideMenu from "./SideMenu";
 import PersonalDetailsScreen from "screens/PersonalDetailsScreen/";
-import TakeAPhotoOfID from "screens/TakeAPhotoOfID/";
 import OpenAccountScreen from "screens/OpenAccountScreen/";
-import SignUpScreen from "screens/SignUpScreen/";
-import DashboardScreen from "screens/DashboardScreen/";
 import AnnouncementScreen from "screens/AnnouncementScreen/";
-import ForgotPasswordScreen from "screens/ForgotPasswordScreen/";
 
-const AuthenticationNavigator = createDrawerNavigator({
-  Login: { screen: Login },
-  SignUpScreen: { screen: SignUpScreen },
-  TakeAPhotoOfID: { screen: TakeAPhotoOfID },
-  FingerPrint: { screen: LoginFingerPrintScreen },
-  ForgotPasswordScreen: { screen: ForgotPasswordScreen },
-}, {
-  initialRouteName: 'Login'
-});
+import DashboardScreen from "screens/DashboardScreen/dashboard";
+import AccountHistoryScreen from "screens/DashboardScreen/accountHistory";
+import CIS01 from "screens/OpenAccountScreen/CIS01";
+import CIS02 from "screens/OpenAccountScreen/CIS02";
+import CIS03 from "screens/OpenAccountScreen/CIS03";
+import CIS04 from "screens/OpenAccountScreen/CIS04";
+import CIS05 from "screens/OpenAccountScreen/CIS05";
+import CIS06 from "screens/OpenAccountScreen/CIS06";
+import CIS07 from "screens/OpenAccountScreen/CIS07";
+import CIS08 from "screens/OpenAccountScreen/CIS08";
+import CIS09 from "screens/OpenAccountScreen/CIS09";
+import CIS10 from "screens/OpenAccountScreen/CIS10";
+import CIS11 from "screens/OpenAccountScreen/CIS11";
+import CIS12 from "screens/OpenAccountScreen/CIS12";
+import CIS13 from "screens/OpenAccountScreen/CIS13";
+import CIS14 from "screens/OpenAccountScreen/CIS14";
+import OTPOpenAccountScreen from "screens/OpenAccountScreen/OTPOpenAccountScreen";
+import OTPScreen from "screens/OTPScreen/OTPScreen";
+import ConnectCreateAccountScreen from "screens/OpenAccountScreen/ConnectCreateAccountScreen";
+import LinkAccount from "screens/OpenAccountScreen/LinkAccount";
+import LoanAccountScreen from "../screens/LoanAccountScreen/LoanAccountScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 
-const HomeNavigator = createDrawerNavigator({
-  DashboardScreen: { screen: DashboardScreen },
-  AnnouncementScreen: { screen: AnnouncementScreen },
-  OpenAccountScreen: { screen: OpenAccountScreen },
-  PersonalDetails: {
-    screen: PersonalDetailsScreen,
-    navigationOptions: ({ navigation }) => ({
-      title: "Personal Details"
-    })
+const AuthenticationNavigator = createStackNavigator(
+  {
+    Login: {
+      screen: Login
+    },
+    CreateMobileAccount: { screen: PersonalInfoScreen },
+    CreateMobileAccount2: { screen: SignUpScreen2 },
+    EmailVerification: { screen: EmailVerificationScreen },
+    TakeAPhotoOfID: { screen: TakeAPhotoOfIDScreen },
+    ForgotPassword: { screen: ForgotPasswordScreen },
+    OTPSignUp: { screen: OTPOpenAccountScreen }
+  },
+  {
+    initialRouteName: "CreateMobileAccount2"
   }
-}, {
-  initialRouteName: 'DashboardScreen',
-  drawerWidth: Dimensions.get("window").width * 0.45,
-  contentComponent: SideMenu
-});
+);
+
+const DashboardStack = createStackNavigator(
+  {
+    Dashboard: { screen: DashboardScreen },
+    AccountHistory: { screen: AccountHistoryScreen },
+    LoanAccount: { screen: LoanAccountScreen },
+    FingerPrint: { screen: LoginFingerPrintScreen },
+    CIS01: { screen: CIS01 },
+    CIS02: { screen: CIS02 },
+    CIS03: { screen: CIS03 },
+    CIS04: { screen: CIS04 },
+    CIS05: { screen: CIS05 },
+    CIS06: { screen: CIS06 },
+    CIS07: { screen: CIS07 },
+    CIS08: { screen: CIS08 },
+    CIS09: { screen: CIS09 },
+    CIS10: { screen: CIS10 },
+    CIS11: { screen: CIS11 },
+    CIS12: { screen: CIS12 },
+    CIS13: { screen: CIS13 },
+    CIS14: { screen: CIS14 },
+    OTPOpenAccount: { screen: OTPOpenAccountScreen },
+    OTP: { screen: OTPScreen },
+    ConnectCreateAccount: { screen: ConnectCreateAccountScreen },
+    LinkAccount: { screen: LinkAccount }
+  },
+  {
+    initialRouteName: "Dashboard"
+  }
+);
+
+const ProfileStack = createStackNavigator(
+  {
+    ViewProfile: { screen: ProfileScreen}
+  },
+  {
+    initialRouteName: "ViewProfile"
+  }
+);
+
+const HomeNavigator = createDrawerNavigator(
+  {
+    Home: { screen: DashboardStack },
+    Announcement: {
+      screen: AnnouncementScreen,
+      header: null
+    },
+    OpenAccountScreen: { screen: OpenAccountScreen },
+    Profile: { screen: ProfileStack },
+    PersonalDetails: {
+      screen: PersonalDetailsScreen,
+      navigationOptions: ({ navigation }) => ({
+        title: "Personal Details"
+      })
+    }
+  },
+  {
+    initialRouteName: "Home",
+    contentComponent: SideMenu
+  }
+);
 
 const AppNavigator = createSwitchNavigator({
   Auth: AuthenticationNavigator,

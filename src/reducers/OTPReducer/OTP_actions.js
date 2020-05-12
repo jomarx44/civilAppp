@@ -28,42 +28,65 @@ export const verifyOTP_BytePerByte = ({ token, otp }) => {
       .then(response => {
         const response_data = response.data.data["Register.Info"];
         const has_data = checkStatus(response) && !response_data.ErrorMsg;
-
-        dispatch(
-          has_data
-            ? {
-                type: CHECK_OTP_SUCCESS,
-                payload: {
-                  id: response.cis_no //CIS id
-                }
-              }
-            : {
-                type: CHECK_OTP_ERROR,
-                payload: {
-                  isFetching: false,
-                  success: false,
-                  message: response_data.ErrorMsg
-                }
-              }
-        );
+        console.log("Verify OTP and Token Response: ", response_data);
+        // return;
+        if (has_data) {
+          dispatch({
+            type: CHECK_OTP_SUCCESS,
+            payload: {
+              id: response_data.cis_no //CIS id
+            }
+          });
+          alertBox("Linked Account successfully!");
+          NavigationService.navigate("Dashboard");
+        } else {
+          dispatch({
+            type: CHECK_OTP_ERROR,
+            payload: {
+              isFetching: false,
+              success: false,
+              message: response_data.ErrorMsg,
+              token: token
+            }
+          });
+          alertBox("Wrong OTP Code. Please try again.");
+        }
       })
       .catch(error => {
-        alertBox(
-          "Ooops! There's something wrong connecting to the server. Please try again."
-        );
-        dispatch({
-          type: CHECK_OTP_ERROR,
-          payload: {
-            success: false,
-            is_fetching: false,
-            message: error
-          }
-        });
+        // alertBox(
+        //   "Ooops! There's something wrong connecting to the server. Please try again."
+        // );
+        // dispatch({
+        //   type: CHECK_OTP_ERROR,
+        //   payload: {
+        //     success: false,
+        //     isFetching: false,
+        //     message: error
+        //   }
+        // });
+        if (error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log("Error", error.message);
+        }
+        console.log(error.config);
       });
   };
 };
 
-export const requestOTP_TM = ({ mobile_number, save_info }) => {
+export const requestOTP_TM = ({
+  mobile_number,
+  save_info,
+  otpScreen = "OTPOpenAccount",
+  toNavId = "",
+  messageIfVerified = "",
+  shouldPutAttributes = true,
+  next = null
+}) => {
   const json_data = {
     path: "tm/otp",
     body: {
@@ -77,32 +100,40 @@ export const requestOTP_TM = ({ mobile_number, save_info }) => {
     dispatch({
       type: REQUEST_OTP
     });
+
     return postOnly(json_data)
       .then(response => {
         console.log("Request OTP response: ", response.data);
         const response_data = response.data;
         const has_data = response_data.status == "ok";
-
-        dispatch(
-          has_data
-            ? {
-                type: REQUEST_OTP_SUCCESS,
-                payload: {
-                  isFetching: false,
-                  success: true,
-                  token: response_data.token,
-                  message: response_data.msg ? response_data.msg : ""
-                }
-              }
-            : {
-                type: REQUEST_OTP_ERROR,
-                payload: {
-                  isFetching: false,
-                  success: false,
-                  message: response_data.ErrorMsg
-                }
-              }
-        );
+        if (has_data) {
+          dispatch({
+            type: REQUEST_OTP_SUCCESS,
+            payload: {
+              isFetching: false,
+              success: true,
+              token: response_data.token,
+              message: response_data.msg ? response_data.msg : "",
+              next: next
+            }
+          });
+          NavigationService.navigate(otpScreen, {
+            navid: toNavId,
+            message: messageIfVerified,
+            shouldPutAttributes: shouldPutAttributes
+          });
+        } else {
+          dispatch({
+            type: REQUEST_OTP_ERROR,
+            payload: {
+              isFetching: false,
+              success: false,
+              message: response_data.msg
+            }
+          });
+          console.log(response_data);
+          alertBox(response_data.msg);
+        }
       })
       .catch(error => {
         alertBox(
@@ -111,8 +142,8 @@ export const requestOTP_TM = ({ mobile_number, save_info }) => {
         dispatch({
           type: REQUEST_OTP_ERROR,
           payload: {
+            isFetching: false,
             success: false,
-            is_fetching: false,
             message: error
           }
         });
@@ -123,14 +154,14 @@ export const requestOTP_TM = ({ mobile_number, save_info }) => {
         } else if (error.request) {
           console.log(error.request);
         } else {
-          console.log('Error', error.message);
+          console.log("Error", error.message);
         }
         console.log(error.config);
       });
   };
-}
+};
 
-export const verifyOTP_TM = ({ token, otp }) => {
+export const verifyOTP_TM = ({ token, otp, navid = "", message = "", next = null }) => {
   const json_data = {
     path: "tm/otp_verify",
     body: {
@@ -144,29 +175,41 @@ export const verifyOTP_TM = ({ token, otp }) => {
     });
     return postOnly(json_data)
       .then(response => {
-        console.log('Verify Token and OTP response: ', response.data);
+        console.log("Verify Token and OTP response: ", response.data);
         const response_data = response.data.data;
         const has_data = response_data.status == "ok";
 
-        dispatch(
-          has_data
-            ? {
-                type: CHECK_OTPTM_SUCCESS,
-                payload: {
-                  is_fetching: false,
-                  success: true,
-                  message: ""
-                }
-              }
-            : {
-                type: CHECK_OTP_ERROR,
-                payload: {
-                  isFetching: false,
-                  success: false,
-                  message: response_data.message
-                }
-              }
-        );
+        if (has_data) {
+          dispatch({
+            type: CHECK_OTPTM_SUCCESS,
+            payload: {
+              isFetching: false,
+              success: true,
+              message: ""
+            }
+          });
+          if (message != "") {
+            alertBox(message);
+          }
+
+          if (navid != "") {
+            NavigationService.navigate(navid);
+          }
+
+          if(next) {
+            next();
+          }
+        } else {
+          dispatch({
+            type: CHECK_OTP_ERROR,
+            payload: {
+              isFetching: false,
+              success: false,
+              message: response_data.message
+            }
+          });
+          alertBox(response_data.message);
+        }
       })
       .catch(error => {
         alertBox(
@@ -176,10 +219,14 @@ export const verifyOTP_TM = ({ token, otp }) => {
           type: CHECK_OTP_ERROR,
           payload: {
             success: false,
-            is_fetching: false,
+            isFetching: false,
             message: error
           }
         });
       });
   };
+};
+
+const checkStatus = response => {
+  return response.data.status == "ok";
 };

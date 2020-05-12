@@ -1,3 +1,13 @@
+// TO BE REFACTORED!!
+// To be done:
+// * Dynamic OTP Functions and Hooks
+// ** Will put the request OTP Handler Here
+// ** Function to be used on Verify
+// ** Functions to be used After Verification
+// ** Dynamic Navigation Route
+// * Separated Components for each Items
+// * To be moved on OTPScreen
+
 import React from "react";
 import AppJson from "../../../app.json";
 
@@ -12,23 +22,18 @@ import {
   PixelRatio
 } from "react-native";
 import { Container, Button, Text, Input } from "native-base";
-import Overlay from "../../library/components/Overlay";
-import * as Profile from "store/profile";
-import { setLoggedState } from "store/auth";
+import Overlay from "library/components/Overlay";
 
 import styles from "styles/commonStyle";
 import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
 import { Col, Row, Grid } from "react-native-easy-grid";
 
-import NavigationService from "../../navigation/NavigationService.js";
 import { connect } from "react-redux";
 import { verifyOTP_TM } from "../../reducers/OTPReducer/OTP_actions";
 import {
   requestUniqueId,
   putAttributes
 } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
-import API from "../../actions/api";
-import { alertBox } from "../../actions/axiosCalls.js";
 
 const { height, width } = Dimensions.get("window");
 
@@ -36,6 +41,10 @@ class OTPOpenAccountScreen extends React.Component {
   constructor(props) {
     super(props);
   }
+
+  static navigationOptions = {
+    header: <PNHeaderBackButtonBlue />
+  };
 
   state = {
     signup_data: "",
@@ -58,6 +67,7 @@ class OTPOpenAccountScreen extends React.Component {
     const { otp, putAttributes, requestUniqueId, appAttribute } = this.props;
 
     if (prevProps.otp !== otp) {
+      console.log("REQUEST ID");
       if (!otp.isFetching && otp.success) {
         requestUniqueId(appAttribute.temporary_attributes);
       }
@@ -69,22 +79,35 @@ class OTPOpenAccountScreen extends React.Component {
         !appAttribute.is_fetching &&
         appAttribute.temporary_key
       ) {
-        AsyncStorage.getItem("ACCESS_TOKEN").then(response => {
-          const data = {
-            attribute_name: appAttribute.temporary_key,
-            attribute_value: appAttribute.temporary_attributes,
-            access_token: response
-          };
-
-          putAttributes(data);
-
-          NavigationService.navigate("DashboardScreen");
-        });
+        console.log("HERE NA!", this.props.navigation.getParam('shouldPutAttributes'));
+        console.log('App Attribute: ', appAttribute);
+        if(this.props.navigation.getParam('shouldPutAttributes') == true) {
+          AsyncStorage.getItem("ACCESS_TOKEN").then(response => {
+            const data = {
+              attribute_name: appAttribute.temporary_key,
+              attribute_value: appAttribute.temporary_attributes,
+              access_token: response
+            };
+            console.log("appAttribute: ", appAttribute)
+              putAttributes(data);
+          });
+        }
       }
     }
   }
 
-  onPressedDigit = value => {
+  // On Remove Digit
+  handleRemove = async() => {
+    let {otp, counter} = this.state;
+    otp = otp.slice(0, -1);
+    this.setState({[`d${counter}`]: ''});
+    if(counter > 0) {
+      counter -= 1;
+    }
+    this.setState({counter, otp });
+  }
+
+  handlePressDigit = value => {
     let { otp, counter } = this.state;
     otp += value;
     counter += 1;
@@ -93,23 +116,20 @@ class OTPOpenAccountScreen extends React.Component {
 
     this.setState({ [`d${counter}`]: value });
     if (counter == 7) {
+      const { getParam } = this.props.navigation;
+      // console.log(this.props.navigation.getParam('navid'));
       this.props.verifyOTP_TM({
-        token: this.props.token.token,
-        otp
+        token: this.props.otp.token,
+        otp,
+        navid: getParam('navid') ? getParam('navid') : '',
+        message: getParam('message') ? getParam('message') : '',
+        next: getParam('next') ? getParam ('next') : null
       });
     }
   };
 
-  static navigationOptions = {
-    header: <PNHeaderBackButtonBlue />
-  };
-
   render() {
     const { appAttribute, otp } = this.props;
-
-    if (!otp.isFetching & (otp.success == false)) {
-      alertBox(otp.message);
-    }
 
     const { d1, d2, d3, d4, d5, d6, d7 } = this.state;
     return (
@@ -137,26 +157,26 @@ class OTPOpenAccountScreen extends React.Component {
           <View style={[{ flex: 1 }]}>
             <View style={localStyle.item}>
               <Grid style={styles.grid}>
-                <Col style={[localStyle.digit]}>
-                  <Input value={d1} style={localStyle.digit_text} />
+                <Col style={[localStyle.digit, d1 != '' && {borderBottomWidth: 0}]}>
+                  <Input value={d1} style={[localStyle.digit_text]} editable={false} />
                 </Col>
-                <Col style={[localStyle.digit]}>
-                  <Input value={d2} style={localStyle.digit_text} />
+                <Col style={[localStyle.digit, d2 != '' && {borderBottomWidth: 0}]}>
+                  <Input value={d2} style={[localStyle.digit_text]} editable={false} />
                 </Col>
-                <Col style={[localStyle.digit]}>
-                  <Input value={d3} style={localStyle.digit_text} />
+                <Col style={[localStyle.digit, d3 != '' && {borderBottomWidth: 0}]}>
+                  <Input value={d3} style={[localStyle.digit_text]} editable={false} />
                 </Col>
-                <Col style={[localStyle.digit]}>
-                  <Input value={d4} style={localStyle.digit_text} />
+                <Col style={[localStyle.digit, d4 != '' && {borderBottomWidth: 0}]}>
+                  <Input value={d4} style={[localStyle.digit_text]} editable={false} />
                 </Col>
-                <Col style={[localStyle.digit]}>
-                  <Input value={d5} style={localStyle.digit_text} />
+                <Col style={[localStyle.digit, d5 != '' && {borderBottomWidth: 0}]}>
+                  <Input value={d5} style={[localStyle.digit_text]} editable={false} />
                 </Col>
-                <Col style={[localStyle.digit]}>
-                  <Input value={d6} style={localStyle.digit_text} />
+                <Col style={[localStyle.digit, d6 != '' && {borderBottomWidth: 0}]}>
+                  <Input value={d6} style={[localStyle.digit_text]} editable={false} />
                 </Col>
-                <Col style={[localStyle.digit]}>
-                  <Input value={d7} style={localStyle.digit_text} />
+                <Col style={[localStyle.digit, d7 != '' && {borderBottomWidth: 0}]}>
+                  <Input value={d7} style={[localStyle.digit_text]} editable={false} />
                 </Col>
               </Grid>
             </View>
@@ -168,7 +188,7 @@ class OTPOpenAccountScreen extends React.Component {
                   <Button
                     transparent
                     light
-                    onPress={() => this.onPressedDigit("1")}
+                    onPress={() => this.handlePressDigit("1")}
                   >
                     <Text style={localStyle.kptext}>1</Text>
                   </Button>
@@ -177,7 +197,7 @@ class OTPOpenAccountScreen extends React.Component {
                   <Button
                     transparent
                     light
-                    onPress={() => this.onPressedDigit("2")}
+                    onPress={() => this.handlePressDigit("2")}
                   >
                     <Text style={localStyle.kptext}>2</Text>
                   </Button>
@@ -186,7 +206,7 @@ class OTPOpenAccountScreen extends React.Component {
                   <Button
                     transparent
                     light
-                    onPress={() => this.onPressedDigit("3")}
+                    onPress={() => this.handlePressDigit("3")}
                   >
                     <Text style={localStyle.kptext}>3</Text>
                   </Button>
@@ -198,7 +218,7 @@ class OTPOpenAccountScreen extends React.Component {
                   <Button
                     transparent
                     light
-                    onPress={() => this.onPressedDigit("4")}
+                    onPress={() => this.handlePressDigit("4")}
                   >
                     <Text style={localStyle.kptext}>4</Text>
                   </Button>
@@ -207,7 +227,7 @@ class OTPOpenAccountScreen extends React.Component {
                   <Button
                     transparent
                     light
-                    onPress={() => this.onPressedDigit("5")}
+                    onPress={() => this.handlePressDigit("5")}
                   >
                     <Text style={localStyle.kptext}>5</Text>
                   </Button>
@@ -216,7 +236,7 @@ class OTPOpenAccountScreen extends React.Component {
                   <Button
                     transparent
                     light
-                    onPress={() => this.onPressedDigit("6")}
+                    onPress={() => this.handlePressDigit("6")}
                   >
                     <Text style={localStyle.kptext}>6</Text>
                   </Button>
@@ -228,7 +248,7 @@ class OTPOpenAccountScreen extends React.Component {
                   <Button
                     transparent
                     light
-                    onPress={() => this.onPressedDigit("7")}
+                    onPress={() => this.handlePressDigit("7")}
                   >
                     <Text style={localStyle.kptext}>7</Text>
                   </Button>
@@ -237,7 +257,7 @@ class OTPOpenAccountScreen extends React.Component {
                   <Button
                     transparent
                     light
-                    onPress={() => this.onPressedDigit("8")}
+                    onPress={() => this.handlePressDigit("8")}
                   >
                     <Text style={localStyle.kptext}>8</Text>
                   </Button>
@@ -246,7 +266,7 @@ class OTPOpenAccountScreen extends React.Component {
                   <Button
                     transparent
                     light
-                    onPress={() => this.onPressedDigit("9")}
+                    onPress={() => this.handlePressDigit("9")}
                   >
                     <Text style={localStyle.kptext}>9</Text>
                   </Button>
@@ -255,19 +275,12 @@ class OTPOpenAccountScreen extends React.Component {
 
               <View style={localStyle.kprow}>
                 <Col style={[localStyle.kpdigit]}>
-                  <Button
-                    transparent
-                    light
-                    onPress={() => this.onPressedDigit("")}
-                  >
-                    <Text style={localStyle.kptext}></Text>
-                  </Button>
                 </Col>
                 <Col style={[localStyle.kpdigit]}>
                   <Button
                     transparent
                     light
-                    onPress={() => this.onPressedDigit("0")}
+                    onPress={() => this.handlePressDigit("0")}
                   >
                     <Text style={localStyle.kptext}>0</Text>
                   </Button>
@@ -276,7 +289,7 @@ class OTPOpenAccountScreen extends React.Component {
                   <Button
                     transparent
                     light
-                    onPress={() => this.onPressedDigit("<")}
+                    onPress={() => this.handleRemove()}
                   >
                     <Text style={localStyle.kptext}>&lt;</Text>
                   </Button>
@@ -285,7 +298,7 @@ class OTPOpenAccountScreen extends React.Component {
             </View>
           </View>
         </View>
-        { appAttribute.isUpdating && (
+        { (appAttribute.isUpdating || otp.isFetching) && (
           <Overlay>
             <ActivityIndicator color="#FFF" size="large" />
           </Overlay>
@@ -298,11 +311,13 @@ class OTPOpenAccountScreen extends React.Component {
 let localStyle = StyleSheet.create({
   digit: {
     marginHorizontal: "2.25%",
-    backgroundColor: "#FFFFFF"
+    borderBottomColor: '#ffffff',
+    borderBottomWidth: 1
   },
   digit_text: {
-    fontFamily: "OpenSans_Bold",
-    fontSize: 16,
+    color: '#ffffff',
+    fontFamily: "Avenir_Medium",
+    fontSize: 29,
     textAlign: "center",
     alignContent: "center",
     alignItems: "center",

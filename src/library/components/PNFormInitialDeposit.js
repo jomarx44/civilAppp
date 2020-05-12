@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { StyleSheet, View, Text, TextInput } from "react-native";
 import { Item, Label } from "native-base";
+import { TextInputMask } from 'react-native-masked-text'
 
 class PNFormInitialDeposit extends Component {
   constructor(props) {
@@ -9,8 +10,39 @@ class PNFormInitialDeposit extends Component {
     this.input = React.createRef();
   }
 
+  state = {
+    styles: {
+      borderBottomColor: "#E1E1E5",
+      borderBottomWidth: 1
+    }
+  };
+
   focus = () => {
     this.input.current.focus();
+  };
+
+  checkIfEmpty = () => {
+    return this.props.value == "";
+  };
+
+  handleOnFocus = () => {
+    const { styles } = this.state;
+    styles.borderBottomColor = "#F5AC14";
+    this.setState({
+      styles
+    });
+  };
+
+  handleOnBlur = () => {
+    const { styles } = this.state;
+    if (!this.checkIfEmpty()) {
+      styles.borderBottomWidth = 0;
+      this.setState({ styles });
+    } else {
+      styles.borderBottomColor = "#E1E1E5";
+      styles.borderBottomWidth = 1;
+      this.setState({ styles });
+    }
   };
 
   render() {
@@ -21,27 +53,43 @@ class PNFormInitialDeposit extends Component {
       maxLength = null,
       onSubmitEditing = null,
       autoCompleteType = "off",
-      editable = true
+      editable = true,
+      invalid
     } = this.props;
 
     
     return (
       <View style={styles.view}>
-        <Label style={styles.label}>{title}</Label>
-        <Item style={styles.text}>
-          <Text style={styles.prefix}>PHP</Text>
-          <TextInput
-            autoCompleteType={autoCompleteType}
-            keyboardType='decimal-pad'
-            onSubmitEditing={onSubmitEditing}
-            onChangeText={onChangeText}
-            ref={this.input}
-            style={[styles.input, !editable && styles.input_disabled]}
-            value={value}
-            editable={editable}
-            maxLength={maxLength}
-          />
-        </Item>
+        <TextInputMask 
+          type={'money'}
+          options={{
+            precision: 2,
+            separator: '.',
+            delimiter: ',',
+            unit: 'PHP ',
+          }}
+          style={[
+            styles.input,
+            {
+              borderBottomColor: this.state.styles.borderBottomColor,
+              borderBottomWidth: this.state.styles.borderBottomWidth
+            }
+          ]}
+          value={value}
+          onChangeText={onChangeText}
+          placeholderTextColor='#444444'
+          onFocus={() => {
+            // Do this.props.onFocus if given
+            // this.props.onFocus && this.props.onFocus();
+            this.handleOnFocus();
+          }}
+          onBlur={() => {
+            // Do this.props.onBlur if given
+            // this.props.onBlur && this.props.onBlur();
+            this.handleOnBlur();
+          }}
+        />
+        <Text style={[styles.invalidText]}>{ invalid }</Text>
       </View>
     );
   }
@@ -62,31 +110,26 @@ let styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     marginTop: 5,
     flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-  prefix: {
-    color: "#f9a010",
-    fontSize: 16,
-    fontFamily: "Montserrat_SemiBold",
-    width:'15%',
-    marginRight: 10
   },
   input: {
-    color: "#f9a010",
-    fontSize: 14,
-    fontFamily: "Montserrat_Medium",
-    width: "85%"
+    backgroundColor: "transparent",
+    borderBottomWidth: 1,
+    fontFamily: "Avenir_Book",
+    fontSize: 20,
+    color: '#F9A010'
   },
   input_disabled: {
     backgroundColor: "#EEEEEE"
   },
-  label: {
-    fontSize: 14,
-    fontFamily: "Montserrat_Medium",
-    color: "#5d646c"
-  },
   view: {
-    marginBottom: 25
+    flexDirection: 'column',
+    marginBottom: 40
+  },
+  invalidText: {
+    marginTop: 5,
+    fontFamily: 'Avenir_Medium',
+    fontSize: 12,
+    color: '#DC6061'
   }
 });
 

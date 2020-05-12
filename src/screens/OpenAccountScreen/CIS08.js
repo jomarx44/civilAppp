@@ -18,30 +18,51 @@ import {
 import {
   Container,
 } from "native-base";
-import * as Profile from "store/profile";
-import { setLoggedState } from "store/auth";
 
-import { StackNavigator } from "react-navigation";
 import NavigationService from "navigation/NavigationService.js";
-import styles from "styles/commonStyle";
-import PNFormContactInfo from "../../library/components/PNFormContactInfo";
-import PNBlueButton from "library/components/PNBlueButton";
-import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage";
-import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
-import PNHeaderTitle from "library/components/PNHeaderTitle";
+import PNFormContactInfo from "library/components/PNFormContactInfo";
+import PNFormNavigation from "library/components/PNFormNavigation";
+import PNFormButton from "library/components/PNFormButton";
+import PNFormHeader from "library/components/PNFormHeader";
 import { connect } from "react-redux";
 import { addAttributes } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
+import validate from "validate.js";
+
+const constraints = {
+  contact_information: {
+    presence: {
+      allowEmpty: false
+    }
+  }
+}
 
 class CIS08 extends React.Component {
-  input_contact_information;
+  
   constructor(props) {
     super(props);
     this.state = {
       cis: {
         contact_information: ''
-      }
+      },
+      invalid: {}
     };
+
+    this.input_contact_information = React.createRef();
   }
+
+  static navigationOptions = {
+    header: ({ scene, previous, navigation }) => {
+      const { options } = scene.descriptor;
+      const title =
+        options.title !== undefined ? options.title : "Create Account";
+      return <PNFormNavigation title={title} />;
+    },
+    headerStyle: {
+      style: {
+        shadowColor: 'transparent'
+      }
+    }
+  };
 
   onChangeText = (value, field) => {
     const { cis } = this.state;
@@ -53,54 +74,83 @@ class CIS08 extends React.Component {
     console.log("APPATTRIBUTE: ", this.props.appAttribute);
   }
 
-  handlePress = () => {
-    const attribute = {
-      contact_information: this.state.cis.contact_information
+  handleOnBlur = ( index, additionalValidate = {} ) => {
+    const current = {
+      ...additionalValidate,
+      [index]: this.state.cis[index]
     };
-    
-    attribute.contact_information = '63' + attribute.contact_information;
-    this.props.addAttributes(attribute);
-    NavigationService.navigate("CIS09");
-  };
+    const invalid = validate(current, { [index]: constraints[index] });
+    if (invalid) {
+      this.setState(
+        {
+          ...this.state,
+          invalid: {
+            ...this.state.invalid,
+            ...invalid
+          }
+        },
+        () => console.log("Invalid State: ", this.state.invalid)
+      );
+    } else {
+      const { invalid } = this.state;
+      delete invalid[index];
+      this.setState({
+        ...this.state,
+        invalid
+      });
+    }
+  }
 
-  static navigationOptions = {
-    header: <PNHeaderBackButtonBlue />
+  handlePress = () => {
+    const invalid = validate(this.state.cis, constraints);
+    
+    if (!invalid) {
+      const attribute = {
+        contact_information: this.state.cis.contact_information
+      };
+      attribute.contact_information = '63' + attribute.contact_information;
+      this.props.addAttributes(attribute);
+      NavigationService.navigate("CIS09");
+    } else {
+      this.setState({
+        invalid: invalid
+      });
+    }
   };
 
   render() {
     let { height, width } = Dimensions.get("window");
+    const {invalid} = this.state;
     return (
       <Container>
         <KeyboardShift>
           {() => (
-            <View style={{ flex: 1 }}>
-              <View
-                style={{ backgroundColor: "#309fe7", height: height * 0.2 }}
+            <View style={{ flex: 1, justifyContent: 'space-between' }}>
+              <PNFormHeader>My Contact Info is:</PNFormHeader>
+              <ScrollView 
+                style={localStyle.container}
+                contentContainerStyle={localStyle.contentContainer}
               >
-                <PNHeaderTitle title="My Contact Info is:" />
-              </View>
-              <ScrollView style={localStyle.container}>
-                <View style={{ flex: 4, paddingTop: 30 }}>
                   <PNFormContactInfo
                     title="Contact Information"
-                    reference={input => {
+                    ref={input => {
                       this.input_contact_information = input;
                     }}
                     onChangeText={text =>
                       this.onChangeText(text, "contact_information")
                     }
                     value={this.state.cis.contact_information}
+                    invalid={invalid.contact_information ? invalid.contact_information[0] : ""}
                   />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <TouchableOpacity
-                    style={localStyle.button}
-                    onPress={this.handlePress}
-                  >
-                    <Text style={localStyle.button_text}>NEXT</Text>
-                  </TouchableOpacity>
-                </View>
               </ScrollView>
+              <View style={{ paddingHorizontal: 30, marginBottom: 30 }}>
+                {/* <PNFormButton onPress={this.handlePress} disabled={!this.state.validated} label="Next" /> */}
+                <PNFormButton
+                  onPress={this.handlePress}
+                  disabled={false}
+                  label="Next"
+                />
+              </View>
             </View>
           )}
         </KeyboardShift>
@@ -113,6 +163,9 @@ let localStyle = StyleSheet.create({
   container: {
     paddingHorizontal: 30,
     paddingBottom: 51
+  },
+  contentContainer: {
+    paddingTop: 30
   },
   text: {
     marginLeft: 32,
@@ -130,7 +183,7 @@ let localStyle = StyleSheet.create({
   button_text: {
     color: "#fff",
     fontSize: 16,
-    fontFamily: "Montserrat_Medium"
+    fontFamily: "Avenir_Medium"
   },
   header: {
     backgroundColor: "#309fe7"

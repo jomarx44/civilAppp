@@ -8,6 +8,7 @@ import * as Auth from 'store/auth';
 import * as PROFILE from 'store/profile';
 import moment from 'moment';
 import AppJson from '../../app.json';
+import NavigationService from "navigation/NavigationService.js";
 
 class IBMAppId  {
 
@@ -57,12 +58,23 @@ class IBMAppId  {
     };
 
     return (dispatch) => {
+      dispatch({
+        type: action_type
+      });
       return this.axios_obj.get(json["path"], config )
         .then(response => {
+          console.log("getUserInfo: ", response.data);
           action_type = action_type + "_SUCCESS"
-          dispatch(this.responseData(response.data, action_type, params))
+          console.log("Hmmm: ", response);
+          dispatch(this.responseData(response.data, action_type, params));
+
+          if(json.navid) {
+            NavigationService.navigate(json.navid);
+          }
         })
         .catch(error => {
+          dispatch(this.responseData(error, action_type + "_ERROR", params));
+          alert("No internet connection. Please try again.");
           console.log("error" + error);
         });
      };
@@ -75,6 +87,7 @@ class IBMAppId  {
       token: token,
       path: _url, 
       reducer_type: TYPE.USERINFO,
+      navid: "Home"
     };
     return this.getMethodWithToken(json_data);
   }

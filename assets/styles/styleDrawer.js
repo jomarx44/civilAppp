@@ -6,8 +6,8 @@ const styleDrawer = StyleSheet.create({
   },
   textstyle: {
     color: "#FFFFFF",
-    fontSize: 12,
-    fontWeight: "normal"
+    fontFamily: 'Avenir_Medium',
+    fontSize: 22
   },
   itemstyle: {
   },

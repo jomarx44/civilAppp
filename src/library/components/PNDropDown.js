@@ -1,22 +1,32 @@
 import React from "react";
 import PropTypes from 'prop-types'
 import { StyleSheet, View, Dimensions, Text, Picker } from "react-native";
+import RNPickerSelect from 'react-native-picker-select';
 
-const PNDropDown = ({ title, onValueChange, selectedValue, options = [] }) => {
+const PNDropDown = ({ placeholder, onValueChange, selectedValue, options = [], invalid ='', onBlur }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{title}</Text>
-      <View>
-        <Picker
+      <View style={styles.bordered}>
+        {/* <Picker
+          mode='dropdown'
           selectedValue={selectedValue}
-          style={styles.picker}
+          style={[styles.picker, selectedValue === '' && styles.picker_blank]}
           onValueChange={value => onValueChange(value)}
         >
           {options.map((option, index) => (
             <Picker.Item key={index} label={option.label} value={option.value} />
           ))}
-        </Picker>
+        </Picker> */}
+        <RNPickerSelect 
+          onClose={onBlur}
+          onValueChange={value => onValueChange(value)}
+          items={options}
+          style={pickerStyles}
+          useNativeAndroidPickerStyle={false}
+          placeholder={placeholder}
+        />
       </View>
+        <Text style={[styles.invalidText]}>{ invalid }</Text>
     </View>
   );
 };
@@ -27,21 +37,46 @@ PNDropDown.propTypes = {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 25,
+    marginBottom: 40,
+    flexDirection: 'column'
+  },
+  bordered: {
     borderBottomColor: '#E0E0E0',
     borderBottomWidth: 1
   },
-  label: {
-    fontSize: 14,
-    fontFamily: "Montserrat_Medium",
-    color: "#5d646c"
-  },
   picker: {
+    padding: 0,
     color: "#f9a010",
-    fontSize: 14,
-    fontFamily: "Montserrat_Medium",
+    fontFamily: "Avenir_Book",
+    fontSize: 30,
     width: "100%"
+  },
+  picker_blank: {
+    color: "#444444",
+  },
+  invalidText: {
+    marginTop: 5,
+    fontFamily: 'Avenir_Medium',
+    fontSize: 12,
+    color: '#DC6061'
   }
 });
+
+const pickerStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 20,
+    fontFamily: "Avenir_Book",
+    width: '100%',
+    color: "#f9a010",
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
+  inputAndroid: {
+    fontSize: 20,
+    fontFamily: "Avenir_Book",
+    width: '100%',
+    color: "#f9a010",
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
+})
 
 export default PNDropDown;

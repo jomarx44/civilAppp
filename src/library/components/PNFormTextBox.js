@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { StyleSheet, View, TextInput } from "react-native";
+import { StyleSheet, View, TextInput, Text } from "react-native";
 import { Item, Label } from "native-base";
 
 class PNFormTextBox extends Component {
@@ -16,32 +16,22 @@ class PNFormTextBox extends Component {
   render() {
     const {
       title,
-      onChangeText,
       password,
-      value,
-      maxLength = null,
-      onSubmitEditing = null,
-      keyboardType = "default",
-      autoCompleteType = "off",
-      editable = true
+      editable = true,
+      invalid = ""
     } = this.props;
     return (
       <View style={styles.view}>
         <Label style={styles.label}>{title}</Label>
         <Item style={styles.text}>
           <TextInput
-            autoCompleteType={autoCompleteType}
-            keyboardType={keyboardType}
-            onSubmitEditing={onSubmitEditing}
-            onChangeText={onChangeText}
+            {...this.props}
             ref={this.input}
             secureTextEntry={password}
             style={[styles.input, !editable && styles.input_disabled]}
-            value={value}
-            editable={editable}
-            maxLength={maxLength}
           />
         </Item>
+        <Text style={[styles.invalidText]}>{ invalid }</Text>
       </View>
     );
   }
@@ -62,24 +52,30 @@ let styles = StyleSheet.create({
   text: {
     alignItems: "center",
     backgroundColor: "#FFFFFF",
-    marginTop: 5
+    marginVertical: 5
   },
   input: {
     color: "#f9a010",
-    fontSize: 14,
-    fontFamily: "Montserrat_Medium",
+    fontSize: 18,
+    fontWeight: 'normal',
+    fontFamily: "Avenir_Medium",
     width: "100%"
   },
   input_disabled: {
     backgroundColor: "#EEEEEE"
   },
   label: {
-    fontSize: 14,
-    fontFamily: "Montserrat_Medium",
+    fontSize: 18,
+    fontFamily: "Avenir_Medium",
     color: "#5d646c"
   },
   view: {
-    marginBottom: 25
+    marginBottom: 15
+  },
+  invalidText: {
+    fontFamily: 'Avenir_Medium',
+    fontSize: 12,
+    color: '#DC6061'
   }
 });
 

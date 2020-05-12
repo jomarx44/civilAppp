@@ -18,53 +18,97 @@ import {
 import {
   Container,
 } from "native-base";
-import * as Profile from "store/profile";
-import { setLoggedState } from "store/auth";
 
-import { StackNavigator } from "react-navigation";
 import NavigationService from "navigation/NavigationService.js";
-import styles from "styles/commonStyle";
+import PNFormNavigation from "library/components/PNFormNavigation";
+import PNFormInputBox from "library/components/PNFormInputBox"
+import PNFormDatePicker from 'library/components/PNFormDatePicker';
 import PNFormTextBox from "library/components/PNFormTextBox";
-import PNBlueButton from "library/components/PNBlueButton";
-import PNBlueButtonSaveAsyncStorage from "library/components/PNBlueButtonSaveAsyncStorage";
-import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
-import PNHeaderTitle from "library/components/PNHeaderTitle";
+import PNFormButton from "library/components/PNFormButton"
+import PNFormHeader from "library/components/PNFormHeader";
 import { connect } from "react-redux";
 import {addAttributes} from '../../reducers/AppAttributeReducer/AppAttribute_actions'
 
 class CIS05 extends React.Component {
-  input_beneficiary_name;
-  input_beneficiary_address;
-  input_birth_date;
-  input_birth_place;
-  input_work_nature;
-  input_fund_source;
   constructor(props) {
     super(props);
     this.state = {
       cis: {
         beneficiary_name: '',
         beneficiary_address: '',
-        beneficiary_birth_date: '',
+        beneficiary_birth_date: new Date(),
         beneficiary_birth_place: '',
         beneficiary_fund_source: '', 
         beneficiary_work_nature: ''
-      }
+      },
+      invalid: {}
     };
+
+    this.input_beneficiary_name = React.createRef();
+    this.input_beneficiary_address = React.createRef();
+    this.input_birth_date = React.createRef();
+    this.input_birth_place = React.createRef();
+    this.input_work_nature = React.createRef();
+    this.input_fund_source = React.createRef();
   }
+
+  static navigationOptions = {
+    header: ({ scene, previous, navigation }) => {
+      const { options } = scene.descriptor;
+      const title =
+        options.title !== undefined ? options.title : "Create Account";
+      return <PNFormNavigation title={title} />;
+    },
+    headerStyle: {
+      style: {
+        shadowColor: 'transparent'
+      }
+    }
+  };
 
   componentDidMount() {
     console.log('APPATTRIBUTE: ', this.props.appAttribute);
   }
 
+  handleOnBlur = ( index, additionalValidate = {} ) => {
+    const current = {
+      ...additionalValidate,
+      [index]: this.state.cis[index]
+    };
+    const invalid = validate(current, { [index]: constraints[index] });
+    if (invalid) {
+      this.setState(
+        {
+          ...this.state,
+          invalid: {
+            ...this.state.invalid,
+            ...invalid
+          }
+        },
+        () => console.log("Invalid State: ", this.state.invalid)
+      );
+    } else {
+      const { invalid } = this.state;
+      delete invalid[index];
+      this.setState({
+        ...this.state,
+        invalid
+      });
+    }
+  }
+
   handlePress = () => {
-    this.props.addAttributes(this.state.cis);
+    const { cis } = this.state;
+    cis.beneficiary_birth_date = cis.beneficiary_birth_date.toISOString().slice(0,10);
+    this.props.addAttributes(cis);
     NavigationService.navigate('CIS06');
   };
 
-  static navigationOptions = {
-    header: <PNHeaderBackButtonBlue />
-  };
+  handleDateChange = (date) => {
+    const currentState = this.state;
+    currentState.cis.beneficiary_birth_date = date || currentState.cis.beneficiary_birth_date;
+    this.setState(currentState)
+  }
 
   onChangeText = (value, field) => {
     const { cis } = this.state;
@@ -78,73 +122,77 @@ class CIS05 extends React.Component {
       <Container>
         <KeyboardShift>
           {() => (
-            <View style={{ flex: 1 }}>
-              <View
-                style={{ backgroundColor: "#309fe7", height: height * 0.2 }}
+            <View style={{ flex: 1, justifyContent: 'space-between' }}>
+              <PNFormHeader>Beneficiary(if applicable) :</PNFormHeader>
+              <ScrollView
+                style={localStyle.container}
+                contentContainerStyle={localStyle.contentContainer}
               >
-                <PNHeaderTitle title="Beneficiary(if applicable):" />
-              </View>
-              <ScrollView style={localStyle.container}>
-                <View style={{ flex: 4, paddingTop: 30 }}>
-                  <PNFormTextBox
-                    title="Name"
-                    reference={input => {
-                      this.input_beneficiary_name = input;
-                    }}
-                    onChangeText={text =>
-                      this.onChangeText(text, "beneficiary_name")
-                    }
-                  />
-                  <PNFormTextBox
-                    title="Address"
-                    reference={input => {
-                      this.input_beneficiary_address = input;
-                    }}
-                    onChangeText={text =>
-                      this.onChangeText(text, "beneficiary_address")
-                    }
-                  />
-                  <PNFormTextBox
-                    title="Birth Date"
-                    reference={input => {
-                      this.input_birth_date = input;
-                    }}
-                    onChangeText={text => this.onChangeText(text, "beneficiary_birth_date")}
-                  />
-                  <PNFormTextBox
-                    title="Birth Place"
-                    reference={input => {
-                      this.input_birth_place = input;
-                    }}
-                    onChangeText={text =>
-                      this.onChangeText(text, "beneficiary_birth_place")
-                    }
-                  />
-                  <PNFormTextBox
-                    title="Nature of Work"
-                    reference={input => {
-                      this.input_work_nature = input;
-                    }}
-                    onChangeText={text =>
-                      this.onChangeText(text, "beneficiary_work_nature")
-                    }
-                  />
-                  <PNFormTextBox
-                    title="Source of Fund"
-                    reference={input => {
-                      this.input_fund_source = input;
-                    }}
-                    onChangeText={text =>
-                      this.onChangeText(text, "beneficiary_fund_source")
-                    }
-                  />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <TouchableOpacity style={localStyle.button} onPress={this.handlePress}>
-                    <Text style={localStyle.button_text}>NEXT</Text>
-                  </TouchableOpacity>
-                </View>
+                <PNFormInputBox
+                  placeholder="Name"
+                  ref={input => {
+                    this.input_beneficiary_name = input;
+                  }}
+                  onChangeText={text =>
+                    this.onChangeText(text, "beneficiary_name")
+                  }
+                  value={this.state.cis.beneficiary_name}
+                />
+                <PNFormInputBox
+                  placeholder="Address"
+                  ref={input => {
+                    this.input_beneficiary_address = input;
+                  }}
+                  onChangeText={text =>
+                    this.onChangeText(text, "beneficiary_address")
+                  }
+                  value={this.state.cis.beneficiary_address}
+                />
+                <PNFormDatePicker 
+                  placeHolderText='Select Date of Birth'
+                  defaultDate={this.state.cis.beneficiary_birth_date}
+                  onDateChange={this.handleDateChange}
+                  maximumDate={new Date()}
+                />
+                <PNFormInputBox
+                  placeholder="Birth Place"
+                  ref={input => {
+                    this.input_birth_place = input;
+                  }}
+                  onChangeText={text =>
+                    this.onChangeText(text, "beneficiary_birth_place")
+                  }
+                  value={this.state.cis.beneficiary_birth_place}
+                />
+                <PNFormInputBox
+                  placeholder="Nature of Work"
+                  ref={input => {
+                    this.input_work_nature = input;
+                  }}
+                  onChangeText={text =>
+                    this.onChangeText(text, "beneficiary_work_nature")
+                  }
+                  value={this.state.cis.beneficiary_work_nature}
+                />
+                <PNFormInputBox
+                  placeholder="Source of Fund"
+                  ref={input => {
+                    this.input_fund_source = input;
+                  }}
+                  onChangeText={text =>
+                    this.onChangeText(text, "beneficiary_fund_source")
+                  }
+                  value={this.state.cis.beneficiary_fund_source}
+                />
               </ScrollView>
+              <View style={{ paddingHorizontal: 30, marginBottom: 30 }}>
+                {/* <PNFormButton onPress={this.handlePress} disabled={!this.state.validated} label="Next" /> */}
+                <PNFormButton
+                  onPress={this.handlePress}
+                  disabled={false}
+                  label="Next"
+                />
+              </View>
             </View>
           )}
         </KeyboardShift>
@@ -157,6 +205,9 @@ let localStyle = StyleSheet.create({
   container: {
     paddingHorizontal: 30,
     paddingBottom: 51
+  },
+  contentContainer: {
+    paddingTop: 30
   },
   text: {
     marginLeft: 32,
@@ -174,7 +225,7 @@ let localStyle = StyleSheet.create({
   button_text: {
     color: "#fff",
     fontSize: 16,
-    fontFamily: "Montserrat_Medium"
+    fontFamily: "Avenir_Medium"
   },
   header: {
     backgroundColor: "#309fe7"

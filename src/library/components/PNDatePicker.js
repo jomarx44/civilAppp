@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,18 +8,20 @@ import {
   DatePicker
 } from 'native-base';
 
-const PNDatePicker = ({title, defaultDate, minimumDate, maximumDate, placeHolderText, onDateChange}) => {
+const PNDatePicker = ({title, onDateChange, ...props }) => {
+  const [ borderBottomWidth, setBorderBottomWidth ] = useState(1);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>{title}</Text>
+    <View style={[styles.container, { borderBottomWidth }]}>
+      <Text style={styles.label}></Text>
       <View style={styles.inputContainer}>
         <DatePicker 
-          defaultDate={defaultDate}
-          onDateChange={(date) => onDateChange(date)}
-          minimumDate={minimumDate}
-          maximumDate={maximumDate}
+          {...props}
+          onDateChange={(date) => {
+            onDateChange(date);
+            setBorderBottomWidth(0);
+          }}
           textStyle={styles.textStyle}
-          placeHolderText={placeHolderText}
           placeHolderTextStyle={styles.placeHolder}
         />
       </View>
@@ -29,13 +31,12 @@ const PNDatePicker = ({title, defaultDate, minimumDate, maximumDate, placeHolder
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 25,
+    marginBottom: 40,
     borderBottomColor: '#E0E0E0',
-    borderBottomWidth: 1
   },
   label: {
     fontSize: 14,
-    fontFamily: 'Montserrat_Medium',
+    fontFamily: 'Avenir_Medium',
     color: "#5d646c"
   },
   inputContainer: {
@@ -44,14 +45,16 @@ const styles = StyleSheet.create({
     marginTop: 5
   },
   placeHolder: {
-    color: '#f9a010',
-    fontSize: 14,
-    fontFamily: 'Montserrat_Medium',
+    color: '#444444',
+    fontFamily: "Avenir_Book",
+    fontSize: 20,
+    padding: 0
   },
   textStyle: {
-    color: '#f9a010',
-    fontSize: 14,
-    fontFamily: 'Montserrat_Medium',
+    padding: 0,
+    fontFamily: "Avenir_Book",
+    fontSize: 20,
+    color: '#F9A010'
   }
 });
 

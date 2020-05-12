@@ -95,3 +95,17 @@ export const getPassword = () => {
       .catch(err => reject(err));
   });
 };
+
+// FOR PASSWORD VALIDATION IN CHANGE PASSWORD
+export const setAccessToken = state => AsyncStorage.setItem("ACCESS_TOKEN", state);
+export const getAccessToken = () => {
+  return new Promise((resolve, reject) => {
+    AsyncStorage.getItem("ACCESS_TOKEN")
+      .then(response => {
+        resolve(response);
+      })
+      .catch(error => reject(error));
+  });
+};
+export const deleteAccessToken = () => AsyncStorage.removeItem("ACCESS_TOKEN");
+

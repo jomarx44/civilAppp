@@ -17,53 +17,98 @@ import {
   Text
 } from "react-native";
 import { Container } from "native-base";
-import Overlay from "../../library/components/Overlay";
+import Overlay from "library/components/Overlay";
 import NavigationService from "navigation/NavigationService.js";
-import PNFormInitialDeposit from "../../library/components/PNFormInitialDeposit";
-import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
-import PNHeaderTitle from "library/components/PNHeaderTitle";
+import PNFormNavigation from "library/components/PNFormNavigation";
+import PNFormInitialDeposit from "library/components/PNFormInitialDeposit";
+import PNFormButton from "library/components/PNFormButton";
+import PNFormHeader from "library/components/PNFormHeader";
 import { connect } from "react-redux";
 import {
   addAttributes,
-  putAttributes,
   requestUniqueId
 } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
 import { requestOTP_TM } from "../../reducers/OTPReducer/OTP_actions";
+import validate from "validate.js";
+
+const constraints = {
+  initial_deposit: {
+    presence: {
+      allowEmpty: false
+    }
+  }
+}
 
 class CIS14 extends React.Component {
-  input_initial_deposit;
+  constructor(props) {
+    super(props);
+
+    this.input_initial_deposit = React.createRef();
+  }
+
   state = {
     cis: {
       initial_deposit: ""
+    },
+    invalid: {}
+  };
+
+  static navigationOptions = {
+    header: ({ scene, previous, navigation }) => {
+      const { options } = scene.descriptor;
+      const title =
+        options.title !== undefined ? options.title : "Create Account";
+      return <PNFormNavigation title={title} />;
+    },
+    headerStyle: {
+      style: {
+        shadowColor: "transparent"
+      }
     }
   };
 
-  componentDidUpdate(prevProps) {
-    const {
-      otp,
-      token
-    } = this.props;
-
-    if(prevProps.otp !== otp) {
-      if(!otp.isFetching & (otp.success == false)) {
-        alertBox(otp.message);
-      }
-    }
-
-    if(prevProps.token !== token) {
-      if (!token.isFetching && token.success) {
-        NavigationService.navigate("OTPOpenAccount");
-      }
+  handleOnBlur = ( index, additionalValidate = {} ) => {
+    const current = {
+      ...additionalValidate,
+      [index]: this.state.cis[index]
+    };
+    const invalid = validate(current, { [index]: constraints[index] });
+    if (invalid) {
+      this.setState(
+        {
+          ...this.state,
+          invalid: {
+            ...this.state.invalid,
+            ...invalid
+          }
+        },
+        () => console.log("Invalid State: ", this.state.invalid)
+      );
+    } else {
+      const { invalid } = this.state;
+      delete invalid[index];
+      this.setState({
+        ...this.state,
+        invalid
+      });
     }
   }
 
   handlePress = () => {
-    const { addAttributes, appAttribute, requestOTP_TM } = this.props;
-    addAttributes(this.state.cis);
-    requestOTP_TM({
-      mobile_number: appAttribute.temporary_attributes.contact_information,
-      save_info: appAttribute.temporary_attributes
-    });
+    const invalid = validate(this.state.cis, constraints);
+    
+    if (!invalid) {
+      const { addAttributes, appAttribute, requestOTP_TM } = this.props;
+      addAttributes(this.state.cis);
+      requestOTP_TM({
+        mobile_number: appAttribute.temporary_attributes.contact_information,
+        save_info: appAttribute.temporary_attributes
+      });
+    } else {
+      this.setState({
+        invalid: invalid
+      });
+    }
   };
 
   onChangeText = (value, field) => {
@@ -72,53 +117,43 @@ class CIS14 extends React.Component {
     this.setState({ cis });
   };
 
-  numberWithCommas(x) {
-    var parts = x.toString().split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
-  }
-
-  static navigationOptions = {
-    header: <PNHeaderBackButtonBlue />
-  };
-
   render() {
     const { otp, token } = this.props;
+    const {invalid} = this.state;
 
     let { height, width } = Dimensions.get("window");
     return (
       <Container>
         <KeyboardShift>
           {() => (
-            <View style={{ flex: 1 }}>
-              <View
-                style={{ backgroundColor: "#309fe7", height: height * 0.2 }}
+            <View style={{ flex: 1, justifyContent: "space-between" }}>
+              <PNFormHeader>My Initial Deposit is:</PNFormHeader>
+              <ScrollView
+                style={localStyle.container}
+                contentContainerStyle={localStyle.contentContainer}
               >
-                <PNHeaderTitle title="My Initial Deposit is:" />
-              </View>
-              <ScrollView style={localStyle.container}>
-                <View style={{ flex: 4, paddingTop: 30 }}>
-                  <PNFormInitialDeposit
-                    title="Initial Deposit"
-                    reference={input => {
-                      this.input_initial_deposit = input;
-                    }}
-                    onChangeText={text =>
-                      this.onChangeText(text, "initial_deposit")
-                    }
-                    value={this.state.cis.initial_deposit}
-                  />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <TouchableOpacity
-                    style={localStyle.button}
-                    onPress={this.handlePress}
-                  >
-                    <Text style={localStyle.button_text}>SAVE</Text>
-                  </TouchableOpacity>
-                </View>
+                <PNFormInitialDeposit
+                  title="Initial Deposit"
+                  ref={input => {
+                    this.input_initial_deposit = input;
+                  }}
+                  onChangeText={text =>
+                    this.onChangeText(text, "initial_deposit")
+                  }
+                  value={this.state.cis.initial_deposit}
+                  onBlur={() => this.handleOnBlur("initial_deposit")}
+                  invalid={invalid.initial_deposit ? invalid.initial_deposit[0] : ""}
+                />
               </ScrollView>
-              {otp.isFetching && otp.success == null &&(
+              <View style={{ paddingHorizontal: 30, marginBottom: 30 }}>
+                {/* <PNFormButton onPress={this.handlePress} disabled={!this.state.validated} label="Next" /> */}
+                <PNFormButton
+                  onPress={this.handlePress}
+                  disabled={false}
+                  label="Save"
+                />
+              </View>
+              {otp.isFetching && otp.success == null && (
                 <Overlay>
                   <ActivityIndicator color="#FFF" size="large" />
                 </Overlay>
@@ -136,6 +171,9 @@ let localStyle = StyleSheet.create({
     paddingHorizontal: 30,
     paddingBottom: 51
   },
+  contentContainer: {
+    paddingTop: 30
+  },
   text: {
     marginLeft: 32,
     marginRight: 32,
@@ -152,7 +190,7 @@ let localStyle = StyleSheet.create({
   button_text: {
     color: "#fff",
     fontSize: 16,
-    fontFamily: "Montserrat_Medium"
+    fontFamily: "Avenir_Medium"
   },
   header: {
     backgroundColor: "#309fe7"
@@ -168,9 +206,6 @@ const mapDispatchToProps = dispatch => {
   return {
     addAttributes: attributes => {
       dispatch(addAttributes(attributes));
-    },
-    putAttributes: params => {
-      dispatch(putAttributes(params));
     },
     requestUniqueId: attributes => {
       dispatch(requestUniqueId(attributes));

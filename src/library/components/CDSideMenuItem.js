@@ -1,60 +1,78 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { View, StyleSheet, TouchableOpacity, TouchableHighlight } from 'react-native';
-import { Text } from 'native-base';
-import { withNavigation } from 'react-navigation';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableHighlight
+} from "react-native";
+import { Text } from "native-base";
+import { withNavigation } from "react-navigation";
 import NavigationService from "navigation/NavigationService.js";
 
-class CDSideMenuItem extends Component {  
+class CDSideMenuItem extends Component {
   render() {
-    const { currentRoute, route } = this.props;
+    const { currentRoute, route, onPress } = this.props;
     return (
-        <View style={styleDrawer.container}>
-          <Text allowFontScaling={false} style={ currentRoute == route ?  styleDrawer.textstyleActive : styleDrawer.textstyle} onPress={()=> (NavigationService.navigate(this.props.route)) } >
-             {this.props.title} 
-          </Text>
-        </View>
+      <View
+        style={[
+          styleDrawer.container,
+          currentRoute == route && styleDrawer.container_active
+        ]}
+      >
+        <Text
+          allowFontScaling={false}
+          style={[
+            styleDrawer.textstyle,
+            currentRoute == route && styleDrawer.textstyleActive
+          ]}
+          onPress={
+            onPress
+              ? onPress
+              : () => {
+                  NavigationService.navigate(this.props.route);
+                }
+          }
+        >
+          {this.props.title}
+        </Text>
+      </View>
     );
   }
 }
 
-
 const styleDrawer = StyleSheet.create({
   container: {
-    height: 30,
+    height: 57,
+    paddingLeft: 22,
+    justifyContent: "center"
+  },
+  container_active: {
+    backgroundColor: "#FFFFFF"
   },
   textstyle: {
     color: "#FFFFFF",
-    fontSize: 14,
-    marginLeft: 22,
-    fontFamily: "Poppins"
+    fontSize: 22,
+    fontFamily: "Avenir_Medium"
   },
   textstyleActive: {
-    color: "#FFFFFF",
-    fontSize: 14,
-    marginLeft: 22,
-    fontFamily: "Poppins_medium"
+    color: "#f5ac14"
   },
   currenttextstyle: {
     color: "#000000",
     fontSize: 14,
-    fontWeight: "normal", 
+    fontWeight: "normal",
     marginLeft: 22,
     fontFamily: "Poppins_medium"
   },
- 
-  itemstyle: {
-  },
+
+  itemstyle: {},
   hairline: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     height: 1,
     marginLeft: 18,
     width: 145
   }
 });
-
-
-
-
 
 export default CDSideMenuItem;

@@ -34,7 +34,7 @@ const NetworkError = ({callerNav}) => {
       padding: width * 0.15,
     },
     contentText: {
-      fontFamily: 'OpenSans_Bold',
+      fontFamily: 'Avenir_Heavy',
       fontSize: 24,
     },
     contentButton: {
@@ -43,7 +43,7 @@ const NetworkError = ({callerNav}) => {
       width: 100
     },
     contentButtonText: {
-      fontFamily: 'OpenSans_SemiBold',
+      fontFamily: 'Avenir_Medium',
       color: '#FFF',
       fontSize: 18,
     }

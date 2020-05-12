@@ -204,13 +204,13 @@ let localStyles = StyleSheet.create({
   title: {
     textAlign: "center",
     color: "#f5ac14",
-    fontFamily: "OpenSans_Bold",
+    fontFamily: "Avenir_Heavy",
     paddingTop: 20,
     fontSize: 25
   },
   subtitle: {
     textAlign: "center",
-    fontFamily: "OpenSans_Bold",
+    fontFamily: "Avenir_Heavy",
     fontSize: 20,
     color: "#fff",
     marginTop: 20,
@@ -219,7 +219,7 @@ let localStyles = StyleSheet.create({
   bodyTitle: {
     textAlign: "center",
     color: "#696969",
-    fontFamily: "OpenSans_Bold",
+    fontFamily: "Avenir_Heavy",
     paddingTop: 20,
     paddingBottom: 10,
     fontSize: 20
@@ -240,7 +240,7 @@ let localStyles = StyleSheet.create({
     textAlign: "left",
     color: "#696969",
     textTransform: "capitalize",
-    fontFamily: "OpenSans_Bold",
+    fontFamily: "Avenir_Heavy",
     fontSize: 18,
   },
   dateText: {
@@ -253,7 +253,7 @@ let localStyles = StyleSheet.create({
     fontSize: 15,
     textAlign: "right",
     alignItems: "center",
-    fontFamily: "OpenSans_SemiBold",
+    fontFamily: "Avenir_Medium",
   }
 });
 
