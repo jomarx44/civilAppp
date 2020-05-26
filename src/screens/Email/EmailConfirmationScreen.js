@@ -1,17 +1,14 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-
 import PNTextButton from "../../library/components/Buttons/PNTextButton";
 import PNContainedButton from "../../library/components/Buttons/PNContainedButton";
 import FormButtonContainer from "../../library/Layout/Containers/FormButtonContainer";
 import { EmailDescription } from "./EmailDescription";
 import { EmailLogo } from "./EmailLogo";
 import { EmailTitle } from "./EmailTitle";
-
-// Others
 import config from "../../config";
 
-const EmailConfirmationScreen = ({ email }) => {
+export const EmailConfirmationScreen = ({ email, onResendEmail, onVerify }) => {
   return (
     <React.Fragment>
       <View style={[styles.defaultContainerStyle]}>
@@ -36,7 +33,7 @@ const EmailConfirmationScreen = ({ email }) => {
             textDecorationStyle: "solid",
             textDecorationLine: "underline",
           }}
-          onPress={() => {}}
+          onPress={onResendEmail}
         />
       </View>
 
@@ -47,7 +44,7 @@ const EmailConfirmationScreen = ({ email }) => {
           }}
           label="OK"
           loading={false}
-          onPress={() => {}}
+          onPress={onVerify}
         />
       </FormButtonContainer>
     </React.Fragment>

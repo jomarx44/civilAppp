@@ -21,10 +21,18 @@ export const LinkAccountOTPScreen = ({
 
   useEffect(() => {
     if (otp.isVerified === true) {
-      linkAccount({
-        cis_no: cis.id,
-        access_token: token.tokens.access_token
-      })
+
+      if(appAttribute.attributes.cis_no) {
+        linkAccount({
+          cis_no: appAttribute.attributes.cis_no ? appAttribute.attributes.cis_no : cis.id,
+          access_token: token.tokens.access_token
+        });
+      } else {
+        linkAccount({
+          cis_no: cis.id,
+          access_token: token.tokens.access_token
+        });
+      }
     } else if (otp.isVerified === false) {
       Alert.alert("OTP", "Wrong OTP Code. Please try again");
     }
@@ -36,7 +44,6 @@ export const LinkAccountOTPScreen = ({
         {
           text: "Ok",
           onPress: () => {
-
             getAccounts(appAttribute.attributes.cis_no);
             navigate("Dashboard")
           },

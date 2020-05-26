@@ -13,7 +13,21 @@ export const config = {
     logo: {
       login: require("res/images/SunSavingsBank/ic_logo_login.png"),
       sidebar: require("res/images/SunSavingsBank/ic_logo_login.png")
-    } 
+    },
+    accountTypes: {
+      "LN": {
+        title: "Loan Accounts",
+        backgroundColor: "#4669ff",
+      },
+      "TD": {
+        title: "Time Deposit",
+        backgroundColor: "#ff5c45",
+      },
+      "SA": {
+        title: "Savings Account",
+        backgroundColor: "#00cc97",
+      }
+    }
   },
   settings: {
     enableFingerprintLogin: true,

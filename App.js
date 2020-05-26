@@ -1,94 +1,51 @@
 import "react-native-gesture-handler";
-import React, { Component } from "react";
-import { AsyncStorage } from "react-native";
+import React, { useEffect, useState } from "react";
 import { AppLoading } from "expo";
-import * as Font from "expo-font";
 import { Root } from "native-base";
-
-import { Provider } from "react-redux";
-import thunk from "redux-thunk";
-import { createStore, applyMiddleware } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
-import rootReducer from "./src/reducers";
-
-// Custom Component
-import OnBoardingScreen from "./src/screens/OnBoardingScreen";
-
-// Others
+import { AsyncStorage } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Provider } from "react-redux";
+import { configureStore } from "./src/redux/store";
+import { fonts } from "./src/res/fonts";
+import OnBoardingScreen from "./src/screens/OnBoardingScreen";
 import Navigator from "./src/navigation";
-// import NavigationService from "./src/navigation/NavigationService";
+import * as Font from "expo-font";
 
-const store = createStore(
-  rootReducer,
-  composeWithDevTools(applyMiddleware(thunk))
-);
+export const App = () => {
+  const [isReady, setReady] = useState(false);
+  const [isFirstTime, setFirstTime] = useState(true);
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-  }
+  useEffect(async () => {
+    await Font.loadAsync(fonts);
+    const status = (await AsyncStorage.getItem("isFirstTime")) !== "false";
+    setFirstTime(status);
+    setReady(true);
+  }, []);
 
-  state = {
-    isReady: false,
-    isFirstTime: true,
-  };
-
-  async componentDidMount() {
-    await Font.loadAsync({
-      Avenir_BlackOblique: require("./src/res/fonts/AvenirLTStd-BlackOblique.otf"),
-      Avenir_Book: require("./src/res/fonts/AvenirLTStd-Book.otf"),
-      Avenir_BookOblique: require("./src/res/fonts/AvenirLTStd-BookOblique.otf"),
-      Avenir_Heavy: require("./src/res/fonts/AvenirLTStd-Heavy.otf"),
-      Avenir_HeavyOblique: require("./src/res/fonts/AvenirLTStd-HeavyOblique.otf"),
-      Avenir_Light: require("./src/res/fonts/AvenirLTStd-Light.otf"),
-      Avenir_LightOblique: require("./src/res/fonts/AvenirLTStd-LightOblique.otf"),
-      Avenir_Medium: require("./src/res/fonts/AvenirLTStd-Medium.otf"),
-      Avenir_MediumOblique: require("./src/res/fonts/AvenirLTStd-MediumOblique.otf"),
-      Avenir_Oblique: require("./src/res/fonts/AvenirLTStd-Oblique.otf"),
-      Avenir_Roman: require("./src/res/fonts/AvenirLTStd-Roman.otf"),
-      Roboto_medium: require("./src/res/fonts/AvenirLTStd-Medium.otf"),
-      Poppins_medium: require("./src/res/fonts/AvenirLTStd-Medium.otf"),
-      Poppins: require("./src/res/fonts/AvenirLTStd-Light.otf"),
-      Gilroy_Bold: require("./src/res/fonts/Gilroy/Gilroy-Bold.ttf"),
-      Gilroy_ExtraBold: require("./src/res/fonts/Gilroy/Gilroy-ExtraBold.otf"),
-      Gilroy_Heavy: require("./src/res/fonts/Gilroy/Gilroy-Heavy.ttf"),
-      Gilroy_Light: require("./src/res/fonts/Gilroy/Gilroy-Light.ttf"),
-      Gilroy_Medium: require("./src/res/fonts/Gilroy/Gilroy-Medium.ttf"),
-      Gilroy_Regular: require("./src/res/fonts/Gilroy/Gilroy-Regular.ttf"),
-    });
-
-    const isFirstTime = (await AsyncStorage.getItem("isFirstTime")) !== "false";
-    this.setState({ isReady: true, isFirstTime });
-  }
-
-  onProceed = () => {
+  const handleProceed = () => {
     AsyncStorage.setItem("isFirstTime", "false");
-    this.setState({ isFirstTime: false });
+    setFirstTime(false);
   };
 
-  render() {
-    if (!this.state.isReady) {
-      return <AppLoading />;
-      // return <AppLoaderScreen />
-    }
-
-    return (
-      <Root>
-        <Provider store={store}>
-          <SafeAreaProvider>
-            {/* <StyleProvider style={getTheme(platform)}> */}
-            {this.state.isFirstTime === true ? (
-              <OnBoardingScreen onProceed={this.onProceed} />
-            ) : (
-              <Navigator />
-            )}
-            {/* </StyleProvider> */}
-          </SafeAreaProvider>
-        </Provider>
-      </Root>
-    );
+  if (isReady) {
+    return <AppLoading />;
   }
-}
+
+  return (
+    <Root>
+      <Provider store={configureStore()}>
+        <SafeAreaProvider>
+          {/* <StyleProvider style={getTheme(platform)}> */}
+          {isFirstTime === true ? (
+            <OnBoardingScreen onProceed={handleProceed} />
+          ) : (
+            <Navigator />
+          )}
+          {/* </StyleProvider> */}
+        </SafeAreaProvider>
+      </Provider>
+    </Root>
+  );
+};
 
 export default App;

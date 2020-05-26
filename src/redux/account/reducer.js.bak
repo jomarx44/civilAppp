@@ -1,0 +1,65 @@
+import {
+  ACCOUNT_CREATE,
+  ACCOUNT_CREATE_ERROR,
+  ACCOUNT_CREATE_INITIALIZE,
+  ACCOUNT_CREATE_SUCCESS,
+} from "../actions";
+
+const initState = {
+  error: null,
+  formData: {},
+  status: {
+    isCreating: false,
+  },
+};
+
+export const accountReducer = (state = initState, action) => {
+  switch (action.type) {
+    case ACCOUNT_CREATE:
+      return {
+        ...state,
+        formData: action.payload.formData,
+        status: {
+          ...state.status,
+          isCreating: true,
+        },
+      };
+
+    case ACCOUNT_CREATE_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        status: {
+          ...state.status,
+          isCreating: false,
+        },
+      };
+
+    case ACCOUNT_CREATE_INITIALIZE:
+      return {
+        ...state,
+        error: initState.error,
+        formData: initState.formData,
+        status: {
+          ...state.status,
+          isCreating: initState.status.isCreating,
+        },
+      };
+
+    case ACCOUNT_CREATE_SUCCESS:
+      return {
+        ...state,
+        error: null,
+        formData: initState.formData,
+        status: {
+          ...state.status,
+          isCreating: false,
+        },
+      };
+
+    default:
+      return state;
+  }
+};
+
+export default accountReducer;

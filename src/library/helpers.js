@@ -45,30 +45,30 @@ export const getFormattedDate = (date) => {
 };
 
 export const APIErrorLogging = (caller, error) => {
-  if(__DEV__) {
-    if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      console.warn(
-        `${caller} request was made but the sercer responded with a status code that falls out of the range of 2xx`
-      );
-      console.warn(`${caller} Response Data: `, error.response.data);
-      console.warn(`${caller} Response Status: `, error.response.status);
-      console.warn(`${caller} Response Headers: `, error.response.headers);
-    } else if (error.request) {
-      // The request was made but no response was received
-      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-      // http.ClientRequest in node.js
-      console.warn(`${caller} request was made but no response was received`)
-      console.warn(`${caller} Request: `,error.request);
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      console.warn(`Something happened in setting up ${caller} request that triggered an Error`);
-      console.warn("Error", error.message);
-    }
+  // if(__DEV__) {
+  //   if (error.response) {
+  //     // The request was made and the server responded with a status code
+  //     // that falls out of the range of 2xx
+  //     console.warn(
+  //       `${caller} request was made but the sercer responded with a status code that falls out of the range of 2xx`
+  //     );
+  //     console.warn(`${caller} Response Data: `, error.response.data);
+  //     console.warn(`${caller} Response Status: `, error.response.status);
+  //     console.warn(`${caller} Response Headers: `, error.response.headers);
+  //   } else if (error.request) {
+  //     // The request was made but no response was received
+  //     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+  //     // http.ClientRequest in node.js
+  //     console.warn(`${caller} request was made but no response was received`)
+  //     console.warn(`${caller} Request: `,error.request);
+  //   } else {
+  //     // Something happened in setting up the request that triggered an Error
+  //     console.warn(`Something happened in setting up ${caller} request that triggered an Error`);
+  //     console.warn("Error", error.message);
+  //   }
     
-    console.warn(`${caller} Config: `, error.config);
-  }
+  //   console.warn(`${caller} Config: `, error.config);
+  // }
 };
 
 export const toAmountWithTwoDecimals = (amount) => {
@@ -88,4 +88,15 @@ export const toAmountWithTwoDecimals = (amount) => {
 export const MMMDDYYYYToDateString = (date = "") => {
   const indexOfLastWhiteSpace = date.lastIndexOf(" ");
   return date.substring(0, indexOfLastWhiteSpace);
+}
+
+export const chunkSubstr = (str, size) => {
+  const numChunks = Math.ceil(str.length / size)
+  const chunks = new Array(numChunks)
+
+  for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
+    chunks[i] = str.substr(o, size)
+  }
+
+  return chunks
 }

@@ -403,7 +403,7 @@ const checkAccount = ({
     //   dispatch({
     //     type: TYPE.REQUEST_OTP_SUCCESS,
     //     payload: {
-    //       token: "1961875",
+    //       token: "3489903",
     //     },
     //   });
     //   NavigationService.navigate("LinkAccountOTP");
@@ -411,7 +411,7 @@ const checkAccount = ({
 
     // const testingInterval = setInterval(() => {
     //   test();
-    //   // otp = 8526710:
+    //   // otp = 5064726:
     //   clearInterval(testingInterval);
     // }, 2000);
 
@@ -761,8 +761,10 @@ const linkAccount = ({ cis_no, access_token }) => {
 const linkAccountWithDispatch = ({ cis_no, access_token }) => {
   return (dispatch) => {
     dispatch(accountLink());
+    console.log("cis_no: ", cis_no)
     return linkAccount({ cis_no, access_token })
       .then(({ data }) => {
+        console.log("Data: ", data);
         if(data.success == true) {
           dispatch(accountLinkSuccess());
         } else {
@@ -851,7 +853,6 @@ const getProfile = ({ id }) => {
     return postOnly(json_data)
       .then((response) => {
         if (response.data.success) {
-          console.log("Response Data", response.data);
           const { attributes } = response.data;
           const {
             displayName,
@@ -924,8 +925,6 @@ const saveProfile = ({
     (key) => json_data.body.user_data[key] == null && delete json_data.body.user_data[key]
   );
 
-  console.log("json_data", json_data);
-
   return (dispatch) => {
     dispatch({
       type: TYPE.UPDATE_PROFILE,
@@ -947,11 +946,8 @@ const saveProfile = ({
             }
           });
         }
-        
-        console.log("response data: ", data);
       })
       .catch((error) => {
-        console.log("error:", error)
         APIErrorLogging("saveProfile", error);
         alertBox(
           "Ooops! There's something wrong connecting to the server. Please try again."

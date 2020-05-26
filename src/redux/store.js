@@ -4,9 +4,15 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 
 export const configureStore = () => {
+  let middleware = applyMiddleware(thunk);
+  
+  if(__DEV__) {
+    middleware = composeWithDevTools(middleware);
+  }
+
   const store = createStore(
     reducers,
-    composeWithDevTools(applyMiddleware(thunk))
+    middleware
   );
 
   if (module.hot) {
