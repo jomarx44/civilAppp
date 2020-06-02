@@ -13,11 +13,15 @@ import { connect } from "react-redux";
 // APIs
 
 // Custom Components
-import Modal from "react-native-modal";
+import {
+  hasHardwareAsync,
+  isEnrolledAsync,
+  authenticateAsync,
+  cancelAuthenticate,
+} from "expo-local-authentication";
 import KeyboardShift from "library/components/KeyboardShift";
 import PlaceholderInputBox from "../../library/components/Form/Inputs/InputBox/PlaceholderInputBox";
-import PNContainedButton from "../../library/components/Buttons/PNContainedButton";
-import PNTextButton from "../../library/components/Buttons/PNTextButton";
+import { ContainedButton, TextButton } from "../../components/Buttons";
 
 // Others
 import config from "../../config";
@@ -25,60 +29,10 @@ import API from "../../actions/api";
 import IBMAppId from "../../actions/ibmappid";
 import * as Profile from "store/profile";
 import {
-  hasHardwareAsync,
-  isEnrolledAsync,
-  authenticateAsync,
-  cancelAuthenticate,
-} from "expo-local-authentication";
-import {
   getAttributes,
   putAttributes,
 } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
 import { useSafeArea } from 'react-native-safe-area-context';
-
-
-export const ModalLoginFingerprint = ({
-  isVisible,
-  isFingerprintSuccess,
-  setModalVisibility,
-}) => (
-  <Modal
-    isVisible={isVisible}
-    style={modalStyle.defaultContainerStyle}
-    onBackButtonPress={() => {}}
-  >
-    <View style={modalStyle.defaultContentStyle}>
-      <Image
-        style={modalStyle.fingerprintIconStyle}
-        source={
-          isFingerprintSuccess
-            ? require("res/images/ic_fingerprint_confirmed.png")
-            : require("res/images/ic_fingerprint.png")
-        }
-        resizeMode="cover"
-      />
-      <Text
-        style={[
-          modalStyle.fingerprintTextStyle,
-          { color: isFingerprintSuccess ? "#f9A010" : "#5D646C" },
-        ]}
-      >
-        {isFingerprintSuccess
-          ? "Fingerprint Verified"
-          : "Touch the fingerprint sensor to login."}
-      </Text>
-      <PNContainedButton
-        onPress={() => {
-          setModalVisibility(false);
-          cancelAuthenticate();
-        }}
-        label="Try login instead"
-        buttonStyle={{ marginTop: 20 }}
-        disabled={isFingerprintSuccess}
-      />
-    </View>
-  </Modal>
-);
 
 export const LoginScreen = ({
   loginByFingerprint,
@@ -89,8 +43,6 @@ export const LoginScreen = ({
   login,
   token,
 }) => {
-  const [isCompatible, setIsCompatible] = useState(false);
-  const [isEnrolled, setIsEnrolled] = useState(false);
   const [fingerprintToken, setFingerprintToken] = useState(null);
   const [signupData, setSignupData] = useState({});
   const [isModalVisible, setModalVisibility] = useState(false);
@@ -119,8 +71,6 @@ export const LoginScreen = ({
   useEffect(() => {
     AsyncStorage.getItem("fingerprintToken").then((token) => {
       setFingerprintToken(token);
-      checkDeviceHardware();
-      checkEnrolledFingerprints();
     });
 
     AsyncStorage.getItem("SIGNUP_DATA").then((data) => {
@@ -130,26 +80,14 @@ export const LoginScreen = ({
   }, []);
 
   useEffect(() => {
-    if (isCompatible && isEnrolled) {
       if (fingerprintToken && isScanning == false) {
         setModalVisibility(true);
         scan();
       }
-    }
-  }, [fingerprintToken, isCompatible, isEnrolled]);
+  }, [fingerprintToken]);
 
   const input_username = useRef();
   const input_password = useRef();
-
-  const checkDeviceHardware = async () => {
-    const isHardwareSupported = await hasHardwareAsync();
-    setIsCompatible(isHardwareSupported);
-  };
-
-  const checkEnrolledFingerprints = async () => {
-    const hasEnrolledFingerprint = await isEnrolledAsync();
-    setIsEnrolled(hasEnrolledFingerprint);
-  };
 
   const scan = async () => {
     setScanningStatus(true);
@@ -234,14 +172,14 @@ export const LoginScreen = ({
               </Text>
             </Button>
 
-            <PNContainedButton
+            <ContainedButton
               disabled={response.is_fetching}
               label="LOGIN"
               loading={response.is_fetching}
               onPress={() => login(user.username, user.password)}
             />
 
-            <PNTextButton
+            <TextButton
               disabled={response.is_fetching}
               label="CREATE MOBILE ACCOUNT"
               loading={response.is_fetching}
@@ -276,32 +214,6 @@ let buttonStyles = StyleSheet.create({
     borderColor: "#FFFFFF",
     justifyContent: "flex-end",
     alignItems: "center",
-  },
-});
-
-const modalStyle = StyleSheet.create({
-  defaultContainerStyle: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  defaultContentStyle: {
-    alignItems: "center",
-    backgroundColor: "white",
-    height: 400,
-    justifyContent: "center",
-    padding: 25,
-    width: 300,
-  },
-  fingerprintIconStyle: {
-    height: 128,
-    marginBottom: 40,
-    width: 128,
-  },
-  fingerprintTextStyle: {
-    fontFamily: "Gilroy_Medium",
-    fontSize: 18,
-    lineHeight: 24,
-    textAlign: "center",
   },
 });
 

@@ -7,7 +7,7 @@ import PNFormTextBox from "library/components/PNFormTextBox";
 // import PNContentWithTitleAndDescription from "../../library/Layout/Content/PNContentWithTitleAndDescription";
 import PNContentWithTitle from "../../library/Layout/Content/PNContentWithTitle"
 import FormButtonContainer from "../../library/Layout/Containers/FormButtonContainer"
-import PNContainedButton from "library/components/Buttons/PNContainedButton";
+import { ContainedButton } from "../../components/Buttons";
 
 // Others
 import { connect } from "react-redux";
@@ -148,7 +148,7 @@ export const ChangePasswordScreen = ({
         />
       </PNContentWithTitle>
       <FormButtonContainer>
-        <PNContainedButton
+        <ContainedButton
           buttonStyle={{ marginTop: 30 }}
           onPress={() => handlePress()}
           disabled={profile.isUpdating}

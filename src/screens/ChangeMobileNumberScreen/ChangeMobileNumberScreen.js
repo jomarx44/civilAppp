@@ -8,7 +8,7 @@ import PNFormTextBoxPhoneNumber from "library/components/PNFormTextBox-PhoneNumb
 // import PNContentWithTitleAndDescription from "../../library/Layout/Content/PNContentWithTitleAndDescription";
 import PNContentWithTitle from "../../library/Layout/Content/PNContentWithTitle"
 import FormButtonContainer from "../../library/Layout/Containers/FormButtonContainer"
-import PNContainedButton from "../../library/components/Buttons/PNContainedButton";
+import { ContainedButton } from "../../components/Buttons";
 import validate from "validate.js";
 import Modal from "react-native-modal";
 
@@ -94,12 +94,12 @@ export const ChangeMobileNumberScreen = ({
         />
       </PNContentWithTitle>
       <FormButtonContainer>
-        <PNContainedButton
+        <ContainedButton
           buttonStyle={{ marginTop: 30 }}
-          onPress={() => handlePress()}
           disabled={otp.isFetching}
           label="Next"
           loading={otp.isFetching}
+          onPress={() => handlePress()}
         />
       </FormButtonContainer>
       <Modal isVisible={otp.isFetching}>

@@ -14,8 +14,7 @@ import Modal from "react-native-modal";
 import SlideContainer from "library/components/SlideContainer";
 import PNElectronicSignature from "library/components/PNElectronicSignature";
 import PNStackedButtons from "library/Layout/Content/PNStackedButtons";
-import PNContainedButton from "../../../../library/components/Buttons/PNContainedButton";
-import PNOutlineButton from "library/components/Buttons/PNOutlineButton";
+import { ContainedButton, OutlineButton } from "../../../../components/Buttons";
 import PNContentWithTitle from "library/Layout/Content/PNContentWithTitle";
 
 import PNFormContactInfo from "library/components/PNFormContactInfo";
@@ -716,7 +715,7 @@ export const HomeInformationScreen = ({
                 paddingHorizontal: 10,
               }}
             />
-            <PNContainedButton
+            <ContainedButton
               buttonStyle={{ height: 40, flex: 2, borderRadius: 0 }}
               label="Search"
               onPress={() => handleEvent("onSearch")}
@@ -1164,7 +1163,7 @@ export const ElectronicSignatureScreen = ({ handleEvent, data }) => {
       <PNStackedButtons
         containerStyle={{ flex: 1, justifyContent: "flex-end" }}
       >
-        <PNContainedButton
+        <ContainedButton
           disabled={isUploading}
           loading={isUploading}
           label="Save"
@@ -1173,7 +1172,7 @@ export const ElectronicSignatureScreen = ({ handleEvent, data }) => {
             uploadImage();
           }}
         />
-        <PNOutlineButton
+        <OutlineButton
           label="CLEAR SIGNATURE"
           buttonStyle={{ width: "100%", height: 50 }}
           onPress={() => {

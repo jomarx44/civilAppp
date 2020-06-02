@@ -12,9 +12,7 @@ import styles from "styles/commonStyle";
 // Custom Components
 
 import PNStackedButtons from "library/Layout/Content/PNStackedButtons";
-import PNContainedButton from "library/components/Buttons/PNContainedButton";
-import PNOutlineButton from "library/components/Buttons/PNOutlineButton";
-import PNTextButton from "library/components/Buttons/PNTextButton";
+import { ContainedButton, OutlineButton, TextButton } from "../../components/Buttons";
 
 let { height, width } = Dimensions.get("window");
 
@@ -31,12 +29,12 @@ export const ConnectCreateAccountScreen = ({ navigation }) => (
         alignItems: "center",
       }}
     >
-      <PNContainedButton
+      <ContainedButton
         label="OPEN BANK ACCOUNT"
         buttonStyle={{ width: "100%", height: 50, marginBottom: 20 }}
         onPress={() => navigation.navigate("CreateBankAccount")}
       />
-      <PNOutlineButton
+      <OutlineButton
         label="LINK MY ACCOUNT"
         buttonStyle={{ width: "100%", height: 50, borderColor: "#FFF" }}
         labelStyle={{ color: "#FFF" }}
@@ -44,7 +42,7 @@ export const ConnectCreateAccountScreen = ({ navigation }) => (
       />
     </PNStackedButtons>
     <View style={styles.termsAndConditions}>
-      <PNTextButton 
+      <TextButton 
         label="Terms and Conditions"
         buttonStyle={{ width: "100%", height: 50, borderColor: "#FFF" }}
         labelStyle={{ color: "#FFF", fontFamily: 'Avenir_Roman', fontSize: 16 }}

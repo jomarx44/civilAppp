@@ -16,7 +16,7 @@ import {
   authenticateAsync,
   cancelAuthenticate,
 } from "expo-local-authentication";
-import PNContainedButton from "../../library/components/Buttons/PNContainedButton";
+import { ContainedButton } from "../../components/Buttons";
 
 export const FingerprintScreen = ({ auth, navigation }) => {
   const [isCompatible, setIsCompatible] = useState(false);
@@ -130,7 +130,7 @@ export const FingerprintScreen = ({ auth, navigation }) => {
       </View>
       <View>
         {fingerprintToken && (
-          <PNContainedButton
+          <ContainedButton
             label="Disable Fingerprint"
             onPress={() => {
               disableFingerprint();

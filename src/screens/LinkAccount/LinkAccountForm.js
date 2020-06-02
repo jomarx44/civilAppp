@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 
 // Custom Components
 import PNContentWithTitleAndDescription from "../../library/Layout/Content/PNContentWithTitleAndDescription";
-import PNContainedButton from "../../library/components/Buttons/PNContainedButton";
+import { ContainedButton } from "../../components/Buttons";
 import FormButtonContainer from "../../library/Layout/Containers/FormButtonContainer";
 import PNFormTextBox from "library/components/PNFormTextBox";
 import PNDatePicker from "library/components/PNDatePicker";
@@ -79,7 +79,7 @@ export const LinkAccountForm = ({
         />
       </PNContentWithTitleAndDescription>
       <FormButtonContainer>
-        <PNContainedButton
+        <ContainedButton
           onPress={() => handleSubmit()}
           disabled={isLoading}
           label="NEXT"

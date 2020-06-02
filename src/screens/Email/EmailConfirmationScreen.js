@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import PNTextButton from "../../library/components/Buttons/PNTextButton";
-import PNContainedButton from "../../library/components/Buttons/PNContainedButton";
+import { ContainedButton, TextButton } from "../../components/Buttons";
 import FormButtonContainer from "../../library/Layout/Containers/FormButtonContainer";
 import { EmailDescription } from "./EmailDescription";
 import { EmailLogo } from "./EmailLogo";
@@ -24,7 +23,7 @@ export const EmailConfirmationScreen = ({ email, onResendEmail, onVerify }) => {
           address. After receiving the email, we will be sending an OTP to your
           mobile number.
         </EmailDescription>
-        <PNTextButton
+        <TextButton
           label="resent email confirmation"
           labelStyle={{
             color: config.colors.emailSecondary,
@@ -37,8 +36,8 @@ export const EmailConfirmationScreen = ({ email, onResendEmail, onVerify }) => {
         />
       </View>
 
-      <FormButtonContainer containerStyle={{marginTop: 25}}>
-        <PNContainedButton
+      <FormButtonContainer containerStyle={{ marginTop: 25 }}>
+        <ContainedButton
           buttonStyle={{
             backgroundColor: config.colors.emailSecondary,
           }}

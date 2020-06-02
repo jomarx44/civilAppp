@@ -5,8 +5,7 @@ import { connect } from "react-redux";
 // Custom Component
 import PNElectronicSignature from "../../library/components/PNElectronicSignature";
 import PNStackedButtons from "library/Layout/Content/PNStackedButtons";
-import PNContainedButton from "library/components/Buttons/PNContainedButton";
-import PNOutlineButton from "library/components/Buttons/PNOutlineButton";
+import { ContainedButton, OutlineButton } from "../../components/Buttons";
 
 // Others
 // var RNFS = require("react-native-fs");
@@ -41,14 +40,14 @@ export const ElectronicSignatureScreen = ({ navigation, containerStyle }) => {
       <PNStackedButtons
         containerStyle={{ flex: 1, justifyContent: "flex-end" }}
       >
-        <PNContainedButton
+        <ContainedButton
           label="DONE SIGNING"
           buttonStyle={{ width: "100%", height: 50, marginBottom: 20 }}
           onPress={() => {
             navigation.navigate("ImageTester", { imageData })
           }}
         />
-        <PNOutlineButton
+        <OutlineButton
           label="CLEAR SIGNATURE"
           buttonStyle={{ width: "100%", height: 50 }}
           onPress={() => {

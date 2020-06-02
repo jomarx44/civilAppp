@@ -7,8 +7,7 @@ import { connect } from "react-redux";
 import FormButtonContainer from "../../library/Layout/Containers/FormButtonContainer";
 import PNContentWithTitle from "../../library/Layout/Content/PNContentWithTitle";
 import PNFormTextBox from "library/components/PNFormTextBox";
-import PNContainedButton from "../../library/components/Buttons/PNContainedButton";
-import PNOutlineButton from "../../library/components/Buttons/PNOutlineButton";
+import { ContainedButton, OutlineButton } from "../../components/Buttons";
 
 // Others
 import validate from "validate.js";
@@ -254,7 +253,7 @@ export const EditProfileScreen = ({
         />
       </PNContentWithTitle>
       <FormButtonContainer>
-        <PNContainedButton
+        <ContainedButton
           disabled={profile.isUpdating} 
           label="Save"
           loading={profile.isUpdating}
@@ -263,7 +262,7 @@ export const EditProfileScreen = ({
             handleEvent("onSubmit")
           }}
         />
-        <PNOutlineButton 
+        <OutlineButton 
           disabled={profile.isUpdating} 
           label="Cancel"
           onPress={() => {

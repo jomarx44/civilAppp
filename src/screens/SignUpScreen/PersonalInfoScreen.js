@@ -6,7 +6,7 @@ import {
 
 import * as Profile from "store/profile";
 import PNContentWithTitleAndDescription from "../../library/Layout/Content/PNContentWithTitleAndDescription";
-import PNContainedButton from "../../library/components/Buttons/PNContainedButton";
+import { ContainedButton } from "../../components/Buttons";
 import FormButtonContainer from "../../library/Layout/Containers/FormButtonContainer";
 import PNFormTextBox from "library/components/PNFormTextBox";
 import PNFormTextBoxPhoneNumber from "library/components/PNFormTextBox-PhoneNumber";
@@ -260,7 +260,7 @@ class PersonalInfo extends React.Component {
           />
         </PNContentWithTitleAndDescription>
         <FormButtonContainer>
-          <PNContainedButton 
+          <ContainedButton 
             loading={this.props.response.is_fetching}
             disabled={this.props.response.is_fetching}
             onPress={() => this.signup()}

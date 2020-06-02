@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 // Custom Components
 import PNContentWithTitleAndDescription from "../../library/Layout/Content/PNContentWithTitleAndDescription";
-import PNContainedButton from "../../library/components/Buttons/PNContainedButton";
+import { ContainedButton } from "../../components/Buttons";
 import FormButtonContainer from "../../library/Layout/Containers/FormButtonContainer";
 import PNFormTextBox from "library/components/PNFormTextBox";
 import PNFormButton from "library/components/PNFormButton";
@@ -252,7 +252,7 @@ export class LoanAccountScreen extends Component {
           />
         </PNContentWithTitleAndDescription>
         <FormButtonContainer>
-          <PNContainedButton
+          <ContainedButton
             onPress={() => this.handlePress()}
             disabled={this.props.is_fetching}
             label="Save"
