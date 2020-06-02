@@ -10,6 +10,7 @@ export const fonts = {
   Gilroy_Light: require("./Gilroy/Gilroy-Light.ttf"),
   Gilroy_Medium: require("./Gilroy/Gilroy-Medium.ttf"),
   Gilroy_Regular: require("./Gilroy/Gilroy-Regular.ttf"),
+  Roboto_medium: require("./Gilroy/Gilroy-Regular.ttf"),
 }
 
 export default fonts;
