@@ -1,6 +1,7 @@
 import Axios from "axios";
 import Config from "../../app.json";
 import Constants from "expo-constants";
+import AppJson from "../../app.json";
 
 Axios.defaults.baseURL = Config.appid.API_URL;
 Axios.defaults.headers = {
