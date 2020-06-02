@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerActions } from "@react-navigation/native";
@@ -7,7 +8,7 @@ import ElectronicSignatureScreen from "../screens/ElectronicSignatureScreen";
 import DashboardScreen from "screens/DashboardScreen/dashboard";
 import AccountHistoryScreen from "screens/DashboardScreen/accountHistory";
 import CreateBankAccount from "../screens/BankAccountScreen/CreateBankAccountScreen";
-import OTPCreateBankAccountScreen from "../screens/BankAccountScreen/OTPCreateBankAccountScreen"
+import OTPCreateBankAccountScreen from "../screens/BankAccountScreen/OTPCreateBankAccountScreen";
 import OTPOpenAccountScreen from "screens/OpenAccountScreen/OTPOpenAccountScreen";
 import ConnectCreateAccountScreen from "screens/OpenAccountScreen/ConnectCreateAccountScreen";
 import LinkAccount from "screens/LinkAccount";
