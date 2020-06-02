@@ -21,7 +21,7 @@ const initState = {
   error: null,
 };
 
-export const BankAccountReducer = (state = initState, action) => {
+export const bankAccount = (state = initState, action) => {
   switch (action.type) {
     case BANK_ACCOUNT_INITIALIZE_REDUCER:
       return initState;
@@ -106,4 +106,4 @@ export const BankAccountReducer = (state = initState, action) => {
   }
 };
 
-export default BankAccountReducer;
+export default bankAccount;

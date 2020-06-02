@@ -1,12 +1,35 @@
-import { LOGIN, LOGIN_ERROR, LOGIN_SUCCESS } from "../actions";
-
+import { LOGIN, LOGIN_ERROR, LOGIN_SUCCESS, LOGOUT } from "../actions";
 import { auth } from "../../API";
+
+/***********************
+ * ACTION CREATORS
+ ***********************/
+
+export const loginStart = () => ({
+  type: LOGIN
+})
+
+export const loginSuccess = (tokens) => ({
+  type: LOGIN_SUCCESS,
+  tokens,
+});
+
+export const loginError = (error) => ({
+  type: LOGIN_ERROR,
+  error: error,
+});
+
+export const logout = () => ({
+  type: LOGOUT
+})
+
+/***********************
+ * API WITH DISPATCH
+ ***********************/
 
 export const login = (username, password) => {
   return (dispatch) => {
-    dispatch({
-      type: LOGIN
-    });
+    dispatch(loginStart());
     return auth
       .signin(username, password)
       .then(
@@ -37,13 +60,3 @@ export const login = (username, password) => {
       });
   };
 };
-
-export const loginSuccess = (tokens) => ({
-  type: LOGIN_SUCCESS,
-  tokens,
-});
-
-export const loginError = (error) => ({
-  type: LOGIN_ERROR,
-  error: error,
-});

@@ -15,9 +15,9 @@ import {
 
 import { bankAccount } from "../../API/index";
 
-/**
+/***********************
  * ACTION CREATORS
- */
+ ***********************/
 
 export const fetchAccountsInitialize = () => ({
   type: FETCH_ACCOUNTS_INITIALIZE,
@@ -98,9 +98,9 @@ export const fetchAccountInfoSuccess = (list, listById) => ({
   },
 });
 
-/**
+/***********************
  * API WITH DISPATCH
- */
+ ***********************/
 
 /**
  * @description Used for fetching Bank Accounts

@@ -1,7 +1,8 @@
 import {
   LOGIN,
   LOGIN_ERROR,
-  LOGIN_SUCCESS
+  LOGIN_SUCCESS,
+  LOGOUT
 } from "../actions";
 
 const initState = {
@@ -15,7 +16,7 @@ const initState = {
   error: null,
 };
 
-export const authReducer = (state = initState, action) => {
+export const auth = (state = initState, action) => {
   switch (action.type) {
     case LOGIN:
       return {
@@ -30,7 +31,6 @@ export const authReducer = (state = initState, action) => {
         },
         error: initState.error,
       };
-    
     case LOGIN_ERROR:
       return {
         ...state,
@@ -41,7 +41,6 @@ export const authReducer = (state = initState, action) => {
           isLoggingIn: false,
         }
       };
-
     case LOGIN_SUCCESS:
       return {
         ...state,
@@ -54,10 +53,12 @@ export const authReducer = (state = initState, action) => {
           isLoggingIn: false
         }
       }
+    case LOGOUT:
+      return initState;
   
     default:
-      break;
+      return state;
   }
 }
 
-export default authReducer;
+export default auth;
