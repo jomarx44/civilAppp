@@ -1,25 +1,32 @@
 import "react-native-gesture-handler";
+
+import * as Font from "expo-font";
+
 import React, { useEffect, useState } from "react";
+
 import { AppLoading } from "expo";
-import { Root } from "native-base";
 import { AsyncStorage } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import Navigator from "./src/navigation";
+import OnBoardingScreen from "./src/screens/OnBoardingScreen";
 import { Provider } from "react-redux";
+import { Root } from "native-base";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { configureStore } from "./src/redux/store";
 import { fonts } from "./src/res/fonts";
-import OnBoardingScreen from "./src/screens/OnBoardingScreen";
-import Navigator from "./src/navigation";
-import * as Font from "expo-font";
 
 export const App = () => {
   const [isReady, setReady] = useState(false);
   const [isFirstTime, setFirstTime] = useState(true);
 
-  useEffect(async () => {
-    await Font.loadAsync(fonts);
-    const status = (await AsyncStorage.getItem("isFirstTime")) !== "false";
-    setFirstTime(status);
-    setReady(true);
+  useEffect(() => {
+    const getFontAsync = async () => {
+      await Font.loadAsync(fonts);
+      const status = (await AsyncStorage.getItem("isFirstTime")) !== "false";
+      setFirstTime(status);
+      setReady(true);
+    }
+
+    getFontAsync();
   }, []);
 
   const handleProceed = () => {
@@ -27,7 +34,7 @@ export const App = () => {
     setFirstTime(false);
   };
 
-  if (isReady) {
+  if (!isReady) {
     return <AppLoading />;
   }
 
