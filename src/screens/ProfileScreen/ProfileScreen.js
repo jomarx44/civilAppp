@@ -1,4 +1,8 @@
-import React, { useEffect } from "react";
+import {
+  CHECK_OTP_INITIALIZE,
+  REQUEST_OTP_INITIALIZE,
+  UPDATE_PROFILE_INITIALIZE,
+} from "../../actions/types";
 import {
   Dimensions,
   Image,
@@ -9,19 +13,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
-import { connect } from "react-redux";
+import React, { useEffect } from "react";
 
+import API from "../../actions/api"
+import { DrawerActions } from "@react-navigation/native";
+import { MaterialIcons } from "@expo/vector-icons";
 // Others
 import { config } from "../../config";
-import { useSafeArea } from "react-native-safe-area-context";
-import { DrawerActions } from "@react-navigation/native";
-import {
-  UPDATE_PROFILE_INITIALIZE,
-  REQUEST_OTP_INITIALIZE,
-  CHECK_OTP_INITIALIZE,
-} from "../../actions/types";
-import API from "../../actions/api"
+import { connect } from "react-redux";
 
 const { height, width } = Dimensions.get("window");
 

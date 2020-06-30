@@ -1,10 +1,11 @@
-import React from 'react'
+import { Body, Button, Header, Icon, Left, Right } from "native-base"
 import { StyleSheet, Text, View } from 'react-native'
-import { Header, Left, Body, Button, Icon, Right } from "native-base"
-import { useSafeArea } from 'react-native-safe-area-context'
+
+import React from 'react'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const PNHeader = ({ headerStyle, left, center, right }) => {
-  const insets = useSafeArea();
+  const insets = useSafeAreaInsets();
   return (
     <Header style={[styles.defaultHeaderStyle, headerStyle, { paddingTop: insets.top }]}>
       <Left style={styles.defaultLeftStyle}>

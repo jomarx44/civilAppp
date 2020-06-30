@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import * as Profile from "store/profile";
+
 import {
   Alert,
   AsyncStorage,
@@ -7,32 +8,33 @@ import {
   Text,
   View,
 } from "react-native";
-import { Button } from "native-base";
-import { connect } from "react-redux";
-
-// APIs
-
+import { ContainedButton, TextButton } from "../../components/Buttons";
+import React, { useEffect, useRef, useState } from "react";
 // Custom Components
 import {
-  hasHardwareAsync,
-  isEnrolledAsync,
   authenticateAsync,
   cancelAuthenticate,
+  hasHardwareAsync,
+  isEnrolledAsync,
 } from "expo-local-authentication";
-import KeyboardShift from "library/components/KeyboardShift";
-import PlaceholderInputBox from "../../library/components/Form/Inputs/InputBox/PlaceholderInputBox";
-import { ContainedButton, TextButton } from "../../components/Buttons";
-
-// Others
-import config from "../../config";
-import API from "../../actions/api";
-import IBMAppId from "../../actions/ibmappid";
-import * as Profile from "store/profile";
 import {
   getAttributes,
   putAttributes,
 } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
-import { useSafeArea } from 'react-native-safe-area-context';
+
+import API from "../../actions/api";
+import { Button } from "native-base";
+import IBMAppId from "../../actions/ibmappid";
+import KeyboardShift from "library/components/KeyboardShift";
+import PlaceholderInputBox from "../../library/components/Form/Inputs/InputBox/PlaceholderInputBox";
+// Others
+import config from "../../config";
+import { connect } from "react-redux";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+// APIs
+
+
 
 export const LoginScreen = ({
   loginByFingerprint,
@@ -55,7 +57,7 @@ export const LoginScreen = ({
     password: "",
   });
 
-  const inset = useSafeArea();
+  const inset = useSafeAreaInsets();
 
   useEffect(() => {
     if (token.tokens) {
