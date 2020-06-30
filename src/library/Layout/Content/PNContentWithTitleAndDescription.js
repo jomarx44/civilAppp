@@ -1,9 +1,9 @@
-import React from "react";
-import { StyleSheet, ScrollView, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
 // Custom Components
 import KeyboardShift from "library/components/KeyboardShift";
 import PNTitleAndDescription from "library/components/PNTitleAndDescription";
+import React from "react";
 
 const PNContentWithTitleAndDescription = ({
   title,
@@ -46,6 +46,5 @@ const styles = StyleSheet.create({
   defaultContentContainerStyle: {
     paddingTop: 30,
     paddingHorizontal: 30,
-    paddingBottom: 200,
   },
 });
