@@ -1,6 +1,7 @@
+import { Animated, Dimensions, Keyboard, StyleSheet, TextInput, UIManager } from 'react-native';
+
 import { PropTypes } from 'prop-types';
 import React from 'react';
-import { Animated, Dimensions, Keyboard, StyleSheet, TextInput, UIManager } from 'react-native';
 
 const { State: TextInputState } = TextInput;
 
@@ -48,7 +49,7 @@ export default class KeyboardShift extends React.Component {
       this.state.shift,
       {
         toValue: 0,
-        duration: DURATION,
+        duration: 0,
         useNativeDriver: true,
       }
     ).start();
