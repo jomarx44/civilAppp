@@ -1,45 +1,30 @@
 /* eslint-disable react/display-name */
 import React from "react";
-import { useNavigation } from "@react-navigation/native";
 import { DrawerActions } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AnnouncementScreen from "screens/AnnouncementScreen";
-import ElectronicSignatureScreen from "../screens/ElectronicSignatureScreen";
 import DashboardScreen from "screens/DashboardScreen/dashboard";
 import AccountHistoryScreen from "screens/DashboardScreen/accountHistory";
 import CreateBankAccount from "../screens/BankAccountScreen/CreateBankAccountScreen";
+import { ProofOfIdentity } from "../screens/ProofOfIdentity";
+import { UploadIdentity } from "../screens/UploadIdentity";
+import ElectronicSignatureScreen from "../screens/ElectronicSignatureScreen";
 import OTPCreateBankAccountScreen from "../screens/BankAccountScreen/OTPCreateBankAccountScreen";
 import OTPOpenAccountScreen from "screens/OpenAccountScreen/OTPOpenAccountScreen";
 import ConnectCreateAccountScreen from "screens/OpenAccountScreen/ConnectCreateAccountScreen";
 import LinkAccount from "screens/LinkAccount";
 import LinkAccountOTPScreen from "../screens/LinkAccount/LinkAccountOTPScreen";
 import LoanAccountScreen from "../screens/LoanAccountScreen/LoanAccountScreen";
-import PNHeaderDrawerTitle from "library/Layout/Header/PNHeaderDrawerTitle";
-import PNHeaderBackTitle from "../library/Layout/Header/PNHeaderBackTitle";
+import { icons } from "../res/images/icons";
+import { TopNavigation } from "../components/TopNavigation";
+import { NavigationButtons } from "../components/NavigationButtons";
 import PNHeaderBlueSkip from "library/Layout/Header/PNHeaderBlueSkip";
-import PNHeaderBlueBack from "library/Layout/Header/PNHeaderBlueBack";
-import PNHeaderBackButton from "../library/Layout/Header/PNHeaderBackButton";
 
 const Stack = createStackNavigator();
 
 export const AccountNavigator = () => {
-  const navigation = useNavigation();
-
   return (
-    <Stack.Navigator
-      initialRouteName="Dashboard"
-      screenOptions={{
-        header: () => {
-          return (
-            // Default Header
-            <PNHeaderBackTitle
-              title="Create Account"
-              onBack={navigation.goBack}
-            />
-          );
-        },
-      }}
-    >
+    <Stack.Navigator initialRouteName="Dashboard">
       <Stack.Screen
         name="Announcement"
         component={AnnouncementScreen}
@@ -58,14 +43,20 @@ export const AccountNavigator = () => {
         name="Dashboard"
         component={DashboardScreen}
         options={{
-          header: () => {
+          header: ({ navigation }) => {
             return (
-              <PNHeaderDrawerTitle
-                title="My Accounts"
-                openDrawer={() => {
-                  navigation.dispatch(DrawerActions.openDrawer());
-                }}
-              />
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_menu_white}
+                    onPress={() => {
+                      navigation.dispatch(DrawerActions.openDrawer());
+                    }}
+                  />
+                }
+              >
+                My Accounts
+              </TopNavigation>
             );
           },
         }}
@@ -74,12 +65,20 @@ export const AccountNavigator = () => {
         name="AccountHistory"
         component={AccountHistoryScreen}
         options={{
-          header: () => {
+          header: ({ navigation }) => {
             return (
-              <PNHeaderBlueBack
-                title="Savings Account"
-                onPress={navigation.goBack}
-              />
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_back_blue}
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  />
+                }
+              >
+                Savings Account
+              </TopNavigation>
             );
           },
         }}
@@ -89,13 +88,64 @@ export const AccountNavigator = () => {
         name="CreateBankAccount"
         component={CreateBankAccount}
         options={{
-          header: () => {
+          header: ({ navigation }) => {
             return (
-              // Default Header
-              <PNHeaderBackTitle
-                title="Create Account"
-                onBack={navigation.goBack}
-              />
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_back_blue}
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  />
+                }
+              >
+                Open Bank Account
+              </TopNavigation>
+            );
+          },
+        }}
+      />
+      <Stack.Screen
+        name="ProofOfIdentity"
+        component={ProofOfIdentity}
+        options={{
+          header: ({ navigation }) => {
+            return (
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_back_blue}
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  />
+                }
+              >
+                Open Bank Account
+              </TopNavigation>
+            );
+          },
+        }}
+      />
+      <Stack.Screen
+        name="UploadIdentity"
+        component={UploadIdentity}
+        options={{
+          header: ({ navigation }) => {
+            return (
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_back_blue}
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  />
+                }
+              >
+                Upload Identity
+              </TopNavigation>
             );
           },
         }}
@@ -104,24 +154,59 @@ export const AccountNavigator = () => {
         name="ElectronicSignature"
         component={ElectronicSignatureScreen}
         options={{
-          header: () => {
+          header: ({ navigation }) => {
             return (
-              <PNHeaderBackTitle title="Signature" onBack={navigation.goBack} />
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_back_blue}
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  />
+                }
+              >
+                Open Bank Account
+              </TopNavigation>
             );
           },
         }}
       />
-      <Stack.Screen name="OTPOpenAccount" component={OTPOpenAccountScreen} />
+      <Stack.Screen
+        name="OTPOpenAccount"
+        component={OTPOpenAccountScreen}
+        options={{
+          header: ({ navigation }) => {
+            return (
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_back_blue}
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  />
+                }
+              />
+            );
+          },
+        }}
+      />
       <Stack.Screen
         name="LinkAccountOTP"
         component={LinkAccountOTPScreen}
         options={{
-          header: () => {
+          header: ({ navigation }) => {
             return (
-              <PNHeaderBackButton
-                onPress={navigation.goBack}
-                headerStyle={blueNavigationStyle.headerStyle}
-                iconStyle={blueNavigationStyle.iconStyle}
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_back_blue}
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  />
+                }
               />
             );
           },
@@ -131,12 +216,17 @@ export const AccountNavigator = () => {
         name="OTPCreateBankAccountScreen"
         component={OTPCreateBankAccountScreen}
         options={{
-          header: () => {
+          header: ({ navigation }) => {
             return (
-              <PNHeaderBackButton
-                onPress={navigation.goBack}
-                headerStyle={blueNavigationStyle.headerStyle}
-                iconStyle={blueNavigationStyle.iconStyle}
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_back_white}
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  />
+                }
               />
             );
           },
@@ -146,8 +236,19 @@ export const AccountNavigator = () => {
         name="ConnectCreateAccount"
         component={ConnectCreateAccountScreen}
         options={{
-          header: () => {
-            return <PNHeaderBlueBack onPress={navigation.goBack} />;
+          header: ({ navigation }) => {
+            return (
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_back_white}
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  />
+                }
+              />
+            );
           },
         }}
       />
@@ -155,8 +256,19 @@ export const AccountNavigator = () => {
         name="LinkAccount"
         component={LinkAccount}
         options={{
-          header: () => {
-            return <PNHeaderBackButton onPress={navigation.goBack} />;
+          header: ({ navigation }) => {
+            return (
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_back_blue}
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  />
+                }
+              />
+            );
           },
         }}
       />

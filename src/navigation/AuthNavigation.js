@@ -1,21 +1,15 @@
-import EmailConfirmationScreen from "../screens/Email/EmailConfirmationScreen";
-import EmailVerificationScreen from "screens/SignUpScreen/EmailVerificationScreen";
-import ForgotPasswordScreen from "screens/ForgotPasswordScreen";
-import { Image } from "react-native";
-import LoginScreen from "screens/LoginScreen";
-import { NavigationButtons } from "../components/NavigationButtons"
-import PNHeaderBackButton from "../library/Layout/Header/PNHeaderBackButton";
-import PNHeaderBlueBack from "library/Layout/Header/PNHeaderBlueBack";
-import PersonalInfoScreen from "screens/SignUpScreen/PersonalInfoScreen";
-import { ProofOfIdentity } from "../screens/ProofOfIdentity"
 /* eslint-disable react/display-name */
 import React from "react";
-import TakeAPhotoOfIDScreen from "screens/TakeAPhotoOfIDScreen";
-import TesterScreen from "../screens/TesterScreen/TesterScreen"
-import { TopNavigation } from "../components/TopNavigation"
+import Login from "screens/Login";
+import ForgotPasswordScreen from "screens/ForgotPasswordScreen";
+import PersonalInfoScreen from "screens/SignUpScreen/PersonalInfoScreen";
+import EmailConfirmationScreen from "../screens/Email/EmailConfirmationScreen";
+// import EmailVerificationScreen from "screens/SignUpScreen/EmailVerificationScreen";
+import { TesterScreen } from "../screens/TesterScreen";
 import { createStackNavigator } from "@react-navigation/stack";
-import { icons } from "../res/images/icons"
-import { useNavigation } from "@react-navigation/native";
+import { icons } from "../res/images/icons";
+import { TopNavigation } from "../components/TopNavigation";
+import { NavigationButtons } from "../components/NavigationButtons";
 
 const Stack = createStackNavigator();
 
@@ -23,29 +17,34 @@ export const AuthNavigation = () => {
   // const navigation = useNavigation();
 
   return (
-    <Stack.Navigator initialRouteName="ProofOfIdentity">
-      <Stack.Screen
-        name="ProofOfIdentity"
-        component={ProofOfIdentity}
-        options={{ 
-          header: ({navigation}) => {
-            return <TopNavigation 
-              leftLogo={<NavigationButtons logo={icons.ic_back_blue} onPress={() => {navigation.goBack()}} />}
-            >Open Bank Account</TopNavigation>;
-          },
-      }}
-      />
+    <Stack.Navigator>
+      {/* <Stack.Screen
+        name="TesterScreen"
+        component={TesterScreen}
+        options={{ headerShown: false }}
+      /> */}
       <Stack.Screen
         name="Login"
-        component={LoginScreen}
+        component={Login}
         options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ForgotPassword"
         component={ForgotPasswordScreen}
         options={{
-          header: () => {
-            return <PNHeaderBlueBack onPress={navigation.goBack} />;
+          header: ({ navigation }) => {
+            return (
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_back_blue}
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  />
+                }
+              />
+            );
           },
         }}
       />
@@ -53,8 +52,19 @@ export const AuthNavigation = () => {
         name="CreateMobileAccount"
         component={PersonalInfoScreen}
         options={{
-          header: () => {
-            return <PNHeaderBackButton onPress={navigation.goBack} />;
+          header: ({ navigation }) => {
+            return (
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_back_blue}
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  />
+                }
+              />
+            );
           },
         }}
       />
@@ -67,8 +77,17 @@ export const AuthNavigation = () => {
         name="EmailVerification"
         component={EmailVerificationScreen}
         options={{
-          header: () => {
-            return <PNHeaderBlueBack onPress={navigation.goBack} />;
+          header: ({navigation}) => {
+            return <TopNavigation
+            leftLogo={
+              <NavigationButtons
+                logo={icons.ic_back_blue}
+                onPress={() => {
+                  navigation.goBack();
+                }}
+              />
+            }
+          />
           },
         }}
       /> */}
@@ -76,12 +95,17 @@ export const AuthNavigation = () => {
         name="OTPSignUp"
         component={OTPOpenAccountScreen}
         options={{
-          header: () => {
+          header: ({ navigation }) => {
             return (
-              <PNHeaderBackButton
-                onPress={navigation.goBack}
-                headerStyle={blueNavigationStyle.headerStyle}
-                iconStyle={blueNavigationStyle.iconStyle}
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_back_blue}
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  />
+                }
               />
             );
           },

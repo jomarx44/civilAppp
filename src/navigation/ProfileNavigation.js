@@ -1,54 +1,53 @@
+/* eslint-disable react/display-name */
 import React from "react";
-import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import ProfileScreen from "../screens/ProfileScreen";
 import EditProfileScreen from "../screens/ProfileScreen/EditProfileScreen";
 import ChangePasswordScreen from "../screens/ChangePasswordScreen";
 import ChangeMobileNumberScreen from "../screens/ChangeMobileNumberScreen";
 import FingerprintScreen from "../screens/FingerprintScreen";
-import OTPChangeMobileNumberScreen from "../screens/ChangeMobileNumberScreen/OTPChangeMobileNumberScreen"
-import PNHeaderBackTitle from "../library/Layout/Header/PNHeaderBackTitle";
-import PNHeaderBackButton from "../library/Layout/Header/PNHeaderBackButton";
+import OTPChangeMobileNumberScreen from "../screens/ChangeMobileNumberScreen/OTPChangeMobileNumberScreen";
+import { icons } from "../res/images/icons";
+import { TopNavigation } from "../components/TopNavigation";
+import { NavigationButtons } from "../components/NavigationButtons";
 
 const Stack = createStackNavigator();
 
 export const ProfileNavigation = () => {
-  const navigation = useNavigation();
-
   return (
     <Stack.Navigator initialRouteName="ViewProfile">
       <Stack.Screen
         name="ViewProfile"
         component={ProfileScreen}
         options={{
-          headerShown: false
+          headerShown: false,
         }}
       />
       <Stack.Screen
         name="EditProfile"
         component={EditProfileScreen}
         options={{
-          header: () => {
-            return (
-              // Default Header
-              <PNHeaderBackTitle
-                title="Edit Profile"
-                onBack={navigation.goBack}
-              />
-            );
-          },
+          headerShown: false,
         }}
       />
       <Stack.Screen
         name="ChangePassword"
         component={ChangePasswordScreen}
         options={{
-          header: () => {
+          header: ({ navigation }) => {
             return (
-              <PNHeaderBackTitle
-                title="Change Password"
-                onBack={navigation.goBack}
-              />
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_back_blue}
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  />
+                }
+              >
+                Change Password
+              </TopNavigation>
             );
           },
         }}
@@ -57,12 +56,20 @@ export const ProfileNavigation = () => {
         name="ChangeMobileNumber"
         component={ChangeMobileNumberScreen}
         options={{
-          header: () => {
+          header: ({ navigation }) => {
             return (
-              <PNHeaderBackTitle
-                title="Change Mobile Number"
-                onBack={navigation.goBack}
-              />
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_back_blue}
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  />
+                }
+              >
+                Change Mobile Number
+              </TopNavigation>
             );
           },
         }}
@@ -71,12 +78,17 @@ export const ProfileNavigation = () => {
         name="OTPChangeMobileNumberScreen"
         component={OTPChangeMobileNumberScreen}
         options={{
-          header: () => {
+          header: ({ navigation }) => {
             return (
-              <PNHeaderBackButton
-                onPress={navigation.goBack}
-                headerStyle={blueNavigationStyle.headerStyle}
-                iconStyle={blueNavigationStyle.iconStyle}
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_back_white}
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  />
+                }
               />
             );
           },
@@ -86,12 +98,20 @@ export const ProfileNavigation = () => {
         name="FingerprintScreen"
         component={FingerprintScreen}
         options={{
-          header: () => {
+          header: ({ navigation }) => {
             return (
-              <PNHeaderBackTitle
-                title="Fingerprint"
-                onBack={navigation.goBack}
-              />
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_back_blue}
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  />
+                }
+              >
+                Fingerprint
+              </TopNavigation>
             );
           },
         }}
