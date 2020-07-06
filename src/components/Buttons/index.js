@@ -18,10 +18,10 @@ export const Button = (props) => {
   return (
     <TouchableOpacity
       {...otherProps}
+      disabled={disabled}
       style={[
         styles.defaultButtonStyle,
         buttonStyle,
-        disabled && styles.defaultDisabledStyle,
         disabled && disabledStyle,
       ]}
     >
@@ -39,6 +39,7 @@ export const ContainedButton = ({ buttonStyle, ...props }) => {
     <Button
       {...props}
       buttonStyle={{ backgroundColor: DEFAULT_PRIMARY_COLOR, ...buttonStyle }}
+      disabledStyle={styles.defaultDisabledStyle}
     />
   );
 };

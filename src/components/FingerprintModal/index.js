@@ -8,6 +8,7 @@ import {
   cancelAuthenticate,
 } from "expo-local-authentication";
 import { styles } from "./styles";
+import { icons } from "../../res/images/icons"
 import { AUTHENTICATION_FAILED, TOO_FAST } from "../../constants/error";
 
 export const FingerprintModal = ({
