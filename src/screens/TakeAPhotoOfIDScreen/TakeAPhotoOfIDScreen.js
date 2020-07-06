@@ -20,7 +20,7 @@ import PNTextBox from "library/components/PNTextBox";
 import PNTransparentButton from "library/components/PNTransparentButton";
 import PNButtonID from "library/components/PNButtonID.js";
 
-class TakeAPhotoOfIDScreen extends React.Component {
+class CameraOfIDScreen extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -86,4 +86,4 @@ let buttonStyles = StyleSheet.create({
   }
 });
 
-export default TakeAPhotoOfIDScreen;
+export default CameraOfIDScreen;

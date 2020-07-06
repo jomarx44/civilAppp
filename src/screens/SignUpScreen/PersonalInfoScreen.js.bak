@@ -5,7 +5,6 @@ import {
 } from "react-native";
 
 import * as Profile from "store/profile";
-import { ScreenWithTitleAndDescription } from "../../layouts/ScreenWithTitleAndDescription"
 import PNContentWithTitleAndDescription from "../../library/Layout/Content/PNContentWithTitleAndDescription";
 import { ContainedButton } from "../../components/Buttons";
 import FormButtonContainer from "../../library/Layout/Containers/FormButtonContainer";
@@ -179,9 +178,9 @@ class PersonalInfo extends React.Component {
 
     return (
       <React.Fragment>
-        <ScreenWithTitleAndDescription
+        <PNContentWithTitleAndDescription
           title="Verify Identity"
-          description="To verify your identity, please fill in personal information."
+          desc="To verify your identity, please fill in personal information."
         >
           <PNFormTextBox
             label="First Name"
@@ -259,7 +258,7 @@ class PersonalInfo extends React.Component {
             }
             value={this.state.user.confirmPassword}
           />
-        </ScreenWithTitleAndDescription>
+        </PNContentWithTitleAndDescription>
         <FormButtonContainer>
           <ContainedButton 
             loading={this.props.response.is_fetching}

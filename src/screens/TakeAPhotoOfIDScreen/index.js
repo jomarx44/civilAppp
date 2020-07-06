@@ -1,2 +1,2 @@
-import TakeAPhotoOfIDScreen from "./TakeAPhotoOfIDScreen";
+import CameraOfIDScreen from "./CameraOfIDScreen";
 export default TakeAPhotoOfIDScreen;

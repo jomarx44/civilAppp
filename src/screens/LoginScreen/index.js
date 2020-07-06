@@ -14,8 +14,6 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   authenticateAsync,
   cancelAuthenticate,
-  hasHardwareAsync,
-  isEnrolledAsync,
 } from "expo-local-authentication";
 import {
   getAttributes,
