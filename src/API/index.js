@@ -7,16 +7,20 @@ export const manage = (action, params = {}) => {
   });
 };
 
-export const putToAttributes = ({
-  attributeName,
-  attributeValue,
-  accessToken,
-}) => {
-  return manage("put_attribute_name", {
-    attribute_name: attributeName,
-    attribute_value: attributeValue,
-    access_token: accessToken,
-  });
+export const attribute = {
+  put: ({ attributeName, attributeValue, accessToken }) => {
+    return manage("put_attribute_name", {
+      attribute_name: attributeName,
+      attribute_value: attributeValue,
+      access_token: accessToken,
+    });
+  },
+  get: (attributeName, accessToken) => {
+    return manage("get_attribute_name", {
+      attribute_name: attributeName,
+      access_token: accessToken
+    });
+  }
 };
 
 export const auth = {
@@ -161,5 +165,11 @@ export const user = {
       emails,
       phoneNumbers,
     });
+  },
+};
+
+export const token = {
+  getByRefreshToken: (refreshToken) => {
+    return manage("refresh_token", { refresh_token: refreshToken });
   },
 };

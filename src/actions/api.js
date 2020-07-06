@@ -761,10 +761,8 @@ const linkAccount = ({ cis_no, access_token }) => {
 const linkAccountWithDispatch = ({ cis_no, access_token }) => {
   return (dispatch) => {
     dispatch(accountLink());
-    console.log("cis_no: ", cis_no)
     return linkAccount({ cis_no, access_token })
       .then(({ data }) => {
-        console.log("Data: ", data);
         if(data.success == true) {
           dispatch(accountLinkSuccess());
         } else {

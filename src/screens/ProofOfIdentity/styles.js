@@ -51,18 +51,3 @@ export const itemStyle = StyleSheet.create({
     width: 20,
   },
 });
-
-export const modalStyles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    justifyContent: "flex-end",
-  },
-  contentContainer: {
-    alignItems: "center",
-    backgroundColor: "white",
-    borderRadius: 10,
-    height: 100,
-    justifyContent: "center",
-    width: 300,
-  }
-})
