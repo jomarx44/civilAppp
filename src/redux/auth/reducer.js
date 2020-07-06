@@ -2,7 +2,11 @@ import {
   LOGIN,
   LOGIN_ERROR,
   LOGIN_SUCCESS,
-  LOGOUT
+  LOGOUT,
+  SIGNUP,
+  SIGNUP_INITIALIZE,
+  SIGNUP_ERROR,
+  SIGNUP_SUCCESS,
 } from "../actions";
 
 const initState = {
@@ -10,6 +14,8 @@ const initState = {
   idtoken: "",
   refreshToken: "",
   status: {
+    isCreating: false,
+    isCreated: null,
     isLoggingIn: false,
     isLoggedIn: false,
   },
@@ -27,7 +33,7 @@ export const auth = (state = initState, action) => {
         status: {
           ...state.status,
           isLoggedIn: false,
-          isLoggingIn: true
+          isLoggingIn: true,
         },
         error: initState.error,
       };
@@ -39,9 +45,10 @@ export const auth = (state = initState, action) => {
           ...state.status,
           isLoggedIn: false,
           isLoggingIn: false,
-        }
+        },
       };
     case LOGIN_SUCCESS:
+      console.log(action.payload);
       return {
         ...state,
         accessToken: action.payload.accessToken,
@@ -50,15 +57,15 @@ export const auth = (state = initState, action) => {
         status: {
           ...state.status,
           isLoggedIn: true,
-          isLoggingIn: false
-        }
-      }
+          isLoggingIn: false,
+        },
+      };
     case LOGOUT:
       return initState;
-  
+
     default:
       return state;
   }
-}
+};
 
 export default auth;

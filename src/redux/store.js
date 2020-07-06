@@ -7,6 +7,7 @@ export const configureStore = () => {
   let middleware = applyMiddleware(thunk);
   
   if(__DEV__) {
+    console.log("DEV MODE")
     middleware = composeWithDevTools(middleware);
   }
 
