@@ -25,6 +25,8 @@ import PNHeaderBlueSkip from "library/Layout/Header/PNHeaderBlueSkip";
 import PNHeaderBlueBack from "library/Layout/Header/PNHeaderBlueBack";
 import PNHeaderBackButton from "../library/Layout/Header/PNHeaderBackButton";
 import PNHeaderCancelDone from "../library/Layout/Header/PNHeaderCancelDone";
+import { TopNavigation } from "../components/TopNavigation"
+import { NavigationButtons } from "../components/NavigationButtons"
 
 // New Components
 import EmailConfirmationScreen from "../screens/Email/EmailConfirmationScreen";
@@ -61,6 +63,8 @@ import { FingerprintScreen } from "../screens/FingerprintScreen";
 // OTPs
 import OTPChangeMobileNumberScreen from "../screens/ChangeMobileNumberScreen/OTPChangeMobileNumberScreen"
 import OTPCreateBankAccountScreen from "../screens/BankAccountScreen/OTPCreateBankAccountScreen"
+import { ProofOfIdentity } from "../screens/ProofOfIdentity"
+import { UploadIdentity } from "../screens/UploadIdentity"
 
 // Navigators
 const Stack = createStackNavigator();
@@ -78,7 +82,7 @@ const MyTheme = {
 const Dashboard = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Dashboard"
+      initialRouteName="ProofOfIdentity"
       screenOptions={{
         header: ({ navigation }) => {
           return (
@@ -147,6 +151,50 @@ const Dashboard = () => {
                 title="Create Account"
                 onBack={navigation.goBack}
               />
+            );
+          },
+        }}
+      />
+      <Stack.Screen
+        name="ProofOfIdentity"
+        component={ProofOfIdentity}
+        options={{
+          header: ({ navigation }) => {
+            return (
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_back_blue}
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  />
+                }
+              >
+                Open Bank Account
+              </TopNavigation>
+            );
+          },
+        }}
+      />
+      <Stack.Screen
+        name="UploadIdentity"
+        component={UploadIdentity}
+        options={{
+          header: ({ navigation }) => {
+            return (
+              <TopNavigation
+                leftLogo={
+                  <NavigationButtons
+                    logo={icons.ic_back_blue}
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  />
+                }
+              >
+                Upload Identity
+              </TopNavigation>
             );
           },
         }}

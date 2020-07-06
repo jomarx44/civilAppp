@@ -1253,7 +1253,8 @@ const upload = ({ file_name, content_type, data64 }) => {
 
 const requestOTP = ({ mobile_number, email, save_info }) => {
   const json_data = {
-    path: "tm/otp",
+    // path: "tm/otp",
+    path: "tm/otp_sunsavings",
     body: {
       mobile_number,
       email,
