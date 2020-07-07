@@ -35,7 +35,8 @@ const styles = StyleSheet.create({
     buttonLabelStyle: {
         color: 'white',
         alignSelf: 'center',
-        fontSize: 18.0
+        fontSize: 18.0,
+        fontFamily: Gilroy_Bold
     }
 });
 

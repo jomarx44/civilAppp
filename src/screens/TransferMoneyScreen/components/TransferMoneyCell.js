@@ -31,7 +31,8 @@ const styles = StyleSheet.create({
     titleStyle: {
         fontSize: 16.0, 
         flex: 1,
-        color: '#003D6F'
+        color: '#003D6F',
+        fontFamily: Gilroy_Bold
     },
     chevronStyle: {
     }

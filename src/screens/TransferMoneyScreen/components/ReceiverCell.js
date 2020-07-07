@@ -32,21 +32,25 @@ const styles = StyleSheet.create({
     },
     nameStyle: {
         color: '#77869E',
-        fontSize: 13.0
+        fontSize: 13.0,
+        fontFamily: Gilroy_Medium
     },
     bankStyle: {
         color: '#003D6F',
-        fontSize: 16.0
+        fontSize: 16.0,
+        fontFamily: Gilroy_Medium
     }, 
     accountStyle:{
         color: '#003D6F',
         fontSize: 16.0,
-        alignSelf: 'flex-end'
+        alignSelf: 'flex-end',
+        fontFamily: Gilroy_Medium
     },
     buttonStyle:{
         color: '#F9A010',
         alignSelf: "flex-end",
-        top: 5
+        top: 5,
+        fontFamily: Gilroy_Medium
     },
     subContainerStyle: {
         flex: 1,

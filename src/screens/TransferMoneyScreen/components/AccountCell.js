@@ -48,17 +48,20 @@ const styles = StyleSheet.create({
     },
     labelStyle: {
         fontSize: 12.0,
-        color: '#444444'
+        color: '#444444',
+        fontFamily: Gilroy_Medium
     },
     accountNameStyle: {
         fontSize: 16.0,
         color: '#003D6F',
-        marginBottom: 5.0
+        marginBottom: 5.0,
+        fontFamily: Gilroy_Medium
     },
     bankAndAccountNumberStyle: {
         fontSize: 14.0,
         color: '#444444',
-        marginBottom: 5.0
+        marginBottom: 5.0,
+        fontFamily: Gilroy_Medium
     }
 });
 
