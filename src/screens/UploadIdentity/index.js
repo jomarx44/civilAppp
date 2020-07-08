@@ -15,69 +15,68 @@ import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import MenuModal from "../../components/MenuModal";
 import DropDownPicker from "react-native-dropdown-picker";
-import PNDropDown from "library/components/PNDropDown";
 import PNFormInputBox from "library/components/PNFormInputBox";
-
-const IdentityRemoveButton = (props) => {
-  const { onRemove } = props;
-  return (
-    <TouchableOpacity style={itemStyles.remove} onPress={onRemove}>
-      <AntDesign name="closecircle" size={20} color="#0061f3" />
-    </TouchableOpacity>
-  );
-};
-
-export const IdentityPhoto = (props) => {
-  const { image } = props;
-  return (
-    <View style={itemStyles.imageContainer}>
-      <Image
-        style={itemStyles.image}
-        source={{ uri: image.uri ? image.uri : null }}
-      />
-    </View>
-  );
-};
-
-export const IdentityDetail = (props) => {
-  const {
-    disabled,
-    items,
-    placeholder,
-    defaultValue,
-    onChangeItem,
-    title,
-  } = props;
-  return (
-    <View style={itemStyles.detailsContainer}>
-      <Text style={itemStyles.title}>{title}</Text>
-      <Text style={itemStyles.description}>For Verification</Text>
-    </View>
-  );
-};
+import { Ionicons } from "@expo/vector-icons";
 
 export const IdentityItem = (props) => {
-  const { item, handleEvent, onChangeItem, onRemove, onAdd } = props;
+  const { item, onRemove, onAdd } = props;
+
+  if (!item.image || item.code != "" || item.type != "" || item.number != "") {
+    return (
+      <Card style={itemStyles.container} onPress={onAdd}>
+        <View style={itemStyles.imageContainer}>
+          <Image
+            style={itemStyles.image}
+            source={{ uri: item.image.uri ? item.image.uri : null }}
+          />
+        </View>
+        <View style={itemStyles.detailsContainer}>
+          <Text style={itemStyles.title}>{item.type}</Text>
+          <Text style={itemStyles.description}>For Verification</Text>
+        </View>
+        {/* <IdentityRemoveButton onRemove={onRemove} /> */}
+        <TouchableOpacity style={itemStyles.remove} onPress={onRemove}>
+          <AntDesign name="closecircle" size={20} color="#0061f3" />
+        </TouchableOpacity>
+      </Card>
+    );
+  }
 
   return (
     <Card style={itemStyles.container} onPress={onAdd}>
-      {!item.image ||
-      item.code != "" ||
-      item.type != "" ||
-      // item.url != "" ||
-      item.number != "" ? (
-        <React.Fragment>
-          <IdentityPhoto {...item} />
-          <IdentityDetail
-            {...item}
-            title={item.type}
-            onChangeItem={onChangeItem}
-          />
-          <IdentityRemoveButton onRemove={onRemove} />
-        </React.Fragment>
-      ) : (
-        <Text>Add Item</Text>
-      )}
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          paddingHorizontal: 10,
+        }}
+      >
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            borderStyle: "dashed",
+            borderColor: "#979797",
+            borderWidth: 1,
+            borderRadius: 4,
+            height: 40,
+            width: 40,
+          }}
+        >
+          <Ionicons name="ios-add" size={24} color="#979797" />
+        </View>
+        <View style={{ flexGrow: 1, paddingHorizontal: 20 }}>
+          <Text
+            style={{
+              fontFamily: "Gilroy_Bold",
+              color: "#979797",
+              fontSize: 14,
+            }}
+          >
+            ADD IDENTITY
+          </Text>
+        </View>
+      </View>
     </Card>
   );
 };
@@ -213,8 +212,9 @@ export const UploadIdentity = (props) => {
             backgroundColor: "#FFF",
             padding: 20,
             justifyContent: "center",
+            alignItems: "stretch",
             width: "100%",
-            height: 300,
+            height: 200,
           }}
         >
           <DropDownPicker
@@ -228,21 +228,28 @@ export const UploadIdentity = (props) => {
                 type: label,
               });
             }}
-            style={{ backgroundColor: "#fff", width: "100%" }}
-            containerStyle={{ height: 40, marginBottom: 20 }}
+            style={{
+              backgroundColor: "#fff",
+              width: "100%",
+              borderRightWidth: 0,
+              borderLeftWidth: 0,
+              borderTopWidth: 0,
+              paddingLeft: 0,
+            }}
+            containerStyle={{ height: 40, marginBottom: 40, marginTop: 20 }}
             dropDownStyle={{ backgroundColor: "#fff" }}
             itemStyle={{
               justifyContent: "flex-start",
             }}
             labelStyle={{
               color: "#444",
-              fontFamily: "Gilroy_Bold",
-              fontSize: 14,
+              fontFamily: "Avenir_Book",
+              fontSize: 20,
             }}
             selectedLabelStyle={{
-              color: "#003d6f",
-              fontFamily: "Gilroy_Bold",
-              fontSize: 14,
+              fontFamily: "Avenir_Book",
+              fontSize: 20,
+              color: "#F9A010",
             }}
           />
           <PNFormInputBox

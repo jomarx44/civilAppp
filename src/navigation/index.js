@@ -82,7 +82,7 @@ const MyTheme = {
 const Dashboard = () => {
   return (
     <Stack.Navigator
-      initialRouteName="ProofOfIdentity"
+      initialRouteName="Dashboard"
       screenOptions={{
         header: ({ navigation }) => {
           return (
