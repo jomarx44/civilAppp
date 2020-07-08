@@ -17,10 +17,11 @@ export const styles = StyleSheet.create({
 
 export const itemStyles = StyleSheet.create({
   container: {
-    width: "100%",
+    // width: "100%",
     height: 90,
     marginBottom: 14,
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    justifyContent: "flex-start"
   },
   imageContainer: {
     width: 120,
@@ -30,8 +31,9 @@ export const itemStyles = StyleSheet.create({
     width: 105
   },
   detailsContainer: {
-    flexGrow: 1,
-    marginRight: 45
+    width: "60%",
+    // borderWidth: 1,
+    // marginRight: 45
   },
   selectedLabel: {
     color: "#003d6f",
@@ -46,14 +48,15 @@ export const itemStyles = StyleSheet.create({
   title: {
     color: "#003d6f",
     fontFamily: "Gilroy_Bold",
-    fontSize: 14
+    fontSize: 14,
   },
   description: {
     color: "#0047cc",
     fontFamily: "Gilroy_Bold",
     fontSize: 11,
     letterSpacing: 0,
-    marginTop: 5
+    marginTop: 5,
+    width: "90%"
   },
   remove:{
     backgroundColor: "transparent",

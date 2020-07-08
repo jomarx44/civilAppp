@@ -16,19 +16,59 @@ import * as ImagePicker from "expo-image-picker";
 import MenuModal from "../../components/MenuModal";
 import DropDownPicker from "react-native-dropdown-picker";
 import PNFormInputBox from "library/components/PNFormInputBox";
+import PNDropDown from "library/components/PNDropDown";
 import { Ionicons } from "@expo/vector-icons";
+import { DrawerItemList } from "@react-navigation/drawer";
+import validate from "validate.js";
+import { ACCESS_TOKEN_ERROR } from "../../actions/types";
 
 export const IdentityItem = (props) => {
-  const { item, onRemove, onAdd } = props;
+  const { item, onRemove, onAdd, invalids, id } = props;
+
+  console.log(invalids[`document${id}`])
+  console.log(invalids[`type${id}`])
+  console.log(invalids[`number${id}`])
 
   if (!item.image || item.code != "" || item.type != "" || item.number != "") {
     return (
-      <Card style={itemStyles.container} onPress={onAdd}>
+      <Card
+        style={{
+          ...itemStyles.container,
+          borderColor:
+            invalids[`document${id}`] ||
+            invalids[`type${id}`] ||
+            invalids[`number${id}`]
+              ? "#DC6061"
+              : "#e5e5e5",
+        }}
+        onPress={onAdd}
+      >
         <View style={itemStyles.imageContainer}>
+          {/* {item.image ? (
+            <Image
+              style={itemStyles.image}
+              source={{ uri: item.image.uri ? item.image.uri : null }}
+            />
+          ) : (
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                borderStyle: "dashed",
+                borderColor: "#979797",
+                borderWidth: 1,
+                borderRadius: 4,
+                height: 40,
+                width: 40,
+              }}
+            >
+              <Ionicons name="ios-add" size={24} color="#979797" />
+            </View>
+          )} */}
           <Image
-            style={itemStyles.image}
-            source={{ uri: item.image.uri ? item.image.uri : null }}
-          />
+              style={itemStyles.image}
+              source={{ uri: item.image.uri ? item.image.uri : null }}
+            />
         </View>
         <View style={itemStyles.detailsContainer}>
           <Text style={itemStyles.title}>{item.type}</Text>
@@ -43,7 +83,18 @@ export const IdentityItem = (props) => {
   }
 
   return (
-    <Card style={itemStyles.container} onPress={onAdd}>
+    <Card
+      style={{
+        ...itemStyles.container,
+        borderColor:
+          invalids[`document${id}`] ||
+          invalids[`type${id}`] ||
+          invalids[`number${id}`]
+            ? "#DC6061"
+            : "#e5e5e5",
+      }}
+      onPress={onAdd}
+    >
       <View
         style={{
           flexDirection: "row",
@@ -85,6 +136,7 @@ export const UploadIdentity = (props) => {
   const [isMenuModalOpen, setMenuModalState] = useState(false);
   const [isCameraModalOpen, setCameraModalState] = useState(false);
   const [selectedID, setSelectedID] = useState(0);
+  const [invalids, setInvalids] = useState({});
   const [identificationData, setIdentificationData] = useState(
     props.route.params.data.identificationData
       ? props.route.params.data.identificationData
@@ -107,6 +159,49 @@ export const UploadIdentity = (props) => {
           },
         ]
   );
+
+  const constraints = {
+    type0: {
+      presence: {
+        allowEmpty: false,
+        message: "^Please select a valid ID Type",
+      },
+    },
+    number0: {
+      presence: {
+        allowEmpty: false,
+        message: "^Government ID is required",
+      },
+    },
+    document0: {
+      presence: {
+        allowEmpty: false,
+        message: "^Please capture/select your ID card for verification",
+      },
+    },
+    type1: {
+      presence: {
+        allowEmpty: false,
+        message: "^Please select a valid ID Type",
+      },
+      exclusion: {
+        within: [identificationData[0].type],
+        message: "^Please choose another ID Type",
+      },
+    },
+    number1: {
+      presence: {
+        allowEmpty: false,
+        message: "^Government ID is required",
+      },
+    },
+    document1: {
+      presence: {
+        allowEmpty: false,
+        message: "^Please capture/select your ID card for verification",
+      },
+    },
+  };
 
   const { navigation, route } = props;
   const { items, onSave } = route.params;
@@ -177,14 +272,79 @@ export const UploadIdentity = (props) => {
     setIdentificationData(newIdentificationData);
   };
 
+  const validateType = (id, value) => {
+    const invalid = validate(
+      {
+        [`type${id}`]: value,
+      },
+      {
+        [`type${id}`]: constraints[`type${id}`],
+      }
+    );
+    console.log(invalid);
+    if (invalid) {
+      setInvalids({
+        ...invalids,
+        ...invalid,
+      });
+    } else {
+      const temporary_invalids = {
+        ...invalids,
+      };
+      delete temporary_invalids[`type${id}`];
+      setInvalids(temporary_invalids);
+    }
+  };
+
+  const validateValue = (id, value) => {
+    const invalid = validate(
+      {
+        [`number${id}`]: value,
+      },
+      {
+        [`number${id}`]: constraints[`number${id}`],
+      }
+    );
+    console.log(invalid);
+    if (invalid) {
+      setInvalids({
+        ...invalids,
+        ...invalid,
+      });
+    } else {
+      const temporary_invalids = {
+        ...invalids,
+      };
+      delete temporary_invalids[`number${id}`];
+      setInvalids(temporary_invalids);
+    }
+  };
+
   const handleSaveCaptured = (image) => {
     setCameraModalState(false);
     handleChangeIdentityData("image", image);
   };
 
   const handleSubmit = () => {
-    onSave(identificationData);
-    navigation.goBack();
+    const toBeValidated = {
+      type0: identificationData[0].type,
+      number0: identificationData[0].number,
+      document0: identificationData[0].image,
+      type1: identificationData[1].type,
+      number1: identificationData[1].number,
+      document1: identificationData[1].image,
+    };
+
+    // console.log("handleSubmit: ", toBeValidated);
+    const invalid = validate(toBeValidated, constraints);
+    if (!invalid) {
+      onSave(identificationData);
+      setInvalids({});
+      navigation.goBack();
+    } else {
+      console.log(invalid);
+      setInvalids(invalid);
+    }
   };
 
   return (
@@ -194,9 +354,11 @@ export const UploadIdentity = (props) => {
         renderItem={({ item, index }) => {
           return (
             <IdentityItem
+              id={index}
               item={item}
               onRemove={() => handleRemove(index)}
               onAdd={() => handleAdd(index)}
+              invalids={invalids}
             />
           );
         }}
@@ -210,60 +372,52 @@ export const UploadIdentity = (props) => {
         <View
           style={{
             backgroundColor: "#FFF",
-            padding: 20,
+            paddingHorizontal: 20,
+            paddingTop: 40,
             justifyContent: "center",
             alignItems: "stretch",
             width: "100%",
             height: 200,
           }}
         >
-          <DropDownPicker
-            disabled={false}
-            items={items}
-            defaultValue={identificationData[selectedID].code}
-            placeholder="Select Government ID"
-            onChangeItem={({ label, value }) => {
-              handleMultipleChangeIdentityData({
-                code: value,
-                type: label,
-              });
+          <PNDropDown
+            placeholder={{ label: "Select Government ID", value: null }}
+            onValueChange={(value, index) => {
+              if (index != 0) {
+                handleMultipleChangeIdentityData({
+                  code: value,
+                  type: items[index - 1].label,
+                });
+                validateType(selectedID, items[index - 1].label);
+              } else {
+                handleMultipleChangeIdentityData({
+                  code: value,
+                  type: null,
+                });
+                validateType(selectedID, null);
+              }
+              // handleEvent("onBlur", { constraints, index: "civil_status" });
             }}
-            style={{
-              backgroundColor: "#fff",
-              width: "100%",
-              borderRightWidth: 0,
-              borderLeftWidth: 0,
-              borderTopWidth: 0,
-              paddingLeft: 0,
-            }}
-            containerStyle={{ height: 40, marginBottom: 40, marginTop: 20 }}
-            dropDownStyle={{ backgroundColor: "#fff" }}
-            itemStyle={{
-              justifyContent: "flex-start",
-            }}
-            labelStyle={{
-              color: "#444",
-              fontFamily: "Avenir_Book",
-              fontSize: 20,
-            }}
-            selectedLabelStyle={{
-              fontFamily: "Avenir_Book",
-              fontSize: 20,
-              color: "#F9A010",
-            }}
+            options={items}
+            selectedValue={identificationData[selectedID].code}
+            invalid={
+              invalids[`type${selectedID}`]
+                ? invalids[`type${selectedID}`][0]
+                : ""
+            }
           />
           <PNFormInputBox
             placeholder="Government ID Number"
-            // ref={input_homePhone}
             onChangeText={(value) => handleChangeIdentityData("number", value)}
-            // onSubmitEditing={() => {
-            //   input_homeMobile.current.focus();
-            // }}
             value={identificationData[selectedID].number}
-            // onBlur={() =>
-            //   handleEvent("onBlur", { constraints, index: "government_id_1" })
-            // }
-            // invalid={invalids.government_id_1 ? invalids.government_id_1[0] : ""}
+            onBlur={() =>
+              validateValue(selectedID, identificationData[selectedID].number)
+            }
+            invalid={
+              invalids[`number${selectedID}`]
+                ? invalids[`number${selectedID}`][0]
+                : ""
+            }
           />
         </View>
 
