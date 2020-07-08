@@ -10,13 +10,15 @@ import {
   Icon,
   Title,
 } from "native-base";
+import { useSafeArea } from 'react-native-safe-area-context'
 
 // Others
 import { config } from "../../../config";
 
 export const PNHeaderDrawerTitle = ({title, containerStyle, titleStyle, openDrawer}) => {
+  const insets = useSafeArea();
   return (
-    <Header style={[styles.defaultContainerStyle, containerStyle]}>
+    <Header style={[styles.defaultContainerStyle, containerStyle, {paddingTop: insets.top}]}>
       <Left style={{ flex: 1 }}>
         <Button
           transparent
@@ -38,8 +40,7 @@ export const PNHeaderDrawerTitle = ({title, containerStyle, titleStyle, openDraw
 const styles = StyleSheet.create({
   defaultContainerStyle: {
     backgroundColor: "#309fe7",
-    paddingTop: 30,
-    height: 80
+    // height: 80
   },
   body: {
     justifyContent: "center",

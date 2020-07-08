@@ -7,7 +7,7 @@ import { icons } from "../../res/images/icons"
 import { Camera } from "./main"
 
 export const CameraModal = (props) => {
-  const {isCameraModalOpen, setCameraModalState, onSave} = props;
+  const {isCameraModalOpen, setCameraModalState, onSave, cameraType, selfieData} = props;
   return (
     <Modal
       isVisible={isCameraModalOpen}
@@ -33,7 +33,7 @@ export const CameraModal = (props) => {
       >
         Take a Photo
       </TopNavigation>
-      <Camera onSave={onSave} />
+      <Camera onSave={onSave} cameraType={cameraType} selfieData={selfieData} />
     </Modal>
   )
 }

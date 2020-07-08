@@ -63,7 +63,6 @@ class IBMAppId {
       });
       return this.getMethodWithToken(json_data)
         .then(({ data: { identities, sub } }) => {
-          console.log("response: ", identities)
           if (identities && identities.length > 0) {
             const {
               displayName,

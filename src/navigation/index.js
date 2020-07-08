@@ -27,9 +27,11 @@ import PNHeaderBackButton from "../library/Layout/Header/PNHeaderBackButton";
 import PNHeaderCancelDone from "../library/Layout/Header/PNHeaderCancelDone";
 import { TopNavigation } from "../components/TopNavigation"
 import { NavigationButtons } from "../components/NavigationButtons"
+import { icons } from "../res/images/icons"
 
 // New Components
 import EmailConfirmationScreen from "../screens/Email/EmailConfirmationScreen";
+import { UploadIdentity } from "../screens/UploadIdentity"
 
 // Authentication
 import LoginScreen from "screens/LoginScreen";
@@ -63,8 +65,6 @@ import { FingerprintScreen } from "../screens/FingerprintScreen";
 // OTPs
 import OTPChangeMobileNumberScreen from "../screens/ChangeMobileNumberScreen/OTPChangeMobileNumberScreen"
 import OTPCreateBankAccountScreen from "../screens/BankAccountScreen/OTPCreateBankAccountScreen"
-import { ProofOfIdentity } from "../screens/ProofOfIdentity"
-import { UploadIdentity } from "../screens/UploadIdentity"
 
 // Navigators
 const Stack = createStackNavigator();
@@ -155,7 +155,7 @@ const Dashboard = () => {
           },
         }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="ProofOfIdentity"
         component={ProofOfIdentity}
         options={{
@@ -176,7 +176,7 @@ const Dashboard = () => {
             );
           },
         }}
-      />
+      /> */}
       <Stack.Screen
         name="UploadIdentity"
         component={UploadIdentity}

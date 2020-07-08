@@ -8,9 +8,9 @@ import { Ionicons } from "@expo/vector-icons";
 
 export const Camera = (props) => {
   const [hasPermission, setHasPermission] = useState(null);
-  const [cameraType, setCameraType] = useState(ExpoCamera.Constants.Type.back);
+  const [cameraType, setCameraType] = useState(ExpoCamera.Constants.Type[props.cameraType ? props.cameraType : "back"]);
   const [cameraReady, setCameraReady] = useState(false);
-  const [imageData, setImageData] = useState(null);
+  const [imageData, setImageData] = useState(props.selfieData);
   const { onSave } = props;
 
   const { width } = Dimensions.get("window");
@@ -30,7 +30,7 @@ export const Camera = (props) => {
   const snap = async () => {
     if (camera && cameraReady) {
       const options = {
-        quality: 1,
+        quality: 0.5,
         base64: true,
         onPictureSaved: (response) => {
           setImageData(response);

@@ -162,7 +162,7 @@ class PersonalInfo extends React.Component {
     
     if (!invalid) {
       const user = { ...this.state.user };
-      user.phoneNumber = '63' + user.phoneNumber;
+      user.phoneNumber = '+63' + user.phoneNumber;
       Profile.setFormData(user);
       this.props.signup(user);
     } else {

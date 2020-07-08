@@ -1,52 +1,76 @@
-import React, { useState } from "react";
-import { connect } from 'react-redux'
-import { ProofOfIdentity } from "./ProofOfIdentity"
+import React, { useState, useEffect } from "react";
+import { Text, View } from "react-native";
+import { connect } from "react-redux";
+import { ProofOfIdentity } from "./ProofOfIdentity";
 
-export const ProofOfIdentityContainer = connect(mapStateToProps, mapDispatchToProps)((props) => {
+const ProofOfIdentityContainer = (props) => {
   const [isCameraModalOpen, setCameraModalState] = useState(false);
-  const [selfieData, setSelfieData] = useState(null);
-  const [identificationData, setIdentificationData] = useState(null);
-  const isUploadingIdentificationDone = identificationData && (identificationData.id1 && identificationData.id2);
-  const { navigation } = props;
+  const [selfieData, setSelfieData] = useState(props.data.selfieImageData);
+
+  const {
+    navigation,
+    data,
+    items,
+    handleEvent,
+    constraints,
+    invalids,
+    handleOnUploadSelfie,
+    handleOnUploadIDs,
+    id1Status,
+    id2Status,
+    selfieStatus,
+    onNext
+  } = props;
 
   const handleSelfie = () => {
     setCameraModalState(true);
   };
 
   const handleUploadIdentity = () => {
-    navigation.navigate("UploadIdentity", {
+    navigation.push("UploadIdentity", {
       onSave: handleDoneUpload,
-    })
-  }
+      items,
+      handleEvent,
+      data,
+      invalids,
+      constraints,
+    });
+  };
 
   const handleDoneSelfie = (image) => {
     setCameraModalState(false);
     setSelfieData(image);
+    handleOnUploadSelfie(image);
   };
 
-  const handleDoneUpload = (image) => {
-    setIdentificationData(image);
+  const handleDoneUpload = (identityData) => {
+    handleOnUploadIDs(identityData)
+    // handleOnUploadIDs(identity[0].image, identity[1].image);
   };
 
   return (
-      <ProofOfIdentity 
-        selfieData={selfieData}
-        isUploadingIdentificationDone={isUploadingIdentificationDone}
-        isCameraModalOpen={isCameraModalOpen}
-        onSelfie={handleSelfie}
-        onUploadIdentity={handleUploadIdentity}
-        onDoneSelfie={handleDoneSelfie}
-        setCameraModalState={setCameraModalState}
-      />
+    <ProofOfIdentity
+      selfieData={selfieData}
+      isCameraModalOpen={isCameraModalOpen}
+      onSelfie={handleSelfie}
+      onUploadIdentity={handleUploadIdentity}
+      onDoneSelfie={handleDoneSelfie}
+      setCameraModalState={setCameraModalState}
+      id1Status={id1Status}
+      id2Status={id2Status}
+      selfieStatus={selfieStatus}
+      onNext={onNext}
+    />
   );
-});
+};
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state) => ({});
 
-})
+const mapDispatchToProps = (dispatch) => ({});
 
-const mapDispatchToProps = (dispatch) => ({
-  
-});
+export const ProofOfIdentityScreen = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProofOfIdentityContainer);
 
-export default ProofOfIdentityContainer;
+export default ProofOfIdentityScreen;

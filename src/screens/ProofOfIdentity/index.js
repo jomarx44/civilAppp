@@ -1,2 +1,1 @@
-export { ProofOfIdentityContainer as ProofOfIdentity } from "./ProofOfIdentityContainer";
-
+export { ProofOfIdentityScreen as ProofOfIdentity } from "./ProofOfIdentityContainer";

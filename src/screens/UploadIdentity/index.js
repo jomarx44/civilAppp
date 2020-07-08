@@ -1,5 +1,12 @@
-import React, { useState } from "react";
-import { Text, View, ScrollView, Image, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  Text,
+  View,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
 import { ContainedButton } from "../../components/Buttons";
 import { Card } from "../../components/Card";
 import { CameraModal } from "../../components/Camera";
@@ -7,6 +14,9 @@ import { styles, itemStyles } from "./styles";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import MenuModal from "../../components/MenuModal";
+import DropDownPicker from "react-native-dropdown-picker";
+import PNDropDown from "library/components/PNDropDown";
+import PNFormInputBox from "library/components/PNFormInputBox";
 
 const IdentityRemoveButton = (props) => {
   const { onRemove } = props;
@@ -21,13 +31,23 @@ export const IdentityPhoto = (props) => {
   const { image } = props;
   return (
     <View style={itemStyles.imageContainer}>
-      <Image style={itemStyles.image} source={{ uri: image.uri }} />
+      <Image
+        style={itemStyles.image}
+        source={{ uri: image.uri ? image.uri : null }}
+      />
     </View>
   );
 };
 
 export const IdentityDetail = (props) => {
-  const { title } = props;
+  const {
+    disabled,
+    items,
+    placeholder,
+    defaultValue,
+    onChangeItem,
+    title,
+  } = props;
   return (
     <View style={itemStyles.detailsContainer}>
       <Text style={itemStyles.title}>{title}</Text>
@@ -37,21 +57,27 @@ export const IdentityDetail = (props) => {
 };
 
 export const IdentityItem = (props) => {
-  const { item, onRemove, onAdd } = props;
-
-  if (!item) {
-    return (
-      <Card style={itemStyles.container} onPress={onAdd}>
-        <Text>Add Item</Text>
-      </Card>
-    );
-  }
+  const { item, handleEvent, onChangeItem, onRemove, onAdd } = props;
 
   return (
-    <Card style={itemStyles.container}>
-      <IdentityPhoto {...item} />
-      <IdentityDetail {...item} />
-      <IdentityRemoveButton onRemove={onRemove} />
+    <Card style={itemStyles.container} onPress={onAdd}>
+      {!item.image ||
+      item.code != "" ||
+      item.type != "" ||
+      // item.url != "" ||
+      item.number != "" ? (
+        <React.Fragment>
+          <IdentityPhoto {...item} />
+          <IdentityDetail
+            {...item}
+            title={item.type}
+            onChangeItem={onChangeItem}
+          />
+          <IdentityRemoveButton onRemove={onRemove} />
+        </React.Fragment>
+      ) : (
+        <Text>Add Item</Text>
+      )}
     </Card>
   );
 };
@@ -59,29 +85,54 @@ export const IdentityItem = (props) => {
 export const UploadIdentity = (props) => {
   const [isMenuModalOpen, setMenuModalState] = useState(false);
   const [isCameraModalOpen, setCameraModalState] = useState(false);
-  const [selectedId, setSelectedId] = useState(null);
-  const [identificationData, setIdentificationData] = useState({
-    id1: null,
-    id2: null,
-  });
+  const [selectedID, setSelectedID] = useState(0);
+  const [identificationData, setIdentificationData] = useState(
+    props.route.params.data.identificationData
+      ? props.route.params.data.identificationData
+      : [
+          {
+            key: "f3440ef8-c0cd-11ea-b3de-0242ac130004",
+            image: {},
+            code: "",
+            type: "",
+            url: "",
+            number: "",
+          },
+          {
+            key: "0af3aaab-5fd8-4a23-b904-9d71a93555b7",
+            image: {},
+            code: "",
+            type: "",
+            url: "",
+            number: "",
+          },
+        ]
+  );
 
   const { navigation, route } = props;
-  const { onSave } = route.params;
+  const { items, onSave } = route.params;
 
   const handleAdd = (id) => {
-    setSelectedId(id);
+    setSelectedID(id);
     setMenuModalState(true);
   };
 
   const handleRemove = (id) => {
-    setIdentificationData({
-      ...identificationData,
-      [id]: null,
-    });
+    let newIdentificationData = [...identificationData];
+    newIdentificationData[id] = {
+      key: id,
+      image: {},
+      code: "",
+      type: "",
+      url: "",
+      number: "",
+    };
+
+    setIdentificationData(newIdentificationData);
   };
 
   const handleTakePhoto = () => {
-    setMenuModalState(false);
+    // setMenuModalState(false);
     setCameraModalState(true);
   };
 
@@ -91,70 +142,124 @@ export const UploadIdentity = (props) => {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1, 1],
-        quality: 1,
+        quality: 0.5,
         base64: true,
       };
 
       const result = await ImagePicker.launchImageLibraryAsync(options);
 
       if (!result.cancelled) {
-        setImage(selectedId, result);
-        setMenuModalState(false);
+        // Set Image
+        handleChangeIdentityData("image", result);
+        // setMenuModalState(false);
       }
     } catch (error) {
       console.log("Error while selecting image: ", error);
     }
   };
 
-  const setImage = (id, image) => {
-    setIdentificationData({
-      ...identificationData,
-      [id]: {
-        ...identificationData,
-        image,
-      },
-    });
+  const handleChangeIdentityData = (index, value) => {
+    let newIdentificationData = [...identificationData];
+    newIdentificationData[selectedID] = {
+      ...newIdentificationData[selectedID],
+      [index]: value,
+    };
+
+    setIdentificationData(newIdentificationData);
+  };
+
+  const handleMultipleChangeIdentityData = (attributes) => {
+    let newIdentificationData = [...identificationData];
+    newIdentificationData[selectedID] = {
+      ...newIdentificationData[selectedID],
+      ...attributes,
+    };
+
+    setIdentificationData(newIdentificationData);
   };
 
   const handleSaveCaptured = (image) => {
     setCameraModalState(false);
-    setImage(selectedId, image);
+    handleChangeIdentityData("image", image);
   };
 
   const handleSubmit = () => {
     onSave(identificationData);
     navigation.goBack();
-  }
+  };
 
   return (
     <View style={{ flexGrow: 1, marginTop: 40 }}>
-      <ScrollView
+      <FlatList
+        data={identificationData}
+        renderItem={({ item, index }) => {
+          return (
+            <IdentityItem
+              item={item}
+              onRemove={() => handleRemove(index)}
+              onAdd={() => handleAdd(index)}
+            />
+          );
+        }}
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
-      >
-        <IdentityItem
-          item={identificationData.id1}
-          onRemove={() => {
-            handleRemove("id1");
-          }}
-          onAdd={() => {
-            handleAdd("id1");
-          }}
-        />
-        <IdentityItem
-          item={identificationData.id2}
-          onRemove={() => {
-            handleRemove("id2");
-          }}
-          onAdd={() => {
-            handleAdd("id2");
-          }}
-        />
-      </ScrollView>
+      />
       <View style={styles.buttonContainer}>
         <ContainedButton label="SUBMIT" onPress={() => handleSubmit()} />
       </View>
       <MenuModal isVisible={isMenuModalOpen} setVisibility={setMenuModalState}>
+        <View
+          style={{
+            backgroundColor: "#FFF",
+            padding: 20,
+            justifyContent: "center",
+            width: "100%",
+            height: 300,
+          }}
+        >
+          <DropDownPicker
+            disabled={false}
+            items={items}
+            defaultValue={identificationData[selectedID].code}
+            placeholder="Select Government ID"
+            onChangeItem={({ label, value }) => {
+              handleMultipleChangeIdentityData({
+                code: value,
+                type: label,
+              });
+            }}
+            style={{ backgroundColor: "#fff", width: "100%" }}
+            containerStyle={{ height: 40, marginBottom: 20 }}
+            dropDownStyle={{ backgroundColor: "#fff" }}
+            itemStyle={{
+              justifyContent: "flex-start",
+            }}
+            labelStyle={{
+              color: "#444",
+              fontFamily: "Gilroy_Bold",
+              fontSize: 14,
+            }}
+            selectedLabelStyle={{
+              color: "#003d6f",
+              fontFamily: "Gilroy_Bold",
+              fontSize: 14,
+            }}
+          />
+          <PNFormInputBox
+            placeholder="Government ID Number"
+            // ref={input_homePhone}
+            onChangeText={(value) => handleChangeIdentityData("number", value)}
+            // onSubmitEditing={() => {
+            //   input_homeMobile.current.focus();
+            // }}
+            value={identificationData[selectedID].number}
+            // onBlur={() =>
+            //   handleEvent("onBlur", { constraints, index: "government_id_1" })
+            // }
+            // invalid={invalids.government_id_1 ? invalids.government_id_1[0] : ""}
+          />
+        </View>
+
         <ContainedButton
           label="Take a Photo"
           labelStyle={{ color: "#003d6f", fontFamily: "Gilroy_Bold" }}
