@@ -18,7 +18,7 @@ import { config } from "../../../config";
 export const PNHeaderDrawerTitle = ({title, containerStyle, titleStyle, openDrawer}) => {
   const insets = useSafeArea();
   return (
-    <Header style={[styles.defaultContainerStyle, containerStyle, {paddingTop: insets.top}]}>
+    <Header style={[styles.defaultContainerStyle, containerStyle, {marginTop: insets.top}]}>
       <Left style={{ flex: 1 }}>
         <Button
           transparent
@@ -40,7 +40,7 @@ export const PNHeaderDrawerTitle = ({title, containerStyle, titleStyle, openDraw
 const styles = StyleSheet.create({
   defaultContainerStyle: {
     backgroundColor: "#309fe7",
-    // height: 80
+    height: 50
   },
   body: {
     justifyContent: "center",
