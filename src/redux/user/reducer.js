@@ -1,58 +1,21 @@
-import {
-  SIGNUP,
-  SIGNUP_INITIALIZE,
-  SIGNUP_ERROR,
-  SIGNUP_SUCCESS,
-} from "../actions";
+import { CREATE_USER } from "../actions";
 
 const initState = {
-  status: {
-    isCreating: false,
-    isCreated: null,
-  },
-  error: null,
+  createdList: {},
+  createdListByIds: [],
 };
 
 export const user = (state = initState, action) => {
   switch (action.type) {
-    case SIGNUP:
+    case CREATE_USER:
+      console.log(action.payload.user.id)
       return {
         ...state,
-        status: {
-          ...state.status,
-          isCreated: null,
-          isCreating: true,
+        createdList: {
+          ...state.createdList,
+          [action.payload.user.id]: action.payload.user,
         },
-      };
-    case SIGNUP_INITIALIZE:
-      return {
-        ...state,
-        error: initState.error,
-        status: {
-          ...state.status,
-          isCreated: initState.status.isCreated,
-          isCreating: initState.status.isCreating,
-        },
-      };
-    case SIGNUP_ERROR:
-      return {
-        ...state,
-        error: action.error,
-        status: {
-          ...state.status,
-          isCreated: false,
-          isCreating: false,
-        },
-      };
-    case SIGNUP_SUCCESS:
-      return {
-        ...state,
-        error: null,
-        status: {
-          ...state.status,
-          isCreated: true,
-          isCreating: false,
-        },
+        createdListByIds: [...state.createdListByIds, action.payload.user.id],
       };
     default:
       return state;
