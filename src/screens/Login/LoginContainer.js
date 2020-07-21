@@ -1,26 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { Alert, AsyncStorage } from "react-native";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { Login } from "./Login";
 import {
   authenticateAsync,
   cancelAuthenticate,
 } from "expo-local-authentication";
 import { auth, token, attribute,  } from "../../API"
+import { SignupDataAsyncStorage } from "../../helpers/asyncStorage"
 import { login } from "../../redux/auth/actions"
+import { addCreatedUser } from "../../redux/user/actions"
 
 export const LoginContainer = (props) => {
   const [fingerprintToken, setFingerprintToken] = useState(null);
-  const [signupData, setSignupData] = useState({});
   const [isModalVisible, setModalVisibility] = useState(false);
   const [isFingerprintSuccess, setIsFingerprintSuccess] = useState(false);
   const [isScanning, setScanningStatus] = useState(false);
-  const [user, setUser] = useState({
+  const [userData, setUserData] = useState({
     // username: "alvin@thousandminds.com",
     // password: "alvinviernes",
     username: "",
     password: "",
   });
+  const dispatch = useDispatch()
 
   const {
     loginByFingerprint,
@@ -30,7 +32,32 @@ export const LoginContainer = (props) => {
     auth,
     login,
     token,
+    user
   } = props;
+
+  useEffect(() => {
+    // Check if fingerprint login status and fingerprint token
+    AsyncStorage.getItem("fingerprintToken").then((token) => {
+      setFingerprintToken(token);
+    });
+
+    // Check if there's pending create account
+    // const signupData = {
+    //   id: "a5c2575d-a520-4f4f-88e2-df016401542c",
+    //   email: "thanusmarksman@gmail.com",
+    //   givenName: "Alvin",
+    //   middleName: "Viernes",
+    //   familyName: "Ching",
+    //   phoneNumber: "+639953186216",
+    // }
+    // SignupDataAsyncStorage.set(JSON.stringify(signupData))
+    SignupDataAsyncStorage.get()
+      .then((data) => {
+        if(data) {
+          dispatch(addCreatedUser(JSON.parse(data)));
+        }
+      });
+  }, []);
 
   useEffect(() => {
     if (token && token.tokens) {
@@ -44,17 +71,6 @@ export const LoginContainer = (props) => {
   }, [token]);
 
   useEffect(() => {
-    AsyncStorage.getItem("fingerprintToken").then((token) => {
-      setFingerprintToken(token);
-    });
-
-    AsyncStorage.getItem("SIGNUP_DATA").then((data) => {
-      data = JSON.parse(data);
-      setSignupData(data);
-    });
-  }, []);
-
-  useEffect(() => {
     if (fingerprintToken && isScanning == false) {
       setModalVisibility(true);
       handleScan();
@@ -62,20 +78,20 @@ export const LoginContainer = (props) => {
   }, [fingerprintToken]);
 
   const handleChangeText = (id, value) => {
-    setUser({
-      ...user,
+    setUserData({
+      ...userData,
       [id]: value,
     });
   };
 
   const handleLogin = () => {
-    login(user.username, user.password)
-    console.log("User Data: ", user);
+    login(userData.username, userData.password)
+    console.log("userData Data: ", userData);
   };
 
   const handleCreate = () => {
-    if(signupData) {
-      return navigation.navigate("EmailVerification")
+    if(user.createdListByIds.length > 0) {
+      return navigation.navigate("EmailConfirmation")
     }
 
     return navigation.navigate("CreateMobileAccount");
@@ -87,7 +103,7 @@ export const LoginContainer = (props) => {
     const { success, error } = await authenticateAsync({ promptMessage: "" });
 
     if (success) {
-      setScanningStatus(false);
+      setScanningStatus(false); 
       setIsFingerprintSuccess(true);
       loginByFingerprint(fingerprintToken);
     } else if (error == "authentication_failed" || error == "too_fast") {
@@ -108,7 +124,7 @@ export const LoginContainer = (props) => {
 
   return (
     <Login
-      data={user}
+      data={userData}
       isLoggingIn={auth && auth.status.isLoggingIn}
       onChangeText={handleChangeText}
       onPressCreate={handleCreate}
@@ -119,10 +135,11 @@ export const LoginContainer = (props) => {
   );
 };
 
-const mapStateToProps = ({ auth, token }) => {
+const mapStateToProps = ({ auth, token, user }) => {
   return {
     auth,
     token,
+    user,
   }
 };
 

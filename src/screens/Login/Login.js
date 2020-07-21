@@ -1,11 +1,11 @@
 import React, { useRef } from "react";
-import { Image, Text, View } from "react-native";
+import PropTypes from 'prop-types'
+import { Image, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ContainedButton, TextButton } from "../../components/Buttons";
 import { InputBox } from "../../components/InputBox";
-// import { FingerprintModal } from "../../components/FingerprintModal"
 import KeyboardShift from "library/components/KeyboardShift";
 import config from "../../config";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { styles } from "./styles";
 import FingerprintModal from "../../components/FingerprintModal";
 
@@ -102,5 +102,15 @@ export const Login = (props) => {
     </React.Fragment>
   );
 };
+
+Login.propTypes = {
+  data: PropTypes.object.isRequired,
+  onChangeText: PropTypes.func.isRequired,
+  onPressCreate: PropTypes.func,
+  onLogin: PropTypes.func.isRequired,
+  setVisibility: PropTypes.func.isRequired,
+  isVisible: PropTypes.bool.isRequired,
+  isLoggingIn: PropTypes.bool,
+}
 
 export default Login;
