@@ -3,10 +3,6 @@ import {
   LOGIN_ERROR,
   LOGIN_SUCCESS,
   LOGOUT,
-  SIGNUP,
-  SIGNUP_INITIALIZE,
-  SIGNUP_ERROR,
-  SIGNUP_SUCCESS,
 } from "../actions";
 
 const initState = {

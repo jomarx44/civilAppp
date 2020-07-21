@@ -2,10 +2,11 @@ import { combineReducers } from "redux";
 import { account } from "./account/reducer";
 import { auth } from "./auth/reducer";
 import { bankAccount } from "./bankAccount/reducer";
-// import {  } from "./profile";
+import { user } from "./user/reducer"
 
 export default combineReducers({
   account,
   auth,
   bankAccount,
+  user
 })
