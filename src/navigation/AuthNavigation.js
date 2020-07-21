@@ -1,28 +1,27 @@
 /* eslint-disable react/display-name */
 import React from "react";
-import Login from "screens/Login";
-import ForgotPasswordScreen from "screens/ForgotPasswordScreen";
-import PersonalInfoScreen from "screens/SignUpScreen/PersonalInfoScreen";
-import EmailConfirmationScreen from "../screens/Email/EmailConfirmationScreen";
-// import EmailVerificationScreen from "screens/SignUpScreen/EmailVerificationScreen";
-import { TesterScreen } from "../screens/TesterScreen";
 import { createStackNavigator } from "@react-navigation/stack";
-import { icons } from "../res/images/icons";
-import { TopNavigation } from "../components/TopNavigation";
-import { NavigationButtons } from "../components/NavigationButtons";
+import { Login } from "../screens/Login";
+import ForgotPasswordScreen from "screens/ForgotPasswordScreen";
+import { CreateMobileAccount } from "../screens/CreateMobileAccount";
+import { EmailConfirmation } from "../screens/Email";
+import { TesterScreen } from "../screens/TesterScreen";
+import { BackHeader, BackHeaderBlue } from "./headers";
 
 const Stack = createStackNavigator();
 
 export const AuthNavigation = () => {
-  // const navigation = useNavigation();
-
   return (
-    <Stack.Navigator>
-      {/* <Stack.Screen
+    <Stack.Navigator initialRouteName="TesterScreen">
+      <Stack.Screen
         name="TesterScreen"
         component={TesterScreen}
-        options={{ headerShown: false }}
-      /> */}
+        options={{
+          header: ({ navigation }) => (
+            <BackHeaderBlue goBack={() => navigation.goBack()} />
+          ),
+        }}
+      />
       <Stack.Screen
         name="Login"
         component={Login}
@@ -32,65 +31,29 @@ export const AuthNavigation = () => {
         name="ForgotPassword"
         component={ForgotPasswordScreen}
         options={{
-          header: ({ navigation }) => {
-            return (
-              <TopNavigation
-                leftLogo={
-                  <NavigationButtons
-                    logo={icons.ic_back_blue}
-                    onPress={() => {
-                      navigation.goBack();
-                    }}
-                  />
-                }
-              />
-            );
-          },
+          header: ({ navigation }) => (
+            <BackHeader goBack={() => navigation.goBack()} />
+          ),
         }}
       />
       <Stack.Screen
         name="CreateMobileAccount"
-        component={PersonalInfoScreen}
+        component={CreateMobileAccount}
         options={{
-          header: ({ navigation }) => {
-            return (
-              <TopNavigation
-                leftLogo={
-                  <NavigationButtons
-                    logo={icons.ic_back_blue}
-                    onPress={() => {
-                      navigation.goBack();
-                    }}
-                  />
-                }
-              />
-            );
-          },
+          header: ({ navigation }) => (
+            <BackHeader goBack={() => navigation.goBack()} />
+          ),
         }}
       />
       <Stack.Screen
-        name="EmailConfirmationScreen"
-        component={EmailConfirmationScreen}
-        options={{ headerShown: false }}
-      />
-      {/* <Stack.Screen
-        name="EmailVerification"
-        component={EmailVerificationScreen}
+        name="EmailConfirmation"
+        component={EmailConfirmation}
         options={{
-          header: ({navigation}) => {
-            return <TopNavigation
-            leftLogo={
-              <NavigationButtons
-                logo={icons.ic_back_blue}
-                onPress={() => {
-                  navigation.goBack();
-                }}
-              />
-            }
-          />
-          },
+          header: ({ navigation }) => (
+            <BackHeader goBack={() => navigation.goBack()} />
+          ),
         }}
-      /> */}
+      />
       {/* <Stack.Screen
         name="OTPSignUp"
         component={OTPOpenAccountScreen}

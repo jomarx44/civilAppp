@@ -9,7 +9,7 @@ import { MainNavigation } from "./MainNavigation";
 import {
   setFingerprintCompatibility,
   setFingerprintEnrolled,
-} from "../redux/application/action";
+} from "../redux/application/actions";
 
 // Theme
 const MyTheme = {
