@@ -7,13 +7,13 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     height: 56,
-    paddingTop: 25,
-    paddingBottom: 10,
+    // paddingTop: 25,
+    paddingVertical: 10,
     paddingHorizontal: 30,
     backgroundColor: "transparent",
   },
   leftHeaderStyle: {
-    alignItems: "center",
+    alignItems: "flex-start",
     backgroundColor: "transparent",
     flex: 1,
     justifyContent: "center",
@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
     flex: 5
   },
   rightHeaderStyle: {
-    alignItems: "center",
+    alignItems: "flex-end",
     backgroundColor: "transparent",
     flex: 1,
     justifyContent: "center",
