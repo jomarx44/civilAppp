@@ -1,9 +1,9 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { View } from 'react-native'
 import Modal from "react-native-modal";
 import { styles } from "./styles"
 
-const MenuModal = (props) => {
+export const MenuModal = (props) => {
   const {isVisible, setVisibility, children} = props;
   return (
     <Modal
