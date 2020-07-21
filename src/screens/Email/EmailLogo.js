@@ -1,21 +1,32 @@
-import React from 'react'
-import { Image, StyleSheet } from 'react-native'
+import React from "react";
+import PropTypes from "prop-types";
+import { Image, ViewPropTypes } from "react-native";
+import { styles } from "./styles";
 
-export const EmailLogo = ({ image, style }) => {
+export const EmailLogo = (props) => {
+  const { image, style } = props;
   return (
-    <Image 
-      resizeMode="contain"
-      source={image}
-      style={[styles.defaultImageStyle, style]}
-    />
-  )
-}
+    <Image resizeMode="contain" source={image} style={[styles.logo, style]} />
+  );
+};
+
+EmailLogo.propTypes = {
+  image: PropTypes.oneOfType([
+    PropTypes.shape({
+      uri: PropTypes.string,
+      headers: PropTypes.objectOf(PropTypes.string),
+    }),
+    PropTypes.number,
+    PropTypes.arrayOf(
+      PropTypes.shape({
+        uri: PropTypes.string,
+        width: PropTypes.number,
+        height: PropTypes.number,
+        headers: PropTypes.objectOf(PropTypes.string),
+      })
+    ),
+  ]),
+  style: ViewPropTypes.style,
+};
 
 export default EmailLogo;
-
-const styles = StyleSheet.create({
-  defaultImageStyle: {
-    height: 275,
-    width: 275,
-  }
-})

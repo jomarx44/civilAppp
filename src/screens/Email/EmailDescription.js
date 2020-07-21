@@ -1,21 +1,16 @@
 import React from "react";
-import { StyleSheet, Text } from "react-native";
+import PropTypes from 'prop-types'
+import { Text, ViewPropTypes } from "react-native";
+import { styles } from "./styles"
 
-// Others
-import config from "../../config";
-
-export const EmailDescription = ({ children, style }) => {
-  return <Text style={[styles.defaultTextStyle, style]}>{children}</Text>;
+export const EmailDescription = (props) => {
+  const { children, style } = props
+  return <Text style={[styles.description, style]}>{children}</Text>;
 };
 
-export default EmailDescription;
+EmailDescription.propTypes = {
+  children: PropTypes.node,
+  style: ViewPropTypes.style
+}
 
-const styles = StyleSheet.create({
-  defaultTextStyle: {
-    color: config.colors.emailPrimary,
-    fontFamily: "Gilroy_Medium",
-    fontSize: 16,
-    lineHeight: 22,
-    textAlign: 'center'
-  },
-});
+export default EmailDescription;

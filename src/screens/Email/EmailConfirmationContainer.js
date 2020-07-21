@@ -1,57 +1,104 @@
-import React, { useEffect } from "react";
-import { Alert, AsyncStorage } from "react-native";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import { Alert, AsyncStorage } from "react-native";
 import { connect } from "react-redux";
-import { EmailConfirmationScreen } from "./EmailConfirmationScreen";
+import { EmailConfirmation } from "./EmailConfirmation";
 import { auth } from "../../API";
+import { Loader } from "../../components"
 
-export const EmailConfirmationContainer = ({ otp }) => {
-  useEffect(() => {
-    getSignupData();
-  }, []);
+export const EmailConfirmationContainer = (props) => {
+  const [isLoading, setLoadingState] = useState(false);
+  const [loadingText, setLoadingText] = useState(null)
+  const {
+    user: { createdList, createdListByIds },
+    navigation,
+  } = props;
+  const createdUser = createdList[createdListByIds[0]];
 
-  useEffect(() => {
-    otp.request();
-  }, []);
-
-  const onResendEmail = (userId) => {
-    auth.resendEmail(userId)
-      .then(({ data: { success } }) => {
-        if(success) {
-          alert("Email Verification successfully resent. Please check your email.")
+  const handleResendEmail = () => {
+    setLoadingState(true)
+    setLoadingText("Resending...")
+    auth
+      .resendEmail(createdUser.id)
+      .then(({ data: { success, message } }) => {
+        if (success) {
+          Alert.alert(
+            "Resend Email Success",
+            "Email Verification successfully resent. Please check your email."
+          );
+        } else {
+          Alert.alert(
+            "Resend Email Failed",
+            message
+          );
         }
       })
-      .catch()
-  }
+      .catch((error) => {
+        console.log("error: ", error);
+      })
+      .finally(() => {
+        setLoadingState(false)
+        setLoadingText(null)
+      });
+  };
 
-  const getSignupData = async () => {
-    let signupData = await AsyncStorage.getItem("SIGNUP_DATA");
-    if (signupData) {
-      signupData = JSON.parse(signupData);
-    }
+  const handleVerifyEmail = () => {
+    setLoadingState(true)
+    setLoadingText("Verifying...")
+    auth
+      .verifyEmail(createdUser.id)
+      .then(({ data }) => {
+        if (data.isEmailVerified) {
+          console.log("ASDAD");
+          // navigation.navigate("", { phoneNumber: createdUser.phoneNumber });
+        } else {
+          Alert.alert(
+            "Verification Failed",
+            "Email Verification successfully resent. Please check your email."
+          );
+        }
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Server Error",
+          "Ooops! There's something wrong connecting to the server. Please try again."
+        );
+      })
+      .finally(() => {
+        setLoadingState(false)
+        setLoadingText(null)
+      });
   };
 
   return (
-    <EmailConfirmationScreen
-      email={}
-      onResendEmail={() => onResendEmail()}
-      onVerify={() => email.verify()}
-    />
+    <React.Fragment>
+      <EmailConfirmation
+        data={createdUser}
+        onResendEmail={() => handleResendEmail()}
+        onVerify={() => handleVerifyEmail()}
+      />
+      <Loader 
+        isVisible={isLoading}
+        loadingText={loadingText}
+      />
+    </React.Fragment>
+    
   );
 };
 
-const mapStateToProps = (state) => ({
-  
-});
+EmailConfirmationContainer.propTypes = {
+  user: PropTypes.object,
+};
+
+const mapStateToProps = (state) => {
+  const { user } = state;
+  return {
+    user,
+  };
+};
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    otp: {
-      request: (params) => {
-        dispatch();
-      },
-    },
-  };
+  return {};
 };
 
 export default connect(
