@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import {
   CIS,
   bankAccount
@@ -61,4 +62,13 @@ OTPLinkAccount.propTypes = {
   navigation: PropTypes.object
 }
 
-export default OTPLinkAccount
+const mapStateToProps = (props) => ({});
+
+const mapDispatchToProps = (dispatch) => {
+  return {};
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OTPLinkAccount);

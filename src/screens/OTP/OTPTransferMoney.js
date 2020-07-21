@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { ModifiedOTP } from "./ModifiedOTP"
 
-export const OTPMobileAccount = (props) => {
+export const OTPTransferMoney = (props) => {
   const [isLoading, setLoadingState] = useState(false);
 
   const handleDone = (code) => {
@@ -19,7 +19,7 @@ export const OTPMobileAccount = (props) => {
   )
 }
 
-OTPMobileAccount.propTypes = {}
+OTPTransferMoney.propTypes = {}
 
 const mapStateToProps = (props) => ({});
 
@@ -30,4 +30,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(OTPMobileAccount);
+)(OTPTransferMoney);

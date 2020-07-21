@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import { ModifiedOTP } from "./ModifiedOTP"
 
 export const OTPProfile = (props) => {
@@ -19,4 +21,13 @@ export const OTPProfile = (props) => {
 
 OTPProfile.propTypes = {}
 
-export default OTPProfile
+const mapStateToProps = (props) => ({});
+
+const mapDispatchToProps = (dispatch) => {
+  return {};
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OTPProfile);
