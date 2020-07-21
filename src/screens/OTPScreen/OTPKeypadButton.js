@@ -1,27 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import React from "react";
+import PropTypes from "prop-types";
+import { TouchableOpacity, ViewPropTypes } from "react-native";
+import { styles } from "./styles";
 
-const OTPKeypadButton = ({onPress, text}) => (
-  <TouchableOpacity
-    onPress={() => onPress()}
-    style={styles.button}
-  >
-    {text}
-  </TouchableOpacity>
-);
+export const OTPKeypadButton = (props) => {
+  const { onPress, style, children } = props;
+  return (
+    <TouchableOpacity onPress={onPress} style={[styles.keypadButton, style]}>
+      { children }
+    </TouchableOpacity>
+  );
+};
 
 OTPKeypadButton.propTypes = {
+  children: PropTypes.node,
+  style: ViewPropTypes.style,
   onPress: PropTypes.func.isRequired,
-  text: PropTypes.element,isRequired
-}
-
-const styles = StyleSheet.create({
-  button: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-});
+};
 
 export default OTPKeypadButton;

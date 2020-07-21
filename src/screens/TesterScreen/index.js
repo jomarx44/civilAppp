@@ -1,9 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { InputBox, constants } from "../../components/InputBox";
+import { OTP } from "../OTPScreen/OTP"
 
 export const TesterScreen = () => {
-  const [value, setValue] = useState();
+  const [value, setValue] = useState("");
+
+  useEffect(() => {
+    if(value.length >= 7) {
+      console.log("DONE: ", value)
+    }
+  }, [value])
+
+  const handleRemove = () => {
+    if (value.length > 0) {
+      setValue(value.slice(0, -1));
+    }
+  }
+
+  const handleChangeValue = (digit = "") => {
+    if(value.length < 7) {
+      setValue(value + digit);
+    }
+  }
+
+  return (
+    <OTP 
+      onChangeValue={(value) => {handleChangeValue(value)}}
+      onRemove={() => {handleRemove()}}
+      value={value}
+    />
+  )
   return (
     <View style={{ flex: 1, paddingTop: 100 }}>
       <InputBox
