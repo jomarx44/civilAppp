@@ -45,7 +45,7 @@ export const auth = {
   },
 };
 
-export const cis = {
+export const CIS = {
   check: ({ firstName, middleName, lastName, birthDate }) => {
     return Axios.get("byteperbyte/CISCheck", {
       params: {
@@ -68,8 +68,28 @@ export const cis = {
 };
 
 export const bankAccount = {
-  create: (account = {}) => {
-    return Axios.post("sunsavings/SSCreateAccountRequest", account);
+
+  /**
+   * Create Account
+   * @description Used for creating Bank Accounts with provided account details
+   * @param {Object} accountDetails Account Bank Details
+   */
+  create: (accountDetails = {}) => {
+    return Axios.post("sunsavings/SSCreateAccountRequest", accountDetails);
+  },
+
+  /**
+   * Link Account
+   * @description 
+   * @param {String} CISNumber CIS Number
+   * @param {String} accessToken Access Token
+   */
+  link: (CISNumber, accessToken) => {
+    return attribute.put({
+      attributeName: "cis_no",
+      attributeValue: CISNumber,
+      accessToken
+    })
   },
 
   /**
@@ -77,7 +97,6 @@ export const bankAccount = {
    * @description Used for fetching Bank Accounts based on CIS Number provided
    * @param {String} CISNo Customer Information System Number
    */
-
   get: (CISNo) => {
     return Axios.get("byteperbyte/CISAccountInquiry", {
       params: {
@@ -92,7 +111,6 @@ export const bankAccount = {
    * @param {String} accountNumber Bank Account Number
    * @param {} count Count
    */
-
   getHistory: (accountNumber, count) => {
     return Axios.get("byteperbyte/AccountInquiryHistory", {
       params: {
