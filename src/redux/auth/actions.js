@@ -10,7 +10,7 @@ import { auth, user } from "../../API";
  * ACTION CREATORS
  ***********************/
 
-export const loginStart = () => ({
+export const login = () => ({
   type: LOGIN,
 });
 
@@ -34,9 +34,9 @@ export const logout = () => ({
  * API WITH DISPATCH
  ***********************/
 
-export const login = (username, password) => {
+export const loginAsync = (username, password) => {
   return (dispatch) => {
-    dispatch(loginStart());
+    dispatch(login());
     return auth
       .signin(username, password)
       .then(

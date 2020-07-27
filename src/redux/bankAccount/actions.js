@@ -1,5 +1,4 @@
 import {
-  BANK_ACCOUNT_INITIALIZE_REDUCER,
   BANK_ACCOUNT_CREATE,
   BANK_ACCOUNT_CREATE_ERROR,
   BANK_ACCOUNT_CREATE_INITIALIZE,
@@ -8,7 +7,16 @@ import {
   BANK_ACCOUNT_FETCH_ERROR,
   BANK_ACCOUNT_FETCH_INITIALIZE,
   BANK_ACCOUNT_FETCH_SUCCESS,
+  BANK_ACCOUNT_INITIALIZE_REDUCER,
 } from "../actions";
+
+import {
+  bankAccount
+} from "../../API"
+
+/***********************
+ * ACTION CREATORS
+ ***********************/
 
 // Initialize Bank Account Reducer
 export const bankAccountInitializeReducer = () => ({
@@ -45,19 +53,19 @@ export const bankAccountInitializeFetch = () => ({
 });
 
 // Fetch Bank Account
-export const fetchBankAccount = (accounts, accountsById) => {
+export const fetchBankAccount = () => {
   return {
-    type: BANK_ACCOUNT_FETCH,
-    payload: {
-      list: accounts,
-      listById: accountsById
-    }
+    type: BANK_ACCOUNT_FETCH
   }
 };
 
 // Fetch Bank Account Success
-export const fetchBankAccountSuccess = () => ({
+export const fetchBankAccountSuccess = (accounts, accountsById) => ({
   type: BANK_ACCOUNT_FETCH_SUCCESS,
+  payload: {
+    list: accounts,
+    listById: accountsById
+  }
 });
 
 // Fetch Bank Account Error
@@ -65,3 +73,19 @@ export const fetchBankAccountError = (error) => ({
   type: BANK_ACCOUNT_FETCH_ERROR,
   error,
 });
+
+/***********************
+ * API WITH DISPATCH
+ ***********************/
+
+export const getBankAsync = (CISNumber) => {
+  return dispatch => {
+    return bankAccount.get(CISNumber)
+      .then(({data}) => {
+        
+      })
+      .catch((error) => {
+        dispatch(fetchBankAccountError(error))
+      })
+  }
+}
