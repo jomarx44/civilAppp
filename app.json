@@ -15,6 +15,10 @@
     "version": "1.0.0",
     "entryPoint": "node_modules/expo/AppEntry.js",
     "icon": "./assets/images/ic_launcher_xxxhdpi.png",
+    "ios": {
+      "bundleIdentifier": "com.thousandminds.sunsavings",
+      "buildNumber": "1.0.0"
+    },
     "android": {
       "versionCode": 20,
       "package": "com.thousandminds.sunsavings",
@@ -26,10 +30,6 @@
         "resizeMode": "contain"
       }
     },
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ]
+    "platforms": ["ios", "android", "web"]
   }
 }
