@@ -1,4 +1,4 @@
-import { DEFAULT_SECONDARY_COLOR } from "../../constants/colors";
+import { DARK_BLUE } from "../../constants/colors";
 import { StyleSheet } from "react-native"
 
 export const styles = StyleSheet.create({
@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
     fontFamily: "Gilroy_Bold",
     fontSize: 21,
     textAlign: "center",
-    color: DEFAULT_SECONDARY_COLOR,
+    color: DARK_BLUE,
   },
 });
 

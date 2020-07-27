@@ -5,7 +5,8 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from "react";
-import { Text, View, TextInput } from "react-native";
+import PropTypes from 'prop-types'
+import { Text, View, TextInput, ViewPropTypes } from "react-native";
 import { styles } from "./styles";
 
 export const InputBox = forwardRef((props, ref) => {
@@ -119,6 +120,29 @@ export const InputBox = forwardRef((props, ref) => {
     </View>
   );
 });
+
+InputBox.propTypes = {
+  containerStyle: ViewPropTypes.style,
+  inputContainerStyle: ViewPropTypes.style,
+  inputStyle: PropTypes.object,
+  labelStyle: PropTypes.object,
+  focusedContainerStyle: ViewPropTypes.style,
+  focusedInputContainerStyle: ViewPropTypes.style,
+  focusedInputStyle: PropTypes.object,
+  focusedLabelStyle: PropTypes.object,
+  filledContainerStyle: ViewPropTypes.style,
+  filledInputContainerStyle: ViewPropTypes.style,
+  filledInputStyle: PropTypes.object,
+  filledLabelStyle: PropTypes.object,
+  invalidStyle: PropTypes.object,
+  label: PropTypes.string,
+  value: PropTypes.string,
+  invalidText: PropTypes.string,
+  placeholderTextColor: PropTypes.string,
+  onFocus: PropTypes.func,
+  onBlur: PropTypes.func,
+  onChangeText: PropTypes.func,
+}
 
 export const constants = {
   FONT_COLOR_ORANGE: "#f9a010",

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types'
-import { Text, ViewPropTypes } from "react-native";
+import { Text } from "react-native";
 import { styles } from "./styles";
 
 export const Title = (props) => {
@@ -10,7 +10,7 @@ export const Title = (props) => {
 
 Title.propTypes = {
   children: PropTypes.node,
-  style: ViewPropTypes.style
+  style: PropTypes.object
 }
 
 export default Title;

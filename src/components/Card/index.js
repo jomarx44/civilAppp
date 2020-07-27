@@ -1,5 +1,5 @@
-import { Text, TouchableOpacity, View } from 'react-native'
-
+import { TouchableOpacity, View, ViewPropTypes } from 'react-native'
+import PropTypes from 'prop-types'
 import React from 'react'
 import { styles } from "./styles"
 
@@ -18,6 +18,12 @@ export const Card = (props) => {
       {children}
     </View>
   )
+}
+
+Card.propTypes = {
+  children: PropTypes.node,
+  onPress: PropTypes.func,
+  style: ViewPropTypes.style
 }
 
 export default Card

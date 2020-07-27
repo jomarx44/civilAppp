@@ -11,6 +11,8 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 13,
     paddingHorizontal: 21,
+    shadowColor: "#0d0000",
+    shadowRadius: 20,
   }
 });
 

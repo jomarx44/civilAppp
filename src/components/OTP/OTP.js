@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Text, View, ViewPropTypes } from 'react-native'
+import { View, ViewPropTypes } from 'react-native'
 import { OTPKeypad } from "./OTPKeypad"
 import { OTPInputs } from "./OTPInputs"
-import { Description, Title } from "../"
+import { Description, Title } from "../Text"
 import { FormHeaderView } from "../../layouts"
 import { styles } from "./styles"
 
