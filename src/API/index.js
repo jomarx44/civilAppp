@@ -1,9 +1,18 @@
-import Axios from "./config";
+import { createIBMInstance, mainInstance } from "./config";
 
 export const manage = (action, params = {}) => {
-  return Axios.post("bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage", {
+  return mainInstance.post("bf33cd0a-aa9c-4424-9253-bf0d82a101fd/manage", {
     action,
     ...params,
+  });
+};
+
+export const getList = (type, additionalParams = {}) => {
+  return mainInstance.get("/byteperbyte/MISDropDown", {
+    params: {
+      type,
+      ...additionalParams,
+    },
   });
 };
 
@@ -18,9 +27,9 @@ export const attribute = {
   get: (attributeName, accessToken) => {
     return manage("get_attribute_name", {
       attribute_name: attributeName,
-      access_token: accessToken
+      access_token: accessToken,
     });
-  }
+  },
 };
 
 export const auth = {
@@ -47,7 +56,7 @@ export const auth = {
 
 export const CIS = {
   check: ({ firstName, middleName, lastName, birthDate }) => {
-    return Axios.get("byteperbyte/CISCheck", {
+    return mainInstance.get("byteperbyte/CISCheck", {
       params: {
         first_name: firstName,
         middle_name: middleName,
@@ -58,7 +67,7 @@ export const CIS = {
   },
 
   verify: (token, otp) => {
-    return Axios.get("byteperbyte/CISVerify", {
+    return mainInstance.get("byteperbyte/CISVerify", {
       params: {
         token,
         otp,
@@ -68,19 +77,21 @@ export const CIS = {
 };
 
 export const bankAccount = {
-
   /**
    * Create Account
    * @description Used for creating Bank Accounts with provided account details
    * @param {Object} accountDetails Account Bank Details
    */
   create: (accountDetails = {}) => {
-    return Axios.post("sunsavings/SSCreateAccountRequest", accountDetails);
+    return mainInstance.post(
+      "sunsavings/SSCreateAccountRequest",
+      accountDetails
+    );
   },
 
   /**
    * Link Account
-   * @description 
+   * @description
    * @param {String} CISNumber CIS Number
    * @param {String} accessToken Access Token
    */
@@ -88,8 +99,8 @@ export const bankAccount = {
     return attribute.put({
       attributeName: "cis_no",
       attributeValue: CISNumber,
-      accessToken
-    })
+      accessToken,
+    });
   },
 
   /**
@@ -98,7 +109,7 @@ export const bankAccount = {
    * @param {String} CISNo Customer Information System Number
    */
   get: (CISNo) => {
-    return Axios.get("byteperbyte/CISAccountInquiry", {
+    return mainInstance.get("byteperbyte/CISAccountInquiry", {
       params: {
         cisno: CISNo,
       },
@@ -112,7 +123,7 @@ export const bankAccount = {
    * @param {} count Count
    */
   getHistory: (accountNumber, count) => {
-    return Axios.get("byteperbyte/AccountInquiryHistory", {
+    return mainInstance.get("byteperbyte/AccountInquiryHistory", {
       params: {
         acctno: accountNumber,
         count,
@@ -121,7 +132,7 @@ export const bankAccount = {
   },
 
   getInfo: (accountNumber) => {
-    return Axios.get("byteperbyte/AccountsInfo", {
+    return mainInstance.get("byteperbyte/AccountsInfo", {
       params: {
         acctno: accountNumber,
       },
@@ -184,10 +195,48 @@ export const user = {
       phoneNumbers,
     });
   },
+
+  getInfo: (accessToken) => {
+    return createIBMInstance(accessToken).get("/userinfo");
+  },
 };
 
 export const token = {
   getByRefreshToken: (refreshToken) => {
     return manage("refresh_token", { refresh_token: refreshToken });
+  },
+};
+
+export const list = {
+  getBank: () => {
+    return mainInstance.get("/byteperbyte/BankList");
+  },
+  getCity: (city) => {
+    return mainInstance.get("/byteperbyte/MISSearch", {
+      params: {
+        search: city,
+      },
+    });
+  },
+  getBarangay: (cityCode) => {
+    return getList("address", { city_code: cityCode });
+  },
+  getCivilStatus: () => {
+    return getList("civil_status");
+  },
+  getHomeOwnership: () => {
+    return getList("home_ownership");
+  },
+  getIdList: () => {
+    return getList("id_list");
+  },
+  getJobTitle: () => {
+    return getList("job_title");
+  },
+  getNationality: () => {
+    return getList("nationality");
+  },
+  getSourceOfFund: () => {
+    return getList("source_of_fund");
   },
 };
