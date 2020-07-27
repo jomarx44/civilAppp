@@ -2,22 +2,22 @@
 import React from "react";
 import { DrawerActions } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import AnnouncementScreen from "screens/AnnouncementScreen";
+import { Announcement } from "../../screens/Announcement";
 import DashboardScreen from "screens/DashboardScreen/dashboard";
 import AccountHistoryScreen from "screens/DashboardScreen/accountHistory";
-import CreateBankAccount from "../screens/BankAccountScreen/CreateBankAccountScreen";
-import { ProofOfIdentity } from "../screens/ProofOfIdentity";
-import { UploadIdentity } from "../screens/UploadIdentity";
-import ElectronicSignatureScreen from "../screens/ElectronicSignatureScreen";
-import OTPCreateBankAccountScreen from "../screens/BankAccountScreen/OTPCreateBankAccountScreen";
+import CreateBankAccount from "screens/BankAccountScreen/CreateBankAccountScreen";
+import { ProofOfIdentity } from "screens/ProofOfIdentity";
+import { UploadIdentity } from "screens/UploadIdentity";
+import ElectronicSignatureScreen from "screens/ElectronicSignatureScreen";
+import OTPCreateBankAccountScreen from "screens/BankAccountScreen/OTPCreateBankAccountScreen";
 import OTPOpenAccountScreen from "screens/OpenAccountScreen/OTPOpenAccountScreen";
 import ConnectCreateAccountScreen from "screens/OpenAccountScreen/ConnectCreateAccountScreen";
 import LinkAccount from "screens/LinkAccount";
-import LinkAccountOTPScreen from "../screens/LinkAccount/LinkAccountOTPScreen";
-import LoanAccountScreen from "../screens/LoanAccountScreen/LoanAccountScreen";
-import { icons } from "../res/images/icons";
-import { TopNavigation } from "../components/TopNavigation";
-import { NavigationButtons } from "../components/NavigationButtons";
+import LinkAccountOTPScreen from "screens/LinkAccount/LinkAccountOTPScreen";
+import LoanAccountScreen from "screens/LoanAccountScreen/LoanAccountScreen";
+import { icons } from "../../res/images/icons";
+import { TopNavigation } from "../../components/TopNavigation";
+import { NavigationButtons } from "../../components/NavigationButtons";
 import PNHeaderBlueSkip from "library/Layout/Header/PNHeaderBlueSkip";
 
 const Stack = createStackNavigator();
@@ -27,7 +27,7 @@ export const AccountNavigator = () => {
     <Stack.Navigator initialRouteName="Dashboard">
       <Stack.Screen
         name="Announcement"
-        component={AnnouncementScreen}
+        component={Announcement}
         options={{
           header: () => {
             return (

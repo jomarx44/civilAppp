@@ -1,15 +1,17 @@
+import { AuthNavigation, MainNavigation, TesterNavigation } from "./routes";
+import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import React, { useEffect } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import { hasHardwareAsync, isEnrolledAsync } from "expo-local-authentication";
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
-import { navigationRef } from "../navigation/NavigationService";
-import { AuthNavigation } from "./AuthNavigation";
-import { MainNavigation } from "./MainNavigation";
 import {
   setFingerprintCompatibility,
   setFingerprintEnrolled,
 } from "../redux/application/actions";
+
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { navigationRef } from "./NavigationService";
+
+const TESTING_MODE = false;
 
 // Theme
 const MyTheme = {
@@ -42,6 +44,15 @@ const Navigator = ({
     const hasEnrolledFingerprint = await isEnrolledAsync();
     setEnrolled(hasEnrolledFingerprint);
   };
+
+  if(TESTING_MODE) {
+    return (
+      <NavigationContainer theme={MyTheme} ref={navigationRef}>
+        <TesterNavigation />
+      </NavigationContainer>
+      
+    )
+  }
 
   return (
     <NavigationContainer theme={MyTheme} ref={navigationRef}>

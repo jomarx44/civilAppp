@@ -2,7 +2,8 @@ import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { AccountNavigator } from "./AccountNavigation";
 import { ProfileNavigation } from "./ProfileNavigation";
-import MainDrawerContent from "./MainDrawerContent";
+import { TransferMoneyNavigation } from "./TransferMoneyNavigation"
+import MainDrawerContent from "../MainDrawerContent";
 
 const Drawer = createDrawerNavigator();
 
@@ -24,6 +25,11 @@ export const MainNavigation = () => {
         name="Profile"
         component={ProfileNavigation}
         options={{ drawerLabel: "My Profile" }}
+      />
+      <Drawer.Screen
+        name="TransferMoney"
+        component={TransferMoneyNavigation}
+        options={{ drawerLabel: "Transfer Money" }}
       />
     </Drawer.Navigator>
   );

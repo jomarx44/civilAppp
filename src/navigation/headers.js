@@ -5,7 +5,7 @@ import { NavigationButtons } from "../components/NavigationButtons";
 import { icons } from "../res/images/icons";
 
 export const BackHeader = (props) => {
-  const { goBack } = props;
+  const { goBack, title } = props;
   return (
     <TopNavigation
       leftLogo={
@@ -16,12 +16,14 @@ export const BackHeader = (props) => {
           }}
         />
       }
-    />
+    >
+      {title}
+    </TopNavigation>
   );
 }
 
 export const BackHeaderBlue = (props) => {
-  const { goBack } = props;
+  const { goBack, title } = props;
   return (
     <TopNavigation
       headerStyle={{backgroundColor: "#309FE7"}}
@@ -33,8 +35,28 @@ export const BackHeaderBlue = (props) => {
           }}
         />
       }
-    />
+    >
+      {title}
+    </TopNavigation>
   );
+}
+
+export const DrawerHeader = (props) => {
+  const { openDrawer, title } = props
+  return (
+    <TopNavigation
+      leftLogo={
+        <NavigationButtons
+          logo={icons.ic_menu_blue}
+          onPress={() => {
+            openDrawer()
+          }}
+        />
+      }
+    >
+      {title}
+    </TopNavigation>
+  )
 }
 
 BackHeader.propTypes = {

@@ -1,15 +1,14 @@
 /* eslint-disable react/display-name */
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import ProfileScreen from "../screens/ProfileScreen";
-import EditProfileScreen from "../screens/ProfileScreen/EditProfileScreen";
-import ChangePasswordScreen from "../screens/ChangePasswordScreen";
-import ChangeMobileNumberScreen from "../screens/ChangeMobileNumberScreen";
-import FingerprintScreen from "../screens/FingerprintScreen";
-import OTPChangeMobileNumberScreen from "../screens/ChangeMobileNumberScreen/OTPChangeMobileNumberScreen";
-import { icons } from "../res/images/icons";
-import { TopNavigation } from "../components/TopNavigation";
-import { NavigationButtons } from "../components/NavigationButtons";
+import ProfileScreen from "screens/ProfileScreen";
+import EditProfileScreen from "screens/ProfileScreen/EditProfileScreen";
+import ChangePasswordScreen from "screens/ChangePasswordScreen";
+import ChangeMobileNumberScreen from "screens/ChangeMobileNumberScreen";
+import FingerprintScreen from "screens/FingerprintScreen";
+import OTPChangeMobileNumberScreen from "screens/ChangeMobileNumberScreen/OTPChangeMobileNumberScreen";
+import { icons } from "../../res/images/icons";
+import { TopNavigation, NavigationButtons } from "../../components";
 
 const Stack = createStackNavigator();
 
