@@ -24,13 +24,13 @@ const styles = StyleSheet.create({
         flex: 3,
         fontSize: 12.0,
         color: '#444444',
-        fontFamily: Gilroy_Medium
+        fontFamily: "Gilroy_Medium"
     },
     valueStyle:{
         flex: 4,
         fontSize: 16.0,
         color: '#003D6F',
-        fontFamily: Gilroy_Medium
+        fontFamily: "Gilroy_Medium"
     },
     editContainerStyle: {
         flex: 0.75

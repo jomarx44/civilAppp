@@ -11,14 +11,14 @@ import { styles } from "./styles";
 import config from "../../config";
 
 export const EmailConfirmation = (props) => {
-  const { data, onResendEmail, onVerify } = props;
+  const { data: { email = "[Undefined]" }, onResendEmail, onVerify } = props;
   return (
     <React.Fragment>
       <View style={styles.container}>
         <EmailLogo image={ic_email_confirmation} />
         <EmailTitle>Email Confirmation</EmailTitle>
         <EmailDescription>
-          We have sent an email to {data.email} to confirm the validity of your email
+          We have sent an email to {email} to confirm the validity of your email
           address. After receiving the email, we will be sending an OTP to your
           mobile number.
         </EmailDescription>

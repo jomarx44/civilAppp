@@ -4,70 +4,73 @@ import { Alert, AsyncStorage } from "react-native";
 import { connect } from "react-redux";
 import { EmailConfirmation } from "./EmailConfirmation";
 import { auth } from "../../API";
-import { Loader } from "../../components"
+import { Loader } from "../../components";
 
 export const EmailConfirmationContainer = (props) => {
   const [isLoading, setLoadingState] = useState(false);
-  const [loadingText, setLoadingText] = useState(null)
+  const [loadingText, setLoadingText] = useState(null);
   const {
     user: { createdList, createdListByIds },
     navigation,
   } = props;
-  const createdUser = createdList[createdListByIds[0]];
+  const createdUser = createdList[createdListByIds[0]]
+    ? createdList[createdListByIds[0]]
+    : { id: null, email: null };
 
   const handleResendEmail = () => {
-    setLoadingState(true)
-    setLoadingText("Resending...")
-    auth
-      .resendEmail(createdUser.id)
-      .then(({ data: { success, message } }) => {
-        if (success) {
-          Alert.alert(
-            "Resend Email Success",
-            "Email Verification successfully resent. Please check your email."
-          );
-        } else {
-          Alert.alert(
-            "Resend Email Failed",
-            message
-          );
-        }
-      })
-      .catch((error) => {
-        console.log("error: ", error);
-      })
-      .finally(() => {
-        setLoadingState(false)
-        setLoadingText(null)
-      });
+    if(createdUser.id) {
+      setLoadingState(true);
+      setLoadingText("Resending...");
+      auth
+        .resendEmail(createdUser.id)
+        .then(({ data: { success, message } }) => {
+          if (success) {
+            Alert.alert(
+              "Resend Email Success",
+              "Email Verification successfully resent. Please check your email."
+            );
+          } else {
+            Alert.alert("Resend Email Failed", message);
+          }
+        })
+        .catch((error) => {
+          console.log("error: ", error);
+        })
+        .finally(() => {
+          setLoadingState(false);
+          setLoadingText(null);
+        });
+    }
   };
 
   const handleVerifyEmail = () => {
-    setLoadingState(true)
-    setLoadingText("Verifying...")
-    auth
-      .verifyEmail(createdUser.id)
-      .then(({ data }) => {
-        if (data.isEmailVerified) {
-          console.log("ASDAD");
-          // navigation.navigate("", { phoneNumber: createdUser.phoneNumber });
-        } else {
+    if(createdUser.id) {
+      setLoadingState(true);
+      setLoadingText("Verifying...");
+      auth
+        .verifyEmail(createdUser.id)
+        .then(({ data }) => {
+          if (data.isEmailVerified) {
+            console.log("ASDAD");
+            // navigation.navigate("", { phoneNumber: createdUser.phoneNumber });
+          } else {
+            Alert.alert(
+              "Verification Failed",
+              "Email Verification successfully resent. Please check your email."
+            );
+          }
+        })
+        .catch((error) => {
           Alert.alert(
-            "Verification Failed",
-            "Email Verification successfully resent. Please check your email."
+            "Server Error",
+            "Ooops! There's something wrong connecting to the server. Please try again."
           );
-        }
-      })
-      .catch((error) => {
-        Alert.alert(
-          "Server Error",
-          "Ooops! There's something wrong connecting to the server. Please try again."
-        );
-      })
-      .finally(() => {
-        setLoadingState(false)
-        setLoadingText(null)
-      });
+        })
+        .finally(() => {
+          setLoadingState(false);
+          setLoadingText(null);
+        });
+    }
   };
 
   return (
@@ -77,12 +80,8 @@ export const EmailConfirmationContainer = (props) => {
         onResendEmail={() => handleResendEmail()}
         onVerify={() => handleVerifyEmail()}
       />
-      <Loader 
-        isVisible={isLoading}
-        loadingText={loadingText}
-      />
+      <Loader isVisible={isLoading} loadingText={loadingText} />
     </React.Fragment>
-    
   );
 };
 

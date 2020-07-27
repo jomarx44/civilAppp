@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { CheckBox } from 'react-native-elements';
+// import { CheckBox } from 'react-native-elements';
 import TransferMoneyField from './TransferMoneyField';
 import Spacer from './spacer';
 
@@ -23,10 +23,10 @@ const BankDetailsForm = ({isSunsavings}) => {
                 <TransferMoneyField fieldName = 'Account Number' />
                 {isSunsavings ? null : <TransferMoneyField fieldName = 'Account Name' />}
                 <View style ={{flexDirection: 'row'}}>
-                    <CheckBox 
+                    {/* <CheckBox 
                         title = 'Save this recipient for future transfers.' 
                         containerStyle = {styles.checkBoxContainerStyle}
-                    />
+                    /> */}
                     {/* <TouchableOpacity style = {styles.checkBoxContainerStyle}></TouchableOpacity>
                     <Text style = {{marginLeft: 7.0}}>Save this recipient for future transfers.</Text> */}
                 </View>
@@ -59,7 +59,6 @@ const styles = StyleSheet.create({
         padding: 10.0,
         backgroundColor: '#F0F0F0',
         marginRight: 24.0,
-        height: 37.0,
         borderRadius: 18.5,
         shadowColor: '#000',
         shadowOffset: { width: 1, height: 1 },
@@ -67,8 +66,8 @@ const styles = StyleSheet.create({
         shadowRadius: 3,  
         elevation: 5,
         alignSelf: 'flex-end',
-        width: 211.0,
-        height: 37.0
+        width: 211,
+        height: 37
     },
     receiverLabelStyle: {
         fontSize: 14.0,

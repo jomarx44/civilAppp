@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
         fontSize: 16.0, 
         flex: 1,
         color: '#003D6F',
-        fontFamily: Gilroy_Bold
+        fontFamily: "Gilroy_Bold"
     },
     chevronStyle: {
     }

@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from "react";
 import { Alert, AsyncStorage } from "react-native";
-import { connect, useDispatch } from "react-redux";
-import { Login } from "./Login";
+import React, { useEffect, useState } from "react";
+import { attribute, auth, token, } from "../../API"
 import {
   authenticateAsync,
   cancelAuthenticate,
 } from "expo-local-authentication";
-import { auth, token, attribute,  } from "../../API"
+import { connect, useDispatch } from "react-redux";
+
+import { Login } from "./Login";
 import { SignupDataAsyncStorage } from "../../helpers/asyncStorage"
-import { login } from "../../redux/auth/actions"
 import { addCreatedUser } from "../../redux/user/actions"
+import { getUserInfoAsync } from "../../redux/user/actions"
+import { loginAsync } from "../../redux/auth/actions"
 
 export const LoginContainer = (props) => {
   const [fingerprintToken, setFingerprintToken] = useState(null);
@@ -86,7 +88,6 @@ export const LoginContainer = (props) => {
 
   const handleLogin = () => {
     login(userData.username, userData.password)
-    console.log("userData Data: ", userData);
   };
 
   const handleCreate = () => {
@@ -145,13 +146,13 @@ const mapStateToProps = ({ auth, token, user }) => {
 
 const mapDispatchToProps = (dispatch) => ({
   login: (username, password) => {
-    dispatch(login(username, password));
+    dispatch(loginAsync(username, password));
   },
   loginByFingerprint: (refreshToken) => {
     dispatch(token.getByRefreshToken(refreshToken));
   },
-  userInfo: (token) => {
-    dispatch(IBMAppId.getUserInfo(token));
+  userInfo: (accessToken) => {
+    dispatch(getUserInfoAsync(accessToken));
   },
   getAttributes: (parameters) => {
     dispatch(attribute.get(parameters));
