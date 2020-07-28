@@ -6,9 +6,9 @@ export const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    alignItems: "center", 
+    alignItems: "stretch", 
     flexDirection: "column",
-    paddingHorizontal: 24
+    paddingHorizontal: 24,
   },
   buttonContainer: {
     padding: 27
@@ -17,33 +17,46 @@ export const styles = StyleSheet.create({
 
 export const itemStyles = StyleSheet.create({
   container: {
-    width: "100%",
+    // width: "100%",
     height: 90,
     marginBottom: 14,
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    justifyContent: "flex-start"
   },
   imageContainer: {
-    width: 130,
+    width: 120,
   },
   image: {
     height: 70,
     width: 105
   },
   detailsContainer: {
-    flexGrow: 1
+    width: "60%",
+    // borderWidth: 1,
+    // marginRight: 45
+  },
+  selectedLabel: {
+    color: "#003d6f",
+    fontFamily: "Gilroy_Bold",
+    fontSize: 14
+  },
+  label: {
+    color: "#444",
+    fontFamily: "Gilroy_Bold",
+    fontSize: 14
   },
   title: {
     color: "#003d6f",
     fontFamily: "Gilroy_Bold",
     fontSize: 14,
-    letterSpacing: 0,
-    marginBottom: 5
   },
   description: {
     color: "#0047cc",
     fontFamily: "Gilroy_Bold",
     fontSize: 11,
-    letterSpacing: 0
+    letterSpacing: 0,
+    marginTop: 5,
+    width: "90%"
   },
   remove:{
     backgroundColor: "transparent",

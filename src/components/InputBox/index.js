@@ -5,8 +5,12 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from "react";
+<<<<<<< HEAD
 import PropTypes from 'prop-types'
 import { Text, View, TextInput, ViewPropTypes } from "react-native";
+=======
+import { Text, View, TextInput } from "react-native";
+>>>>>>> AC/pnmobile-live
 import { styles } from "./styles";
 
 export const InputBox = forwardRef((props, ref) => {
@@ -121,6 +125,7 @@ export const InputBox = forwardRef((props, ref) => {
   );
 });
 
+<<<<<<< HEAD
 InputBox.propTypes = {
   containerStyle: ViewPropTypes.style,
   inputContainerStyle: ViewPropTypes.style,
@@ -144,6 +149,8 @@ InputBox.propTypes = {
   onChangeText: PropTypes.func,
 }
 
+=======
+>>>>>>> AC/pnmobile-live
 export const constants = {
   FONT_COLOR_ORANGE: "#f9a010",
   FONT_COLOR_GRAY: "#3e4a59",

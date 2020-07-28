@@ -4,9 +4,16 @@ export const styles = StyleSheet.create({
   container: {
     alignItems: "stretch",
     backgroundColor: "#FFF",
+<<<<<<< HEAD
     flexDirection: "column",
     marginBottom: 20,
     width: "100%",
+=======
+    // borderColor: "#53ab32",
+    // borderWidth: 1,
+    flexDirection: "column",
+    marginBottom: 20
+>>>>>>> AC/pnmobile-live
   },
   label: {
     backgroundColor: "transparent",

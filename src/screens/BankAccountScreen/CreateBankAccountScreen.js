@@ -1,10 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import {
-  ActivityIndicator,
-  View,
-  StyleSheet,
-  Text,
-} from "react-native";
+import { ActivityIndicator, View, StyleSheet, Text } from "react-native";
 import PropTypes from "prop-types";
 import ViewPager from "@react-native-community/viewpager";
 import { connect } from "react-redux";
@@ -64,6 +59,7 @@ export const CreateBankAccountScreen = ({
   const [invalids, setInvalids] = useState({});
   const [isFetched, setFetch] = useState(false);
   const [isModalVisible, toggleModal] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
 
   // References
@@ -74,10 +70,19 @@ export const CreateBankAccountScreen = ({
   }, []);
 
   useEffect(() => {
-    setTimeout(() => {
-      getLists();
-      setFetch(true);
-    }, 300);
+    if (
+      lists.homeOwnerships.length <= 0 ||
+      lists.civilStatuses.length <= 0 ||
+      lists.idTypes.length <= 0 ||
+      lists.jobTitles.length <= 0 ||
+      lists.nationalities.length <= 0 ||
+      lists.fundSources.length <= 0
+    ) {
+      setTimeout(() => {
+        getLists();
+        setFetch(true);
+      }, 300);
+    }
   }, [isFetched]);
 
   const handleOnBack = () => {
@@ -263,10 +268,12 @@ export const CreateBankAccountScreen = ({
           </View>
           <View key="5">
             <IDScreen
+              setLoading={setLoading}
               lists={lists}
               data={accountInfo}
               handleEvent={handleEvent}
               invalids={invalids}
+              navigation={navigation}
             />
           </View>
           <View key="6">
@@ -276,7 +283,16 @@ export const CreateBankAccountScreen = ({
             />
           </View>
         </ViewPager>
-        <Modal isVisible={lists.isFetching || barangays.isFetching || otp.isFetching ? true : false}>
+        <Modal
+          isVisible={
+            lists.isFetching ||
+            barangays.isFetching ||
+            otp.isFetching ||
+            isLoading
+              ? true
+              : false
+          }
+        >
           <View
             style={{
               flex: 1,
@@ -332,7 +348,7 @@ const mapStateToProps = (state) => {
     },
     city,
     appAttribute,
-    otp
+    otp,
   } = state;
 
   return {
@@ -353,7 +369,7 @@ const mapStateToProps = (state) => {
       fundSources: Object.values(fundSources.data),
       isFetching: meta.isFetching,
     },
-    otp
+    otp,
   };
 };
 
@@ -370,8 +386,8 @@ const mapDispatchToProps = (dispatch, { navigation }) => {
         type: CHECK_OTP_INITIALIZE,
       });
       dispatch({
-        type: CLEAR_TEMPORARY_KEY
-      })
+        type: CLEAR_TEMPORARY_KEY,
+      });
     },
     addFormData: (data) => {
       dispatch({
@@ -436,6 +452,7 @@ const mapDispatchToProps = (dispatch, { navigation }) => {
           }
         })
         .catch((error) => {
+          console.log(error);
           dispatch({
             type: REQUEST_OTP_ERROR,
             payload: {

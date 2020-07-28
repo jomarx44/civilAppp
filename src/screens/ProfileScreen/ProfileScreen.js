@@ -184,7 +184,7 @@ export const ProfileScreen = ({
           <ProfileHeader
             name={profile.data.name.displayName}
             email={profile.data.emails[0].value}
-            phoneNumber={`+${profile.data.phoneNumbers[0].value}`}
+            phoneNumber={`${profile.data.phoneNumbers[0].value}`}
           />
           <ProfileItem
             imagePath={require("res/images/icons/ic_lock.png")}

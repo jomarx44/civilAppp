@@ -81,7 +81,7 @@ export const requestOTP_TM = ({
   //   }
   // };
   const json_data = {
-    path: "tm/otp",
+    path: "tm/otp_sunsavings",
     body: {
       mobile_number,
       email: email,

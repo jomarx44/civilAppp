@@ -31,14 +31,24 @@ import CityItem from "../../../../library/components/CityItem";
 
 // Others
 import { getFormattedDate } from "library/helpers";
+import axios from "axios";
 import API from "../../../../actions/api";
+import { ProofOfIdentity } from "../../../ProofOfIdentity";
 // import {} from "../../../../reducers/"
 
 export const PersonalInformationScreen = ({
   handleEvent,
   invalids,
-  data: { title, appellation, firstName, middleName, lastName, email, gender,
-    phoneNumber },
+  data: {
+    title,
+    appellation,
+    firstName,
+    middleName,
+    lastName,
+    email,
+    gender,
+    phoneNumber,
+  },
 }) => {
   const input_title = useRef();
   const input_appellation = useRef();
@@ -358,7 +368,7 @@ export const AdditionalInformationScreen = ({
             })
           }
           // onSubmitEditing={() => {
-          //   
+          //
           //   this.input_middle_name.current.focus();
           // }}
           value={mothers_maiden_name}
@@ -400,7 +410,7 @@ export const AdditionalInformationScreen = ({
           options={lists.civilStatuses}
           selectedValue={civil_status}
           title="Civil Status"
-          // onBlur={() => 
+          // onBlur={() =>
           //   handleEvent("onBlur", { constraints, index: "civil_status" })
           // }
           invalid={invalids.civil_status ? invalids.civil_status[0] : ""}
@@ -475,7 +485,7 @@ export const HomeInformationScreen = ({
     home_ownership,
     home_phone,
     home_stayed_since,
-    home_ownership_desc
+    home_ownership_desc,
   },
   modalVisible,
   search,
@@ -522,8 +532,6 @@ export const HomeInformationScreen = ({
       },
     },
   };
-
-  
 
   return (
     <React.Fragment>
@@ -673,7 +681,7 @@ export const HomeInformationScreen = ({
                 home_barangay_or_district,
                 home_stayed_since,
                 city_description,
-                home_ownership
+                home_ownership,
               },
               constraints,
             });
@@ -797,7 +805,7 @@ export const EmploymentInformationScreen = ({
       },
     },
   };
-  
+
   return (
     <React.Fragment>
       <PNContentWithTitle title="Employment Information">
@@ -892,17 +900,30 @@ export const EmploymentInformationScreen = ({
 
 export const IDScreen = ({
   handleEvent,
+  setLoading,
   invalids,
   lists,
   data: {
+    selfieImageData,
+    identificationData,
+    selfie_fileId,
     id1_code,
     id2_code,
     government_id_1,
+    government_id1_url,
+    government_id1_fileId,
     government_id_2,
     government_type_1,
-    government_type_2
+    government_type_2,
+    government_id2_url,
+    government_id2_fileId,
   },
+  navigation,
 }) => {
+  const [id1Status, setID1Status] = useState(false);
+  const [id2Status, setID2Status] = useState(false);
+  const [selfieStatus, setSelfieStatus] = useState(false);
+
   const constraints = {
     government_type_1: {
       presence: {
@@ -920,8 +941,8 @@ export const IDScreen = ({
       },
       exclusion: {
         within: [government_type_1],
-        message: "^Please choose another ID Type"
-      }
+        message: "^Please choose another ID Type",
+      },
     },
     government_id_2: {
       presence: {
@@ -930,138 +951,124 @@ export const IDScreen = ({
     },
   };
 
-  
-  return (
-    <React.Fragment>
-      <PNContentWithTitle title="Government IDs">
-        <PNDropDown
-          placeholder={{ label: "Select Government ID 1", value: null }}
-          onValueChange={(value, index) => {
-            if (index != 0) {
-              handleEvent("onChange", [
-                {
-                  index: "id1_code",
-                  value: value,
-                },
-                {
-                  index: "government_type_1",
-                  value: lists.idTypes[index - 1].label,
-                },
-              ]);
-            } else {
-              handleEvent("onChange", [
-                {
-                  index: "id1_code",
-                  value: value,
-                },
-                {
-                  index: "government_type_1",
-                  value: null,
-                },
-              ]);
-            }
-          }}
-          options={lists.idTypes}
-          selectedValue={government_type_1}
-          // onBlur={() =>
-          //   handleEvent("onBlur", { constraints, index: "government_type_1" })
-          // }
-          invalid={
-            invalids.government_type_1 ? invalids.government_type_1[0] : ""
-          }
-        />
-        <PNFormInputBox
-          placeholder="Government ID Number 1"
-          // ref={input_homePhone}
-          onChangeText={(text) =>
-            handleEvent("onChange", {
-              index: "government_id_1",
-              value: text,
-            })
-          }
-          // onSubmitEditing={() => {
-          //   input_homeMobile.current.focus();
-          // }}
-          value={government_id_1}
-          onBlur={() =>
-            handleEvent("onBlur", { constraints, index: "government_id_1" })
-          }
-          invalid={invalids.government_id_1 ? invalids.government_id_1[0] : ""}
-        />
-        <PNDropDown
-          placeholder={{ label: "Select Government ID 2", value: null }}
-          onValueChange={(value, index) => {
-            if (index != 0) {
-              handleEvent("onChange", [
-                {
-                  index: "id2_code",
-                  value: value,
-                },
-                {
-                  index: "government_type_2",
-                  value: lists.idTypes[index - 1].label,
-                },
-              ]);
-            } else {
-              handleEvent("onChange", [
-                {
-                  index: "id2_code",
-                  value: value,
-                },
-                {
-                  index: "government_type_2",
-                  value: null,
-                },
-              ]);
-            }
-          }}
-          options={lists.idTypes}
-          selectedValue={government_type_2}
-          onBlur={() =>
-            handleEvent("onBlur", { constraints, index: "government_type_2" })
-          }
-          invalid={
-            invalids.government_type_2 ? invalids.government_type_2[0] : ""
-          }
-        />
-        <PNFormInputBox
-          placeholder="Government ID Number 2"
-          // ref={input_homePhone}
-          onChangeText={(text) =>
-            handleEvent("onChange", {
-              index: "government_id_2",
-              value: text,
-            })
-          }
-          // onSubmitEditing={() => {
-          //   input_homeMobile.current.focus();
-          // }}
-          value={government_id_2}
-          // onBlur={() =>
-          //   handleEvent("onBlur", { constraints, index: "government_id_2" })
-          // }
-          invalid={invalids.government_id_2 ? invalids.government_id_2[0] : ""}
-        />
-      </PNContentWithTitle>
-      <FormButtonContainer>
+  const handleOnUploadSelfie = (selfie) => {
+    handleEvent("onChange", { index: "selfieImageData", value: selfie });
+    setLoading(true);
+    API.upload({
+      file_name: "selfie.png",
+      content_type: "image",
+      data64: selfie.base64,
+    })
+      .then(({ data: { data: response, status, msg } }) => {
+        if (status == "ok" && response.length > 0) {
+          setSelfieStatus(true);
+          handleEvent("onChange", {
+            index: "selfie_fileId",
+            value: response[0],
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => setLoading(false));
+  };
 
-        <PNFormButton
-          onPress={() => {
-            handleEvent("onNext", {
-              fields: {
-                government_id_1,
-                government_id_2,
-                government_type_1,
-                government_type_2,
-              },
-              constraints,
-            });
-          }}
-          disabled={false}
-          label="NEXT"
-        />
-      </FormButtonContainer>
-    </React.Fragment>
+  const handleOnUploadIDs = (data) => {
+    setLoading(true);
+    const image1 = data[0].image;
+    const image2 = data[1].image;
+    if(image1 && image2) {
+      API.uploadIDs(image1.base64, image2.base64)
+      .then(
+        axios.spread((responseID1, responseID2) => {
+          console.log("SUCCESS!")
+          const {
+            data: { data: firstResponse, status: firstStatus, msg: firstMsg },
+          } = responseID1;
+          const {
+            data: {
+              data: secondResponse,
+              status: secondStatus,
+              msg: secondMsg,
+            },
+          } = responseID2;
+
+          if (
+            firstStatus == "ok" &&
+            firstResponse.length > 0 &&
+            secondStatus == "ok" &&
+            secondResponse.length > 0
+          ) {
+            setID1Status(true);
+            setID2Status(true);
+            handleEvent("onChange", [
+              { index: "government_id1_fileId", value: firstResponse[0] },
+              { index: "government_id2_fileId", value: secondResponse[0] },
+              { index: "id1_code", value: data[0].code },
+              { index: "id2_code", value: data[1].code },
+              { index: "government_id_1", value: data[0].number },
+              { index: "government_id_2", value: data[1].number },
+              { index: "government_type_1", value: data[0].type },
+              { index: "government_type_2", value: data[1].type },
+              { index: "identificationData", value: data}
+            ]);
+          }
+        })
+      )
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => setLoading(false));
+    }
+    
+  };
+
+  return (
+    <ProofOfIdentity
+      data={{
+        selfieImageData,
+        identificationData,
+        selfie_fileId,
+        id1_code,
+        id2_code,
+        government_id_1,
+        government_id1_url,
+        government_id1_fileId,
+        government_id_2,
+        government_type_1,
+        government_type_2,
+        government_id2_url,
+        government_id2_fileId,
+      }}
+      items={lists.idTypes}
+      handleEvent={handleEvent}
+      constraints={constraints}
+      invalids={invalids}
+      navigation={navigation}
+      handleOnUploadSelfie={handleOnUploadSelfie}
+      handleOnUploadIDs={handleOnUploadIDs}
+      id1Status={id1Status}
+      id2Status={id2Status}
+      selfieStatus={selfieStatus}
+      onNext={() => {
+        handleEvent("onNext", {
+          fields: {
+            id1_code,
+            id2_code,
+            government_id_1,
+            government_id1_url,
+            government_id1_fileId,
+            government_id_2,
+            government_type_1,
+            government_type_2,
+            government_id2_url,
+            government_id2_fileId,
+          },
+          constraints,
+        });
+      }}
+    />
   );
 };
 
@@ -1077,10 +1084,13 @@ export const ElectronicSignatureScreen = ({ handleEvent, data }) => {
 
   const uploadImage = () => {
     setUploading(true);
-    API.upload({file_name: "esignature.png", content_type: "image", data64: imageData.replace("data:image/png;base64,", "") })
-      .then(({data: {data: response, status, msg}}) => {
-        if(status == "ok" && response.length > 0) {
-          
+    API.upload({
+      file_name: "esignature.png",
+      content_type: "image",
+      data64: imageData.replace("data:image/png;base64,", ""),
+    })
+      .then(({ data: { data: response, status, msg } }) => {
+        if (status == "ok" && response.length > 0) {
           const formData = {
             title: data.title,
             appelation: data.appellation,
@@ -1089,7 +1099,7 @@ export const ElectronicSignatureScreen = ({ handleEvent, data }) => {
             lname: data.lastName,
             email: data.email,
             gender: data.gender,
-  
+
             birth_date: getFormattedDate(data.birth_date),
             place_of_birth: data.place_of_birth,
             mothers_maiden_name: data.mothers_maiden_name,
@@ -1098,46 +1108,47 @@ export const ElectronicSignatureScreen = ({ handleEvent, data }) => {
             nationality: data.nationality,
             nationality_desc: data.nationality_desc,
             is_foreigner: 0,
-  
+
             home_address: data.home_address,
             home_village: data.home_village,
             dynamic_address: data.home_barangay_or_district,
             h_ownership: data.home_ownership,
             home_ownership_desc: data.home_ownership_desc,
             home_phone: data.home_phone,
-            home_mobile: "63" + data.phoneNumber,
+            home_mobile: "+63" + data.phoneNumber,
             home_stayed_since: getFormattedDate(data.home_stayed_since),
-  
+
             source_of_fund: data.source_of_fund,
             source_of_fund_desc: data.source_of_fund_desc,
             job_title_path: data.job_title,
             job_title_desc: data.job_title_desc,
-  
+
+            selfie_document_id: data.selfie_fileId,
             id1_code: data.id1_code,
             id1_ref: data.government_id_1,
             id1_code_desc: data.government_type_1,
             id1_url: "",
+            id1_document_id: data.government_id1_fileId,
             id2_code: data.id2_code,
             id2_ref: data.government_id_2,
-            id2_url: "",
             id2_code_desc: data.government_type_2,
-  
-            eSignatureId: response[0]
+            id2_url: "",
+            id2_document_id: data.government_id2_fileId,
+
+            eSignatureId: response[0],
           };
-          
-          handleEvent("onAddFormData", {data: formData});
-          handleEvent("onSubmit", {data: formData});
+
+          handleEvent("onAddFormData", { data: formData });
+          handleEvent("onSubmit", { data: formData });
         } else {
           // Failed
         }
       })
-      .catch((error) => {
-        
-      })
+      .catch((error) => {})
       .finally(() => {
         setUploading(false);
-      })
-  }
+      });
+  };
 
   return (
     <View style={[styles.defaultContainerStyle]}>

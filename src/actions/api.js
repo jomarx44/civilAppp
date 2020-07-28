@@ -763,10 +763,10 @@ const linkAccountWithDispatch = ({ cis_no, access_token }) => {
     dispatch(accountLink());
     return linkAccount({ cis_no, access_token })
       .then(({ data }) => {
-        if(data.success == true) {
+        if (data.success == true) {
           dispatch(accountLinkSuccess());
         } else {
-          dispatch(accountLinkError("Error"))
+          dispatch(accountLinkError("Error"));
         }
       })
       .catch((error) => {
@@ -920,7 +920,9 @@ const saveProfile = ({
   };
 
   Object.keys(json_data.body.user_data).forEach(
-    (key) => json_data.body.user_data[key] == null && delete json_data.body.user_data[key]
+    (key) =>
+      json_data.body.user_data[key] == null &&
+      delete json_data.body.user_data[key]
   );
 
   return (dispatch) => {
@@ -928,20 +930,20 @@ const saveProfile = ({
       type: TYPE.UPDATE_PROFILE,
     });
     return postOnly(json_data)
-      .then(({data}) => {
-        if(data.errorCode && data.errorCode !== "") {
+      .then(({ data }) => {
+        if (data.errorCode && data.errorCode !== "") {
           dispatch({
             type: TYPE.UPDATE_PROFILE_ERROR,
             payload: {
-              message: data.message
-            }
+              message: data.message,
+            },
           });
         } else {
           dispatch({
             type: TYPE.UPDATE_PROFILE_SUCCESS,
             payload: {
-              message: ""
-            }
+              message: "",
+            },
           });
         }
       })
@@ -1225,6 +1227,22 @@ const getLists = () => {
   };
 };
 
+const uploadIDs = (id1, id2) => {
+  return axios
+    .all([
+      upload({
+        file_name: "id1.png",
+        content_type: "image",
+        data64: id1,
+      }),
+      upload({
+        file_name: "id2.png",
+        content_type: "image",
+        data64: id2,
+      }),
+    ]);
+};
+
 // Uploader
 const upload = ({ file_name, content_type, data64 }) => {
   const json_data = {
@@ -1247,7 +1265,8 @@ const upload = ({ file_name, content_type, data64 }) => {
 
 const requestOTP = ({ mobile_number, email, save_info }) => {
   const json_data = {
-    path: "tm/otp",
+    // path: "tm/otp",
+    path: "tm/otp_sunsavings",
     body: {
       mobile_number,
       email,
@@ -1365,6 +1384,7 @@ export default {
   getBarangays,
   searchByCity,
   upload,
+  uploadIDs,
   requestOTP,
   verifyOTP,
   verifyOTPBPB,

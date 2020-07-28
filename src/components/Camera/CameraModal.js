@@ -7,7 +7,11 @@ import { icons } from "../../res/images/icons"
 import { Camera } from "./main"
 
 export const CameraModal = (props) => {
+<<<<<<< HEAD
   const {isCameraModalOpen, setCameraModalState, onSave} = props;
+=======
+  const {isCameraModalOpen, setCameraModalState, onSave, cameraType, selfieData} = props;
+>>>>>>> AC/pnmobile-live
   return (
     <Modal
       isVisible={isCameraModalOpen}
@@ -33,7 +37,11 @@ export const CameraModal = (props) => {
       >
         Take a Photo
       </TopNavigation>
+<<<<<<< HEAD
       <Camera onSave={onSave} />
+=======
+      <Camera onSave={onSave} cameraType={cameraType} selfieData={selfieData} />
+>>>>>>> AC/pnmobile-live
     </Modal>
   )
 }
