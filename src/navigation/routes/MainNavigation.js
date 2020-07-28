@@ -10,7 +10,7 @@ const Drawer = createDrawerNavigator();
 export const MainNavigation = () => {
   return (
     <Drawer.Navigator
-      initialRouteName="Home"
+      initialRouteName="TransferMoney"
       drawerStyle={{
         width: "85%",
       }}

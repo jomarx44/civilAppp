@@ -26,6 +26,9 @@ const Navigator = ({
   auth: {
     status: { isLoggedIn },
   },
+  user: {
+    info
+  },
   setCompatibility,
   setEnrolled,
 }) => {
@@ -56,15 +59,16 @@ const Navigator = ({
 
   return (
     <NavigationContainer theme={MyTheme} ref={navigationRef}>
-      {isLoggedIn ? 
+      {isLoggedIn && info ? 
         <MainNavigation /> :
         <AuthNavigation />}
     </NavigationContainer>
   );
 };
 
-const mapStateToProps = ({ auth }) => ({
+const mapStateToProps = ({ auth, user }) => ({
   auth,
+  user
 });
 
 const mapDispatchToProps = (dispatch) => ({

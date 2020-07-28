@@ -13,6 +13,7 @@ import {
   SunSavingsTransferForm,
   TransferMoneyOption,
 } from "../../screens/TransferMoney";
+import { SelectSourceAccount } from "../../screens/SelectSourceAccount"
 
 import { DrawerActions } from "@react-navigation/native";
 import { Image } from "react-native";
@@ -26,7 +27,7 @@ const Stack = createStackNavigator();
 
 export const TransferMoneyNavigation = () => {
   return (
-    <Stack.Navigator initialRouteName="TransferMoneyOption">
+    <Stack.Navigator initialRouteName="SelectSourceAccount">
       <Stack.Screen
         name="TransferMoneyOption"
         component={TransferMoneyOption}
@@ -105,13 +106,39 @@ export const TransferMoneyNavigation = () => {
         }
       />
       <Stack.Screen
+        name="SelectSourceAccount"
+        component={SelectSourceAccount}
+        options={({ navigation }) =>
+          headerOptions({
+            headerLeft: (props) => {
+              return (
+                <HeaderBackButton
+                  {...props}
+                  backImage={() => (
+                    <Image
+                      source={icons.ic_back_blue}
+                      style={{ height: 20, width: 20 }}
+                      resizeMode="contain"
+                    />
+                  )}
+                  canGoBack
+                />
+              );
+            },
+            title: "Select Source Account",
+            cardStyle: {
+              backgroundColor: DIRTY_WHITE,
+            },
+          })
+        }
+      />
+      <Stack.Screen
         name="OTPTransferMoney"
         component={OTPTransferMoney}
-        options={headerOptions({
+        options={({ navigation, route }) => headerOptions({
           headerLeft: (props) => (
             <HeaderBackButton
               {...props}
-              canGoBack={true}
               backImage={() => (
                 <Image
                   source={icons.ic_back_white}
@@ -119,6 +146,9 @@ export const TransferMoneyNavigation = () => {
                   resizeMode="contain"
                 />
               )}
+              onPress={() => {
+                navigation.navigate(route.params?.previousScreen, route.params?.formData)
+              }}
             />
           ),
           headerTitleColor: WHITE,
