@@ -6,9 +6,9 @@ import {
 } from "../actions";
 
 const initState = {
-  accessToken: "",
-  idtoken: "",
-  refreshToken: "",
+  accessToken: null,
+  idtoken: null,
+  refreshToken: null,
   status: {
     isCreating: false,
     isCreated: null,
@@ -44,7 +44,6 @@ export const auth = (state = initState, action) => {
         },
       };
     case LOGIN_SUCCESS:
-      console.log(action.payload);
       return {
         ...state,
         accessToken: action.payload.accessToken,

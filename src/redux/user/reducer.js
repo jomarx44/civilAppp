@@ -18,7 +18,6 @@ const initState = {
 export const user = (state = initState, action) => {
   switch (action.type) {
     case CREATE_USER:
-      console.log(action.payload.user.id);
       return {
         ...state,
         createdList: {

@@ -1,9 +1,4 @@
-import {
-  LOGIN,
-  LOGIN_ERROR,
-  LOGIN_SUCCESS,
-  LOGOUT,
-} from "../actions";
+import { LOGIN, LOGIN_ERROR, LOGIN_SUCCESS, LOGOUT } from "../actions";
 import { auth, user } from "../../API";
 
 /***********************
@@ -14,10 +9,12 @@ export const login = () => ({
   type: LOGIN,
 });
 
-export const loginSuccess = (tokens) => ({
+export const loginSuccess = ({ accessToken, idToken, refreshToken }) => ({
   type: LOGIN_SUCCESS,
   payload: {
-    tokens,
+    accessToken,
+    idToken,
+    refreshToken,
   },
 });
 

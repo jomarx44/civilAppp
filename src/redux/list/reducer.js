@@ -66,7 +66,6 @@ export const list = (state = initState, action) => {
         },
       };
     case FETCH_LIST_ERROR:
-      // console.log("Fetch List Error: ", action.error);
       return {
         ...state,
         [action.payload.selectedIndex]: {
@@ -79,7 +78,6 @@ export const list = (state = initState, action) => {
         },
       };
     case FETCH_LIST_SUCCESS:
-      console.log(`Fetch ${action.payload.selectedIndex} List Success: `, action.payload);
       return {
         ...state,
         [action.payload.selectedIndex]: {

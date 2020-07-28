@@ -10,9 +10,7 @@ import {
   BANK_ACCOUNT_INITIALIZE_REDUCER,
 } from "../actions";
 
-import {
-  bankAccount
-} from "../../API"
+import { bankAccount } from "../../API";
 
 /***********************
  * ACTION CREATORS
@@ -55,8 +53,8 @@ export const bankAccountInitializeFetch = () => ({
 // Fetch Bank Account
 export const fetchBankAccount = () => {
   return {
-    type: BANK_ACCOUNT_FETCH
-  }
+    type: BANK_ACCOUNT_FETCH,
+  };
 };
 
 // Fetch Bank Account Success
@@ -64,8 +62,8 @@ export const fetchBankAccountSuccess = (accounts, accountsById) => ({
   type: BANK_ACCOUNT_FETCH_SUCCESS,
   payload: {
     list: accounts,
-    listById: accountsById
-  }
+    listByIds: accountsById,
+  },
 });
 
 // Fetch Bank Account Error
@@ -78,14 +76,64 @@ export const fetchBankAccountError = (error) => ({
  * API WITH DISPATCH
  ***********************/
 
-export const getBankAsync = (CISNumber) => {
-  return dispatch => {
-    return bankAccount.get(CISNumber)
-      .then(({data}) => {
+const reformatAccount = (account) => {
+  return {
+    accountNumber: account.acctno,
+    accountNumberFormatted: account.AcctNoFormatted,
+    accountLedger: account.Ledger,
+    accountLedgerFormatted: account.LedgerFormatted,
+    accountAmountCent: account.amt_cent,
+    accountAmountWhole: account.amt_whole,
+    accountMainName: account.acctname,
+    accountName: account.Name1,
+    accountOtherName: account.Name2,
+    accountDesription: account.acctdesc,
+    accountType: account.accttype,
+    accountCurrencyCode: account.CurrencyCode,
+    FTRSource: account.FTRSrc,
+    ATM: account.atm,
+  };
+};
+
+export const getBankAccountsAsync = (CISNumber) => {
+  return (dispatch) => {
+    dispatch(fetchBankAccount());
+    return bankAccount
+      .get(CISNumber)
+      .then(({ data: { data, msg, status} }) => {
+        const {
+          accts: { a: accounts },
+          ErrorMsg: errorMessage,
+          ReturnCode: returnCode,
+        } = data["Account.Info"];
         
+        if (accounts) {
+          let list = {};
+          let listByIds = [];
+
+          if (Array.isArray(accounts)) {
+            accounts.map((account, index) => {
+              list = {
+                ...list,
+                [account.AcctNoFormatted]: reformatAccount(account),
+              };
+              listByIds = [...listByIds, account.AcctNoFormatted];
+            });
+          } else if (accounts instanceof Object) {
+            list = {
+              ...list,
+              [accounts.AcctNoFormatted]: reformatAccount(accounts),
+            };
+            listByIds = [...listByIds, accounts.AcctNoFormatted];
+          }
+
+          dispatch(fetchBankAccountSuccess(list, listByIds));
+        } else {
+          dispatch(fetchBankAccountError(new Error(errorMessage)));
+        }
       })
       .catch((error) => {
-        dispatch(fetchBankAccountError(error))
-      })
-  }
-}
+        dispatch(fetchBankAccountError(error));
+      });
+  };
+};

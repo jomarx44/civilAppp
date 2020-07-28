@@ -240,3 +240,11 @@ export const list = {
     return getList("source_of_fund");
   },
 };
+
+export const transferMoney = {
+  otp: (accountNumber) => {
+    return mainInstance.post("/byteperbyte/InstaPayOTP", {
+      acctno: accountNumber
+    })
+  }
+}

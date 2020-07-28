@@ -12,7 +12,7 @@ import {
 
 const initState = {
   list: {},
-  listById: [],
+  listByIds: [],
   formData: {},
   status: {
     isFetching: false,
@@ -65,7 +65,7 @@ export const bankAccount = (state = initState, action) => {
       return {
         ...state,
         list: initState.list,
-        listById: initState.listById,
+        listByIds: initState.listByIds,
         status: {
           ...state.status,
           isFetching: initState.status.isFetching,
@@ -75,7 +75,7 @@ export const bankAccount = (state = initState, action) => {
       return {
         ...state,
         list: {},
-        listById: {},
+        listByIds: [],
         status: {
           ...state.status,
           isFetching: true,
@@ -85,7 +85,7 @@ export const bankAccount = (state = initState, action) => {
       return {
         ...state,
         list: action.payload.list,
-        listById: action.payload.listById,
+        listByIds: action.payload.listByIds,
         status: {
           ...state.status,
           isFetching: false,
