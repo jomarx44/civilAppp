@@ -51,7 +51,6 @@ export const EmailConfirmationContainer = (props) => {
         .verifyEmail(createdUser.id)
         .then(({ data }) => {
           if (data.isEmailVerified) {
-            console.log("ASDAD");
             // navigation.navigate("", { phoneNumber: createdUser.phoneNumber });
           } else {
             Alert.alert(

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import validate from "validate.js";
@@ -22,7 +22,13 @@ export const TransferFormContainer = (props) => {
   });
   const [invalids, setInvalids] = useState({});
   const [isSubmitting, setSubmittingStatus] = useState(false);
-  const {} = props;
+  const { route } = props;
+
+  useEffect(() => {
+    if(route.params?.formData) {
+      setFormData(route.params?.formData);
+    }
+  }, [route.params?.formData])
 
   /**
    * Handle Blur Event Listener
@@ -85,6 +91,12 @@ export const TransferFormContainer = (props) => {
   const handleSubmit = () => {
     setSubmittingStatus(true);
     // Validate
+    const invalid = handleValidate(formData, config.constraints);
+    if(invalid) {
+      setInvalids()
+    } else {
+      navigation.navigate()
+    }
     // Submit
     setSubmittingStatus(false);
   };

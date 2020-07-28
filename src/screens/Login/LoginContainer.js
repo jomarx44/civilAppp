@@ -1,6 +1,6 @@
 import { Alert, AsyncStorage } from "react-native";
 import React, { useEffect, useState } from "react";
-import { attribute, auth, token, } from "../../API"
+import { attribute, token, } from "../../API"
 import {
   authenticateAsync,
   cancelAuthenticate,
@@ -62,15 +62,15 @@ export const LoginContainer = (props) => {
   }, []);
 
   useEffect(() => {
-    if (token && token.tokens) {
+    if (auth && auth.accessToken) {
       getAttributes({
         name: "cis_no",
-        access_token: token.tokens.access_token,
+        access_token: auth.accessToken,
       });
-      userInfo(token.tokens.access_token);
-      Profile.setAccessToken(token.tokens.access_token);
+      userInfo(auth.accessToken);
+      // Profile.setAccessToken(auth.accessToken);
     }
-  }, [token]);
+  }, [auth]);
 
   useEffect(() => {
     if (fingerprintToken && isScanning == false) {
@@ -155,7 +155,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(getUserInfoAsync(accessToken));
   },
   getAttributes: (parameters) => {
-    dispatch(attribute.get(parameters));
+    // dispatch(attribute.get(parameters));
   },
 });
 

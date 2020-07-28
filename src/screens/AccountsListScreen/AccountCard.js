@@ -3,7 +3,6 @@ import {View, Text, StyleSheet, Image} from 'react-native';
 import React from 'react';
 
 const AccountCard = ({account, color1, color2}) => {
-    console.log(account.balance)
     return(
         <LinearGradient
             start = {{x: 0.05, y: 0.8}}
