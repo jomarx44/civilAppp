@@ -51,7 +51,7 @@ export const EmailConfirmationContainer = (props) => {
         .verifyEmail(createdUser.id)
         .then(({ data }) => {
           if (data.isEmailVerified) {
-            // navigation.navigate("", { phoneNumber: createdUser.phoneNumber });
+            navigation.navigate("OTPMobileAccount", { phoneNumber: createdUser.phoneNumber });
           } else {
             Alert.alert(
               "Verification Failed",

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   AsyncStorage,
@@ -13,8 +13,21 @@ import { Accordion, Container, Icon, Text } from "native-base";
 // Others
 import { getProfileData, getAccessData } from "store/profile";
 import { connect } from "react-redux";
+import { profile as profileAPI } from "../../API";
 import { setProfileData } from "../../actions/actionCreators";
 import API from "../../actions/api";
+
+import { getProfileAsync } from "../../redux/profile/actions";
+import { getBankAccountsAsync } from "../../redux/bankAccount/actions";
+import {
+  getBankAsync,
+  getCivilStatusAsync,
+  getHomeOwnershipAsync,
+  getIdListAsync,
+  getJobTitleAsync,
+  getNationalityAsync,
+  getSourceOfFundAsync,
+} from "../../redux/list/actions";
 
 export const AccountItemHeader = ({
   item,
@@ -57,16 +70,26 @@ export const AccountItemContainer = ({ containerStyle, children }) => {
   );
 };
 
-export const AccountItem = ({ onPress, item: { acctno, title, balance } }) => {
+export const AccountItem = ({
+  onPress,
+  item: {
+    accountNumberFormatted,
+    accountMainName,
+    accountCurrencyCode,
+    accountLedgerFormatted,
+  },
+}) => {
   return (
     <TouchableOpacity onPress={onPress} style={itemStyles.defaultButton}>
       <View style={itemStyles.defaultItem}>
         <View style={{ flex: 1 }}>
-          <Text style={styles.cardTitle}>{title}</Text>
-          <Text style={styles.cardSubTitle}>{acctno}</Text>
+          <Text style={styles.cardTitle}>{accountMainName}</Text>
+          <Text style={styles.cardSubTitle}>{accountNumberFormatted}</Text>
         </View>
         <View style={{ flex: 1 }}>
-          <Text style={styles.cardTextBalanceValue}>{balance}</Text>
+          <Text
+            style={styles.cardTextBalanceValue}
+          >{`${accountCurrencyCode} ${accountLedgerFormatted}`}</Text>
           <Text style={styles.cardTextBalance}>Current Balance</Text>
         </View>
       </View>
@@ -94,129 +117,251 @@ export const AccountAddButton = ({ onPress }) => {
   );
 };
 
-class DashboardScreen extends React.Component {
-  state = {
-    modalVisible: false,
-    loanAccounts: {
+export const Dashboard = (props) => {
+  const {
+    auth,
+    bankAccount,
+    profile,
+    user,
+    getBankAccounts,
+    getBank,
+    getCivilStatus,
+    getHomeOwnership,
+    getIdList,
+    getJobTitle,
+    getNationality,
+    getSourceOfFund,
+    getProfile,
+    navigation,
+  } = props;
+
+  const [accounts, setAccounts] = useState({
+    LN: {
       title: "Loan Accounts",
       data: [],
     },
-    timeDeposit: {
+    TD: {
       title: "Time Deposit",
       data: [],
     },
-    savingsAccount: {
+    SA: {
       title: "Savings Account",
       data: [],
     },
-  };
+  });
 
-  async componentDidMount() {
-    let profile = await getProfileData();
-    const { setProfileData, navigation } = this.props;
+  useEffect(() => {
+    getProfile(user.info.sub);
+    getBank();
+    getCivilStatus();
+    getHomeOwnership();
+    getIdList();
+    getJobTitle();
+    getNationality();
+    getSourceOfFund();
+    navigation.navigate("Announcement");
+  }, []);
 
-    if (!this.props.profile.data) {
-      const { sub } = profile;
-      const {
-        displayName,
-        emails,
-        id,
-        name: { givenName, middleName, familyName },
-        phoneNumbers,
-      } = profile.identities[0].idpUserInfo;
-      this.props.getProfile(sub);
-      // setProfileData({
-      //   id,
-      //   sub,
-      //   emails,
-      //   phoneNumbers,
-      //   displayName,
-      //   givenName,
-      //   middleName,
-      //   familyName
-      // });
+  useEffect(() => {
+    const { firstName, middleName, lastName, emails, phoneNumbers } = user.info;
+    if (profile.data?.attributes?.cis_no) {
+      // getBankAccounts(profile.data?.attributes?.CISNumber)
+      getBankAccounts(profile.data?.attributes?.cis_no);
     }
 
-    this.props.getAccounts(this.props.appAttribute.attributes.cis_no);
+    if (!profile.data?.attributes?.name) {
+      handleAddNameAtttribute(auth.accessToken, { firstName, middleName, lastName })
+    }
 
-    // this.props.getAccounts("1590000062");
-    navigation.navigate("Announcement");
-  }
+    if (!profile.data?.attributes?.email) {
+      handleAddEmailAtttribute(auth.accessToken, { email: emails[0].value })
+    }
 
-  onRefresh = () => {
-    this.props.getAccounts(this.props.appAttribute.attributes.cis_no);
+    if (!profile.data?.attributes?.phoneNumber) {
+      handleAddPhoneNumberAtttribute(auth.accessToken, { phoneNumber: phoneNumbers[0].value })
+    }
+  }, [profile.data?.attributes]);
+
+  // Fetch Bank List
+  useEffect(() => {
+    if (!bankAccount.status.isFetching) {
+      if (bankAccount.list !== {} || !bankAccount.error) {
+        const arrayedAccounts = Object.values(bankAccount.list);
+        setAccounts((currentAccount) => ({
+          ...currentAccount,
+          LN: {
+            ...currentAccount.LN,
+            data: arrayedAccounts.filter(
+              (account) => account.accountType === "LN"
+            ),
+          },
+          SA: {
+            ...currentAccount.SA,
+            data: arrayedAccounts.filter(
+              (account) => account.accountType === "SA"
+            ),
+          },
+          TD: {
+            ...currentAccount.TD,
+            data: arrayedAccounts.filter(
+              (account) => account.accountType === "TD"
+            ),
+          },
+        }));
+      }
+    }
+  }, [bankAccount.error, bankAccount.list]);
+
+  // Add Default Name Attribute
+  const handleAddNameAtttribute = (accessToken, {firstName, middleName, lastName}) => {
+    profileAPI.addAttribute({
+      accessToken: accessToken,
+      attributeName: "name",
+      attributeValue: {
+        firstName,
+        middleName,
+        lastName,
+      },
+    });
   };
 
-  onPress = (navid, accountNumber) => {
-    this.props.navigation.navigate(
-      navid,
-      accountNumber ? { accountNumber } : null
+  // Add Default Email Attribute
+  const handleAddEmailAtttribute = (accessToken, {email}) => {
+    profileAPI.addAttribute({
+      accessToken: accessToken,
+      attributeName: "email",
+      attributeValue: email,
+    });
+  };
+
+  // Add Default PHone Number Attribute
+  const handleAddPhoneNumberAtttribute = (accessToken, {phoneNumber}) => {
+    profileAPI.addAttribute({
+      accessToken: accessToken,
+      attributeName: "phoneNumber",
+      attributeValue: phoneNumber,
+    });
+  };
+
+  const handleRefresh = () => {
+    console.log("Attributes: ", profile.data?.attributes)
+    if (profile.data?.attributes?.cis_no) {
+      getBankAccounts(profile.data?.attributes?.cis_no);
+    }
+  };
+
+  const handleCardPress = (accountNumber) => {
+    navigation.navigate(
+      "AccountHistory",
+      accountNumber ? { accountNumber: accountNumber } : null
     );
   };
 
-  onAddAccount = (navid) => {
-    this.props.navigation.navigate(navid);
+  const handleAdd = () => {
+    navigation.navigate("ConnectCreateAccount");
   };
 
-  render() {
-    const {
-      accounts,
-      profile: { data, ...profile },
-    } = this.props;
-
-    return (
-      <Container>
-        <View style={styles.viewHeader}>
-          {!profile.isFetching && (
-            <React.Fragment>
-              <Text style={styles.title}>{data.name.displayName}</Text>
-              <Text style={styles.subtitle}>{data.emails[0].value}</Text>
-            </React.Fragment>
+  return (
+    <Container>
+      <View style={styles.viewHeader}>
+        {!profile.status.isFetching && (
+          <React.Fragment>
+            <Text style={styles.title}>
+              {profile.data?.attributes?.name
+                ? `${profile.data?.attributes?.name.firstName} ${profile.data?.attributes.name.lastName}`
+                : `${user.info.firstName} ${user.info.lastName}`}
+            </Text>
+            <Text style={styles.subtitle}>
+              {profile.data?.attributes?.email
+                ? profile.data?.attributes.email
+                : user.info.emails[0].value
+              }
+            </Text>
+          </React.Fragment>
+        )}
+      </View>
+      <View style={styles.viewAccounts}>
+        <Accordion
+          refreshControl={
+            <RefreshControl
+              refreshing={bankAccount.status.isFetching}
+              onRefresh={handleRefresh}
+            />
+          }
+          renderHeader={(item, expanded) => (
+            <AccountItemHeader item={item} expanded={expanded} />
           )}
-        </View>
-        <View style={styles.viewAccounts}>
-          <Accordion
-            refreshControl={
-              <RefreshControl
-                refreshing={accounts.is_fetching}
-                onRefresh={() => this.onRefresh()}
-              />
-            }
-            renderHeader={(item, expanded) => (
-              <AccountItemHeader item={item} expanded={expanded} />
-            )}
-            renderContent={(items) => {
-              return (
-                <AccountItemContainer>
-                  {items.accountsById &&
-                    items.accountsById.map((itemId, id) => {
-                      return (
-                        <AccountItem
-                          key={id}
-                          item={items.accounts[itemId]}
-                          onPress={() =>
-                            this.onPress(
-                              "AccountHistory",
-                              items.accounts[itemId].acctno
-                            )
-                          }
-                        />
-                      );
-                    })}
-                  <AccountAddButton
-                    onPress={() => this.onPress("ConnectCreateAccount")}
-                  />
-                </AccountItemContainer>
-              );
-            }}
-            dataArray={Object.values(accounts.list)}
-            contentStyle={{ backgroundColor: "#ddecf8" }}
-          />
-        </View>
-      </Container>
-    );
-  }
-}
+          renderContent={(items) => {
+            return (
+              <AccountItemContainer>
+                {items.data &&
+                  items.data.map((account, id) => {
+                    return (
+                      <AccountItem
+                        key={id}
+                        item={account}
+                        onPress={() =>
+                          handleCardPress(account.accountNumberFormatted)
+                        }
+                      />
+                    );
+                  })}
+                <AccountAddButton onPress={handleAdd} />
+              </AccountItemContainer>
+            );
+          }}
+          dataArray={Object.values(accounts)}
+          contentStyle={{ backgroundColor: "#ddecf8" }}
+        />
+      </View>
+    </Container>
+  );
+};
+
+const mapStateToProps = (state) => {
+  const { auth, bankAccount, profile, user } = state;
+  return { auth, bankAccount, profile, user };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getProfile: (subId) => {
+      dispatch(getProfileAsync(subId));
+    },
+    getBankAccounts: (CISNumber) => {
+      dispatch(getBankAccountsAsync(CISNumber));
+    },
+    getAccounts: (cisno) => {
+      dispatch(API.getAccounts(cisno));
+    },
+    setProfileData: (data) => {
+      dispatch(setProfileData(data));
+    },
+    getBank: () => {
+      dispatch(getBankAsync());
+    },
+    getCivilStatus: () => {
+      dispatch(getCivilStatusAsync());
+    },
+    getHomeOwnership: () => {
+      dispatch(getHomeOwnershipAsync());
+    },
+    getIdList: () => {
+      dispatch(getIdListAsync());
+    },
+    getJobTitle: () => {
+      dispatch(getJobTitleAsync());
+    },
+    getNationality: () => {
+      dispatch(getNationalityAsync());
+    },
+    getSourceOfFund: () => {
+      dispatch(getSourceOfFundAsync());
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
 
 const itemStyles = StyleSheet.create({
   defaultContainer: {
@@ -233,12 +378,10 @@ const itemStyles = StyleSheet.create({
     backgroundColor: "#ffffff",
     borderTopWidth: 1,
     borderTopColor: "#e5eced",
-    borderLeftWidth: 1,
-    borderLeftColor: "#e5eced",
+    borderLeftWidth: 3,
+    borderLeftColor: "#f9a010",
     borderRightWidth: 1,
     borderRightColor: "#e5eced",
-    borderLeftColor: "#f9a010",
-    borderLeftWidth: 3,
     borderRadius: 5,
   },
 });
@@ -330,24 +473,3 @@ const styles = StyleSheet.create({
     backgroundColor: "#f2f4f5",
   },
 });
-
-const mapStateToProps = (state, props) => {
-  const { profile, accounts, appAttribute, auth, token } = state;
-  return { profile, accounts, appAttribute, auth, token };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getProfile: (id) => {
-      dispatch(API.getProfile({ id }));
-    },
-    getAccounts: (cisno) => {
-      dispatch(API.getAccounts(cisno));
-    },
-    setProfileData: (data) => {
-      dispatch(setProfileData(data));
-    },
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(DashboardScreen);

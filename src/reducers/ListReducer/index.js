@@ -42,10 +42,10 @@ const ListReducer = (state = initialState, action) => {
 export default combineReducers({
   meta: ListReducer,
   barangays: barangaysReducer,
-  homeOwnerships: homeOwnershipsReducer,
-  civilStatuses: civilStatusesReducer,
-  idTypes: idTypesReducer,
-  jobTitles: jobTitlesReducer,
-  nationalities: nationalitiesReducer,
-  fundSources: fundSourcesReducer,
+  homeOwnership: homeOwnershipsReducer,
+  civilStatus: civilStatusesReducer,
+  idList: idTypesReducer,
+  jobTitle: jobTitlesReducer,
+  nationality: nationalitiesReducer,
+  sourceOfFund: fundSourcesReducer,
 })

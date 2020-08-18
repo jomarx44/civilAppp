@@ -20,7 +20,10 @@ import { DrawerActions } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 // Others
 import { config } from "../../config";
+import { useSafeArea } from "react-native-safe-area-context";
 import { connect } from "react-redux";
+import { getProfileAsync } from "../../redux/profile/actions"
+import { profile } from "../../API";
 
 const { height, width } = Dimensions.get("window");
 
@@ -112,20 +115,27 @@ export const ProfileItem = ({
   );
 };
 
-export const ProfileScreen = ({
-  navigation,
-  profile,
-  initializeReducers,
-  getProfile,
-}) => {
+export const ProfileScreen = (props) => {
   const inset = useSafeArea();
+  const {
+    navigation,
+    profile: {
+      data,
+      status: { isFetching }
+    },
+    getProfile,
+    user,
+    route: { params }
+  } = props
 
   useEffect(() => {
-    initializeReducers();
-  }, []);
+    if(params?.reload) {
+      handleRefresh()
+    }
+  }, [params?.reload])
 
   const handleRefresh = () => {
-    getProfile(profile.data.sub)
+    getProfile(user.info.sub)
   }
 
   return (
@@ -170,21 +180,25 @@ export const ProfileScreen = ({
           onPressLeftButton={() =>
             navigation.dispatch(DrawerActions.openDrawer())
           }
-          onPressRightButton={() => navigation.navigate("EditProfile")}
+          onPressRightButton={() => navigation.navigate("EditProfile", { formData: {
+            firstName: data?.attributes?.name.firstName,
+            middleName: data?.attributes?.name.middleName,
+            lastName: data?.attributes?.name.lastName
+          } })}
         />
         <ScrollView
           contentContainerStyle={{ padding: 24 }}
           refreshControl={
             <RefreshControl
-              refreshing={profile.isFetching}
+              refreshing={isFetching}
               onRefresh={() => handleRefresh()}
             />
           }
         >
           <ProfileHeader
-            name={profile.data.name.displayName}
-            email={profile.data.emails[0].value}
-            phoneNumber={`${profile.data.phoneNumbers[0].value}`}
+            name={data?.attributes?.name ? `${data?.attributes?.name?.firstName} ${data?.attributes?.name?.middleName} ${data?.attributes?.name?.lastName}` : `${user.info.firstName} ${user.info.middleName} ${user.info.lastName}`}
+            email={data?.attributes?.email ? data?.attributes?.email: user.info.emails[0].value}
+            phoneNumber={data?.attributes.phoneNumber ? data?.attributes.phoneNumber : user.info.phoneNumbers[0].value}
           />
           <ProfileItem
             imagePath={require("res/images/icons/ic_lock.png")}
@@ -226,24 +240,14 @@ export const ProfileScreen = ({
 const mapStateToProps = (state) => {
   return {
     profile: state.profile,
+    user: state.user
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    initializeReducers: () => {
-      dispatch({
-        type: UPDATE_PROFILE_INITIALIZE,
-      });
-      dispatch({
-        type: REQUEST_OTP_INITIALIZE,
-      });
-      dispatch({
-        type: CHECK_OTP_INITIALIZE,
-      });
-    },
-    getProfile: (id) => {
-      dispatch(API.getProfile({ id }));
+    getProfile: (subID) => {
+      dispatch(getProfileAsync(subID));
     },
   };
 };

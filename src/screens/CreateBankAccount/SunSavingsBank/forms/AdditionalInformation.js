@@ -90,7 +90,7 @@ export const AdditionalInformation = (props) => {
                 },
                 {
                   index: "civil_status_desc",
-                  value: lists.civilStatuses[index - 1].label,
+                  value: lists.civilStatus[index - 1].label,
                 },
               ]);
             } else {
@@ -107,7 +107,7 @@ export const AdditionalInformation = (props) => {
             }
             // handleEvent("onBlur", { constraints, index: "civil_status" });
           }}
-          options={lists.civilStatuses}
+          options={lists.civilStatus}
           selectedValue={civil_status}
           title="Civil Status"
           // onBlur={() => 
@@ -126,7 +126,7 @@ export const AdditionalInformation = (props) => {
                 },
                 {
                   index: "nationality_desc",
-                  value: lists.nationalities[index - 1].label,
+                  value: lists.nationality[index - 1].label,
                 },
               ]);
             } else {
@@ -142,7 +142,7 @@ export const AdditionalInformation = (props) => {
               ]);
             }
           }}
-          options={lists.nationalities}
+          options={lists.nationality}
           selectedValue={nationality}
           title="Nationality"
           // onBlur={() =>

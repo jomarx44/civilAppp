@@ -1,5 +1,6 @@
 export const config = {
-  constraints: {}
+  constraints: {},
+  validate: true
 };
 
 export default config;

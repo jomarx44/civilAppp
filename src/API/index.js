@@ -120,7 +120,7 @@ export const bankAccount = {
    * Get History
    * @description Used for fetching transaction history of bank account based on account number provided.
    * @param {String} accountNumber Bank Account Number
-   * @param {} count Count
+   * @param {Number} count Count
    */
   getHistory: (accountNumber, count) => {
     return mainInstance.get("byteperbyte/AccountInquiryHistory", {
@@ -140,28 +140,52 @@ export const bankAccount = {
   },
 };
 
+export const OTP = {
+  request: (
+    to,
+    data
+  ) => {
+    if (!to?.mobileNumber && !to?.email) {
+      return false;
+    }
+
+    return mainInstance.post("tm/otp_sunsavings", {
+      mobile_number: to.mobileNumber,
+      email: to.email,
+      save_info: data
+    });
+  },
+  verify: (code, token) => {
+    return mainInstance.post("tm/otp_verify", {
+      token: `${token}${code}`
+    });
+  }
+};
+
 export const profile = {
   get: (id) => {
     return manage("getProfile", { user_id: id });
   },
 
-  update: ({
-    id,
-    attributes,
-    givenName,
-    middleName,
-    familyName,
-    emails,
-    phoneNumber,
-  }) => {
+  addAttribute: ({ attributeName, attributeValue, accessToken }) => {
+    return manage("put_attribute_name", {
+      attribute_name: attributeName,
+      attribute_value: attributeValue,
+      access_token: accessToken,
+    });
+  },
+
+  updateAttribute: ({ subId, attributes }) => {
     return manage("updateProfile", {
-      id,
+      id: subId,
       attributes,
-      givenName,
-      middleName,
-      familyName,
-      emails,
-      phoneNumber,
+    });
+  },
+
+  getAttribute: (attributeName, accessToken) => {
+    return manage("get_attribute_name", {
+      attribute_name: attributeName,
+      access_token: accessToken,
     });
   },
 };
@@ -185,14 +209,22 @@ export const user = {
     });
   },
 
-  update: ({ id, userName, password, name, emails, phoneNumbers }) => {
+  update: (userData = {}) => {
+    const filteredUserData = Object.entries(userData).reduce(
+      (a, [k, v]) => (v ? ((a[k] = v), a) : a),
+      {}
+    );
+
+    if (
+      !filteredUserData.id ||
+      !filteredUserData.name ||
+      !filteredUserData.emails
+    ) {
+      return false;
+    }
+
     return manage("updateUserByID", {
-      id,
-      userName,
-      password,
-      name,
-      emails,
-      phoneNumbers,
+      user_data: filteredUserData
     });
   },
 
@@ -244,7 +276,32 @@ export const list = {
 export const transferMoney = {
   otp: (accountNumber) => {
     return mainInstance.post("/byteperbyte/InstaPayOTP", {
-      acctno: accountNumber
-    })
-  }
-}
+      acctno: accountNumber,
+    });
+  },
+  transfer: (
+    transerDetails = {
+      amount: null,
+      bankCode: null,
+      recipientAccountNumber: null,
+      recipientMobileNumber: null,
+      recipientAccountName: null,
+      senderAccountNumber: null,
+    },
+    code = {
+      otp: null,
+      token: null,
+    }
+  ) => {
+    return mainInstance.post("/byteperbyte/InstaPayTM", {
+      amount: transerDetails.amount,
+      bank_code: transerDetails.bankCode,
+      otp: code.otp,
+      recipient_accno: transerDetails.recipientAccountNumber,
+      recipient_mobile_no: transerDetails.recipientMobileNumber,
+      recipient_name: transerDetails.recipientAccountName,
+      sender_acctno: transerDetails.senderAccountNumber,
+      token: code.token,
+    });
+  },
+};

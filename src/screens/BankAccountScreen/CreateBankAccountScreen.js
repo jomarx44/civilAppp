@@ -335,16 +335,17 @@ const styles = StyleSheet.create({
   },
 });
 const mapStateToProps = (state) => {
+  // return {};
   const {
     lists: {
       meta,
       barangays,
-      homeOwnerships,
-      civilStatuses,
-      idTypes,
-      jobTitles,
-      nationalities,
-      fundSources,
+      homeOwnership,
+      civilStatus,
+      idList,
+      jobTitle,
+      nationality,
+      sourceOfFund,
     },
     city,
     appAttribute,
@@ -361,12 +362,12 @@ const mapStateToProps = (state) => {
     city,
     lists: {
       barangays: Object.values(barangays.data),
-      homeOwnerships: Object.values(homeOwnerships.data),
-      civilStatuses: Object.values(civilStatuses.data),
-      idTypes: Object.values(idTypes.data),
-      jobTitles: Object.values(jobTitles.data),
-      nationalities: Object.values(nationalities.data),
-      fundSources: Object.values(fundSources.data),
+      homeOwnerships: Object.values(homeOwnership.data),
+      civilStatuses: Object.values(civilStatus.data),
+      idTypes: Object.values(idList.data),
+      jobTitles: Object.values(jobTitle.data),
+      nationalities: Object.values(nationality.data),
+      fundSources: Object.values(sourceOfFund.data),
       isFetching: meta.isFetching,
     },
     otp,

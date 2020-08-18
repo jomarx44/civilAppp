@@ -2,7 +2,7 @@ export * from "./Buttons";
 export * from "./Camera";
 export * from "./Card";
 export * from "./FingerprintModal";
-export * from "./InputBox";
+export * from "./Input";
 export * from "./KeyboardShift";
 export * from "./Loader";
 export * from "./MenuModal";

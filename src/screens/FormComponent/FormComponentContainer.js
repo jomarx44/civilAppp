@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import validate from "validate.js";
@@ -15,7 +15,16 @@ export const FormComponentContainer = (props) => {
   const [formData, setFormData] = useState({});
   const [invalids, setInvalids] = useState({});
   const [isSubmitting, setSubmittingStatus] = useState(false);
-  const {} = props;
+  const { navigation, route: { params } } = props;
+
+  useEffect(() => {
+    if (params?.formData) {
+      setFormData((currentState) => ({
+        ...currentState,
+        ...params?.formData,
+      }));
+    }
+  }, [params?.formData]);
 
   /**
    * Handle Blur Event Listener
@@ -24,11 +33,15 @@ export const FormComponentContainer = (props) => {
    * @param {Object} additionalValidation Additional data for validation (used for Equality Validation)
    */
   const handleBlur = (index, additionalValidation = {}) => {
+    if(!config.validate) {
+      return true;
+    }
+
     let newInvalids = {};
 
     if (__DEV__) {
       // Warn the user if the given index doesn't exist in [formData] state
-      if (!formData[index]) {
+      if (!formData[index] === undefined) {
         console.warn(`'${index}' index is not found in [formData] state.`);
       }
 
@@ -69,20 +82,29 @@ export const FormComponentContainer = (props) => {
   };
 
   const handleChange = (index, value) => {
-    setFormData({
-      ...formData,
+    setFormData((currentState) => ({
+      ...currentState,
       [index]: value,
-    });
+    }));
   };
 
   const handleSubmit = () => {
-    setSubmittingStatus(true);
     // Validate
-    // Submit
-    setSubmittingStatus(false);
+    const invalid = handleValidate(formData, config.constraints);
+    if(invalid) {
+      setInvalids(invalid)
+    } else {  
+      setSubmittingStatus(true);
+      // Submit
+      setSubmittingStatus(false);
+    }
   };
 
   const handleValidate = (data = {}, constraints = {}) => {
+    if(!config.validate) {
+      return false;
+    }
+    
     const invalid = validate(data, constraints);
     // Do additional invalid data processing here
     return invalid;

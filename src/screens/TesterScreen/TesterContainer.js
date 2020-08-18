@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import {
   getBankAsync,
@@ -9,37 +9,21 @@ import {
   getNationalityAsync,
   getSourceOfFundAsync,
 } from "../../redux/list/actions";
+import { Dropdown } from "../../components"
+import DropDownPicker from "react-native-dropdown-picker";
 
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 export const TesterContainer = (props) => {
-  const {
-    getBank,
-    getCivilStatus,
-    getHomeOwnership,
-    getIdList,
-    getJobTitle,
-    getNationality,
-    getSourceOfFund,
-  } = props;
-
-  useEffect(() => {
-    getBank();
-    // getCivilStatus();
-    // getHomeOwnership();
-    // getIdList();
-    // getJobTitle();
-    // getNationality();
-    // getSourceOfFund();
-  }, [])
-
-  return <View></View>;
+  return (
+    <View></View>
+  )
 };
 
 const mapStateToProps = (state) => {
   return {
-    list: state.list
+    list: state.list,
   };
 };
 

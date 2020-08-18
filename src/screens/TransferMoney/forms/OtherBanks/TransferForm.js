@@ -5,8 +5,9 @@ import { StyleSheet, Text, View, ViewPropTypes } from "react-native";
 // Custom Components Here
 import {
   ContainedButton,
+  Dropdown,
   HelperText,
-  InputBox,
+  Input,
   KeyboardShift,
 } from "../../../../components";
 import {
@@ -19,6 +20,7 @@ export const TransferForm = (props) => {
   const inputBankName = useRef();
   const inputAccountNumber = useRef();
   const inputAccountName = useRef();
+  const inputAmount = useRef();
   const inputEmailAddress = useRef();
   const inputMobileNumber = useRef();
   const inputPaymentDescription = useRef();
@@ -28,8 +30,9 @@ export const TransferForm = (props) => {
     isSubmitting,
     onBlur,
     onChange,
+    onSelectSource,
     onSubmit,
-    containerStyle,
+    bankList,
   } = props;
 
   return (
@@ -37,80 +40,116 @@ export const TransferForm = (props) => {
       <FormScrollView>
         <FormContentView>
           <HelperText style={styles.helperText}>
+            Please select source account
+          </HelperText>
+          <View style={{flexDirection: "row", justifyContent: "flex-end", marginBottom: 20}}>
+            <ContainedButton 
+              buttonStyle={{
+                borderRadius: 18.5,
+                backgroundColor: "#f0f0f0",
+                width: 200
+              }}
+              labelStyle={{
+                color: "#444",
+                fontSize: 14,
+                fontFamily: "Gilroy_Medium"
+              }}
+              label="Select Source Account"
+              onPress={onSelectSource}
+            />
+          </View>
+          <Input
+            label="Source Account Number"
+            invalidText={
+              invalids && invalids.sourceAccountNumber && invalids.sourceAccountNumber[0]
+            }
+            editable={false}
+            value={data.sourceAccountNumber}
+          />
+          <HelperText style={styles.helperText}>
             Please enter your Bank Details
           </HelperText>
-          <InputBox
-            label="Bank Name"
-            onChangeText={(value) => {
-              onChange("bankName", value);
+          <Dropdown
+            items={bankList}
+            defaultValue={data.bankCode}
+            onChangeItem={(item) => {
+              onChange("bankCode", item.value)
+              onChange("recipientBankName", item.label)
             }}
-            ref={inputBankName}
-            onSubmitEditing={() => inputAccountNumber.current.focus()}
-            onBlur={() => onBlur("bankName")}
-            invalidText={
-              invalids && invalids.bankName && invalids.bankName[0]
-            }
-            value={data.bankName}
           />
-          <InputBox
-            label="Account Number"
+          <Input
+            label="Recipient Account Number"
             onChangeText={(value) => {
-              onChange("accountNumber", value);
+              onChange("recipientAccountNumber", value);
             }}
             ref={inputAccountNumber}
             onSubmitEditing={() => inputAccountName.current.focus()}
-            onBlur={() => onBlur("accountNumber")}
+            onBlur={() => onBlur("recipientAccountNumber")}
             invalidText={
-              invalids && invalids.accountNumber && invalids.accountNumber[0]
+              invalids && invalids.recipientAccountNumber && invalids.recipientAccountNumber[0]
             }
-            value={data.accountNumber}
+            value={data.recipientAccountNumber}
           />
-          <InputBox
-            label="Account Name"
+          <Input
+            label="Recipient Account Name"
             onChangeText={(value) => {
-              onChange("accountName", value);
+              onChange("recipientAccountName", value);
             }}
             ref={inputAccountName}
-            onSubmitEditing={() => inputEmailAddress.current.focus()}
-            onBlur={() => onBlur("accountName")}
+            onSubmitEditing={() => inputAmount.current.focus()}
+            onBlur={() => onBlur("recipientAccountName")}
             invalidText={
-              invalids && invalids.accountName && invalids.accountName[0]
+              invalids && invalids.recipientAccountName && invalids.recipientAccountName[0]
             }
-            value={data.accountName}
+            value={data.recipientAccountName}
+          />
+          <Input
+            label="Amount"
+            onChangeText={(value) => {
+              onChange("amount", value);
+            }}
+            keyboardType="decimal-pad"
+            ref={inputAmount}
+            onSubmitEditing={() => inputEmailAddress.current.focus()}
+            onBlur={() => onBlur("amount")}
+            invalidText={
+              invalids && invalids.amount && invalids.amount[0]
+            }
+            value={data.amount}
           />
           <HelperText style={styles.helperText}>
             To notify the recipient, please fill in the following:
           </HelperText>
-          <InputBox
+          <Input
             label="Email Address"
             onChangeText={(value) => {
-              onChange("emailAddress", value);
+              onChange("recipientEmailAddress", value);
             }}
             ref={inputEmailAddress}
             onSubmitEditing={() => inputMobileNumber.current.focus()}
-            onBlur={() => onBlur("emailAddress")}
+            onBlur={() => onBlur("recipientEmailAddress")}
             invalidText={
-              invalids && invalids.emailAddress && invalids.emailAddress[0]
+              invalids && invalids.recipientEmailAddress && invalids.recipientEmailAddress[0]
             }
-            value={data.emailAddress}
+            value={data.recipientEmailAddress}
           />
-          <InputBox
+          <Input
             label="Mobile Number"
             onChangeText={(value) => {
-              onChange("mobileNumber", value);
+              onChange("recipientMobileNumber", value);
             }}
             ref={inputMobileNumber}
             keyboardType="phone-pad"
             maxLength={13}
             onSubmitEditing={() => inputPaymentDescription.current.focus()}
-            onBlur={() => onBlur("mobileNumber")}
+            onBlur={() => onBlur("recipientMobileNumber")}
             invalidText={
-              invalids && invalids.mobileNumber && invalids.mobileNumber[0]
+              invalids && invalids.recipientMobileNumber && invalids.recipientMobileNumber[0]
             }
             defaultValue={data.phoneCode}
-            value={data.mobileNumber}
+            value={data.recipientMobileNumber.length < 3 ? "+63" : data.recipientMobileNumber}
           />
-          <InputBox
+          <Input
             label="Payment Description"
             onChangeText={(value) => {
               onChange("paymentDescription", value);
@@ -145,6 +184,7 @@ TransferForm.propTypes = {
   isSubmitting: PropTypes.bool,
   onBlur: PropTypes.func,
   onChange: PropTypes.func,
+  onSelectSource: PropTypes.func,
   onSubmit: PropTypes.func,
   containerStyle: ViewPropTypes.style,
 };

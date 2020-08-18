@@ -1,7 +1,2 @@
-import DashboardScreen from "./dashboard.js";
-import AccountHistoryScreen from "./accountHistory.js";
-
-export default {
-  DashboardScreen,
-  AccountHistoryScreen,
-}
+export { default as Dashboard } from "./dashboard"
+export { default as AccountHistory } from "./accountHistory"

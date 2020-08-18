@@ -8,10 +8,15 @@ import {
   BANK_ACCOUNT_FETCH_ERROR,
   BANK_ACCOUNT_FETCH_INITIALIZE,
   BANK_ACCOUNT_FETCH_SUCCESS,
+  BANK_ACCOUNT_HISTORY_FETCH,
+  BANK_ACCOUNT_HISTORY_FETCH_ERROR,
+  BANK_ACCOUNT_HISTORY_FETCH_INITIALIZE,
+  BANK_ACCOUNT_HISTORY_FETCH_SUCCESS,
 } from "../actions";
 
 const initState = {
   list: {},
+  historyList: {},
   listByIds: [],
   formData: {},
   status: {
@@ -92,6 +97,37 @@ export const bankAccount = (state = initState, action) => {
         },
       };
     case BANK_ACCOUNT_FETCH_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        status: {
+          ...state.status,
+          isFetching: false,
+        },
+      };
+    case BANK_ACCOUNT_HISTORY_FETCH:
+      return {
+        ...state,
+        error: initState.error,
+        historyList: {},
+        status: {
+          ...state.status,
+          isFetching: true,
+        },
+      };
+    case BANK_ACCOUNT_HISTORY_FETCH_SUCCESS:
+      return {
+        ...state,
+        historyList: {
+          ...state.historyList,
+          ...action.payload.historyList
+        },
+        status: {
+          ...state.status,
+          isFetching: false,
+        },
+      };
+    case BANK_ACCOUNT_HISTORY_FETCH_ERROR:
       return {
         ...state,
         error: action.error,

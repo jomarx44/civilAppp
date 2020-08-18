@@ -10,10 +10,12 @@ import {
 } from "@react-navigation/stack";
 import {
   OtherBanksTransferForm,
-  SunSavingsTransferForm,
+  // SunSavingsTransferForm,
   TransferMoneyOption,
 } from "../../screens/TransferMoney";
 import { SelectSourceAccount } from "../../screens/SelectSourceAccount"
+import { ReviewTransfer } from "../../screens/ReviewTransfer"
+import { SuccessTransferMoney } from "../../screens/Common"
 
 import { DrawerActions } from "@react-navigation/native";
 import { Image } from "react-native";
@@ -27,7 +29,7 @@ const Stack = createStackNavigator();
 
 export const TransferMoneyNavigation = () => {
   return (
-    <Stack.Navigator initialRouteName="SelectSourceAccount">
+    <Stack.Navigator initialRouteName="TransferMoneyOption">
       <Stack.Screen
         name="TransferMoneyOption"
         component={TransferMoneyOption}
@@ -57,7 +59,7 @@ export const TransferMoneyNavigation = () => {
           })
         }
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="SunSavingsTransferForm"
         component={SunSavingsTransferForm}
         options={({ navigation }) =>
@@ -80,7 +82,7 @@ export const TransferMoneyNavigation = () => {
             title: "Transfer Money",
           })
         }
-      />
+      /> */}
       <Stack.Screen
         name="OtherBanksTransferForm"
         component={OtherBanksTransferForm}
@@ -133,6 +135,39 @@ export const TransferMoneyNavigation = () => {
         }
       />
       <Stack.Screen
+        name="ReviewTransfer"
+        component={ReviewTransfer}
+        options={({ navigation, route }) =>
+          headerOptions({
+            headerLeft: (props) => {
+              return (
+                <HeaderBackButton
+                  {...props}
+                  backImage={() => (
+                    <Image
+                      source={icons.ic_back_blue}
+                      style={{ height: 20, width: 20 }}
+                      resizeMode="contain"
+                    />
+                  )}
+                  onPress={() => {
+                    if(route.params?.previousRouteName && route.params?.transferMoneyData) {
+                      navigation.navigate(route.params?.previousRouteName, { formData: route.params?.transferMoneyData })
+                    } else {
+                      navigation.goBack();
+                    }
+                  }}
+                />
+              );
+            },
+            title: "Review and Transfer",
+            cardStyle: {
+              backgroundColor: DIRTY_WHITE,
+            },
+          })
+        }
+      />
+      <Stack.Screen
         name="OTPTransferMoney"
         component={OTPTransferMoney}
         options={({ navigation, route }) => headerOptions({
@@ -147,7 +182,11 @@ export const TransferMoneyNavigation = () => {
                 />
               )}
               onPress={() => {
-                navigation.navigate(route.params?.previousScreen, route.params?.formData)
+                if(route.params?.formData) {
+                  navigation.navigate("ReviewTransfer", { formData: route.params?.formData })
+                } else {
+                  navigation.navigate("TransferMoneyOption")
+                }
               }}
             />
           ),
@@ -156,6 +195,11 @@ export const TransferMoneyNavigation = () => {
             backgroundColor: LIGHT_BLUE,
           },
         })}
+      />
+      <Stack.Screen
+        name="SuccessTransferMoney"
+        component={SuccessTransferMoney}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

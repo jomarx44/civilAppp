@@ -10,7 +10,7 @@ import {
 } from "../../reducers/AppAttributeReducer/AppAttribute_actions";
 import {CHECK_OTP, CHECK_OTPTM_SUCCESS, CHECK_OTP_ERROR} from "../../actions/types";
 
-export const OTPCreateBankAccountScreen = ({otp, token, appAttribute, account, requestUniqueId, verifyOTP }) => {
+export const OTPCreateBankAccountScreen = ({otp, auth, appAttribute, account, requestUniqueId, verifyOTP }) => {
   const [OTPValue, setOTPValue] = useState("");
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export const OTPCreateBankAccountScreen = ({otp, token, appAttribute, account, r
       API.createBankAccout({
         uniqueId: appAttribute.temporary_key,
         attributes: account.formData,
-        access_token: token.tokens.access_token
+        access_token: auth.accessToken
       });
     }
   }, [appAttribute.temporary_key])
@@ -46,9 +46,10 @@ export const OTPCreateBankAccountScreen = ({otp, token, appAttribute, account, r
   )
 }
 
-const mapStateToProps = ({otp, account, token, appAttribute}) => ({
+const mapStateToProps = ({auth, otp, account, user, appAttribute}) => ({
+  auth,
   otp,
-  token,
+  user,
   account,
   appAttribute
 })

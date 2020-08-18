@@ -11,11 +11,8 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 13,
     paddingHorizontal: 21,
-<<<<<<< HEAD
     shadowColor: "#0d0000",
     shadowRadius: 20,
-=======
->>>>>>> AC/pnmobile-live
   }
 });
 

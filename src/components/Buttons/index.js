@@ -1,4 +1,4 @@
-import { ActivityIndicator, Text, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, ViewPropTypes } from "react-native";
 
 import { DEFAULT_PRIMARY_COLOR } from "../../constants/colors";
 import PropTypes from "prop-types";
@@ -34,20 +34,22 @@ export const Button = (props) => {
   );
 };
 
-export const ContainedButton = ({ buttonStyle, ...props }) => {
+export const ContainedButton = (props) => {
+  const {buttonStyle, ...buttonProps} = props;
   return (
     <Button
-      {...props}
+      {...buttonProps}
       buttonStyle={{ backgroundColor: DEFAULT_PRIMARY_COLOR, ...buttonStyle }}
       disabledStyle={styles.defaultDisabledStyle}
     />
   );
 };
 
-export const OutlineButton = ({ buttonStyle, ...props }) => {
+export const OutlineButton = (props) => {
+  const {buttonStyle, ...buttonProps} = props;
   return (
     <Button
-      {...props}
+      {...buttonProps}
       buttonStyle={{
         borderColor: DEFAULT_PRIMARY_COLOR,
         borderWidth: 2,
@@ -58,12 +60,12 @@ export const OutlineButton = ({ buttonStyle, ...props }) => {
   );
 };
 
-export const TextButton = ({ buttonStyle, ...props }) => {
+export const TextButton = (props) => {
+  const {buttonStyle, ...buttonProps} = props;
   return (
     <Button
-      {...props}
+      {...buttonProps}
       buttonStyle={{
-        color: DEFAULT_PRIMARY_COLOR,
         ...buttonStyle,
         backgroundColor: "transparent",
       }}
@@ -78,11 +80,15 @@ export default Button;
  */
 
 Button.propTypes = {
-  buttonStyle: PropTypes.object,
+  buttonStyle: ViewPropTypes.style,
   disabled: PropTypes.bool,
-  disabledStyle: PropTypes.object,
+  disabledStyle: ViewPropTypes.style,
   label: PropTypes.string,
   labelStyle: PropTypes.object,
   loading: PropTypes.bool,
   onPress: PropTypes.func,
 };
+
+ContainedButton.propTypes = Button.propTypes;
+OutlineButton.propTypes = Button.propTypes;
+TextButton.propTypes = Button.propTypes;

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { StyleSheet, View } from 'react-native'
 
 // Custom Components Here
-import { SelectSourceAccountList } from "./components/SelectSourceAccountList"
+import { SelectSourceAccountList } from "./components"
 
 export const SelectSourceAccount = (props) => {
   const { data } = props;

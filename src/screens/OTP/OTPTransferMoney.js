@@ -12,44 +12,113 @@ import { transferMoney } from "../../API";
 export const OTPTransferMoney = (props) => {
   const [isLoading, setLoadingState] = useState(false);
   const [token, setToken] = useState(null);
-  const { route } = props;
+  const {
+    navigation,
+    route: {
+      params: { formData },
+    },
+  } = props;
 
   useEffect(() => {
-    requestOTP();
+    // No Form Data passed
+    if (!formData) {
+      Alert.alert("OTP Failed", "You must review the transfer form first.", [
+        { text: "Go Back", onPress: navigation.goBack },
+      ]);
+    } else {
+      if(!token) {
+        handleRequestOTP();
+      }
+    }
   }, []);
 
-  const requestOTP = () => {
-    transferMoney
-      .otp(accountNumber)
+  const handleRequestOTP = () => {
+    return transferMoney
+      .otp(formData.sourceAccount.accountNumberFormatted)
       .then(({ data: { data } }) => {
-        const { token, ErrorMsg: errorMessage, ReturnCode: returnCode } = data[
-          "Account.Info"
-        ];
+        const { token, ErrorMsg: errorMessage } = data["Account.Info"];
         if (token) {
-          setToken(token);
-        } else {
-          Alert.alert(
-            "Request OTP Failed",
-            "Ooops! There's something wrong connecting to the server. Please try again."
-          );
+          return setToken(token);
         }
+
+        Alert.alert("Invalid Account Number", errorMessage, [
+          {
+            text: "Retry",
+            onPress: () => handleRequestOTP(),
+          },
+          {
+            text: "Cancel",
+            onPress: navigation.navigate("ReviewTransfer", {
+              formData,
+            }),
+            style: "cancel",
+          },
+        ]);
       })
-      .catch((error) => {
+      .catch(() => {
         Alert.alert(
           "Server Error",
-          "Ooops! There's something wrong connecting to the server. Please try again."
+          "Ooops! There's something wrong connecting to the server. Please try again.",
+          [
+            {
+              text: "Retry",
+              onPress: () => handleRequestOTP(),
+            },
+          ]
         );
       });
   };
 
-  const handleDone = (code) => {};
+  const handleDone = (code) => {
+    setLoadingState(true);
+    return transferMoney
+      .transfer({
+        amount: formData.amount,
+        bankCode: formData.bankCode,
+        recipientAccountNumber: formData.recipientAccountNumber,
+        recipientMobileNumber: formData.recipientMobileNumber,
+        recipientAccountName: formData.recipientAccountName,
+        senderAccountNumber: formData.sourceAccount.accountNumber,
+      }, { otp: code, token })
+      .then(({ data: { data, status } }) => {
+        const {
+          ErrorMsg: errorMessage,
+          inv
+        } = data["Account.Info"];
+        if( inv ) {
+          navigation.navigate("SuccessTransferMoney", { formData })
+        } else {
+          Alert.alert("Transefer Money Failed", errorMessage);
+        }
+      })
+      .catch(() => {
+        Alert.alert(
+          "Server Error",
+          "Ooops! There's something wrong connecting to the server. Please try again.",
+          [
+            {
+              text: "Retry",
+              onPress: () => handleDone(code),
+            },
+            {
+              text: "Cancel",
+              style: "cancel"
+            },
+          ]
+        );
+      })
+      .finally(() => setLoadingState(false));
+  };
 
   return (
-    <ModifiedOTP onDone={handleDone} isLoading={isLoading} loadingText="" />
+    <ModifiedOTP onDone={handleDone} isLoading={isLoading} loadingText="Verifying OTP Code..." />
   );
 };
 
-OTPTransferMoney.propTypes = {};
+OTPTransferMoney.propTypes = {
+  navigation: PropTypes.object,
+  route: PropTypes.object,
+};
 
 const mapStateToProps = (props) => ({});
 

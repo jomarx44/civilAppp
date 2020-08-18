@@ -2,6 +2,7 @@ import AppJson from "../../app.json";
 import Axios from "axios";
 import Config from "../../app.json";
 import Constants from "expo-constants";
+import { captureException } from "sentry-expo"
 
 export const mainInstance = Axios.create({
   baseURL: Config.appid.API_URL,
@@ -12,7 +13,7 @@ export const mainInstance = Axios.create({
     "X-IBM-Client-Id": AppJson.appid.IBM_CLIENT_ID,
     "DeviceID": Constants.installationId,
     "DeviceName": Constants.deviceName
-  }
+  },
 });
 
 export const createIBMInstance = (accessToken) => {
@@ -24,3 +25,11 @@ export const createIBMInstance = (accessToken) => {
     }
   });
 };
+
+// For online error logging
+mainInstance.interceptors.response.use((response) => {
+  return response;
+}, (error) => {
+  captureException(error)
+  return Promise.reject(error);
+})

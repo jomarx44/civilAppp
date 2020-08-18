@@ -24,7 +24,7 @@ import API from "../../actions/api";
 import { Button } from "native-base";
 import IBMAppId from "../../actions/ibmappid";
 import KeyboardShift from "library/components/KeyboardShift";
-import PlaceholderInputBox from "../../library/components/Form/Inputs/InputBox/PlaceholderInputBox";
+import PlaceholderInputBox from "../../library/components/Form/Inputs/Input/PlaceholderInputBox";
 // Others
 import config from "../../config";
 import { connect } from "react-redux";

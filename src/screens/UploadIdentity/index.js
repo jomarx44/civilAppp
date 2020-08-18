@@ -1,3 +1,7 @@
+import React, { useState, useEffect } from "react";
+import {
+  Text,
+  View,
   ScrollView,
   Image,
   TouchableOpacity,
@@ -7,6 +11,7 @@ import { ContainedButton } from "../../components/Buttons";
 import { Card } from "../../components/Card";
 import { CameraModal } from "../../components/Camera";
 import { styles, itemStyles } from "./styles";
+import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import MenuModal from "../../components/MenuModal";
 import DropDownPicker from "react-native-dropdown-picker";

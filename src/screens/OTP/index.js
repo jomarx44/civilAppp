@@ -1,5 +1,5 @@
 export { default as OTPLinkAccount } from "./OTPLinkAccount"
 export { default as OTPBankAccount } from "./OTPBankAccount"
+export { default as OTPChangeMobileNumber } from "./OTPChangeMobileNumber"
 export { default as OTPMobileAccount } from "./OTPMobileAccount"
-export { default as OTPProfile } from "./OTPProfile"
 export { default as OTPTransferMoney } from "./OTPTransferMoney"

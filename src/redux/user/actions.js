@@ -5,7 +5,7 @@ import {
   FETCH_USER_INFO_SUCCESS,
 } from "../actions";
 
-import { user } from "../../API"
+import { user } from "../../API";
 
 /***********************
  * ACTION CREATORS
@@ -47,14 +47,37 @@ export const getUserInfoError = (error) => {
  ***********************/
 
 export const getUserInfoAsync = (accessToken) => {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(getUserInfo());
-    return user.getInfo(accessToken)
+    return user
+      .getInfo(accessToken)
       .then(({ data }) => {
-        dispatch(getUserInfoSuccess(data));
+        const { sub, identities, ...otherData } = data;
+        const {
+          id,
+          idpUserInfo: {
+            emails,
+            phoneNumbers,
+            userName,
+            name: { familyName, givenName, middleName },
+          },
+        } = identities[0];
+        
+        const formattedData = {
+          id,
+          sub,
+          firstName: givenName,
+          middleName: middleName,
+          lastName: familyName,
+          emails: emails,
+          phoneNumbers: phoneNumbers,
+          username: userName
+        };
+
+        dispatch(getUserInfoSuccess(formattedData));
       })
       .catch((error) => {
-        dispatch(getUserInfoError(error))
-      })
-  }
-}
+        dispatch(getUserInfoError(error));
+      });
+  };
+};

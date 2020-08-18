@@ -7,6 +7,10 @@ import {
   BANK_ACCOUNT_FETCH_ERROR,
   BANK_ACCOUNT_FETCH_INITIALIZE,
   BANK_ACCOUNT_FETCH_SUCCESS,
+  BANK_ACCOUNT_HISTORY_FETCH,
+  BANK_ACCOUNT_HISTORY_FETCH_ERROR,
+  BANK_ACCOUNT_HISTORY_FETCH_INITIALIZE,
+  BANK_ACCOUNT_HISTORY_FETCH_SUCCESS,
   BANK_ACCOUNT_INITIALIZE_REDUCER,
 } from "../actions";
 
@@ -51,14 +55,14 @@ export const bankAccountInitializeFetch = () => ({
 });
 
 // Fetch Bank Account
-export const fetchBankAccount = () => {
+export const getBankAccount = () => {
   return {
     type: BANK_ACCOUNT_FETCH,
   };
 };
 
 // Fetch Bank Account Success
-export const fetchBankAccountSuccess = (accounts, accountsById) => ({
+export const getBankAccountSuccess = (accounts, accountsById) => ({
   type: BANK_ACCOUNT_FETCH_SUCCESS,
   payload: {
     list: accounts,
@@ -67,8 +71,29 @@ export const fetchBankAccountSuccess = (accounts, accountsById) => ({
 });
 
 // Fetch Bank Account Error
-export const fetchBankAccountError = (error) => ({
+export const getBankAccountError = (error) => ({
   type: BANK_ACCOUNT_FETCH_ERROR,
+  error,
+});
+
+// Fetch Bank Account
+export const getBankAccountHistory = () => {
+  return {
+    type: BANK_ACCOUNT_HISTORY_FETCH,
+  };
+};
+
+// Fetch Bank Account Success
+export const getBankAccountHistorySuccess = (historyList) => ({
+  type: BANK_ACCOUNT_HISTORY_FETCH_SUCCESS,
+  payload: {
+    historyList,
+  },
+});
+
+// Fetch Bank Account Error
+export const getBankAccountHistoryError = (error) => ({
+  type: BANK_ACCOUNT_HISTORY_FETCH_ERROR,
   error,
 });
 
@@ -95,19 +120,25 @@ const reformatAccount = (account) => {
   };
 };
 
+/**
+ * @description Used for fetching Bank Accounts
+ * @param {String} CISNumber
+ */
 export const getBankAccountsAsync = (CISNumber) => {
+  console.log("Went Here???");
   return (dispatch) => {
-    dispatch(fetchBankAccount());
+    dispatch(getBankAccount());
     return bankAccount
       .get(CISNumber)
-      .then(({ data: { data, msg, status} }) => {
+      .then(({ data: { data, msg, status } }) => {
         const {
           accts: { a: accounts },
           ErrorMsg: errorMessage,
           ReturnCode: returnCode,
         } = data["Account.Info"];
-        
-        if (accounts) {
+        console.log("errorMessage: ", errorMessage);
+
+        if (errorMessage == "") {
           let list = {};
           let listByIds = [];
 
@@ -127,13 +158,62 @@ export const getBankAccountsAsync = (CISNumber) => {
             listByIds = [...listByIds, accounts.AcctNoFormatted];
           }
 
-          dispatch(fetchBankAccountSuccess(list, listByIds));
+          dispatch(getBankAccountSuccess(list, listByIds));
         } else {
-          dispatch(fetchBankAccountError(new Error(errorMessage)));
+          dispatch(getBankAccountError(new Error(errorMessage)));
         }
       })
       .catch((error) => {
-        dispatch(fetchBankAccountError(error));
+        console.log("Error: ", error);
+        dispatch(getBankAccountError(error));
+      });
+  };
+};
+
+/**
+ * Get Bank Account History Async
+ * @param {String} accountNumber Bank Account Number or Bank Formatted Account Number
+ * @param {String} count Maximum count of total history to be returned
+ */
+export const getBankAccountHistoryAsync = (accountNumber, count = 10) => {
+  return (dispatch) => {
+    dispatch(getBankAccountHistory());
+    return bankAccount
+      .getHistory(accountNumber, count)
+      .then(({ data: { data } }) => {
+        const {
+          AcctNoFormatted: accountNumberFormatted,
+          ErrorMsg: errorMessage,
+          ErrorMsg2: errorMessage2,
+          ReturnCode: returnCode,
+          tis: { ti: historyList },
+        } = data["Account.Info"];
+
+        if (returnCode == 0) {
+          if (historyList instanceof Array) {
+            let formattedHistoryList = historyList.map((history, index) => {
+              return {
+                id: index.toString(),
+                title: history.tn,
+                date: history.td,
+                amount: history.dr
+                  ? parseInt(history.dr.replace(",", ""))
+                  : -Math.abs(parseInt(history.cr.replace(",", ""))),
+              };
+            });
+
+            dispatch(
+              getBankAccountHistorySuccess({
+                [accountNumberFormatted]: formattedHistoryList,
+              })
+            );
+          }
+        } else {
+          getBankAccountHistoryError(new Error(errorMessage));
+        }
+      })
+      .catch((error) => {
+        dispatch(getBankAccountHistoryError(error));
       });
   };
 };

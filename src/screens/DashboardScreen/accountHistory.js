@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   ActivityIndicator,
@@ -11,9 +11,9 @@ import {
 import { Container } from "native-base";
 
 import { connect } from "react-redux";
-import API from "../../actions/api";
+import { getBankAccountHistoryAsync } from "../../redux/bankAccount/actions";
 
-numFixed = (amount) => {
+const numFixed = (amount) => {
   amount = Math.abs(amount);
   amount = amount.toFixed(2);
 
@@ -27,7 +27,8 @@ numFixed = (amount) => {
   return str.join(".");
 };
 
-function Item({ title, date, amount, index }) {
+export const Item = (props) => {
+  const { title, date, amount, index } = props;
   return (
     <View
       style={[
@@ -45,7 +46,7 @@ function Item({ title, date, amount, index }) {
         <Text style={localStyles.itemText}>{title}</Text>
         <Text style={localStyles.dateText}>{date}</Text>
       </View>
-      <View style={{ flex: 2, justifyContent: "center" }}>
+      <View style={{ flexGrow: 2, justifyContent: "center" }}>
         <Text
           style={[
             localStyles.amountText,
@@ -59,98 +60,107 @@ function Item({ title, date, amount, index }) {
       </View>
     </View>
   );
-}
+};
 
-class AccountHistoryScreen extends React.Component {
-  componentDidMount() {
-    const {
-      route: {
-        params: { accountNumber },
-      },
-      account,
-      getAccountDetails,
-    } = this.props;
-    if (!account.accounts[accountNumber]) {
-      getAccountDetails(accountNumber, "10");
+export const AccountHistory = (props) => {
+  const {
+    route: {
+      params: { accountNumber },
+    },
+    bankAccount: { list, listByIds, historyList, status },
+    getBankAccountHistory,
+  } = props;
+  const arrayedHistoryList = historyList[accountNumber]
+    ? Object.values(historyList[accountNumber])
+    : [];
+
+  useEffect(() => {
+    if (!historyList[accountNumber]) {
+      getBankAccountHistory(accountNumber, 10);
     }
+  }, [accountNumber]);
+
+  if (status.isFetching) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="large" color="#f9a010" />
+      </View>
+    );
+    
   }
 
-  render() {
-    const {
-      account: { isFetching, accounts },
-      route: {
-        params: { accountNumber },
-      },
-    } = this.props;
+  return (
+    <Container>
+      <View style={localStyles.viewHeader}>
+        <Text style={localStyles.title}>CURRENT BALANCE</Text>
+        <View style={localStyles.subtitle_container}>
+          <Text style={localStyles.subtitle_static}>
+            {list[accountNumber].accountCurrencyCode}
+          </Text>
+          <Text style={localStyles.subtitle}>
+            {list[accountNumber].accountLedgerFormatted}
+          </Text>
+        </View>
+      </View>
 
-    if (isFetching || !accounts[accountNumber]) {
-      return (
+      {arrayedHistoryList && arrayedHistoryList.length > 0 && (
+        <View style={localStyles.viewAccounts}>
+          <View style={localStyles.bodyTitle_container}>
+            <Text style={localStyles.bodyTitle}>TRANSACTIONS</Text>
+          </View>
+          <SafeAreaView style={localStyles.listStyle}>
+            <FlatList
+              data={arrayedHistoryList}
+              renderItem={({ item, index }) => (
+                <Item
+                  index={index}
+                  title={item.title}
+                  amount={item.amount}
+                  date={item.date}
+                />
+              )}
+              keyExtractor={(item) => item.id}
+            />
+          </SafeAreaView>
+        </View>
+      )}
+
+      {arrayedHistoryList && arrayedHistoryList.length == 0 && (
         <View
           style={{
-            flex: 1,
+            flex: 4,
+            backgroundColor: "#f2f4f5",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <ActivityIndicator size="large" color="#f9a010" />
+          <Text style={localStyles.bodyTitle}>Empty Transactions</Text>
         </View>
-      );
-    }
+      )}
+    </Container>
+  );
+};
 
-    return (
-      <Container>
-        <View style={localStyles.viewHeader}>
-          <Text style={localStyles.title}>CURRENT BALANCE</Text>
-          <View style={localStyles.subtitle_container}>
-            <Text style={localStyles.subtitle_static}>PHP</Text>
-            <Text style={localStyles.subtitle}>
-              {accounts[accountNumber].balance
-                ? accounts[accountNumber].balance.formatted
-                : ""}
-            </Text>
-          </View>
-        </View>
+const mapStateToProps = (state) => {
+  const { bankAccount } = state;
+  return { bankAccount };
+};
 
-        {accounts[accountNumber].history &&
-          accounts[accountNumber].history.length > 0 && (
-            <View style={localStyles.viewAccounts}>
-              <View style={localStyles.bodyTitle_container}>
-                <Text style={localStyles.bodyTitle}>TRANSACTIONS</Text>
-              </View>
-              <SafeAreaView style={localStyles.listStyle}>
-                <FlatList
-                  data={accounts[accountNumber].history}
-                  renderItem={({ item, index }) => (
-                    <Item
-                      index={index}
-                      title={item.title}
-                      amount={item.amount}
-                      date={item.date}
-                    />
-                  )}
-                  keyExtractor={(item) => item.id}
-                />
-              </SafeAreaView>
-            </View>
-          )}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getBankAccountHistory: (accountNumber, count) => {
+      dispatch(getBankAccountHistoryAsync(accountNumber, count));
+    },
+  };
+};
 
-        {accounts[accountNumber].history &&
-          accounts[accountNumber].history.length == 0 && (
-            <View
-              style={{
-                flex: 4,
-                backgroundColor: "#f2f4f5",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text style={localStyles.bodyTitle}>Empty Transactions</Text>
-            </View>
-          )}
-      </Container>
-    );
-  }
-}
+export default connect(mapStateToProps, mapDispatchToProps)(AccountHistory);
 
 let localStyles = StyleSheet.create({
   viewHeader: {
@@ -232,21 +242,3 @@ let localStyles = StyleSheet.create({
     fontFamily: "Avenir_Medium",
   },
 });
-
-const mapStateToProps = (state, props) => {
-  const { account } = state;
-  return { account };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getAccountDetails: (acctno, count) => {
-      dispatch(API.getAccountDetails(acctno, count));
-    },
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AccountHistoryScreen);

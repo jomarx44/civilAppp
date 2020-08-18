@@ -33,7 +33,6 @@ export const FingerprintScreen = ({ auth, navigation }) => {
 
   useEffect(() => {
     if (!fingerprintToken && isCompatible && isEnrolled) {
-      
       scan();
     }
   }, [isCompatible, isEnrolled, fingerprintToken]);
@@ -73,10 +72,10 @@ export const FingerprintScreen = ({ auth, navigation }) => {
   };
 
   const scan = async () => {
-    const { success, error } = await authenticateAsync({ promptMessage: "" });
+    const { success, error } = await authenticateAsync({ promptMessage: "Touch the fingerprint sensor to login." });
     if (success) {
-      AsyncStorage.setItem("fingerprintToken", auth.refresh_token);
-      setFingerprintToken(auth.refresh_token);
+      AsyncStorage.setItem("fingerprintToken", auth.refreshToken);
+      setFingerprintToken(auth.refreshToken);
     } else if (error == "authentication_failed" || error == "too_fast") {
       Alert.alert(
         "Invalid Fingerprint",

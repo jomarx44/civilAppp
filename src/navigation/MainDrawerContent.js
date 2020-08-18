@@ -9,12 +9,13 @@ import {
   useIsDrawerOpen
 } from "@react-navigation/drawer";
 import { DrawerActions } from "@react-navigation/native";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { logout } from "../actions/actionCreators";
 import * as Profile from "store/profile";
 import { config } from "../config";
 
 const MainDrawerContent = ({ logout, ...props }) => {
+  const dispatch = useDispatch()
   return (
     <DrawerContentScrollView
       {...props}
@@ -44,8 +45,8 @@ const MainDrawerContent = ({ logout, ...props }) => {
         label="Logout"
         onPress={() => {
           Profile.deleteAccessToken();
-          props.navigation.dispatch(DrawerActions.closeDrawer());
           logout();
+          dispatch({type: "LOGOUT"});
         }}
       />
     </DrawerContentScrollView>

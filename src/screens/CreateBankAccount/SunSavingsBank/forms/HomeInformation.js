@@ -117,7 +117,7 @@ export const HomeInformation = (props) => {
                 },
                 {
                   index: "home_ownership_desc",
-                  value: lists.homeOwnerships[index - 1].label,
+                  value: lists.homeOwnership[index - 1].label,
                 },
               ]);
             } else {
@@ -133,7 +133,7 @@ export const HomeInformation = (props) => {
               ]);
             }
           }}
-          options={lists.homeOwnerships}
+          options={lists.homeOwnership}
           selectedValue={home_ownership}
           invalid={invalids.home_ownership ? invalids.home_ownership[0] : ""}
         />

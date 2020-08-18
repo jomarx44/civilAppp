@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Image, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ContainedButton, TextButton } from "../../components/Buttons";
-import { InputBox } from "../../components/InputBox";
+import { Input } from "../../components/Input";
 import KeyboardShift from "library/components/KeyboardShift";
 import config from "../../config";
 import { styles } from "./styles";
@@ -52,7 +52,7 @@ export const Login = (props) => {
               maxWidth: 315,
             }}
           >
-            <InputBox
+            <Input
               containerStyle={{ borderRadius: 4 }}
               inputContainerStyle={{ borderBottomWidth: 0 }}
               inputStyle={styles.input}
@@ -63,7 +63,7 @@ export const Login = (props) => {
               placeholder="Username"
               value={username}
             />
-            <InputBox
+            <Input
               containerStyle={{ borderRadius: 4 }}
               inputContainerStyle={{ borderBottomWidth: 0 }}
               inputStyle={styles.input}
@@ -92,13 +92,6 @@ export const Login = (props) => {
           </View>
         </View>
       </KeyboardShift>
-      <FingerprintModal
-        isVisible={isVisible}
-        onScanSuccess={() => {
-          
-        }}
-        setVisibility={setVisibility}
-      />
     </React.Fragment>
   );
 };

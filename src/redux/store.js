@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware } from "redux";
 import reducers from "./reducers";
 import thunk from "redux-thunk";
+import Axios from "axios"
 import { composeWithDevTools } from "redux-devtools-extension";
 
 export const configureStore = () => {

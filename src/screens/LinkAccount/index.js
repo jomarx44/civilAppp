@@ -1,2 +1,1 @@
-import LinkAccount from "./LinkAccountScreen";
-export default LinkAccount;
+export { default as LinkAccount } from "./LinkAccountContainer";

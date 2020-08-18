@@ -11,6 +11,7 @@ import React from "react";
 import {
   Testing
 } from "../../screens/TesterScreen";
+import {SuccessTransferMoney} from "../../screens/Common"
 import { headerOptions } from "../HeaderOptions";
 import { icons } from "../../res/images/icons";
 
@@ -22,31 +23,7 @@ export const TesterNavigation = () => {
       <Stack.Screen
         name="Testing"
         component={Testing}
-        options={({ navigation }) =>
-          headerOptions({
-            headerLeft: (props) => {
-              return (
-                <HeaderBackButton
-                  {...props}
-                  backImage={() => (
-                    <Image
-                      source={icons.ic_menu_blue}
-                      style={{ height: 20, width: 20 }}
-                      resizeMode="contain"
-                    />
-                  )}
-                  onPress={() => {
-                    navigation.dispatch(DrawerActions.openDrawer());
-                  }}
-                />
-              );
-            },
-            title: "Transfer Money",
-            cardStyle: {
-              backgroundColor: DIRTY_WHITE,
-            },
-          })
-        }
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

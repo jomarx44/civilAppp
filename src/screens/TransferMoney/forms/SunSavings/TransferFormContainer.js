@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import validate from "validate.js";
@@ -13,15 +13,35 @@ import { config } from "./config";
 
 export const TransferFormContainer = (props) => {
   const [formData, setFormData] = useState({
-    accountNumber: "",
-    accountName: "",
-    emailAddress: "",
-    mobileNumber: "",
+    sourceAccount: {},
+    bankCode: "0147",
+    sourceAccountNumber: "",
+    recipientAccountNumber: "",
+    recipientAccountName: "",
+    recipientBankName: "Sun Savings Bank",
+    amount: "",
+    recipientEmailAddress: "",
+    recipientMobileNumber: "",
     paymentDescription: "",
   });
   const [invalids, setInvalids] = useState({});
   const [isSubmitting, setSubmittingStatus] = useState(false);
-  const {} = props;
+  const { route, navigation } = props;
+
+  useEffect(() => {
+    if (route.params?.formData) {
+      setFormData((currentFormData) => ({
+        ...currentFormData,
+        ...route.params?.formData,
+      }));
+    }
+  }, [route.params?.formData]);
+
+  const handleSelectSource = () => {
+    navigation.navigate("SelectSourceAccount", {
+      previousRouteName: "SunSavingsTransferForm",
+    });
+  };
 
   /**
    * Handle Blur Event Listener
@@ -34,7 +54,7 @@ export const TransferFormContainer = (props) => {
 
     if (__DEV__) {
       // Warn the user if the given index doesn't exist in [formData] state
-      if (!formData[index]) {
+      if (!formData[index] === undefined) {
         console.warn(`'${index}' index is not found in [formData] state.`);
       }
 
@@ -82,10 +102,16 @@ export const TransferFormContainer = (props) => {
   };
 
   const handleSubmit = () => {
-    setSubmittingStatus(true);
     // Validate
-    // Submit
-    setSubmittingStatus(false);
+    const invalid = handleValidate(formData, config.constraints);
+    if (invalid) {
+      setInvalids(invalid);
+    } else {
+      navigation.navigate("ReviewTransfer", {
+        previousRouteName: "SunSavingsTransferForm",
+        transferMoneyData: formData,
+      });
+    }
   };
 
   const handleValidate = (data = {}, constraints = {}) => {
@@ -102,6 +128,7 @@ export const TransferFormContainer = (props) => {
       onBlur={handleBlur}
       onChange={handleChange}
       onSubmit={handleSubmit}
+      onSelectSource={handleSelectSource}
     />
   );
 };

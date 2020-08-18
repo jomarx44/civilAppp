@@ -13,22 +13,35 @@ import { config } from "./config";
 
 export const TransferFormContainer = (props) => {
   const [formData, setFormData] = useState({
-    bankName: "",
-    accountNumber: "",
-    accountName: "",
-    emailAddress: "",
-    mobileNumber: "",
+    sourceAccount: {},
+    bankCode: "",
+    sourceAccountNumber: "",
+    recipientAccountNumber: "",
+    recipientAccountName: "",
+    recipientBankName: "",
+    amount: "",
+    recipientEmailAddress: "",
+    recipientMobileNumber: "",
     paymentDescription: "",
   });
   const [invalids, setInvalids] = useState({});
   const [isSubmitting, setSubmittingStatus] = useState(false);
-  const { route } = props;
+  const { route, navigation, list } = props;
 
   useEffect(() => {
     if(route.params?.formData) {
-      setFormData(route.params?.formData);
+      setFormData((currentFormData) => ({
+        ...currentFormData,
+        ...route.params?.formData
+      }));
     }
   }, [route.params?.formData])
+
+  const handleSelectSource = () => {
+    navigation.navigate("SelectSourceAccount", {
+      previousRouteName: "OtherBanksTransferForm"
+    })
+  }
 
   /**
    * Handle Blur Event Listener
@@ -82,23 +95,23 @@ export const TransferFormContainer = (props) => {
   };
 
   const handleChange = (index, value) => {
-    setFormData({
-      ...formData,
+    setFormData((currentFormData) => ({
+      ...currentFormData,
       [index]: value,
-    });
+    }));
   };
 
   const handleSubmit = () => {
-    setSubmittingStatus(true);
     // Validate
     const invalid = handleValidate(formData, config.constraints);
-    if(invalid) {
-      setInvalids()
+    if (invalid) {
+      setInvalids(invalid);
     } else {
-      navigation.navigate()
+      navigation.navigate("ReviewTransfer", {
+        previousRouteName: "OtherBanksTransferForm",
+        transferMoneyData: formData,
+      });
     }
-    // Submit
-    setSubmittingStatus(false);
   };
 
   const handleValidate = (data = {}, constraints = {}) => {
@@ -115,6 +128,8 @@ export const TransferFormContainer = (props) => {
       onBlur={handleBlur}
       onChange={handleChange}
       onSubmit={handleSubmit}
+      onSelectSource={handleSelectSource}
+      bankList={Object.values(list.bank.list)}
     />
   );
 };
@@ -122,7 +137,7 @@ export const TransferFormContainer = (props) => {
 TransferFormContainer.propTypes = {};
 
 const mapStateToProps = (state) => () => {
-  return {};
+  return {list: state.list};
 };
 
 const mapDispatchToProps = (dispatch) => {

@@ -1,6 +1,6 @@
-import { Alert, AsyncStorage } from "react-native";
 import React, { useEffect, useState } from "react";
-import { attribute, token, } from "../../API"
+import { Alert, AsyncStorage } from "react-native";
+import { attribute, token } from "../../API";
 import {
   authenticateAsync,
   cancelAuthenticate,
@@ -8,10 +8,10 @@ import {
 import { connect, useDispatch } from "react-redux";
 
 import { Login } from "./Login";
-import { SignupDataAsyncStorage } from "../../helpers/asyncStorage"
-import { addCreatedUser } from "../../redux/user/actions"
-import { getUserInfoAsync } from "../../redux/user/actions"
-import { loginAsync } from "../../redux/auth/actions"
+import { SignupDataAsyncStorage } from "../../helpers/asyncStorage";
+import { addCreatedUser } from "../../redux/user/actions";
+import { getUserInfoAsync } from "../../redux/user/actions";
+import { loginAsync, loginByFingerprintAsync } from "../../redux/auth/actions";
 
 export const LoginContainer = (props) => {
   const [fingerprintToken, setFingerprintToken] = useState(null);
@@ -24,17 +24,18 @@ export const LoginContainer = (props) => {
     username: "",
     password: "",
   });
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const {
     loginByFingerprint,
     navigation,
-    userInfo,
+    getUserInfo,
+    getProfile,
     getAttributes,
     auth,
     login,
     token,
-    user
+    user,
   } = props;
 
   useEffect(() => {
@@ -43,32 +44,19 @@ export const LoginContainer = (props) => {
       setFingerprintToken(token);
     });
 
-    // Check if there's pending create account
-    // const signupData = {
-    //   id: "a5c2575d-a520-4f4f-88e2-df016401542c",
-    //   email: "thanusmarksman@gmail.com",
-    //   givenName: "Alvin",
-    //   middleName: "Viernes",
-    //   familyName: "Ching",
-    //   phoneNumber: "+639953186216",
-    // }
-    // SignupDataAsyncStorage.set(JSON.stringify(signupData))
-    SignupDataAsyncStorage.get()
-      .then((data) => {
-        if(data) {
-          dispatch(addCreatedUser(JSON.parse(data)));
-        }
-      });
+    SignupDataAsyncStorage.get().then((data) => {
+      if (data) {
+        dispatch(addCreatedUser(JSON.parse(data)));
+      }
+    });
   }, []);
 
   useEffect(() => {
     if (auth && auth.accessToken) {
-      getAttributes({
-        name: "cis_no",
-        access_token: auth.accessToken,
-      });
-      userInfo(auth.accessToken);
+      getUserInfo(auth.accessToken);
       // Profile.setAccessToken(auth.accessToken);
+    } else if (auth && auth.error) {
+      Alert.alert("Login failed", auth.error);
     }
   }, [auth]);
 
@@ -87,12 +75,12 @@ export const LoginContainer = (props) => {
   };
 
   const handleLogin = () => {
-    login(userData.username, userData.password)
+    login(userData.username, userData.password);
   };
 
   const handleCreate = () => {
-    if(user.createdListByIds.length > 0) {
-      return navigation.navigate("EmailConfirmation")
+    if (user.createdListByIds.length > 0) {
+      return navigation.navigate("EmailConfirmation");
     }
 
     return navigation.navigate("CreateMobileAccount");
@@ -101,10 +89,12 @@ export const LoginContainer = (props) => {
   const handleScan = async () => {
     setScanningStatus(true);
 
-    const { success, error } = await authenticateAsync({ promptMessage: "" });
+    const { success, error } = await authenticateAsync({
+      promptMessage: "Scan your fingerprint to access to app",
+    });
 
     if (success) {
-      setScanningStatus(false); 
+      setScanningStatus(false);
       setIsFingerprintSuccess(true);
       loginByFingerprint(fingerprintToken);
     } else if (error == "authentication_failed" || error == "too_fast") {
@@ -141,7 +131,7 @@ const mapStateToProps = ({ auth, token, user }) => {
     auth,
     token,
     user,
-  }
+  };
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -149,13 +139,10 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(loginAsync(username, password));
   },
   loginByFingerprint: (refreshToken) => {
-    dispatch(token.getByRefreshToken(refreshToken));
+    dispatch(loginByFingerprintAsync(refreshToken));
   },
-  userInfo: (accessToken) => {
+  getUserInfo: (accessToken) => {
     dispatch(getUserInfoAsync(accessToken));
-  },
-  getAttributes: (parameters) => {
-    // dispatch(attribute.get(parameters));
   },
 });
 

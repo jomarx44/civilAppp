@@ -1,5 +1,5 @@
 import { LOGIN, LOGIN_ERROR, LOGIN_SUCCESS, LOGOUT } from "../actions";
-import { auth, user } from "../../API";
+import { auth, token } from "../../API";
 
 /***********************
  * ACTION CREATORS
@@ -36,6 +36,39 @@ export const loginAsync = (username, password) => {
     dispatch(login());
     return auth
       .signin(username, password)
+      .then(
+        ({
+          data: {
+            success,
+            message,
+            access_token: accessToken,
+            id_token: idToken,
+            refresh_token: refreshToken,
+          },
+        }) => {
+          if (success) {
+            dispatch(
+              loginSuccess({
+                accessToken,
+                idToken,
+                refreshToken,
+              })
+            );
+          } else {
+            dispatch(loginError(message));
+          }
+        }
+      )
+      .catch((error) => {
+        dispatch(loginError(error));
+      });
+  };
+};
+
+export const loginByFingerprintAsync = (refreshToken) => {
+  return (dispatch) => {
+    dispatch(login());
+    return token.getByRefreshToken(refreshToken)
       .then(
         ({
           data: {

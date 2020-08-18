@@ -1,18 +1,26 @@
 import "react-native-gesture-handler";
-
-import * as Font from "expo-font";
+import 'intl';
+import 'intl/locale-data/jsonp/en';
 
 import React, { useEffect, useState } from "react";
-
 import { AppLoading } from "expo";
 import { AsyncStorage } from "react-native";
-import Navigator from "./src/navigation";
-import OnBoardingScreen from "./src/screens/OnBoardingScreen";
 import { Provider } from "react-redux";
 import { Root } from "native-base";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { configureStore } from "./src/redux/store";
 import { fonts } from "./src/res/fonts";
+import * as Font from "expo-font";
+import OnBoardingScreen from "./src/screens/OnBoardingScreen";
+import Navigator from "./src/navigation";
+import * as Sentry from 'sentry-expo';
+
+Sentry.init({
+  dsn: 'https://c22c0a956ad54b16921b931a82ad7012@o427147.ingest.sentry.io/5370817',
+  enableAutoSessionTracking: true,
+  enableInExpoDevelopment: true,
+  debug: true,
+});
 
 export const App = () => {
   const [isReady, setReady] = useState(false);

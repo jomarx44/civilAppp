@@ -10,22 +10,39 @@ import { constants } from "../../constants";
 import { getBankAccountsAsync } from "../../redux/bankAccount/actions";
 
 export const SelectSourceContainer = (props) => {
-  const { bankAccount, getBankAccounts } = props;
+  const { bankAccount, getBankAccounts, route, navigation } = props;
 
-  useEffect(() => {
-    getBankAccounts("1200000039");
-  }, []);
-
-  const handlePress = (accountNumber) => {};
+  const handlePress = (account) => {
+    if (route.params?.previousRouteName) {
+      navigation.navigate(route.params?.previousRouteName, {
+        formData: {
+          sourceAccountNumber: account.accountNumber,
+          sourceAccount: account
+        },
+      });
+    }
+  };
 
   return (
     <SelectSourceAccount
-      data={Object.values(bankAccount.list).map((account) => ({
-        accountNumber: account.accountNumber,
-        accountType: constants.accountTypes[account.accountType],
-        availableBalance: `${account.accountCurrencyCode} ${account.accountLedgerFormatted}`,
-        onPress: () => handlePress(account.accountNumber),
-      }))}
+      data={Object.values(bankAccount.list).map(
+        (account) => {
+          const {
+            accountNumber,
+            accountType,
+            accountMainName,
+            accountCurrencyCode,
+            accountLedgerFormatted,
+          } = account;
+          return {
+            accountNumber: accountNumber,
+            accountType: constants.accountTypes[accountType],
+            accountName: accountMainName,
+            availableBalance: `${accountCurrencyCode} ${accountLedgerFormatted}`,
+            onPress: () => handlePress(account),
+          };
+        }
+      )}
     />
   );
 };

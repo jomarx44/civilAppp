@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { styles } from "./styles";
 import {
   ContainedButton,
-  InputBox,
+  Input,
   KeyboardShift,
   Title,
   Description,
@@ -35,7 +35,7 @@ export const CreateMobileAccount = (props) => {
           </Description>
         </FormHeaderView>
         <FormContentView>
-          <InputBox
+          <Input
             label="First Name"
             onChangeText={(value) => {
               onChange("givenName", value);
@@ -46,14 +46,14 @@ export const CreateMobileAccount = (props) => {
             invalidText={invalids.givenName && invalids.givenName[0]}
             value={data.givenName}
           />
-          <InputBox
+          <Input
             label="Middle Name"
             onChangeText={(value) => onChange("middleName", value)}
             ref={inputMiddleName}
             onSubmitEditing={() => inputFamilyName.current.focus()}
             value={data.middleName}
           />
-          <InputBox
+          <Input
             label="Last Name"
             onChangeText={(value) => onChange("familyName", value)}
             ref={inputFamilyName}
@@ -62,7 +62,7 @@ export const CreateMobileAccount = (props) => {
             invalidText={invalids.familyName && invalids.familyName[0]}
             value={data.familyName}
           />
-          <InputBox
+          <Input
             label="Email Address"
             onChangeText={(value) => onChange("email", value)}
             ref={inputEmail}
@@ -71,7 +71,7 @@ export const CreateMobileAccount = (props) => {
             invalidText={invalids.email && invalids.email[0]}
             value={data.email}
           />
-          <InputBox
+          <Input
             label="Mobile Number"
             onChangeText={(value) => onChange("phoneNumber", value)}
             ref={inputPhoneNumber}
@@ -83,7 +83,7 @@ export const CreateMobileAccount = (props) => {
             defaultValue={data.phoneCode}
             // value={ data.phoneNumber }
           />
-          <InputBox
+          <Input
             label="Password"
             password={true}
             onChangeText={(value) => onChange("password", value)}
@@ -94,7 +94,7 @@ export const CreateMobileAccount = (props) => {
             invalidText={invalids.password && invalids.password[0]}
             value={data.password}
           />
-          <InputBox
+          <Input
             label="Confirm Password"
             password={true}
             onChangeText={(value) => onChange("confirmPassword", value)}

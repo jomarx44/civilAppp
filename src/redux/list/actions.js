@@ -61,7 +61,11 @@ const reformatList = (list) => {
     formattedList = {
       list: {
         ...formattedList.list,
-        [item.id_code]: item,
+        [item.id_code]: {
+          id: item.code,
+          value: item.id_code,
+          label: item.description
+        },
       },
       listByIds: [...formattedList.listByIds, item.id_code],
     };
@@ -74,10 +78,27 @@ export const getBankAsync = () => {
   return (dispatch) => {
     return list
       .getBank()
-      .then(({ data: { data: list, msg: message, status } }) => {
-        if (status === "ok" && list) {
-          if (Array.isArray(list)) {
-            const formattedList = reformatList(list);
+      .then(({ data: { data, msg: message, status } }) => {
+        const { ErrorMsg: errorMessage, ReturnCode: returnCode, banks} = data["Account.Info"];
+        if (returnCode == 0 && banks) {
+          if (banks.i instanceof Array) {
+            let formattedList = {
+              list: {},
+              listByIds: [],
+            }
+            banks.i.map((bank) => {
+              formattedList = {
+                list: {
+                  ...formattedList.list,
+                  [bank.code]: {
+                    id: bank.code,
+                    value: bank.code,
+                    label: bank.name
+                  },
+                },
+                listByIds: [...formattedList.listByIds, bank.code],
+              };
+            });
             dispatch(getListSuccess("bank", formattedList));
           }
         } 

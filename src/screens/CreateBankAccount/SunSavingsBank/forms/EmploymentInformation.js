@@ -27,7 +27,7 @@ export const EmploymentInformation = (props) => {
               handleEvent("onChange", [
                 {
                   index: "source_of_fund_desc",
-                  value: lists.fundSources[index - 1].label,
+                  value: lists.sourceOfFund[index - 1].label,
                 },
                 {
                   index: "source_of_fund",
@@ -47,7 +47,7 @@ export const EmploymentInformation = (props) => {
               ]);
             }
           }}
-          options={lists.fundSources}
+          options={lists.sourceOfFund}
           selectedValue={source_of_fund}
           // onBlur={() =>
           //   handleEvent("onBlur", { constraints, index: "source_of_fund" })
@@ -61,7 +61,7 @@ export const EmploymentInformation = (props) => {
               handleEvent("onChange", [
                 {
                   index: "job_title_desc",
-                  value: lists.jobTitles[index - 1].label,
+                  value: lists.jobTitle[index - 1].label,
                 },
                 {
                   index: "job_title",
@@ -81,7 +81,7 @@ export const EmploymentInformation = (props) => {
               ]);
             }
           }}
-          options={lists.jobTitles}
+          options={lists.jobTitle}
           selectedValue={job_title}
           // onBlur={() =>
           //   handleEvent("onBlur", { constraints, index: "job_title" })
