@@ -88,7 +88,7 @@ export const OTPTransferMoney = (props) => {
         if( inv ) {
           navigation.navigate("SuccessTransferMoney", { formData })
         } else {
-          Alert.alert("Transefer Money Failed", errorMessage);
+          Alert.alert("Transfer Money Failed", errorMessage);
         }
       })
       .catch(() => {
