@@ -42,6 +42,10 @@
         "resizeMode": "contain"
       }
     },
-    "platforms": ["ios", "android", "web"]
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ]
   }
 }

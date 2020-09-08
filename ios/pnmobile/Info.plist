@@ -46,6 +46,13 @@
 		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
+			<key>e4788528.us-south.apiconnect.appdomain.cloud</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
 			<key>localhost</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
@@ -66,7 +73,7 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Allow Sun Savings Mobile to access your microphone</string>
 	<key>NSMotionUsageDescription</key>
-	<string>Allow Sun Savings Mobile to access your device's accelerometer</string>
+	<string>Allow Sun Savings Mobile to access your device&apos;s accelerometer</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Give Sun Savings Mobile periences permission to save photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>

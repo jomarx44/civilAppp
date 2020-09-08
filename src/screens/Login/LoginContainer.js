@@ -52,6 +52,7 @@ export const LoginContainer = (props) => {
   }, []);
 
   useEffect(() => {
+    console.log('auth', auth)
     if (auth && auth.accessToken) {
       getUserInfo(auth.accessToken);
       // Profile.setAccessToken(auth.accessToken);

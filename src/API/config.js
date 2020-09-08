@@ -6,7 +6,7 @@ import { captureException } from "sentry-expo"
 
 export const mainInstance = Axios.create({
   baseURL: Config.appid.API_URL,
-  timeout: 1000,
+  timeout: 10000,
   headers: {
     "Access-Control-Allow-Origin": "*",
     "Content-Type": "application/json",
@@ -19,7 +19,7 @@ export const mainInstance = Axios.create({
 export const createIBMInstance = (accessToken) => {
   return Axios.create({
     baseURL: `${Config.appid.APPID_AUTH_SERVER_HOST}/oauth/v4/${Config.appid.IBM_TENANT_ID}/`,
-    timeout: 1000,
+    timeout: 10000,
     headers: {
       "Authorization": `Bearer ${accessToken}`
     }
