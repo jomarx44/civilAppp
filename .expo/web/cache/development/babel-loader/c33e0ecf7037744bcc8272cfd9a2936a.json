@@ -1,0 +1,1 @@
+{"ast":null,"code":"export * from \"./OtherBanks\";","map":{"version":3,"sources":["/Users/thadz/Desktop/SunSavings/fixedProfileAndTransfer/pnmobileapp/src/screens/TransferMoney/forms/index.js"],"names":[],"mappings":"AAAA","sourcesContent":["export * from \"./OtherBanks\";\n// export * from \"./SunSavings\";\n"]},"metadata":{},"sourceType":"module"}

@@ -27,6 +27,7 @@ export const postMethod = (json) => {
     return axios
       .post(json["path"], params)
       .then((response) => {
+        console.log('response', response);
         if (response.data.success == true) {
           action_type = action_type + "_SUCCESS";
           dispatch(responseData(response.data, action_type, params));
