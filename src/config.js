@@ -3,9 +3,9 @@ export const config = {
     emailPrimary: "#444444",
     emailSecondary: "#309fe7",
     transactionType: "#003d6f",
-    transactionAmountDebit: "#003d6f",
-    transactionAmountCredit: "#00b87b",
-    transactionDate: "#77869e", 
+    transactionAmountDebit: "#00b87b",
+    transactionAmountCredit: "#003d6f",
+    transactionDescription: "#77869e", 
   },
   company: {
     id: "SunSavingsBank",

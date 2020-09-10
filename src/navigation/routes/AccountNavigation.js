@@ -3,15 +3,18 @@ import React from "react";
 import { Image } from "react-native"
 import { DrawerActions } from "@react-navigation/native";
 import { createStackNavigator, HeaderBackButton } from "@react-navigation/stack";
+import { useDispatch } from 'react-redux'
 
 import { Announcement } from "../../screens/Announcement";
-import { AccountHistory, Dashboard} from "../../screens/DashboardScreen/";
+import { Dashboard} from "../../screens/DashboardScreen/";
+import { Transaction } from "../../screens/Transaction"
 import CreateBankAccount from "screens/BankAccountScreen/CreateBankAccountScreen";
 import { ProofOfIdentity } from "../../screens/ProofOfIdentity";
 import { UploadIdentity } from "screens/UploadIdentity";
 import ElectronicSignatureScreen from "screens/ElectronicSignatureScreen";
 import OTPCreateBankAccountScreen from "screens/BankAccountScreen/OTPCreateBankAccountScreen";
 import OTPOpenAccountScreen from "screens/OpenAccountScreen/OTPOpenAccountScreen";
+import { OTPMobileAccount, OTPLoginNonVerified } from "../../screens/OTP"
 import ConnectCreateAccountScreen from "screens/OpenAccountScreen/ConnectCreateAccountScreen";
 import { LinkAccount } from "../../screens/LinkAccount";
 import { OTPLinkAccount } from "../../screens/OTP";
@@ -32,6 +35,7 @@ import {
 const Stack = createStackNavigator();
 
 export const AccountNavigator = () => {
+  const dispatch = useDispatch()
   return (
     <Stack.Navigator initialRouteName="Dashboard">
       <Stack.Screen
@@ -47,6 +51,29 @@ export const AccountNavigator = () => {
             );
           },
         }}
+      /> 
+      <Stack.Screen
+        name="OTPLoginNonVerified"
+        component={OTPLoginNonVerified}
+        options={headerOptions({
+          headerLeft: (props) => (
+            <HeaderBackButton
+              {...props}
+              backImage={() => (
+                <Image
+                  source={icons.ic_back_white}
+                  style={{ height: 20, width: 20 }}
+                  resizeMode="contain"
+                />
+              )}
+              onPress={() => dispatch({type: "LOGOUT"})}
+            />
+          ),
+          headerTitleColor: WHITE,
+          cardStyle: {
+            backgroundColor: LIGHT_BLUE,
+          },
+        })}
       />
       <Stack.Screen
         name="Dashboard"
@@ -80,7 +107,7 @@ export const AccountNavigator = () => {
       />
       <Stack.Screen
         name="AccountHistory"
-        component={AccountHistory}
+        component={Transaction}
         options={headerOptions({
           headerLeft: (props) => (
             <HeaderBackButton
@@ -96,7 +123,10 @@ export const AccountNavigator = () => {
             />
           ),
           headerTitleColor: DARK_BLUE,
-          title: "Open Bank Account"
+          title: "Transactions",
+          cardStyle: {
+            backgroundColor: "#fafcff",
+          },
         })}
       />
       <Stack.Screen name="LoanAccount" component={LoanAccountScreen} />

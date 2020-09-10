@@ -55,7 +55,7 @@ export const EmailConfirmationContainer = (props) => {
           } else {
             Alert.alert(
               "Verification Failed",
-              "Email Verification successfully resent. Please check your email."
+              "Check your email to verify your account."
             );
           }
         })

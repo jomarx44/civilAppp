@@ -31,9 +31,23 @@ export const ProfileNavigation = () => {
       <Stack.Screen
         name="EditProfile"
         component={EditProfile}
-        options={{
-          headerShown: false,
-        }}
+        options={headerOptions({
+          headerLeft: (props) => (
+            <HeaderBackButton
+              {...props}
+              backImage={() => (
+                <Image
+                  source={icons.ic_back_blue}
+                  style={{ height: 20, width: 20 }}
+                  resizeMode="contain"
+                />
+              )}
+              canGoBack
+            />
+          ),
+          headerTitleColor: DARK_BLUE,
+          title: "Edit Profile",
+        })}
       />
       <Stack.Screen
         name="ChangePassword"

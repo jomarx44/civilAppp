@@ -1,4 +1,5 @@
 export { default as OTPLinkAccount } from "./OTPLinkAccount"
+export { default as OTPLoginNonVerified } from "./OTPLoginNonVerified"
 export { default as OTPBankAccount } from "./OTPBankAccount"
 export { default as OTPChangeMobileNumber } from "./OTPChangeMobileNumber"
 export { default as OTPMobileAccount } from "./OTPMobileAccount"

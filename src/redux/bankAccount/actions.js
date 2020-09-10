@@ -14,6 +14,7 @@ import {
   BANK_ACCOUNT_INITIALIZE_REDUCER,
 } from "../actions";
 
+import moment from "moment";
 import { bankAccount } from "../../API";
 
 /***********************
@@ -125,7 +126,6 @@ const reformatAccount = (account) => {
  * @param {String} CISNumber
  */
 export const getBankAccountsAsync = (CISNumber) => {
-  console.log("Went Here???");
   return (dispatch) => {
     dispatch(getBankAccount());
     return bankAccount
@@ -136,7 +136,6 @@ export const getBankAccountsAsync = (CISNumber) => {
           ErrorMsg: errorMessage,
           ReturnCode: returnCode,
         } = data["Account.Info"];
-        console.log("errorMessage: ", errorMessage);
 
         if (errorMessage == "") {
           let list = {};
@@ -195,10 +194,14 @@ export const getBankAccountHistoryAsync = (accountNumber, count = 10) => {
               return {
                 id: index.toString(),
                 title: history.tn,
-                date: history.td,
+                type: history.tn,
+                date: moment(history.td, "MMM DD, YYYY h:mma").format(
+                  "MMMM DD, YYYY"
+                ),
                 amount: history.dr
                   ? parseInt(history.dr.replace(",", ""))
                   : -Math.abs(parseInt(history.cr.replace(",", ""))),
+                invoice: history.ref,
               };
             });
 
