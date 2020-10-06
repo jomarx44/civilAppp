@@ -27,7 +27,7 @@ export default class PieChartView extends Component {
 					colorArray={['#4d84eb', '#fca63e', 'green', 'yellow']}
 					outerRadius={40}
 					innerRadius={25}
-					animationEndCallBack={()=>{console.log("animationEndCallBack")}}
+					animationEndCallBack={()=>{
 				/>
 				<Text>总percent不足100%：</Text>
 				<PieChart
@@ -72,7 +72,7 @@ export default class PieChartView extends Component {
 					innerRadius={25}
 					duration={1500}
 					animationType='synchron'
-					animationEndCallBack={()=>{console.log("同步animationEndCallBack")}}
+					animationEndCallBack={()=>{
 					configArray={[, { stroke: 'red', strokeWidth: 1, strokeDash: [2, 5] }, , { stroke: 'black', strokeWidth: 1, strokeDash: [2, 5] }]}
 				/>
 			</ScrollView>

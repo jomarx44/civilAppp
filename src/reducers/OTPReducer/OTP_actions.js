@@ -1,192 +1,195 @@
 import { postOnly, getDataOnly, alertBox } from "../../actions/axiosCalls";
-import NavigationService from "../../navigation/NavigationService.js";
-
-export const REQUEST_OTP = "REQUEST_OTP";
-export const REQUEST_OTP_ERROR = "REQUEST_OTP_ERROR";
-export const REQUEST_OTP_SUCCESS = "REQUEST_OTP_SUCCESS";
-
-export const CHECK_OTP = "CHECK_OTP";
-export const CHECK_OTP_ERROR = "CHECK_OTP_ERROR";
-export const CHECK_OTP_SUCCESS = "CHECK_OTP_SUCCESS";
-
-export const CHECK_OTPTM_SUCCESS = "CHECK_OTPTM_SUCCESS";
+import * as NavigationService from "../../navigation/NavigationService.js";
+import * as TYPE from "../../actions/types";
+import { APIErrorLogging } from "../../library/helpers";
+import * as Profile from "../../store/profile"
 
 export const verifyOTP_BytePerByte = ({ token, otp }) => {
   const json_data = {
     path: "byteperbyte/CISVerify",
     params: {
       token,
-      otp
-    }
+      otp,
+    },
   };
-  console.log("Verify OTP and Token: ", json_data);
-  return dispatch => {
+  
+  return (dispatch) => {
     dispatch({
-      type: CHECK_OTP
+      type: TYPE.CHECK_OTP,
     });
     return getDataOnly(json_data)
-      .then(response => {
+      .then((response) => {
         const response_data = response.data.data["Register.Info"];
         const has_data = checkStatus(response) && !response_data.ErrorMsg;
-        console.log("Verify OTP and Token Response: ", response_data);
+        
         // return;
         if (has_data) {
           dispatch({
-            type: CHECK_OTP_SUCCESS,
+            type: TYPE.CHECK_OTP_SUCCESS,
             payload: {
-              id: response_data.cis_no //CIS id
-            }
+              id: response_data.cis_no, //CIS id
+            },
           });
-          alertBox("Linked Account successfully!");
-          NavigationService.navigate("Dashboard");
+          dispatch({
+            type: TYPE.CHECK_OTPTM_SUCCESS
+          })
         } else {
           dispatch({
-            type: CHECK_OTP_ERROR,
+            type: TYPE.CHECK_OTP_ERROR,
             payload: {
               isFetching: false,
               success: false,
               message: response_data.ErrorMsg,
-              token: token
-            }
+              token: token,
+            },
           });
           alertBox("Wrong OTP Code. Please try again.");
         }
       })
-      .catch(error => {
+      .catch((error) => {
         // alertBox(
         //   "Ooops! There's something wrong connecting to the server. Please try again."
         // );
         // dispatch({
-        //   type: CHECK_OTP_ERROR,
+        //   type: TYPE.CHECK_OTP_ERROR,
         //   payload: {
         //     success: false,
         //     isFetching: false,
         //     message: error
         //   }
         // });
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log("Error", error.message);
-        }
-        console.log(error.config);
+        APIErrorLogging(error);
       });
   };
 };
 
 export const requestOTP_TM = ({
   mobile_number,
+  email,
   save_info,
   otpScreen = "OTPOpenAccount",
   toNavId = "",
   messageIfVerified = "",
   shouldPutAttributes = true,
-  next = null
+  next = null,
 }) => {
+  // const json_data = {
+  //   path: "tm/otp",
+  //   body: {
+  //     mobile_number,
+  //     save_info
+  //   }
+  // };
   const json_data = {
-    path: "tm/otp",
+    path: "tm/otp_sunsavings",
     body: {
       mobile_number,
-      save_info
-    }
+      email: email,
+      save_info,
+    },
   };
 
-  console.log("Request OTP and Token: ", json_data);
-  return dispatch => {
+  Object.keys(json_data.body)
+    .forEach((key) => (json_data.body[key] == null) && delete json_data.body[key]);
+
+  
+  return (dispatch) => {
     dispatch({
-      type: REQUEST_OTP
+      type: TYPE.REQUEST_OTP,
     });
 
     return postOnly(json_data)
-      .then(response => {
-        console.log("Request OTP response: ", response.data);
+      .then((response) => {
+        
         const response_data = response.data;
         const has_data = response_data.status == "ok";
         if (has_data) {
           dispatch({
-            type: REQUEST_OTP_SUCCESS,
+            type: TYPE.REQUEST_OTP_SUCCESS,
             payload: {
               isFetching: false,
               success: true,
               token: response_data.token,
               message: response_data.msg ? response_data.msg : "",
-              next: next
-            }
+              next: next,
+            },
           });
           NavigationService.navigate(otpScreen, {
             navid: toNavId,
             message: messageIfVerified,
-            shouldPutAttributes: shouldPutAttributes
+            shouldPutAttributes: shouldPutAttributes,
           });
         } else {
           dispatch({
-            type: REQUEST_OTP_ERROR,
+            type: TYPE.REQUEST_OTP_ERROR,
             payload: {
               isFetching: false,
               success: false,
-              message: response_data.msg
-            }
+              message: response_data.msg,
+            },
           });
-          console.log(response_data);
+          
           alertBox(response_data.msg);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         alertBox(
           "Ooops! There's something wrong connecting to the server. Please try again."
         );
         dispatch({
-          type: REQUEST_OTP_ERROR,
+          type: TYPE.REQUEST_OTP_ERROR,
           payload: {
             isFetching: false,
             success: false,
-            message: error
-          }
+            message: error,
+          },
         });
         if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
+          
+          
+          
         } else if (error.request) {
-          console.log(error.request);
+          
         } else {
-          console.log("Error", error.message);
+          
         }
-        console.log(error.config);
+        
       });
   };
 };
 
-export const verifyOTP_TM = ({ token, otp, navid = "", message = "", next = null }) => {
+export const verifyOTP_TM = ({
+  token,
+  otp,
+  navid = "",
+  message = "",
+  next = null,
+}) => {
   const json_data = {
     path: "tm/otp_verify",
     body: {
-      token: token + otp
-    }
+      token: token + otp,
+    },
   };
-  console.log("Verify OTP and Token: ", json_data);
-  return dispatch => {
+  
+  return (dispatch) => {
     dispatch({
-      type: CHECK_OTP
+      type: TYPE.CHECK_OTP,
     });
     return postOnly(json_data)
-      .then(response => {
-        console.log("Verify Token and OTP response: ", response.data);
+      .then((response) => {
+        
         const response_data = response.data.data;
         const has_data = response_data.status == "ok";
 
         if (has_data) {
           dispatch({
-            type: CHECK_OTPTM_SUCCESS,
+            type: TYPE.CHECK_OTPTM_SUCCESS,
             payload: {
               isFetching: false,
               success: true,
-              message: ""
-            }
+              message: "",
+            },
           });
           if (message != "") {
             alertBox(message);
@@ -196,37 +199,36 @@ export const verifyOTP_TM = ({ token, otp, navid = "", message = "", next = null
             NavigationService.navigate(navid);
           }
 
-          if(next) {
-            next();
-          }
+          Profile.deleteSignUpData();
+          Profile.deleteFormData();
         } else {
           dispatch({
-            type: CHECK_OTP_ERROR,
+            type: TYPE.CHECK_OTP_ERROR,
             payload: {
               isFetching: false,
               success: false,
-              message: response_data.message
-            }
+              message: response_data.message,
+            },
           });
           alertBox(response_data.message);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         alertBox(
           "Ooops! There's something wrong connecting to the server. Please try again."
         );
         dispatch({
-          type: CHECK_OTP_ERROR,
+          type: TYPE.CHECK_OTP_ERROR,
           payload: {
             success: false,
             isFetching: false,
-            message: error
-          }
+            message: error,
+          },
         });
       });
   };
 };
 
-const checkStatus = response => {
+const checkStatus = (response) => {
   return response.data.status == "ok";
 };

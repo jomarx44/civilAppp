@@ -8,41 +8,27 @@
 // * Separated Components for each Items
 
 import React from "react";
-import AppJson from "../../../app.json";
-
-import KeyboardShift from "library/components/CDKeyboardShift.js";
-
 import {
   ActivityIndicator,
-  AsyncStorage,
   Dimensions,
   StyleSheet,
   View,
-  PixelRatio
+  PixelRatio,
 } from "react-native";
-import {
-  Container,
-  Button,
-  Text,
-  Input
-} from "native-base";
-import * as Profile from "store/profile";
-import { setLoggedState } from "store/auth";
+import { Container, Button, Text, Input } from "native-base";
 
 import styles from "styles/commonStyle";
-import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import Overlay from "library/components/Overlay";
 
-import NavigationService from "navigation/NavigationService.js";
 import { connect } from "react-redux";
-import { verifyOTP_BytePerByte, verifyOTP_TM } from "../../reducers/OTPReducer/OTP_actions"
+import {
+  verifyOTP_BytePerByte,
+  verifyOTP_TM,
+} from "../../reducers/OTPReducer/OTP_actions";
 import API from "../../actions/api";
 
-const {
-  height,
-  width
-} = Dimensions.get('window');
+const { height, width } = Dimensions.get("window");
 
 class OTPScreen extends React.Component {
   constructor(props) {
@@ -63,44 +49,51 @@ class OTPScreen extends React.Component {
     d4: "",
     d5: "",
     d6: "",
-    d7: ""
+    d7: "",
   };
 
-  onRemove = async() => {
-    let {otp, counter} = this.state;
+  componentDidUpdate = (prevProps) => {
+    if (prevProps.cis !== this.props.cis) {
+      if (this.props.cis.id) {
+        this.props.linkAccount(
+          this.props.cis.id,
+          this.props.token.tokens.access_token
+        );
+      }
+    }
+  };
+
+  onRemove = async () => {
+    let { otp, counter } = this.state;
     otp = otp.slice(0, -1);
-    this.setState({[`d${counter}`]: ''});
-    if(counter > 0) {
+    this.setState({ [`d${counter}`]: "" });
+    if (counter > 0) {
       counter -= 1;
     }
-    this.setState({counter, otp });
-  }
+    this.setState({ counter, otp });
+  };
 
-  onPressedDigit = value => {
+  onPressedDigit = (value) => {
     let { otp, counter } = this.state;
     otp += value;
     counter += 1;
     this.setState({ counter: counter });
     this.setState({ otp: otp });
 
-    this.setState({ [`d${counter}`]: value});
-    if(counter == 7) {
-      if(this.props.mode == "TM") {
+    this.setState({ [`d${counter}`]: value });
+    if (counter == 7) {
+      if (this.props.mode == "TM") {
         this.props.verifyOTP_TM({
           token: this.props.otp.token,
-          otp
-        })
+          otp,
+        });
       } else {
         this.props.verifyOTP_BytePerByte({
           token: this.props.otp.token,
-          otp
+          otp,
         });
       }
     }
-  };
-
-  static navigationOptions = {
-    header: <PNHeaderBackButtonBlue />
   };
 
   render() {
@@ -113,7 +106,7 @@ class OTPScreen extends React.Component {
             <Text
               style={[
                 localStyle.text,
-                { fontSize: 32 / PixelRatio.getFontScale() }
+                { fontSize: 32 / PixelRatio.getFontScale() },
               ]}
             >
               OTP
@@ -121,7 +114,7 @@ class OTPScreen extends React.Component {
             <Text
               style={[
                 localStyle.text,
-                { fontSize: 16 / PixelRatio.getFontScale() }
+                { fontSize: 16 / PixelRatio.getFontScale() },
               ]}
             >
               Please type the verification code sent to your mobile number.
@@ -131,26 +124,89 @@ class OTPScreen extends React.Component {
           <View style={[{ flex: 1 }]}>
             <View style={localStyle.item}>
               <Grid style={styles.grid}>
-                <Col style={[localStyle.digit, d1 != '' && {borderBottomWidth: 0}]}>
-                  <Input value={d1} style={[localStyle.digit_text]} editable={false} />
+                <Col
+                  style={[
+                    localStyle.digit,
+                    d1 != "" && { borderBottomWidth: 0 },
+                  ]}
+                >
+                  <Input
+                    value={d1}
+                    style={[localStyle.digit_text]}
+                    editable={false}
+                  />
                 </Col>
-                <Col style={[localStyle.digit, d2 != '' && {borderBottomWidth: 0}]}>
-                  <Input value={d2} style={[localStyle.digit_text]} editable={false} />
+                <Col
+                  style={[
+                    localStyle.digit,
+                    d2 != "" && { borderBottomWidth: 0 },
+                  ]}
+                >
+                  <Input
+                    value={d2}
+                    style={[localStyle.digit_text]}
+                    editable={false}
+                  />
                 </Col>
-                <Col style={[localStyle.digit, d3 != '' && {borderBottomWidth: 0}]}>
-                  <Input value={d3} style={[localStyle.digit_text]} editable={false} />
+                <Col
+                  style={[
+                    localStyle.digit,
+                    d3 != "" && { borderBottomWidth: 0 },
+                  ]}
+                >
+                  <Input
+                    value={d3}
+                    style={[localStyle.digit_text]}
+                    editable={false}
+                  />
                 </Col>
-                <Col style={[localStyle.digit, d4 != '' && {borderBottomWidth: 0}]}>
-                  <Input value={d4} style={[localStyle.digit_text]} editable={false} />
+                <Col
+                  style={[
+                    localStyle.digit,
+                    d4 != "" && { borderBottomWidth: 0 },
+                  ]}
+                >
+                  <Input
+                    value={d4}
+                    style={[localStyle.digit_text]}
+                    editable={false}
+                  />
                 </Col>
-                <Col style={[localStyle.digit, d5 != '' && {borderBottomWidth: 0}]}>
-                  <Input value={d5} style={[localStyle.digit_text]} editable={false} />
+                <Col
+                  style={[
+                    localStyle.digit,
+                    d5 != "" && { borderBottomWidth: 0 },
+                  ]}
+                >
+                  <Input
+                    value={d5}
+                    style={[localStyle.digit_text]}
+                    editable={false}
+                  />
                 </Col>
-                <Col style={[localStyle.digit, d6 != '' && {borderBottomWidth: 0}]}>
-                  <Input value={d6} style={[localStyle.digit_text]} editable={false} />
+                <Col
+                  style={[
+                    localStyle.digit,
+                    d6 != "" && { borderBottomWidth: 0 },
+                  ]}
+                >
+                  <Input
+                    value={d6}
+                    style={[localStyle.digit_text]}
+                    editable={false}
+                  />
                 </Col>
-                <Col style={[localStyle.digit, d7 != '' && {borderBottomWidth: 0}]}>
-                  <Input value={d7} style={[localStyle.digit_text]} editable={false} />
+                <Col
+                  style={[
+                    localStyle.digit,
+                    d7 != "" && { borderBottomWidth: 0 },
+                  ]}
+                >
+                  <Input
+                    value={d7}
+                    style={[localStyle.digit_text]}
+                    editable={false}
+                  />
                 </Col>
               </Grid>
             </View>
@@ -248,8 +304,7 @@ class OTPScreen extends React.Component {
               </View>
 
               <View style={localStyle.kprow}>
-                <Col style={[localStyle.kpdigit]}>
-                </Col>
+                <Col style={[localStyle.kpdigit]}></Col>
                 <Col style={[localStyle.kpdigit]}>
                   <Button
                     transparent
@@ -260,11 +315,7 @@ class OTPScreen extends React.Component {
                   </Button>
                 </Col>
                 <Col style={[localStyle.kpdigit]}>
-                  <Button
-                    transparent
-                    light
-                    onPress={() => this.onRemove()}
-                  >
+                  <Button transparent light onPress={() => this.onRemove()}>
                     <Text style={localStyle.kptext}>&lt;</Text>
                   </Button>
                 </Col>
@@ -272,7 +323,7 @@ class OTPScreen extends React.Component {
             </View>
           </View>
         </View>
-        { this.props.otp.isFetching && (
+        {this.props.otp.isFetching && (
           <Overlay>
             <ActivityIndicator color="#FFF" size="large" />
           </Overlay>
@@ -285,59 +336,59 @@ class OTPScreen extends React.Component {
 let localStyle = StyleSheet.create({
   digit: {
     marginHorizontal: "2.25%",
-    borderBottomColor: '#ffffff',
-    borderBottomWidth: 1
+    borderBottomColor: "#ffffff",
+    borderBottomWidth: 1,
   },
   digit_text: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontFamily: "Avenir_Medium",
     fontSize: 29,
     textAlign: "center",
     alignContent: "center",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   grid: {
     flex: 1,
-    flexDirection: "row"
+    flexDirection: "row",
   },
   item: {
     height: 35,
-    paddingHorizontal: '1.45%',
-    marginTop: '3%',
+    paddingHorizontal: "1.45%",
+    marginTop: "3%",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   text: {
     marginLeft: 32,
     marginRight: 32,
-    color: "#FFFFFF"
+    color: "#FFFFFF",
   },
   button: {
     alignItems: "center",
     justifyContent: "center",
-    position: "absolute"
+    position: "absolute",
   },
   kptext: {
     flex: 1,
     fontSize: 32,
     color: "#FFFFFF",
-    textAlign: "center"
+    textAlign: "center",
   },
   kpdigit: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   kpgrid: {
     flex: 4,
-    flexDirection: "column"
+    flexDirection: "column",
   },
   kprow: {
     marginLeft: 30,
     marginRight: 30,
     flex: 1,
-    flexDirection: "row"
+    flexDirection: "row",
   },
 
   kpitem: {
@@ -346,23 +397,23 @@ let localStyle = StyleSheet.create({
     marginLeft: 30,
     marginRight: 30,
     alignItems: "center",
-    justifyContent: "center"
-  }
+    justifyContent: "center",
+  },
 });
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { otp, token, cis } = state;
   return {
     otp,
     token,
-    cis
+    cis,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    loginInitial: (username, password) => {
-      dispatch(API.loginInitial(username, password));
+    linkAccount: (cis_no, access_token) => {
+      dispatch(API.linkAccountWithDispatch({ cis_no, access_token }));
     },
     verifyOTP_BytePerByte: (token, otp) => {
       dispatch(verifyOTP_BytePerByte(token, otp));

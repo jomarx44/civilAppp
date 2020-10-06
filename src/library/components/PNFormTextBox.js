@@ -1,54 +1,37 @@
-import React, { Component } from "react";
+import React, { createRef, forwardRef, useImperativeHandle } from "react";
 import PropTypes from "prop-types";
 import { StyleSheet, View, TextInput, Text } from "react-native";
 import { Item, Label } from "native-base";
 
-class PNFormTextBox extends Component {
-  constructor(props) {
-    super(props);
-    this.input = React.createRef();
-  }
+export const PNFormTextBox = forwardRef(({ editable = true, password, invalid, label, ...props }, ref) => {
+  const input = createRef();
 
-  focus = () => {
-    this.input.current.focus();
-  };
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      input.current.focus();
+    }
+  }));
 
-  render() {
-    const {
-      title,
-      password,
-      editable = true,
-      invalid = ""
-    } = this.props;
-    return (
-      <View style={styles.view}>
-        <Label style={styles.label}>{title}</Label>
-        <Item style={styles.text}>
-          <TextInput
-            {...this.props}
-            ref={this.input}
-            secureTextEntry={password}
-            style={[styles.input, !editable && styles.input_disabled]}
-          />
-        </Item>
-        <Text style={[styles.invalidText]}>{ invalid }</Text>
-      </View>
-    );
-  }
-}
-
-PNFormTextBox.propTypes = {
-  title: PropTypes.string.isRequired,
-  value: PropTypes.string,
-  onChangeText: PropTypes.func,
-  password: PropTypes.bool,
-  keyboardType: PropTypes.string,
-  autoCompleteType: PropTypes.string,
-  reference: PropTypes.func,
-  onSubmitEditing: PropTypes.func
-};
+  return (
+    <View style={styles.defaultContainerStyle}>
+      <Label style={styles.label}>{label}</Label>
+      <Item style={styles.text}>
+        <TextInput
+          {...props}
+          ref={input}
+          secureTextEntry={password}
+          style={[styles.input, !editable && styles.input_disabled]}
+        />
+      </Item>
+      <Text style={[styles.invalidText]}>{ invalid }</Text>
+    </View>
+  );
+})
 
 let styles = StyleSheet.create({
+  defaultContainerStyle: {
+    marginBottom: 15
+  },
   text: {
     alignItems: "center",
     backgroundColor: "#FFFFFF",
@@ -57,8 +40,7 @@ let styles = StyleSheet.create({
   input: {
     color: "#f9a010",
     fontSize: 18,
-    fontWeight: 'normal',
-    fontFamily: "Avenir_Medium",
+    fontFamily: "Gilroy_Medium",
     width: "100%"
   },
   input_disabled: {
@@ -66,14 +48,11 @@ let styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
-    fontFamily: "Avenir_Medium",
+    fontFamily: "Gilroy_Medium",
     color: "#5d646c"
   },
-  view: {
-    marginBottom: 15
-  },
   invalidText: {
-    fontFamily: 'Avenir_Medium',
+    fontFamily: 'Gilroy_Medium',
     fontSize: 12,
     color: '#DC6061'
   }

@@ -1,45 +1,12 @@
-import { NavigationActions, StackActions } from 'react-navigation';
-let _navigator;
+import React from 'react';
+import { StackActions } from '@react-navigation/native';
 
-function setTopLevelNavigator(navigatorRef) {
-  _navigator = navigatorRef;
+export const navigationRef =  React.createRef();
+
+export const navigate = (name, params) => {
+  navigationRef.current?.navigate(name, params);
 }
 
-function getTopLevelNavigator(navigatorRef) {
-  return _navigator;
+export function push(...args) {
+  navigationRef.current?.dispatch(StackActions.push(...args));
 }
-
-function navigate(routeName, params) {
-  _navigator.dispatch(
-    NavigationActions.navigate({
-      routeName,
-      params,
-    })
-  );
-}
-
-function navigateReset(routeName, params) {
-  _navigator.dispatch(
-    StackActions.reset({
-      index: 0,
-      actions: [
-        NavigationActions.navigate({
-          routeName,
-          params,
-        })
-      ]
-    })
-  );
-}
-
-function updateMenu( loggedState ) {
-  _navigator.dispatch({ loggedState : loggedState});
-}
-
-export default {
-  navigate,
-  navigateReset,
-  updateMenu,
-  setTopLevelNavigator,
-  getTopLevelNavigator,
-};

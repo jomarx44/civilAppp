@@ -1,130 +1,83 @@
-import React, { Component } from "react";
+import { AuthNavigation, MainNavigation, TesterNavigation } from "./routes";
+import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
+import React, { useEffect } from "react";
+import { hasHardwareAsync, isEnrolledAsync } from "expo-local-authentication";
 import {
-  createDrawerNavigator,
-  createAppContainer,
-  createSwitchNavigator,
-  createStackNavigator
-} from "react-navigation";
-import { Dimensions } from "react-native";
+  setFingerprintCompatibility,
+  setFingerprintEnrolled,
+} from "../redux/application/actions";
 
-import Login from "screens/LoginScreen";
-import PersonalInfoScreen from "screens/SignUpScreen/PersonalInfoScreen";
-import SignUpScreen2 from "screens/SignUpScreen/SignUpScreen2";
-import EmailVerificationScreen from "screens/SignUpScreen/EmailVerificationScreen";
-import TakeAPhotoOfIDScreen from "screens/TakeAPhotoOfIDScreen";
-import LoginFingerPrintScreen from "screens/LoginScreen/fingerprint";
-import ForgotPasswordScreen from "screens/ForgotPasswordScreen";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { navigationRef } from "./NavigationService";
 
-import SideMenu from "./SideMenu";
-import PersonalDetailsScreen from "screens/PersonalDetailsScreen/";
-import OpenAccountScreen from "screens/OpenAccountScreen/";
-import AnnouncementScreen from "screens/AnnouncementScreen/";
+const TESTING_MODE = false;
 
-import DashboardScreen from "screens/DashboardScreen/dashboard";
-import AccountHistoryScreen from "screens/DashboardScreen/accountHistory";
-import CIS01 from "screens/OpenAccountScreen/CIS01";
-import CIS02 from "screens/OpenAccountScreen/CIS02";
-import CIS03 from "screens/OpenAccountScreen/CIS03";
-import CIS04 from "screens/OpenAccountScreen/CIS04";
-import CIS05 from "screens/OpenAccountScreen/CIS05";
-import CIS06 from "screens/OpenAccountScreen/CIS06";
-import CIS07 from "screens/OpenAccountScreen/CIS07";
-import CIS08 from "screens/OpenAccountScreen/CIS08";
-import CIS09 from "screens/OpenAccountScreen/CIS09";
-import CIS10 from "screens/OpenAccountScreen/CIS10";
-import CIS11 from "screens/OpenAccountScreen/CIS11";
-import CIS12 from "screens/OpenAccountScreen/CIS12";
-import CIS13 from "screens/OpenAccountScreen/CIS13";
-import CIS14 from "screens/OpenAccountScreen/CIS14";
-import OTPOpenAccountScreen from "screens/OpenAccountScreen/OTPOpenAccountScreen";
-import OTPScreen from "screens/OTPScreen/OTPScreen";
-import ConnectCreateAccountScreen from "screens/OpenAccountScreen/ConnectCreateAccountScreen";
-import LinkAccount from "screens/OpenAccountScreen/LinkAccount";
-import LoanAccountScreen from "../screens/LoanAccountScreen/LoanAccountScreen";
-import ProfileScreen from "../screens/ProfileScreen";
-
-const AuthenticationNavigator = createStackNavigator(
-  {
-    Login: {
-      screen: Login
-    },
-    CreateMobileAccount: { screen: PersonalInfoScreen },
-    CreateMobileAccount2: { screen: SignUpScreen2 },
-    EmailVerification: { screen: EmailVerificationScreen },
-    TakeAPhotoOfID: { screen: TakeAPhotoOfIDScreen },
-    ForgotPassword: { screen: ForgotPasswordScreen },
-    OTPSignUp: { screen: OTPOpenAccountScreen }
+// Theme
+const MyTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: "#FFFFFF",
   },
-  {
-    initialRouteName: "CreateMobileAccount2"
-  }
-);
+};
 
-const DashboardStack = createStackNavigator(
-  {
-    Dashboard: { screen: DashboardScreen },
-    AccountHistory: { screen: AccountHistoryScreen },
-    LoanAccount: { screen: LoanAccountScreen },
-    FingerPrint: { screen: LoginFingerPrintScreen },
-    CIS01: { screen: CIS01 },
-    CIS02: { screen: CIS02 },
-    CIS03: { screen: CIS03 },
-    CIS04: { screen: CIS04 },
-    CIS05: { screen: CIS05 },
-    CIS06: { screen: CIS06 },
-    CIS07: { screen: CIS07 },
-    CIS08: { screen: CIS08 },
-    CIS09: { screen: CIS09 },
-    CIS10: { screen: CIS10 },
-    CIS11: { screen: CIS11 },
-    CIS12: { screen: CIS12 },
-    CIS13: { screen: CIS13 },
-    CIS14: { screen: CIS14 },
-    OTPOpenAccount: { screen: OTPOpenAccountScreen },
-    OTP: { screen: OTPScreen },
-    ConnectCreateAccount: { screen: ConnectCreateAccountScreen },
-    LinkAccount: { screen: LinkAccount }
+const Navigator = ({
+  auth: {
+    status: { isLoggedIn },
   },
-  {
-    initialRouteName: "Dashboard"
-  }
-);
-
-const ProfileStack = createStackNavigator(
-  {
-    ViewProfile: { screen: ProfileScreen}
+  user: {
+    info
   },
-  {
-    initialRouteName: "ViewProfile"
-  }
-);
+  setCompatibility,
+  setEnrolled,
+}) => {
+  // Check fingerprint compatibility and enrollment
+  useEffect(() => {
+    checkDeviceHardware();
+    checkEnrolledFingerprints();
+  }, []);
 
-const HomeNavigator = createDrawerNavigator(
-  {
-    Home: { screen: DashboardStack },
-    Announcement: {
-      screen: AnnouncementScreen,
-      header: null
-    },
-    OpenAccountScreen: { screen: OpenAccountScreen },
-    Profile: { screen: ProfileStack },
-    PersonalDetails: {
-      screen: PersonalDetailsScreen,
-      navigationOptions: ({ navigation }) => ({
-        title: "Personal Details"
-      })
-    }
-  },
-  {
-    initialRouteName: "Home",
-    contentComponent: SideMenu
-  }
-);
+  const checkDeviceHardware = async () => {
+    const isHardwareSupported = await hasHardwareAsync();
+    setCompatibility(isHardwareSupported);
+  };
 
-const AppNavigator = createSwitchNavigator({
-  Auth: AuthenticationNavigator,
-  Home: HomeNavigator
+  const checkEnrolledFingerprints = async () => {
+    const hasEnrolledFingerprint = await isEnrolledAsync();
+    setEnrolled(hasEnrolledFingerprint);
+  };
+
+  if(TESTING_MODE) {
+    return (
+      <NavigationContainer theme={MyTheme} ref={navigationRef}>
+        <TesterNavigation />
+      </NavigationContainer>
+      
+    )
+  }
+
+  return (
+    <NavigationContainer theme={MyTheme} ref={navigationRef}>
+      {isLoggedIn && info ? 
+        <MainNavigation /> :
+        <AuthNavigation />}
+    </NavigationContainer>
+  );
+};
+
+const mapStateToProps = ({ auth, user }) => ({
+  auth,
+  user
 });
 
-export const Navigator = createAppContainer(AppNavigator);
-export default Navigator;
+const mapDispatchToProps = (dispatch) => ({
+  setCompatibility: (isCompatible) => {
+    dispatch(setFingerprintCompatibility(isCompatible));
+  },
+  setEnrolled: (isEnrolled) => {
+    dispatch(setFingerprintEnrolled(isEnrolled));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navigator);

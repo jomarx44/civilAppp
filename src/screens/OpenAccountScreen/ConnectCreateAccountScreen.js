@@ -1,105 +1,68 @@
 import React from "react";
 
 import {
-  StatusBar,
-  Image,
   Dimensions,
   StyleSheet,
   ImageBackground,
-  TextInput,
   View,
-  BackHandler,
-  TouchableOpacity,
-  PixelRatio
 } from "react-native";
-import {
-  Container,
-  Header,
-  Title,
-  Left,
-  Center,
-  Icon,
-  Right,
-  Button,
-  Body,
-  Content,
-  Text,
-  Card,
-  CardItem
-} from "native-base";
 
 import styles from "styles/commonStyle";
-import PNOrangeButton from "library/components/PNOrangeButton";
-import PNTransparentButton from "library/components/PNTransparentButton";
-import PNHeaderBackButtonBlue from "library/components/PNHeaderBackButtonBlue";
+
+// Custom Components
+
+import PNStackedButtons from "library/Layout/Content/PNStackedButtons";
+import { ContainedButton, OutlineButton, TextButton } from "../../components/Buttons";
 
 let { height, width } = Dimensions.get("window");
 
-class ConnectCreateAccountScreen extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  static navigationOptions = {
-    header: <PNHeaderBackButtonBlue navid="Dashboard" />
-  };
-
-  render() {
-    return (
-      <ImageBackground
-        source={require("res/images/SSB-Splash.png")}
-        style={buttonStyles.backgroundImage}
-      >
-        <View
-          style={{
-            flex: 1,
-            width: width * 0.9,
-            alignSelf: 'center',
-            alignItems: 'stretch',
-            justifyContent: 'center'
-          }}
-        >
-          <PNOrangeButton title="OPEN BANK ACCOUNT" navid="CIS01" />
-          <PNTransparentButton title="LINK MY ACCOUNT" navid="LinkAccount" />
-        </View>
-        <View style={styles.termsAndConditions}>
-          <TouchableOpacity style={buttonStyles.buttonTrans}>
-            <Text style={buttonStyles.buttonTransText}>
-              Terms and Conditions
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ImageBackground>
-    );
-  }
-}
+export const ConnectCreateAccountScreen = ({ navigation }) => (
+  <ImageBackground
+    source={require("res/images/SSB-Splash.png")}
+    style={buttonStyles.backgroundImage}
+  >
+    <PNStackedButtons
+      containerStyle={{
+        flex: 1,
+        justifyContent: "center",
+        marginTop: 100,
+        alignItems: "center",
+      }}
+    >
+      <ContainedButton
+        label="OPEN BANK ACCOUNT"
+        buttonStyle={{ width: "100%", height: 50, marginBottom: 20 }}
+        onPress={() => navigation.navigate("CreateBankAccount")}
+      />
+      <OutlineButton
+        label="LINK MY ACCOUNT"
+        buttonStyle={{ width: "100%", height: 50, borderColor: "#FFF" }}
+        labelStyle={{ color: "#FFF" }}
+        onPress={() => navigation.navigate("LinkAccount")}
+      />
+    </PNStackedButtons>
+    <View style={styles.termsAndConditions}>
+      <TextButton 
+        label="Terms and Conditions"
+        buttonStyle={{ width: "100%", height: 50, borderColor: "#FFF" }}
+        labelStyle={{ color: "#FFF", fontFamily: 'Avenir_Roman', fontSize: 16 }}
+        // onPress={() => navigation.navigate("LinkAccount")}
+      />
+    </View>
+  </ImageBackground>
+);
 
 let buttonStyles = StyleSheet.create({
-  button: {
-    alignItems: "center",
-    justifyContent: "center"
-  },
   termsAndConditions: {
     justifyContent: "center",
     alignItems: "center"
-  },
-  buttonTrans: {
-    borderColor: "#FFFFFF",
-    backgroundColor: "transparent",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  buttonTransText: {
-    color: "#FFF",
-    fontFamily: "Avenir_Roman",
-    fontSize: 16
   },
   backgroundImage: {
     flex: 1,
     paddingHorizontal: width * 0.1,
     paddingVertical: 45,
-    justifyContent: 'flex-end',
-    alignItems: "center",
+    justifyContent: "flex-end",
+    alignItems: "stretch",
     resizeMode: "contain"
   }
 });

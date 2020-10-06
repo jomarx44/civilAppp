@@ -1,356 +1,333 @@
-// To be added
-import React, { Component } from "react";
 import {
-  AsyncStorage,
-  ActivityIndicator,
-  View,
+  CHECK_OTP_INITIALIZE,
+  REQUEST_OTP_INITIALIZE,
+  UPDATE_PROFILE_INITIALIZE,
+} from "../../actions/types";
+import {
+  Dimensions,
+  Image,
+  RefreshControl,
   ScrollView,
   StyleSheet,
-  RefreshControl,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { connect } from "react-redux";
+import React, { useEffect } from "react";
 
-// Custom Component
-import KeyboardShift from "library/components/CDKeyboardShift.js";
-import PNFormTextBox from "library/components/PNFormTextBox";
-import PNFormTextBoxPhoneNumber from "library/components/PNFormTextBox-PhoneNumber";
-import PNHeaderNoLogo from "library/components/PNHeaderNoLogo.js";
-import PNHeaderTitleDesc from "library/components/PNHeaderTitleDesc";
-
+import API from "../../actions/api"
+import { DrawerActions } from "@react-navigation/native";
+import { MaterialIcons } from "@expo/vector-icons";
 // Others
-import validate from "validate.js";
+import { config } from "../../config";
+import { useSafeArea } from "react-native-safe-area-context";
+import { connect } from "react-redux";
+import { getProfileAsync } from "../../redux/profile/actions"
+import { profile } from "../../API";
 
-import API from "../../actions/api";
+const { height, width } = Dimensions.get("window");
 
-const constraints = {
-  email: {
-    presence: {
-      allowEmpty: false
-    },
-    email: {
-      message: "This doesn't look like a valid email"
-    }
-  },
-  givenName: {
-    presence: {
-      allowEmpty: false
-    }
-  },
-  familyName: {
-    presence: {
-      allowEmpty: false
-    }
-  },
-  phoneNumber: {
-    presence: {
-      allowEmpty: false
-    },
-    length: {
-      minimum: 10,
-      message: "is not valid"
-    }
-  }
+export const ProfileNavigationBar = ({
+  onPressLeftButton,
+  onPressRightButton,
+}) => {
+  return (
+    <View style={styles.defaultNavigationBarContainer}>
+      <View style={{ flex: 1, alignItems: "center" }}>
+        <TouchableOpacity onPress={() => onPressLeftButton()}>
+          {/* <MaterialIcons
+            color="#FFF"
+            name="menu"
+            size={30}
+          /> */}
+          <Image
+            style={{ height: 24, width: 24 }}
+            source={config.icons.drawer}
+            resizeMode="cover"
+          />
+        </TouchableOpacity>
+      </View>
+      <View style={{ flex: 3, alignItems: "center", justifyContent: "center" }}>
+        <Text
+          style={{
+            color: "#FFF",
+            fontFamily: "Gilroy_Bold",
+            fontSize: 23,
+            textAlign: "center",
+          }}
+        >
+          Settings
+        </Text>
+      </View>
+      <View style={{ flex: 1, alignItems: "center" }}>
+        <TouchableOpacity onPress={() => onPressRightButton()}>
+          <MaterialIcons color="#FFF" name="edit" size={30} />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 };
 
-export class ProfileScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.input_givenName = React.createRef();
-    this.input_middleName = React.createRef();
-    this.input_familyName = React.createRef();
-    this.input_email = React.createRef();
-    this.input_phoneNumber = React.createRef();
-  }
+export const ProfileHeader = ({ containerStyle, name, email, phoneNumber }) => {
+  return (
+    <View
+      style={[
+        styles.defaultContainerStyle,
+        styles.headerContainer,
+        containerStyle,
+      ]}
+    >
+      {/* <Image style={styles.headerImage} /> */}
+      <Text style={styles.headerTitle}>{name}</Text>
+      <Text style={styles.headerSubtitle}>{email}</Text>
+      <Text style={styles.headerSubtitle}>{phoneNumber}</Text>
+    </View>
+  );
+};
 
-  state = {
-    user: {
-      id: "",
-      givenName: "",
-      middleName: "",
-      familyName: "",
-      email: "",
-      phoneNumber: ""
+export const ProfileItem = ({
+  containerStyle,
+  disabledStyle,
+  imagePath,
+  text,
+  disabled,
+  ...props
+}) => {
+  return (
+    <TouchableOpacity
+      {...props}
+      disabled={disabled}
+      activeOpacity={0.4}
+      style={[
+        styles.defaultContainerStyle,
+        styles.itemContainer,
+        containerStyle,
+        disabled && styles.disabledContainerStyle,
+        disabled && disabledStyle,
+      ]}
+    >
+      <View style={styles.itemLogoContainer}>
+        <Image source={imagePath} resizeMode="cover" style={styles.itemLogo} />
+      </View>
+      <Text style={styles.itemText}>{text}</Text>
+      <MaterialIcons color="#dddddd" name="chevron-right" size={25} />
+    </TouchableOpacity>
+  );
+};
+
+export const ProfileScreen = (props) => {
+  const inset = useSafeArea();
+  const {
+    navigation,
+    profile: {
+      data,
+      status: { isFetching }
     },
-    invalid: {},
-    isEditMode: false
-  };
+    getProfile,
+    user,
+    route: { params }
+  } = props
 
-  static navigationOptions = {
-    header: <PNHeaderNoLogo title="My Profile" />
-  };
-
-  componentDidMount = async () => {
-    let profile = await AsyncStorage.getItem("PROFILE_DATA");
-    profile = JSON.parse(profile);
-    console.log("PROFILE: ", profile);
-    const { id } = profile.identities[0].idpUserInfo;
-    this.setState(state => ({
-      ...state,
-      user: {
-        ...state.user,
-        id
-      }
-    }));
-    this.props.getProfile({ id });
-  };
-
-  componentDidUpdate = () => {};
-
-  handleChangeText = (value, field) => {
-    const { user } = this.state;
-    user[field] = value;
-
-    this.setState({ user: user });
-  };
-
-  handleOnBlur = (index, additionalValidate = {}) => {
-    const current = {
-      ...additionalValidate,
-      [index]: this.state.user[index]
-    };
-    console.log("Current: ", current);
-    const invalid = validate(current, { [index]: constraints[index] });
-    if (invalid) {
-      this.setState(
-        {
-          ...this.state,
-          invalid: {
-            ...this.state.invalid,
-            ...invalid
-          }
-        },
-        () => console.log("Invalid State: ", this.state.invalid)
-      );
-    } else {
-      const { invalid } = this.state;
-      delete invalid[index];
-      this.setState({
-        ...this.state,
-        invalid
-      });
+  useEffect(() => {
+    if(params?.reload) {
+      handleRefresh()
     }
-  };
+  }, [params?.reload])
 
-  handleBlurPhone = index => {
-    // console.log(parseInt(this.state.user.phoneNumber, 10).toString());
-    this.setState(
-      {
-        ...this.state,
-        user: {
-          ...this.state.user,
-          phoneNumber: this.state.user.phoneNumber
-            ? parseInt(this.state.user.phoneNumber.toString(), 10)
-            : ""
-        }
-      },
-      () => {
-        // console.log(user.phoneNumber)
-        this.handleOnBlur(index);
-      }
-    );
-  };
-
-  handleSubmit = () => {
-    // Add Validation
-    const invalid = validate(this.state.user, constraints);
-
-    if (!invalid) {
-      const user = { ...this.state.user };
-      user.phoneNumber = "63" + user.phoneNumber;
-      this.props.saveProfile(user);
-    } else {
-      this.setState({
-        invalid: invalid
-      });
-    }
-  };
-
-  handleToggleEditMode = () =>
-    this.setState(state => ({ isEditMode: !state.isEditMode }));
-
-  render() {
-    const { invalid, user, isEditMode } = this.state;
-    const { profile, getProfile } = this.props;
-
-    return (
-      <KeyboardShift>
-        {() => (
-          <React.Fragment>
-          <ScrollView
-            contentContainerStyle={styles.container}
-            persistentScrollbar={true}
-            style={{flex: 1}}
-            refreshControl={
-              <RefreshControl
-                refreshing={profile.isFetching}
-                onRefresh={() => getProfile({id: this.state.user.id})}
-                progressBackgroundColor="#ffffff"
-              />
-            }
-          >
-            <View style={styles.header}>
-              <PNHeaderTitleDesc title="Profile" />
-            </View>
-            <View style={{ flex: 4, paddingTop: 30 }}>
-              <PNFormTextBox
-                title="First Name"
-                onChangeText={text => this.handleChangeText(text, "givenName")}
-                ref={this.input_givenName}
-                onSubmitEditing={() => this.input_middleName.current.focus()}
-                onBlur={() => this.handleOnBlur("givenName")}
-                invalid={invalid.givenName ? invalid.givenName[0] : ""}
-                editable={isEditMode}
-                value={user.givenName}
-              />
-
-              <PNFormTextBox
-                title="Middle Name"
-                onChangeText={text => this.handleChangeText(text, "middleName")}
-                ref={this.input_middleName}
-                onSubmitEditing={() => this.input_familyName.current.focus()}
-                editable={isEditMode}
-                value={user.middleName}
-              />
-
-              <PNFormTextBox
-                title="Last Name"
-                onChangeText={text => this.handleChangeText(text, "familyName")}
-                ref={this.input_familyName}
-                onSubmitEditing={() => this.input_email.current.focus()}
-                onBlur={() => this.handleOnBlur("familyName")}
-                invalid={invalid.familyName ? invalid.familyName[0] : ""}
-                editable={isEditMode}
-                value={user.familyName}
-              />
-
-              <PNFormTextBox
-                title="Email Address"
-                onChangeText={text => this.handleChangeText(text, "email")}
-                ref={this.input_email}
-                onBlur={() => this.handleOnBlur("email")}
-                onSubmitEditing={() => this.input_phoneNumber.current.focus()}
-                invalid={invalid.email ? invalid.email[0] : ""}
-                editable={isEditMode}
-                value={user.email}
-              />
-
-              <PNFormTextBoxPhoneNumber
-                title="Mobile Number"
-                onChangeText={text =>
-                  this.handleChangeText(text, "phoneNumber")
-                }
-                ref={this.input_phoneNumber}
-                // onSubmitEditing={() => this.input_password.current.focus()}
-                maxLength={10}
-                value={user.phoneNumber}
-                onBlur={() => this.handleOnBlur("phoneNumber")}
-                invalid={invalid.phoneNumber ? invalid.phoneNumber[0] : ""}
-                editable={isEditMode}
-              />
-            </View>
-          </ScrollView>
-          <View style={{padding: 20}}>
-            {!isEditMode ? (
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  this.handleToggleEditMode();
-                }}
-                disable={false}
-              >
-                {profile.isUpdating ? (
-                  <ActivityIndicator color="#FFFFFF" />
-                ) : (
-                  <Text style={styles.button_text}>Edit Profile</Text>
-                )}
-              </TouchableOpacity>
-            ) : (
-              <React.Fragment>
-                <TouchableOpacity
-                  style={[styles.button, {marginBottom: 10}]}
-                  onPress={() => this.handleSubmit()}
-                  disable={profile.isUpdating}
-                >
-                  {profile.isUpdating ? (
-                    <ActivityIndicator color="#FFFFFF" />
-                  ) : (
-                    <Text style={styles.button_text}>Save Changes</Text>
-                  )}
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.button, {backgroundColor: "transparent"}]}
-                  onPress={() => {
-                    this.handleToggleEditMode();
-                  }}
-                >
-                  <Text style={[styles.button_text, {color: "red"}]}>Cancel</Text>
-                </TouchableOpacity>
-              </React.Fragment>
-              
-            )}
-          </View>
-          </React.Fragment >
-        )}
-      </KeyboardShift>
-    );
+  const handleRefresh = () => {
+    getProfile(user.info.sub)
   }
-}
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "#f7f7f7",
+      }}
+    >
+      <View
+        style={{
+          backgroundColor: "#1e73be",
+          borderBottomRightRadius: 32,
+          height: "40%",
+          width: "100%",
+          top: 0,
+          left: 0,
+        }}
+      />
+      <View
+        style={{
+          backgroundColor: "#309fe7",
+          borderBottomLeftRadius: height * 0.25,
+          height: height * 0.25,
+          width: height * 0.25,
+          opacity: 0.68,
+          position: "absolute",
+          top: 0,
+          right: 0,
+        }}
+      />
+      <View
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          paddingTop: inset.top,
+          backgroundColor: "transparent",
+        }}
+      >
+        <ProfileNavigationBar
+          onPressLeftButton={() =>
+            navigation.dispatch(DrawerActions.openDrawer())
+          }
+          onPressRightButton={() => navigation.navigate("EditProfile", { formData: {
+            firstName: data?.attributes?.name.firstName,
+            middleName: data?.attributes?.name.middleName,
+            lastName: data?.attributes?.name.lastName
+          } })}
+        />
+        <ScrollView
+          contentContainerStyle={{ padding: 24 }}
+          refreshControl={
+            <RefreshControl
+              refreshing={isFetching}
+              onRefresh={() => handleRefresh()}
+            />
+          }
+        >
+          <ProfileHeader
+            name={data?.attributes?.name ? `${data?.attributes?.name?.firstName} ${data?.attributes?.name?.middleName} ${data?.attributes?.name?.lastName}` : `${user.info.firstName} ${user.info.middleName} ${user.info.lastName}`}
+            email={data?.attributes?.email ? data?.attributes?.email: user.info.emails[0].value}
+            phoneNumber={data?.attributes.phoneNumber ? data?.attributes.phoneNumber : user.info.phoneNumbers[0].value}
+          />
+          <ProfileItem
+            imagePath={require("res/images/icons/ic_lock.png")}
+            text="Change Password"
+            onPress={() => navigation.navigate("ChangePassword")}
+          />
+          <ProfileItem
+            imagePath={require("res/images/icons/ic_mobileNumber.png")}
+            text="Change Mobile Number"
+            onPress={() => navigation.navigate("ChangeMobileNumber")}
+          />
+          {/* <ProfileItem
+            disabled={true}
+            imagePath={require("res/images/icons/ic_lock.png")}
+            text="Activity Logs"
+            onPress={() => navigation.navigate("")}
+          />
+          <ProfileItem
+            disabled={true}
+            imagePath={require("res/images/icons/ic_lock.png")}
+            text="Notifications"
+            onPress={() => navigation.navigate("")}
+          /> */}
+          <ProfileItem
+            imagePath={require("res/images/icons/ic_finger.png")}
+            text="Fingerprint"
+            onPress={() => navigation.navigate("FingerprintScreen")}
+          />
+        </ScrollView>
+      </View>
+    </View>
+  );
+};
+
+// ProfileScreen.PropTypes = {
+
+// };
+
+const mapStateToProps = (state) => {
+  return {
+    profile: state.profile,
+    user: state.user
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getProfile: (subID) => {
+      dispatch(getProfileAsync(subID));
+    },
+  };
+};
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 30,
-  },
-  text: {
-    marginLeft: 32,
-    marginRight: 32,
-    color: "#FFFFFF"
-  },
-  button: {
-    width: "100%",
+  defaultNavigationBarContainer: {
+    backgroundColor: "transparent",
     height: 50,
-    backgroundColor: "#f9a010",
+    width: "100%",
+    justifyContent: "space-between",
+    marginTop: 10,
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center"
   },
-  button_text: {
-    color: "#fff",
-    fontSize: 16,
-    fontFamily: "Avenir_Medium"
+  defaultContainerStyle: {
+    backgroundColor: "#FFF",
+    borderRadius: 12,
+    shadowColor: "#0d0000",
+    shadowRadius: 20,
   },
-  header: {
-    paddingTop: 20,
-    backgroundColor: "#FFFFFF",
-    flex: 1
+  disabledContainerStyle: {
+    backgroundColor: "#EEE",
   },
-  textbox: {
-    height: 48,
-    marginTop: 20,
-    marginLeft: 30,
-    marginRight: 30,
+  headerContainer: {
+    alignItems: "center",
     justifyContent: "center",
+    marginBottom: 30,
+    paddingVertical: 24,
+  },
+  headerImage: {
+    borderRadius: 8,
+    borderWidth: 4,
+    borderColor: "#f7f7f7",
+    height: 80,
+    marginBottom: 10,
+    width: 80,
+  },
+  headerTitle: {
+    color: "#042c5c",
+    fontFamily: "Gilroy_Bold",
+    fontSize: 16,
+    letterSpacing: 0.4,
+    marginBottom: 10,
+  },
+  headerSubtitle: {
+    color: "#77869e",
+    fontFamily: "Gilroy_Medium",
+    fontSize: 13,
+    letterSpacing: 0.11,
+    marginBottom: 10,
+  },
+  itemContainer: {
     alignItems: "center",
-    backgroundColor: "#FFFFFF"
-  }
+    flexDirection: "row",
+    justifyContent: "space-between",
+    height: 56,
+    marginBottom: 10,
+    paddingHorizontal: 8,
+  },
+  disabledItemContainer: {
+    alignItems: "center",
+    flexDirection: "row",
+    height: 56,
+    marginBottom: 10,
+    paddingHorizontal: 8,
+  },
+  itemLogoContainer: {
+    flex: 1,
+  },
+  itemLogo: {
+    height: 40,
+    width: 40,
+  },
+  itemText: {
+    flex: 5,
+    color: "#042c5c",
+    fontFamily: "Gilroy_Bold",
+    fontSize: 16,
+    letterSpacing: 0.4,
+  },
 });
-
-const mapStateToProps = state => {
-  const { profile } = state;
-  return {
-    profile
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    saveProfile: payload => {
-      dispatch(API.saveProfile(payload));
-    },
-    getProfile: payload => {
-      dispatch(API.getProfile(payload));
-    }
-  };
-};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);

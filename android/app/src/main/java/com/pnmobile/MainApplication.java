@@ -3,7 +3,8 @@ package com.pnmobile;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.rnfs.RNFSPackage;
+import com.react_native_signature.RCTSignaturePackage;
+import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 import com.rssignaturecapture.RSSignatureCapturePackage;
 import com.swmansion.reanimated.ReanimatedPackage;
 import com.facebook.react.ReactNativeHost;
@@ -41,7 +42,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNFSPackage(),
+            new RCTSignaturePackage(),
+            new SafeAreaContextPackage(),
             new RSSignatureCapturePackage(),
           new ReanimatedPackage(),
           new RNGestureHandlerPackage(),

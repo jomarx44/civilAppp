@@ -15,7 +15,7 @@ class PNFormTextBoxPhoneNumber extends Component {
 
   render() {
     const {
-      title,
+      label,
       password,
       value,
       editable = true,
@@ -23,7 +23,7 @@ class PNFormTextBoxPhoneNumber extends Component {
     } = this.props;
     return (
       <View style={styles.view}>
-        <Label style={styles.label}>{title}</Label>
+        <Label style={styles.label}>{label}</Label>
         <Item style={[styles.text, !editable && styles.disabled]}>
           <Text style={styles.prefix_number}>+63</Text>
           <TextInput
@@ -43,7 +43,6 @@ class PNFormTextBoxPhoneNumber extends Component {
 }
 
 PNFormTextBoxPhoneNumber.propTypes = {
-  title: PropTypes.string.isRequired,
   value: PropTypes.string,
   onChangeText: PropTypes.func,
   password: PropTypes.bool,
@@ -62,7 +61,7 @@ let styles = StyleSheet.create({
     justifyContent: 'flex-start'
   },
   prefix_number: {
-    fontFamily: "Avenir_Book",
+    fontFamily: "Gilroy_Medium",
     fontSize: 20,
     color: '#F9A010',
     width: '15%',
@@ -70,8 +69,7 @@ let styles = StyleSheet.create({
   input: {
     color: "#f9a010",
     fontSize: 18,
-    fontWeight: 'normal',
-    fontFamily: "Avenir_Medium",
+    fontFamily: "Gilroy_Medium",
     width:'85%'
   },
   disabled: {
@@ -79,7 +77,7 @@ let styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
-    fontFamily: "Avenir_Medium",
+    fontFamily: "Gilroy_Medium",
     color: "#5d646c"
   },
   view: {
@@ -87,7 +85,7 @@ let styles = StyleSheet.create({
   },
   invalidText: {
     marginTop: 5,
-    fontFamily: 'Avenir_Medium',
+    fontFamily: 'Gilroy_Medium',
     fontSize: 12,
     color: '#DC6061'
   }

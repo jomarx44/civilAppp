@@ -1,14 +1,38 @@
 import {
   UPDATE_PROFILE,
   UPDATE_PROFILE_ERROR,
+  UPDATE_PROFILE_INITIALIZE,
   UPDATE_PROFILE_SUCCESS,
   FETCH_PROFILE,
   FETCH_PROFILE_SUCCESS,
-  FETCH_PROFILE_ERROR
+  FETCH_PROFILE_ERROR,
+  SET_PROFILE,
+  CLEAR_PROFILE
 } from "../actions/types";
 
 const initialState = {
+  data: {
+    id: "",
+    sub: "",
+    tokens: {
+      accessToken: "",
+      idToken: "",
+      refreshToken: ""
+    },
+    attributes: {},
+    emails: [],
+    phoneNumbers: [],
+    name: {
+      displayName: "",
+      givenName: "",
+      middleName: "",
+      familyName: ""
+    },
+  },
+  isLoggedIn: false,
+  // data: null,
   isUpdating: false,
+  isUpdated: null,
   isFetching: false,
   success: null,
   message: ""
@@ -17,11 +41,24 @@ const initialState = {
 export const profileReducer = (state = initialState, action) => {
   let output = {};
   switch (action.type) {
+    case UPDATE_PROFILE_INITIALIZE: 
+      output = {
+        ...state,
+        isUpdating: false,
+        isUpdated: null,
+        message: ""
+      };
+      return output;
+
+    case CLEAR_PROFILE: 
+      output = initialState;
+      return output;
+
     case UPDATE_PROFILE:
       output = {
         ...state,
         isUpdating: true,
-        success: null,
+        isUpdated: null,
         message: ""
       };
       return output;
@@ -29,16 +66,15 @@ export const profileReducer = (state = initialState, action) => {
       output = {
         ...state,
         isUpdating: false,
-        success: false,
+        isUpdated: false,
         message: action.payload.message
       };
-      console.log("Output: ", output);
       return output;
     case UPDATE_PROFILE_SUCCESS:
       output = {
         ...state,
         isUpdating: false,
-        success: true,
+        isUpdated: true,
         message: action.payload.message
       };
       return output;
@@ -49,7 +85,6 @@ export const profileReducer = (state = initialState, action) => {
         success: null,
         message: ""
       };
-      console.log("HIT REDUCER!")
       return output;
     case FETCH_PROFILE_ERROR:
       output = {
@@ -62,10 +97,24 @@ export const profileReducer = (state = initialState, action) => {
     case FETCH_PROFILE_SUCCESS:
       output = {
         ...state,
+        data: {
+          ...state.data,
+          ...action.payload
+        },
+        isLoggedIn: true,
         isFetching: false,
         success: true,
-        message: action.payload.message
+        message: action.payload.message,
       };
+      return output;
+    case SET_PROFILE: 
+      output = {
+        ...state,
+        data: {
+          ...state.data,
+          ...action.payload
+        }
+      }
       return output;
     default:
       return state;

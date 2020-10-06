@@ -3,8 +3,9 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { connect } from "react-redux";
 
 // Custom Components
-import KeyboardShift from "library/components/CDKeyboardShift.js";
-import PNHeaderTitleDesc from "library/components/PNHeaderTitleDesc";
+import PNContentWithTitleAndDescription from "../../library/Layout/Content/PNContentWithTitleAndDescription";
+import { ContainedButton } from "../../components/Buttons";
+import FormButtonContainer from "../../library/Layout/Containers/FormButtonContainer";
 import PNFormTextBox from "library/components/PNFormTextBox";
 import PNFormButton from "library/components/PNFormButton";
 
@@ -19,30 +20,30 @@ import * as Profile from "../../store/profile";
 let constraints = {
   amount: {
     presence: {
-      allowEmpty: false
+      allowEmpty: false,
     },
     numericality: {
-      strict: true
-    }
+      strict: true,
+    },
   },
   perCutOff: {
     presence: {
-      allowEmpty: false
+      allowEmpty: false,
     },
     numericality: {
       strict: true,
       greaterThan: 0,
-      notLessThanOrEqualTo: "must be lesser or equal to Loan Amount"
-    }
+      notLessThanOrEqualTo: "must be lesser or equal to Loan Amount",
+    },
   },
   months: {
     presence: {
-      allowEmpty: false
+      allowEmpty: false,
     },
     numericality: {
-      strict: true
-    }
-  }
+      strict: true,
+    },
+  },
 };
 
 export class LoanAccountScreen extends Component {
@@ -62,20 +63,20 @@ export class LoanAccountScreen extends Component {
       lastName: "",
       amount: "",
       perCutOff: "",
-      months: ""
+      months: "",
     },
-    invalid: {}
+    invalid: {},
   };
 
   // To be added
   componentDidMount = async () => {
     let profile = await Profile.getProfileData();
-    console.log("Profile: ", profile);
+
     const { id } = profile.identities[0];
     const {
       givenName,
       middleName,
-      familyName
+      familyName,
     } = profile.identities[0].idpUserInfo.name;
     this.setState((state, props) => ({
       ...state,
@@ -84,30 +85,28 @@ export class LoanAccountScreen extends Component {
         user_id: id,
         firstName: givenName,
         middleName: middleName,
-        lastName: familyName
-      }
+        lastName: familyName,
+      },
     }));
   };
 
   // Set Invalid
-  setInvalid = invalid => {
+  setInvalid = (invalid) => {
     this.setState({
-      invalid: invalid
+      invalid: invalid,
     });
   };
 
   handlePress = () => {
-    // console.log("State: ", this.state);
     constraints.perCutOff.numericality.lessThanOrEqualTo = parseFloat(
       this.state.data.amount
     );
-    console.log("NEW CONSTRAINTS: ", constraints);
+
     const invalid = validate(this.state.data, constraints);
     if (!invalid) {
       this.props.loan(this.state);
     } else {
       this.setInvalid(invalid);
-      console.log("INVALID: ", invalid);
     }
   };
 
@@ -122,8 +121,8 @@ export class LoanAccountScreen extends Component {
           ...state,
           data: {
             ...state.data,
-            [params.index]: params.value
-          }
+            [params.index]: params.value,
+          },
         }));
         break;
 
@@ -131,22 +130,19 @@ export class LoanAccountScreen extends Component {
         let {} = params;
         invalid = validate({ perCutOff: perCutOff }, constraints);
         if (invalid) {
-          this.setState(
-            (state) => ({
-              ...state,
-              invalid: {
-                ...state.invalid,
-                ...invalid
-              }
-            }),
-            () => console.log("Invalid State: ", this.state.invalid)
-          );
+          this.setState((state) => ({
+            ...state,
+            invalid: {
+              ...state.invalid,
+              ...invalid,
+            },
+          }));
         } else {
           const { invalid } = this.state;
           delete invalid[params.index];
-          this.setState(state => ({
+          this.setState((state) => ({
             ...state,
-            invalid
+            invalid,
           }));
         }
         break;
@@ -162,7 +158,7 @@ export class LoanAccountScreen extends Component {
             // Change State of Per Cut Off
             this.setState((state, props) => ({
               ...state,
-              data: { ...state.data, months: computedMonths.toString() }
+              data: { ...state.data, months: computedMonths.toString() },
             }));
           } else {
             this.setInvalid(invalid);
@@ -194,88 +190,76 @@ export class LoanAccountScreen extends Component {
   render() {
     const {
       data: { amount, perCutOff, months },
-      invalid
+      invalid,
     } = this.state;
 
     return (
-      <KeyboardShift>
-        {() => (
-          <View style={styles.container}>
-            <View style={styles.header}>
-              <PNHeaderTitleDesc
-                title="Loan Money"
-                desc="Please provide the required field with appropriate values."
-              />
-            </View>
-            <ScrollView
-              style={styles.content}
-              contentContainerStyle={styles.contentContainer}
-            >
-              {/* To be added (All input fields and buttons) */}
-              <PNFormTextBox
-                title="Loan Amount"
-                keyboardType="decimal-pad"
-                onChangeText={text =>
-                  this.handleEvents("onChangeText", {
-                    value: text,
-                    index: "amount"
-                  })
-                }
-                ref={this.input_amount}
-                onSubmitEditing={() => this.input_perCutOff.current.focus()}
-                // onBlur={() => this.handleOnBlur("givenName")}
-                invalid={invalid.amount ? invalid.amount[0] : ""}
-                value={amount}
-              />
+      <React.Fragment>
+        <PNContentWithTitleAndDescription
+          title="Loan Money"
+          desc="Please provide the required field with appropriate values."
+        >
+          <PNFormTextBox
+            label="Loan Amount"
+            keyboardType="decimal-pad"
+            onChangeText={(text) =>
+              this.handleEvents("onChangeText", {
+                value: text,
+                index: "amount",
+              })
+            }
+            ref={this.input_amount}
+            onSubmitEditing={() => this.input_perCutOff.current.focus()}
+            // onBlur={() => this.handleOnBlur("givenName")}
+            invalid={invalid.amount ? invalid.amount[0] : ""}
+            value={amount}
+          />
 
-              <PNFormTextBox
-                title="Amount per Cut Off"
-                keyboardType="decimal-pad"
-                onChangeText={text =>
-                  this.handleEvents("onChangeText", {
-                    value: text,
-                    index: "perCutOff"
-                  })
-                }
-                ref={this.input_perCutOff}
-                onSubmitEditing={() => this.input_months.current.focus()}
-                onBlur={() => {
-                  this.handleEvents("onBlurAmountPerCutOff");
-                }}
-                invalid={invalid.perCutOff ? invalid.perCutOff[0] : ""}
-                value={perCutOff}
-              />
+          <PNFormTextBox
+            label="Amount per Cut Off"
+            keyboardType="decimal-pad"
+            onChangeText={(text) =>
+              this.handleEvents("onChangeText", {
+                value: text,
+                index: "perCutOff",
+              })
+            }
+            ref={this.input_perCutOff}
+            onSubmitEditing={() => this.input_months.current.focus()}
+            onBlur={() => {
+              this.handleEvents("onBlurAmountPerCutOff");
+            }}
+            invalid={invalid.perCutOff ? invalid.perCutOff[0] : ""}
+            value={perCutOff}
+          />
 
-              <PNFormTextBox
-                title="Months"
-                keyboardType="decimal-pad"
-                onChangeText={text =>
-                  this.handleEvents("onChangeText", {
-                    value: text,
-                    index: "months"
-                  })
-                }
-                ref={this.input_months}
-                // onSubmitEditing={() => this.input_middleName.current.focus()}
-                onBlur={() => {
-                  this.handleEvents("onBlurMonths");
-                }}
-                invalid={invalid.months ? invalid.months[0] : ""}
-                value={months}
-              />
-
-              <PNFormButton
-                onPress={() => {
-                  this.handlePress();
-                }}
-                disabled={this.props.is_fetching}
-                label="Save"
-                loading={this.props.is_fetching}
-              />
-            </ScrollView>
-          </View>
-        )}
-      </KeyboardShift>
+          <PNFormTextBox
+            label="Months"
+            keyboardType="decimal-pad"
+            onChangeText={(text) =>
+              this.handleEvents("onChangeText", {
+                value: text,
+                index: "months",
+              })
+            }
+            ref={this.input_months}
+            // onSubmitEditing={() => this.input_middleName.current.focus()}
+            onBlur={() => {
+              this.handleEvents("onBlurMonths");
+            }}
+            invalid={invalid.months ? invalid.months[0] : ""}
+            value={months}
+          />
+        </PNContentWithTitleAndDescription>
+        <FormButtonContainer>
+          <ContainedButton
+            onPress={() => this.handlePress()}
+            disabled={this.props.is_fetching}
+            label="Save"
+            loading={this.props.is_fetching}
+          />
+        </FormButtonContainer>
+      </React.Fragment>
     );
   }
 }
@@ -284,31 +268,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    padding: 25
+    padding: 25,
   },
   header: {
     paddingTop: 20,
     backgroundColor: "#FFFFFF",
-    flex: 1
+    flex: 1,
   },
   content: {},
-  contentContainer: {}
+  contentContainer: {},
 });
 
 // To be added
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { loader } = state;
   return {
-    ...loader.payload
+    ...loader.payload,
   };
 };
 
 // To be added
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    loan: payload => {
+    loan: (payload) => {
       dispatch(API.loan(payload));
-    }
+    },
   };
 };
 

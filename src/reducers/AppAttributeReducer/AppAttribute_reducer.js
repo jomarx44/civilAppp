@@ -8,69 +8,105 @@ import {
   PUT_ATTRIBUTES_ERROR,
   REQUEST_ID,
   REQUEST_ID_SUCCESS,
-  REQUEST_ID_ERROR
+  REQUEST_ID_ERROR,
+  CLEAR_TEMPORARY_KEY
 } from "./AppAttribute_actions";
 
 import {alertBox} from "../../actions/axiosCalls"
 
 const initialState = {
   isFetching: false,
+  isSaving: false,
   isUpdating: false,
-  success: true,
+  success: null,
   message: "",
   attributes: {},
-  temporary_key: '',
+  temporary_key: null,
   temporary_attributes: {}
 };
 
 export const AppAttributeReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_ATTRIBUTES: 
-      return Object.assign({}, state, {
+      return {
+        ...state,
         temporary_attributes: {
           ...state.temporary_attributes,
           ...action.attributes
         }
-      });
+      };
+
+    case CLEAR_TEMPORARY_KEY: 
+      return {
+        ...state,
+        temporary_key: null
+      }
+
     case REQUEST_ID:
-      return Object.assign({}, state, {
+      return {
         ...state,
-        isFetching: true
-      });
+        isSaving: true
+      };
+      
     case REQUEST_ID_SUCCESS:
-      console.log('REQUEST_ID_SUCCESS');
-      return Object.assign({}, state, {
-        temporary_key: action.payload
-      });
+      
+      return {
+        ...state,
+        temporary_key: action.payload,
+        isSaving: false
+      }
+
     case REQUEST_ID_ERROR:
-        console.log('REQUEST_ID_ERROR');
-      return action.payload;
+      return {
+        ...state,
+        isSaving: false
+      };
+
     case FETCH_ATTRIBUTES_ERROR:
-      return action.payload;
+      return {
+        ...state,
+        isFetching: false
+      };
+
     case FETCH_ATTRIBUTES_SUCCESS:
-      return action.payload;
+      
+      return {
+        ...state,
+        isFetching: false,
+        attributes: {
+          ...state.attributes,
+          ...action.payload.attribute
+        }
+      };
+
     case FETCH_ATTRIBUTES:
-      return Object.assign({}, state, {
+      return {
         ...state,
         isFetching: true
-      });
+      }
+
     case FETCH_ATTRIBUTES_ERROR:
       return action.payload;
+
     case FETCH_ATTRIBUTES_SUCCESS:
       return action.payload;
+
     case PUT_ATTRIBUTES:
       return Object.assign({}, state, {
         ...state,
         isUpdating: true
       });
+
     case PUT_ATTRIBUTES_ERROR:
       return {
         ...state,
         isFetching: false,
         success: false
       };
+
     case PUT_ATTRIBUTES_SUCCESS:
       return action.payload;
+
     default:
       return state;
   }

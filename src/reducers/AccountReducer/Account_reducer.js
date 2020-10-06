@@ -1,21 +1,33 @@
-import * as TYPE from "../../actions/types";
+import {
+  FETCH_ACCOUNTS,
+  FETCH_ACCOUNTS_SUCCESS,
+  FETCH_ACCOUNTS_ERROR,
+  FETCH_ACCOUNTINFO_ERROR,
+  FETCH_ACCOUNTSHISTORY_ERROR,
+  CLEAR_ACCOUNTS,
+} from "../../actions/types";
 
 const accountState = {
-  is_fetching: true,
+  is_fetching: false,
   error: null,
   list: []
 };
 
 export const accountsReducer = (state = accountState, action) => {
   switch (action.type) {
-    case TYPE.FETCH_ACCOUNTS:
-      return state;
-    case TYPE.FETCH_ACCOUNTS_SUCCESS:
+    case CLEAR_ACCOUNTS: 
+      return accountState;
+    case FETCH_ACCOUNTS:
+      return {
+        ...state,
+        is_fetching: true,
+      };
+    case FETCH_ACCOUNTS_SUCCESS:
       return {
         is_fetching: false,
         list: action.payload
       };
-    case TYPE.FETCH_ACCOUNTS_ERROR:
+    case FETCH_ACCOUNTS_ERROR:
       return action.payload;
     default:
       return state;
@@ -48,35 +60,14 @@ const accountDetailsState = {
 
 export const accountDetailsReducer = (state = accountDetailsState, action) => {
   switch (action.type) {
-    case TYPE.FETCH_ACCOUNTDETAILS:
-      return {
-        ...state,
-        is_fetching: true,
-        error: null, 
-        account: {}
-      };
-    case TYPE.FETCH_ACCOUNTDETAILS_SUCCESS:
-      return {
-        ...state,
-        is_fetching: false,
-        account: action.payload,
-        error: null
-      };
-    case TYPE.FETCH_ACCOUNTDETAILS_ERROR:
+    case FETCH_ACCOUNTINFO_ERROR:
       return {
         ...state,
         ...action.payload,
         is_fetching: false,
         error: true
       };
-    case TYPE.FETCH_ACCOUNTINFO_ERROR:
-      return {
-        ...state,
-        ...action.payload,
-        is_fetching: false,
-        error: true
-      };
-    case TYPE.FETCH_ACCOUNTSHISTORY_ERROR:
+    case FETCH_ACCOUNTSHISTORY_ERROR:
       return {
         ...state,
         ...action.payload,

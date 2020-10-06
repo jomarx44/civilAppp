@@ -34,7 +34,11 @@ target 'pnmobile' do
 
   pod 'react-native-signature-capture', :path => '../node_modules/react-native-signature-capture'
 
-
-  pod 'RNFS', :path => '../node_modules/react-native-fs'
+  pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
+  
+  pod 'EXTaskManagerInterface',
+    :path => "../node_modules/expo-task-manager-interface/ios"
+  pod 'EXAppLoaderProvider',
+    :path => "../node_modules/expo-app-loader-provider/ios"
 
 end

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Dimensions, Text, Platform, StatusBar, StyleSheet, View, TouchableOpacity } from 'react-native'
 import { Header, Left, Body, Title, Right, Icon } from 'native-base';
-import { withNavigation } from 'react-navigation'
-import NavigationService from 'navigation/NavigationService.js'
+import { withNavigation } from '@react-navigation/compat'
+import * as NavigationService from 'navigation/NavigationService.js'
 
 const {width} = Dimensions.get('window')
 

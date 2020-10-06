@@ -1,5 +1,5 @@
 import { AsyncStorage } from "react-native";
-import NavigationService from "../navigation/NavigationService";
+import * as NavigationService from "../navigation/NavigationService";
 import * as TYPE from "../actions/types";
 import * as Auth from "store/auth";
 import * as Profile from "store/profile";
@@ -11,12 +11,10 @@ export default function loginReducer(state = [], action) {
         is_fetching: true
       };
     case TYPE.LOGIN_ERROR:
-      // console.log('Login Error: ', action.payload);
       action.payload.is_fetching = false;
       return action.payload;
 
     case TYPE.LOGIN_SUCCESS:
-      console.log("Login Success: ", action.payload);
       Profile.setAccessData(action.payload);
       return action.payload;
 
@@ -47,38 +45,9 @@ export default function loginReducer(state = [], action) {
       };
 
     case TYPE.FORGOT_PASSWORD_SUCCESS:
-      console.log("FORGOT PASSWORD SUCCESS: ", action.payload);
       return action.payload;
 
     case TYPE.FORGOT_PASSWORD_ERROR:
-      console.log("FORGOT PASSWORD ERROR: ", action.payload);
-      return action.payload;
-
-    case TYPE.USERINFO: 
-      console.log("USER INFO")
-      return {
-        is_fetching: true
-      }
-
-    case TYPE.USERINFO_SUCCESS:
-      console.log("User Info: ", action.payload);
-      Profile.setProfileData(action.payload);
-      return {
-        ...action.payload,
-        action: 'USERINFO',
-        is_fetching: false
-      };
-
-    case TYPE.USERINFO_ERROR: 
-      
-      return {
-        ...action.payload,
-        is_fetching: false,
-        success: false
-      };
-
-    case TYPE.LOGIN_INITIAL_SUCCESS:
-      Profile.setAccessData(action.payload);
       return action.payload;
 
     case TYPE.CHANGE_MENU_LOGIN:

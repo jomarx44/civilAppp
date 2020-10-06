@@ -12,21 +12,40 @@
     "name": "pnmobile",
     "slug": "expo-template-bare",
     "privacy": "unlisted",
-    "sdkVersion": "34.0.0",
-    "version": "1.0.0",
+    "version": "2.0.1",
     "entryPoint": "node_modules/expo/AppEntry.js",
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "Thousand Minds Social Media Inc.",
+            "project": "sun-savings-mobile-bank-application",
+            "authToken": "da5bbc0c697140b59b9e9bb2e2db2be90a1ab7b060fc48219dd905841df4f2a6"
+          }
+        }
+      ]
+    },
     "icon": "./assets/images/ic_launcher_xxxhdpi.png",
+    "ios": {
+      "bundleIdentifier": "com.thousandminds.sunsavings",
+      "buildNumber": "2.0.2"
+    },
     "android": {
-      "versionCode": 20,
+      "versionCode": 22,
       "package": "com.thousandminds.sunsavings",
       "splash": {
+        "backgroundColor": "#309fe7",
         "xhdpi": "./assets/images/SSB-Splash.png",
         "xxhdpi": "./assets/images/SSB-Splash@2x.png",
         "xxxhdpi": "./assets/images/SSB-Splash@3x.png",
-        "resizeMode": "cover"
+        "resizeMode": "contain"
       }
     },
-
-    "platforms": ["ios", "android", "web"]
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ]
   }
 }
