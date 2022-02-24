@@ -3,7 +3,7 @@ import 'intl';
 import 'intl/locale-data/jsonp/en';
 
 import React, { useEffect, useState } from "react";
-import { AppLoading } from "expo";
+import AppLoading from "expo-app-loading";
 import { AsyncStorage } from "react-native";
 import { Provider } from "react-redux";
 import { Root } from "native-base";
@@ -64,3 +64,6 @@ export const App = () => {
 };
 
 export default App;
+
+
+

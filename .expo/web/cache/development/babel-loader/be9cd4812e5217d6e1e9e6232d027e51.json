@@ -1,1 +1,0 @@
-{"ast":null,"code":"export { OTP } from \"./OTP\";","map":{"version":3,"sources":["/Users/thadz/Desktop/SunSavings/fixedProfileAndTransfer/pnmobileapp/src/components/OTP/index.js"],"names":["OTP"],"mappings":"AAAA,SAASA,GAAT","sourcesContent":["export { OTP } from \"./OTP\";\n"]},"metadata":{},"sourceType":"module"}
